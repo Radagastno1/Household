@@ -8,3 +8,5 @@
 
 - es lint
 - prettier
+
+jag skriver lite här fö ratt testa och se om workflow körs eller ej
