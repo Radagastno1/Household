@@ -5,3 +5,5 @@
 - native navigation
 - native screens
 - stack navigation
+
+- es lint
