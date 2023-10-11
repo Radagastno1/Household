@@ -12,7 +12,9 @@
     "types": "tsc --noEmit"
   },
   "dependencies": {
+    "@react-navigation/bottom-tabs": "^6.5.9",
     "@react-navigation/native": "^6.1.8",
+    "@react-navigation/native-stack": "^6.9.14",
     "@react-navigation/stack": "^6.3.18",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-react-hooks": "^4.6.0",
