@@ -4,7 +4,7 @@ import React from "react";
 export default function SignInScreen() {
   return (
     <View>
-      <Text>SignInScreen</Text>
+      <Text>SignInScreen, här loggar man in sig.</Text>
     </View>
   );
 }

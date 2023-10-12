@@ -1,8 +1,8 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import CreateAccountScreen from "../screens/CreateAccountScreen";
-import CreateHouseholdScreen from "../screens/CreateHouseholdScreen";
 import CreateTaskScreen from "../screens/CreateTaskScreen";
+import CreateUserAccountScreen from "../screens/CreateUserAccountScreen";
+import HandleHouseholdScreen from "../screens/HandleHouseholdScreen";
 import HouseholdAccountScreen from "../screens/HouseholdAccountScreen";
 import HouseholdTasksScreen from "../screens/HouseholdTasksScreen";
 import SettingsScreen from "../screens/SettingsScreen";
@@ -12,9 +12,9 @@ import TaskDetailScreen from "../screens/TaskDetailScreen";
 
 export type RootStackParamList = {
   SignInScreen: undefined;
-  CreateAccountScreen: undefined;
+  CreateUserAccountScreen: undefined;
   HouseholdAccountScreen: undefined;
-  CreateHouseholdScreen: undefined;
+  HandleHouseholdScreen: undefined;
   HouseholdTasksScreen: undefined;
   TaskDetailScreen: undefined;
   CreateTaskScreen: undefined;
@@ -54,8 +54,8 @@ export default function RootNavigator() {
             />
 
             <Stack.Screen
-              name="CreateHouseholdScreen"
-              component={CreateHouseholdScreen}
+              name="HandleHouseholdScreen"
+              component={HandleHouseholdScreen}
               options={{ title: "Skapa hushåll" }}
             />
             <Stack.Screen //fråga david hur tänka kring navigationen här med statistik och swipe
@@ -82,8 +82,8 @@ export default function RootNavigator() {
               options={{ title: "Logga in" }}
             />
             <Stack.Screen
-              name="CreateAccountScreen"
-              component={CreateAccountScreen}
+              name="CreateUserAccountScreen"
+              component={CreateUserAccountScreen}
               options={{ title: "Skapa konto" }}
             />
           </>
