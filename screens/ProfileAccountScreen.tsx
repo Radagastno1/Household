@@ -1,10 +1,10 @@
 import { View, Text } from "react-native";
 import React from "react";
 
-export default function SettingsScreen() {
+export default function ProfileAccountScreen() {
   return (
     <View>
-      <Text>SettingsScreen, för att redigera användaren??</Text>
+      <Text>ProfileAccountScreen</Text>
     </View>
   );
 }

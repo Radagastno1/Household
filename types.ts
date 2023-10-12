@@ -3,14 +3,16 @@ export interface User {
   name: string;
   username: string;
   password: string;
-  isOwner: boolean;
-  isActive: boolean;
 }
 
-export interface HouseholdUserModel {
+export interface Profile {
+  id: string;
+  profileName: string;
   userId: string;
   householdId: string;
-  avatarId: string;
+  avatar: string;
+  isOwner: boolean;
+  isActive: boolean;
 }
 
 export interface Household {
@@ -22,20 +24,30 @@ export interface Household {
 //fråga david
 export interface Task {
   id: string;
-  name: string;
+  title: string;
   description: string;
   energiWeight: number;
-  startDate: Date; //default blir dagens datum
+  creatingDate: Date; //default blir dagens datum
   interval: number; //dagar emellan?
-  isDone: boolean;
   householdId: string;
 }
 
-export interface Avatar {
+export interface TaskCompletion {
   id: string;
-  symbol: string; //url
-  color: string;
+  taskId: string;
+  profileId: string;
+  completionDate: Date;
 }
+
+// Show how to make a day function work between task-data and taskCompletion-data
+// task created today 2023-10-12
+// interval : 3 days
+
+// task completed: 2023-10-15
+// late by 1 day
+// late by 2 day
+// completed 2023-10-18
+// completed 2023-10-21
 
 // fråga david
 // hushåll och user är many to many
