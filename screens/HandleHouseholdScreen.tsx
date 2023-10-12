@@ -5,7 +5,7 @@ export default function HandleHouseholdScreen() {
   return (
     <View>
       <Text>
-        CreateHouseholdscreen, här skapar vi ett nytt hushåll och får en enkel
+        HandleHouseholdScreen, här skapar vi ett nytt hushåll och får en enkel
         kod. ELLER ange kod och gå med i befintligt hushåll.
       </Text>
     </View>

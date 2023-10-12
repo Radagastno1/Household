@@ -3,23 +3,24 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import CreateTaskScreen from "../screens/CreateTaskScreen";
 import CreateUserAccountScreen from "../screens/CreateUserAccountScreen";
 import HandleHouseholdScreen from "../screens/HandleHouseholdScreen";
-import HouseholdAccountScreen from "../screens/HouseholdAccountScreen";
 import HouseholdTasksScreen from "../screens/HouseholdTasksScreen";
-import SettingsScreen from "../screens/SettingsScreen";
 import SignInScreen from "../screens/SignInScreen";
 import StatisticScreen from "../screens/StatisticScreen";
 import TaskDetailScreen from "../screens/TaskDetailScreen";
+import HouseholdAccountScreen from "../screens/HouseholdAccountScreen";
 
+//kolla om dela upp navigationen, från profileaccount ny stack?
 export type RootStackParamList = {
   SignInScreen: undefined;
   CreateUserAccountScreen: undefined;
+  CreateProfileScreen: undefined;
+  ProfileAccountScreen: undefined;
   HouseholdAccountScreen: undefined;
   HandleHouseholdScreen: undefined;
   HouseholdTasksScreen: undefined;
   TaskDetailScreen: undefined;
   CreateTaskScreen: undefined;
   StatisticScreen: undefined;
-  SettingsScreen: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -41,11 +42,6 @@ export default function RootNavigator() {
               name="HouseholdAccountScreen"
               component={HouseholdAccountScreen}
               options={{ title: "Välkommen" }}
-            />
-            <Stack.Screen
-              name="SettingsScreen"
-              component={SettingsScreen}
-              options={{ title: "Inställningar" }}
             />
             <Stack.Screen
               name="HouseholdTasksScreen"
