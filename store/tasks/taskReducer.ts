@@ -9,11 +9,9 @@ export default function taskReducer(
 ) {
   switch (action.type) {
     case "ADD_TASK":
-      const updatedTasks = [...state.tasks, action.payload];
-
       return {
         ...state,
-        tasks: updatedTasks,
+        tasks: [...state.tasks, action.payload],
       };
     default: {
       action.type satisfies never;
