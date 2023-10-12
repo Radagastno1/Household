@@ -1,6 +1,8 @@
+import { Task } from "../../types";
+
 export interface AddTaskAction {
   type: "ADD_TASK";
-  payload: string;
+  payload: Task;
 }
 
 export type TaskAction = AddTaskAction;
