@@ -24,7 +24,12 @@ export default function HouseholdTasksScreen() {
       <Appbar.Header>
         <Appbar.BackAction onPress={_goBack} />
         <Appbar.Content title="Househållet Namn" />
-        <Appbar.Action icon="./assets/bee-home.png" onPress={_handleMore} />
+        <Appbar.Action icon={({ size, color }) => (
+    <Image
+      source={require('../assets/bee-home.png')}
+      style={{ width: 20, height: 30, }}
+    />
+  )} onPress={_handleMore} />
       </Appbar.Header>
       <TouchableOpacity onPress={_handleMore}>
         {/* <Image
