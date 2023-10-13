@@ -1,13 +1,27 @@
-import { View, Text } from "react-native";
+import { View, Text, StyleSheet, Button } from "react-native";
 import React from "react";
 
-export default function HandleHouseholdScreen() {
+export default function HandleHouseholdScreen({ navigation }: any) {
   return (
-    <View>
-      <Text>
-        HandleHouseholdScreen, här skapar vi ett nytt hushåll och får en enkel
-        kod. ELLER ange kod och gå med i befintligt hushåll.
-      </Text>
+    <View style={styles.container}>
+      <Text>Här skapas ett hushåll</Text>
+      <Button
+        title="Skapa hushåll"
+        onPress={() => navigation.navigate("CreateProfile")}
+      />
+      <Button
+        title="Stäng"
+        onPress={() => navigation.navigate("HouseholdAccount")}
+      />
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+});

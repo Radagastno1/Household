@@ -1,16 +1,20 @@
-import { View, Text } from "react-native";
+import { View, Text, StyleSheet, Button } from "react-native";
 import React from "react";
 
-//här ser man detaljer om tasken. OM du är ägare över aktuella hushållet
-//DÅ kan du redigera tasken härifrån
-//man ska kunna välja sysslan som gjord
-export default function TaskDetailScreen() {
+export default function TaskDetailScreen({ navigation }: any) {
   return (
-    <View>
-      <Text>
-        TaskDetailScreen, här kan man redigera tasken?? ska det vara en modul
-        för detail och redigering?
-      </Text>
+    <View style={styles.container}>
+      <Text>Här visas en task!</Text>
+      <Button title="Klar" onPress={() => navigation.navigate("Tab")} />
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+});
