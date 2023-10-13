@@ -24,7 +24,6 @@ const avatars: Avatar[] = [
   { id: "H", name: "Avatar H" },
 ];
 
-
 export default function CreateProfileScreen({ navigation }: any) {
   const [householdName, setHouseholdName] = useState("");
   const [selectedAvatar, setSelectedAvatar] = useState<string | null>(null);
@@ -75,7 +74,6 @@ export default function CreateProfileScreen({ navigation }: any) {
     </View>
   );
 }
-};
 
 const styles = StyleSheet.create({
   container: {
