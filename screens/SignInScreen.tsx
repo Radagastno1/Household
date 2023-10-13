@@ -14,6 +14,7 @@ import { Text, TextInput } from "react-native-paper";
 import { users } from "../data";
 // import { loginUser } from "../store/user/userActions";
 
+
 export const SignInScreen = ({ navigation }: any) => {
   // const dispatch = useDispatch();
   const [username, setUsername] = useState("");
@@ -49,6 +50,7 @@ export const SignInScreen = ({ navigation }: any) => {
     if (user) {
       console.log("Authentication successful");
       console.log("User data:", user);
+
 
       navigation.navigate("HomeStack");
     } else {
@@ -198,31 +200,3 @@ const styles = StyleSheet.create({
   },
 });
 export default SignInScreen;
-
-// import React from "react";
-// import { Text, View, Button, StyleSheet } from "react-native";
-
-// export default function SignInScreen({navigation}:any) {
-//   return (
-//     <View style={styles.container}>
-//       <Text>Login Page</Text>
-//       <Button
-//         title="Need an account?"
-//         onPress={() => navigation.navigate("Signup")}
-//       />
-//       <Button
-//         title="Faked login"
-//         onPress={() => navigation.navigate("HomeStack")}
-//       />
-//     </View>
-//   );
-// }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: "#fff",
-//     alignItems: "center",
-//     justifyContent: "center",
-//   },
-// });

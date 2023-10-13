@@ -24,6 +24,7 @@ const avatars: Avatar[] = [
   { id: "H", name: "Avatar H" },
 ];
 
+
 export default function CreateProfileScreen({ navigation }: any) {
   const [householdName, setHouseholdName] = useState("");
   const [selectedAvatar, setSelectedAvatar] = useState<string | null>(null);
@@ -74,6 +75,7 @@ export default function CreateProfileScreen({ navigation }: any) {
     </View>
   );
 }
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -142,27 +144,3 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
 });
-
-// import { View, Text, StyleSheet, Button } from "react-native";
-// import React from "react";
-
-// export default function CreateProfileScreen({ navigation }: any) {
-//   return (
-//     <View style={styles.container}>
-//       <Text>Här skapas en profil</Text>
-//       <Button
-//         title="Skapa profil"
-//         onPress={() => navigation.navigate("HouseholdAccount")}
-//       />
-//     </View>
-//   );
-// }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: "#fff",
-//     alignItems: "center",
-//     justifyContent: "center",
-//   },
-// });
