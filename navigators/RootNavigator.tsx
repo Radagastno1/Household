@@ -17,7 +17,7 @@ export type RootStackParamList = {
   ProfileAccountScreen: undefined;
   HouseholdAccountScreen: undefined;
   HandleHouseholdScreen: undefined;
-  HouseholdTasksScreen: undefined;
+  HouseholdTasksScreen: {id:string};
   TaskDetailScreen: undefined;
   CreateTaskScreen: undefined;
   StatisticScreen: undefined;
@@ -72,16 +72,21 @@ export default function RootNavigator() {
           </>
         ) : (
           <>
-            <Stack.Screen
+            {/* <Stack.Screen
               name="SignInScreen"
               component={SignInScreen}
               options={{ title: "Logga in" }}
+            /> */}
+              <Stack.Screen
+              name="HouseholdTasksScreen"
+              component={HouseholdTasksScreen}
+            //   options={{ title: "Hushållet" }}
             />
-            <Stack.Screen
+            {/* <Stack.Screen
               name="CreateUserAccountScreen"
               component={CreateUserAccountScreen}
               options={{ title: "Skapa konto" }}
-            />
+            /> */}
           </>
         )}
       </Stack.Navigator>
