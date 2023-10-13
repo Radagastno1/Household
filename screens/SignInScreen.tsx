@@ -14,7 +14,8 @@ import { Text, TextInput } from "react-native-paper";
 import { users } from "../data";
 // import { loginUser } from "../store/user/userActions";
 
-export const SignInScreen = () => {
+
+export const SignInScreen = ({ navigation }: any) => {
   // const dispatch = useDispatch();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -50,7 +51,8 @@ export const SignInScreen = () => {
       console.log("Authentication successful");
       console.log("User data:", user);
 
-      // navigation.navigate('HouseholdAccountScreen');
+
+      navigation.navigate("HomeStack");
     } else {
       console.error("Authentication failed");
     }
@@ -162,7 +164,7 @@ export const SignInScreen = () => {
             borderColor: "black",
           }}
           onPress={() => {
-            // navigation.navigate("CreateAccountScreen");
+            navigation.navigate("Signup");
           }}
         >
           <Text style={{ color: "black", fontSize: 18 }}>Skapa konto</Text>

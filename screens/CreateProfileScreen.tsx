@@ -24,12 +24,13 @@ const avatars: Avatar[] = [
   { id: "H", name: "Avatar H" },
 ];
 
-export const CreateProfileScreen: React.FC = () => {
+
+export default function CreateProfileScreen({ navigation }: any) {
   const [householdName, setHouseholdName] = useState("");
   const [selectedAvatar, setSelectedAvatar] = useState<string | null>(null);
 
   const saveProfile = () => {
-
+    navigation.navigate("HouseholdAccount");
   };
 
   return (
@@ -73,6 +74,7 @@ export const CreateProfileScreen: React.FC = () => {
       </TouchableOpacity>
     </View>
   );
+}
 };
 
 const styles = StyleSheet.create({

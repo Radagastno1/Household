@@ -1,11 +1,23 @@
-import { View, Text } from "react-native";
+import { View, Text, StyleSheet, Button } from "react-native";
 import React from "react";
 
-//här skapar man en task som ägare för hushållet
-export default function CreateTaskScreen() {
+export default function CreateTaskScreen({ navigation }: any) {
   return (
-    <View>
-      <Text>CreateTaskScreen. ska det vara en modul?</Text>
+    <View style={styles.container}>
+      <Text>Skapa ett task här!</Text>
+      <Button
+        title="Skapa"
+        onPress={() => navigation.navigate("TodaysTasks")}
+      />
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+});
