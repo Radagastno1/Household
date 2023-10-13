@@ -24,11 +24,13 @@ const avatars: Avatar[] = [
   { id: "H", name: "Avatar H" },
 ];
 
-export default function CreateProfileScreen() {
+export default function CreateProfileScreen({ navigation }: any) {
   const [householdName, setHouseholdName] = useState("");
   const [selectedAvatar, setSelectedAvatar] = useState<string | null>(null);
 
-  const saveProfile = () => {};
+  const saveProfile = () => {
+    navigation.navigate("HouseholdAccount");
+  };
 
   return (
     <View style={styles.container}>
