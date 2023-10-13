@@ -1,16 +1,22 @@
+import { configureStore } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
-import { combineReducers, legacy_createStore as createStore } from "redux";
-import taskReducer from "./tasks/taskReducer";
+import { taskReducer } from "./tasks/taskSlice";
 
-const reducer = combineReducers({
-  taskSlice: taskReducer,
-  //här stoppar man in sin reducer tex user:userReducer
+// import { balanceReducer } from "./balanceSlice";
+// import { userReducer } from "./userSlice";
+
+const store = configureStore({
+  reducer: {
+    task: taskReducer,
+    //     user: userReducer,
+  },
 });
 
-export const store = createStore(reducer);
-
 export type RootState = ReturnType<typeof store.getState>;
-export type AppDispatch = typeof store.dispatch;
 
+export type AppDispatch = typeof store.dispatch;
 export const useAppDispatch: () => AppDispatch = useDispatch;
+
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
+
+export default store;
