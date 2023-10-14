@@ -12,9 +12,15 @@ import {
 } from "react-native";
 import { Card, Paragraph, Title } from "react-native-paper";
 import CircleComponent from "../components/CircleComponent";
+import { households } from "../data";
+import { Task } from "../types";
 
 //här skapar man en task som ägare för hushållet
 export default function CreateTaskScreen({ navigation }: any) {
+  //LÅTSAS ATT JAG KOLLAR MOT HUSHÅLLSSTATET VILKET HUSHÅLL ANVÄNDAREN ÄR PÅ HÄR
+  const householdId = "household1";
+  const household = households.find((h) => h.id == householdId);
+
   const [intervalDataPressed, setIntervalDataPressed] = useState(false);
   const [energyDataPressed, setEnergyDataPressed] = useState(false);
 
@@ -25,6 +31,18 @@ export default function CreateTaskScreen({ navigation }: any) {
 
   const intervalData: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   const energyData: number[] = [1, 2, 4, 6, 8];
+
+  const handleCreateTask = () => {
+    const newTask: Task = {
+      id: "something",
+      title: title,
+      description: description,
+      energiWeight: selectedEnergy,
+      interval: selectedInterval,
+      creatingDate: new Date(),
+      householdId: householdId,
+    };
+  };
 
   return (
     <KeyboardAvoidingView
