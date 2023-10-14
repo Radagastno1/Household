@@ -7,6 +7,7 @@ import { profiles } from "../data/index";
 import { Profile } from "../types";
 import React from "react";
 import { TabBar, TabView } from "react-native-tab-view";
+import { AntDesign } from '@expo/vector-icons';
 // ska knna gå till lägg till ny task OM du är ägare för hushålllet
 //här listas alla sysslor i hushållet. nullas från avatarer varje midnatt.
 //vilka som gjort sysslan ska visas bredvid sysslan
@@ -69,8 +70,11 @@ export default function HouseholdTasksScreen(
       </Card>
       <View style={styles.buttonContainer}>
         {/* {profile.isOwner &&( */}
+       
         <Button
-          icon=""
+           icon={({ size, color }) => (
+            <AntDesign name="pluscircleo" size={20} color="black" />
+          )}
           mode="outlined"
           onPress={() => console.log("Lägg Till")}
           style={styles.button}
