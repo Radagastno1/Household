@@ -1,21 +1,12 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { Task } from "../../types";
+import { tasks } from "../../data";
 
 interface TaskState {
   tasks: Task[];
 }
 export const initialState: TaskState = {
-  tasks: [
-    {
-      id: "task1",
-      title: "Damma vardagsrummet",
-      description: "Damma vardagsrummets ytor",
-      energiWeight: 4,
-      creatingDate: new Date("2023-10-01"),
-      interval: 5,
-      householdId: "household1",
-    },
-  ],
+  tasks: tasks,
 };
 
 const taskSlice = createSlice({
@@ -37,5 +28,5 @@ const taskSlice = createSlice({
   },
 });
 
-export const { addTask } = taskSlice.actions;
+export const { addTask, editTask } = taskSlice.actions;
 export const taskReducer = taskSlice.reducer;

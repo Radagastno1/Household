@@ -14,7 +14,7 @@ import { Card, Paragraph, Title } from "react-native-paper";
 import CircleComponent from "../components/CircleComponent";
 import { households } from "../data";
 import { useAppDispatch, useAppSelector } from "../store/store";
-import { addTask } from "../store/tasks/taskSlice";
+import { addTask, editTask } from "../store/tasks/taskSlice";
 import { Task } from "../types";
 
 //här skapar man en task som ägare för hushållet
@@ -34,13 +34,22 @@ export default function CreateTaskScreen({ navigation }: any) {
   const dispatch = useAppDispatch();
 
   //FÖR ATT TESTA HÄMTA TASKEN FÖR ETT HUSHÅLL SÅ JAG SER ATT DOM SKAPADES KORREKT
-  // const taskSlice = useAppSelector((state) => state.task);
-  // const allTasksForHousehold = taskSlice.tasks.filter(
-  //   (t) => t.householdId === householdId,
-  // );
+  const taskSlice = useAppSelector((state) => state.task);
+  const allTasksForHousehold = taskSlice.tasks.filter(
+    (t) => t.householdId === householdId,
+  );
 
   const intervalData: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   const energyData: number[] = [1, 2, 4, 6, 8];
+
+  const testEditTask = () => {
+    if (allTasksForHousehold.length >= 5) {
+      const lastTaskInList = allTasksForHousehold[5];
+      lastTaskInList.title = "MATA KATTEN";
+      console.log("last task i listan hete");
+      dispatch(editTask(lastTaskInList));
+    }
+  };
 
   const handleCreateTask = () => {
     if (title && description) {
@@ -50,7 +59,7 @@ export default function CreateTaskScreen({ navigation }: any) {
         description: description,
         energiWeight: selectedEnergy,
         interval: selectedInterval,
-        creatingDate: new Date(),
+        creatingDate: new Date().toISOString(),
         householdId: householdId,
       };
       dispatch(addTask(newTask));
@@ -209,8 +218,14 @@ export default function CreateTaskScreen({ navigation }: any) {
           </TouchableOpacity>
         </View>
 
-        {/* TESTAR BARA ATT SKRIVA UT ALLA TASKS FÖR ETT HUSHÅLL SÅ JAG SER ATT DET FUNKAR
+        {/* TESTAR BARA ATT SKRIVA UT ALLA TASKS FÖR ETT HUSHÅLL SÅ JAG SER ATT DET FUNKAR*/}
         <View style={{ flexDirection: "column" }}>
+          <TouchableOpacity
+            style={{ padding: 20, backgroundColor: "red" }}
+            onPress={() => testEditTask()}
+          >
+            <Text>Redigera första tasken till att heta MATA KATT</Text>
+          </TouchableOpacity>
           {allTasksForHousehold
             ? allTasksForHousehold.map((t) => (
                 <Text key={t.id}>
@@ -219,10 +234,11 @@ export default function CreateTaskScreen({ navigation }: any) {
                   Energi: {t.energiWeight}
                   Återkommande: {t.interval}
                   HushållsId: {t.householdId}
+                  Datum: {t.creatingDate.toString()}
                 </Text>
               ))
             : null}
-        </View> */}
+        </View>
       </ScrollView>
     </KeyboardAvoidingView>
   );
