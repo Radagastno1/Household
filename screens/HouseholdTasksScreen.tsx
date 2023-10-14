@@ -21,31 +21,25 @@ export default function HouseholdTasksScreen(
 
   return (
     <View style={styles.container}>
-      <Appbar.Header>
-        <View
-          style={{ flex: 1, alignItems: "center", }}
-        >
+      <Appbar.Header style={styles.customHeader}>
+        <View style={styles.title}>
           <Appbar.Content title="Househållet Namn" />
         </View>
-        <Appbar.Action
-          icon={({ size, color }) => (
-            <Image
-              source={require("../assets/bee-home.png")}
-              style={{ width: 20, height: 30,justifyContent:"center" }}
-            />
-          )}
-          onPress={_backHome}
-        />
+        <View style={styles.imageContainer}>
+          <Appbar.Action
+            icon={({ size, color }) => (
+              <Image
+                source={require("../assets/bee-home.png")}
+                style={styles.beeHomeImage}
+              />
+            )}
+            onPress={_backHome}
+          />
+        </View>
       </Appbar.Header>
 
       <Card style={styles.card}>
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
+        <View style={styles.taskItem}>
           <View>
             <Text variant="titleLarge">Syssla</Text>
           </View>
@@ -74,6 +68,22 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  customHeader: {
+    height: 40,
+  },
+  title: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    alignContent: "center",
+  },
+  imageContainer: {
+    marginBottom: 20,
+  },
+  beeHomeImage: {
+    width: 20,
+    height: 30,
+  },
   card: {
     margin: 16,
     padding: 16,
@@ -84,6 +94,11 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
+  },
+  taskItem: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   buttonContainer: {
     position: "absolute",
