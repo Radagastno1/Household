@@ -58,7 +58,7 @@ export default function CreateTaskScreen() {
                 }}
               >
                 <View>
-                  <Title>Återkommer:</Title>
+                  <Title style={{ fontWeight: "bold" }}>Återkommer:</Title>
                 </View>
 
                 <View style={{ flexDirection: "row" }}>
@@ -107,7 +107,7 @@ export default function CreateTaskScreen() {
                 }}
               >
                 <View>
-                  <Title>Värde:</Title>
+                  <Title style={{ fontWeight: "bold" }}>Värde:</Title>
                   <Paragraph>Hur energikrävande är sysslan?</Paragraph>
                 </View>
 
@@ -221,5 +221,6 @@ const styles = StyleSheet.create({
     color: "black",
     fontSize: 16,
     paddingHorizontal: 10,
+    fontWeight: "bold",
   },
 });
