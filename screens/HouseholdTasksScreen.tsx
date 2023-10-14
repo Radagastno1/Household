@@ -15,13 +15,12 @@ import { TabBar, TabView } from "react-native-tab-view";
 
 export default function HouseholdTasksScreen(
   { navigation }: any,
-  profile: Profile,
+  profileId: string,
 ) {
-  const _backHome = () => console.log("Shown more");
-
   return (
     <View style={styles.container}>
       <Appbar.Header style={styles.customHeader}>
+        {/* <Appbar.BackAction onPress={_backHome} /> */}
         <View style={styles.title}>
           <Appbar.Content title="Househållet Namn" />
         </View>
@@ -33,7 +32,7 @@ export default function HouseholdTasksScreen(
                 style={styles.beeHomeImage}
               />
             )}
-            onPress={_backHome}
+            onPress={() => navigation.navigate("HouseholdAccount")}
           />
         </View>
       </Appbar.Header>
@@ -41,10 +40,30 @@ export default function HouseholdTasksScreen(
       <Card style={styles.card}>
         <View style={styles.taskItem}>
           <View>
-            <Text variant="titleLarge">Syssla</Text>
+            <Text variant="titleLarge">Syssla1</Text>
           </View>
           <View>
-            <Text variant="bodyMedium">avatarer</Text>
+            <Text variant="bodyMedium">avatarer1</Text>
+          </View>
+        </View>
+      </Card>
+      <Card style={styles.card}>
+        <View style={styles.taskItem}>
+          <View>
+            <Text variant="titleLarge">Syssla2</Text>
+          </View>
+          <View>
+            <Text variant="bodyMedium">avatarer2</Text>
+          </View>
+        </View>
+      </Card>
+      <Card style={styles.card}>
+        <View style={styles.taskItem}>
+          <View>
+            <Text variant="titleLarge">Syssla3</Text>
+          </View>
+          <View>
+            <Text variant="bodyMedium">avatarer3</Text>
           </View>
         </View>
       </Card>
