@@ -20,4 +20,4 @@ export const AvatarColors: Record<Avatars, string> = {
   [Avatars.Pig]: "pink",
 };
 
-const avatarWithUrl = [];
+const avatarWithUrl = [{ avatar: "monkey", url: "" }];
