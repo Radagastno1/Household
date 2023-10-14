@@ -25,6 +25,15 @@ const taskSlice = createSlice({
     addTask: (state, action: PayloadAction<Task>) => {
       state.tasks = [...state.tasks, action.payload];
     },
+    editTask: (state, action: PayloadAction<Task>) => {
+      const editedTaskIndex = state.tasks.findIndex(
+        (task) => task.id === action.payload.id,
+      );
+
+      if (editedTaskIndex !== -1) {
+        state.tasks[editedTaskIndex] = action.payload;
+      }
+    },
   },
 });
 
