@@ -21,13 +21,13 @@ export default function CircleComponent({
 
 const styles = StyleSheet.create({
   circle: {
-    width: 35,
-    height: 35,
+    width: 34,
+    height: 34,
     borderRadius: 50,
     justifyContent: "center",
     alignItems: "center",
   },
   number: {
-    fontSize: 18,
+    fontSize: 16,
   },
 });

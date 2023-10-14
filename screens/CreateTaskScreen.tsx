@@ -76,7 +76,7 @@ export default function CreateTaskScreen() {
                 </View>
               </View>
 
-              <View style={{ flexDirection: "row" }}>
+              <View style={{ flexDirection: "row", justifyContent: "center" }}>
                 {intervalDataPressed
                   ? intervalData.map((number) => (
                       <TouchableOpacity
