@@ -13,7 +13,7 @@ import {
 import { Card, Paragraph, Title } from "react-native-paper";
 import CircleComponent from "../components/CircleComponent";
 import { households } from "../data";
-import { useAppDispatch } from "../store/store";
+import { useAppDispatch, useAppSelector } from "../store/store";
 import { addTask } from "../store/tasks/taskSlice";
 import { Task } from "../types";
 
@@ -32,6 +32,12 @@ export default function CreateTaskScreen({ navigation }: any) {
   const [description, setDescription] = useState("");
 
   const dispatch = useAppDispatch();
+
+  //FÖR ATT TESTA HÄMTA TASKEN FÖR ETT HUSHÅLL SÅ JAG SER ATT DOM SKAPADES KORREKT
+  // const taskSlice = useAppSelector((state) => state.task);
+  // const allTasksForHousehold = taskSlice.tasks.filter(
+  //   (t) => t.householdId === householdId,
+  // );
 
   const intervalData: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   const energyData: number[] = [1, 2, 4, 6, 8];
@@ -63,8 +69,6 @@ export default function CreateTaskScreen({ navigation }: any) {
         keyboardShouldPersistTaps="always"
       >
         <View style={styles.container}>
-          <Text>{title}</Text>
-          <Text>{description}</Text>
           <TextInput
             placeholder="Titel"
             style={styles.input}
@@ -204,6 +208,21 @@ export default function CreateTaskScreen({ navigation }: any) {
             <Text style={styles.buttonText}>Stäng</Text>
           </TouchableOpacity>
         </View>
+
+        {/* TESTAR BARA ATT SKRIVA UT ALLA TASKS FÖR ETT HUSHÅLL SÅ JAG SER ATT DET FUNKAR
+        <View style={{ flexDirection: "column" }}>
+          {allTasksForHousehold
+            ? allTasksForHousehold.map((t) => (
+                <Text key={t.id}>
+                  Titel: {t.title}
+                  Beskrivning: {t.description}
+                  Energi: {t.energiWeight}
+                  Återkommande: {t.interval}
+                  HushållsId: {t.householdId}
+                </Text>
+              ))
+            : null}
+        </View> */}
       </ScrollView>
     </KeyboardAvoidingView>
   );
