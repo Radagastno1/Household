@@ -77,7 +77,10 @@ export default function CreateTaskScreen() {
                 {intervalDataPressed
                   ? intervalData.map((number) => (
                       <TouchableOpacity
-                        onPress={() => setSelectedValue(number)}
+                        onPress={() => {
+                          setSelectedValue(number),
+                            setIntervalDataPressed(false);
+                        }}
                       >
                         <CircleComponent number={number} color="lightgrey" />
                       </TouchableOpacity>
@@ -102,7 +105,11 @@ export default function CreateTaskScreen() {
                 </View>
 
                 <View style={{ backgroundColor: "blue" }}>
-                  <TouchableOpacity onPress={() => setEnergyDataPressed(true)}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      setEnergyDataPressed(true);
+                    }}
+                  >
                     <CircleComponent
                       number={selectedEnergy}
                       color="lightgrey"
@@ -115,7 +122,10 @@ export default function CreateTaskScreen() {
                 {energyDataPressed
                   ? energyData.map((number) => (
                       <TouchableOpacity
-                        onPress={() => setSelectedEnergy(number)}
+                        onPress={() => {
+                          setSelectedEnergy(number),
+                            setEnergyDataPressed(false);
+                        }}
                       >
                         <CircleComponent number={number} color="lightgrey" />
                       </TouchableOpacity>
