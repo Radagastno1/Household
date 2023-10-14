@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { AvatarColors, Avatars } from "../data/avatars";
 import { Button } from "react-native-paper";
+import { households } from "../data";
+
 
 import {
   Text,
@@ -27,10 +29,14 @@ const avatars: Avatar[] = [
   { id: Avatars.Pig, name: "Pig" },
 ];
 
-export default function CreateProfileScreen({ navigation }: any) {
+export default function CreateProfileScreen({ navigation, route }: any) {
+  
   const [householdName, setHouseholdName] = useState("");
   const [selectedAvatar, setSelectedAvatar] = useState<string | null>(null);
+  const { id } = route.params;
+  const household = households.find((h) => h.id === id);
   const {theme } = useTheme();
+
   const saveProfile = () => {
     navigation.navigate("HouseholdAccount");
   };
@@ -39,7 +45,7 @@ export default function CreateProfileScreen({ navigation }: any) {
     <View style={styles.container}>
       <View style={styles.sectionContainer}>
         <View style={styles.rectContainer}>
-          <Text style={styles.rectText}>{householdName} Hushållets namn</Text>
+          <Text style={styles.rectText}>{household?.name}</Text>
         </View>
       </View>
       <View style={styles.sectionContainer}>
