@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { AvatarColors, Avatars } from "../data/avatars";
 import { Button } from "react-native-paper";
 import { households } from "../data";
+import { useDispatch } from 'react-redux';
+import { setProfile } from "../store/profile/profileSlice";
 
 
 import {
@@ -36,8 +38,23 @@ export default function CreateProfileScreen({ navigation, route }: any) {
   const { id } = route.params;
   const household = households.find((h) => h.id === id);
   const {theme } = useTheme();
+  const dispatch = useDispatch();
 
   const saveProfile = () => {
+    const avatar = selectedAvatar || '';
+    const avatarsColor = selectedAvatar ? AvatarColors[selectedAvatar as Avatars] : '';
+    const newProfile = {
+      id: '1234',
+      profileName: householdName, 
+      userId: '',
+      householdId: id,
+      avatar: avatar,
+      avatarsColors: avatarsColor,
+      isOwner: false,
+      isActive: false,
+    };
+     
+    dispatch(setProfile(newProfile));
     navigation.navigate("HouseholdAccount");
   };
 
