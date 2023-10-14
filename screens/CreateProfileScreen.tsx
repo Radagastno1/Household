@@ -1,12 +1,15 @@
 import React, { useState } from "react";
+import { AvatarColors, Avatars } from "../data/avatars";
+import { Button } from "react-native-paper";
+
 import {
   Text,
   View,
   TextInput,
-  Button,
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
+import { useTheme } from "../contexts/themeContext";
 
 type Avatar = {
   id: string;
@@ -14,20 +17,20 @@ type Avatar = {
 };
 
 const avatars: Avatar[] = [
-  { id: "A", name: "Avatar A" },
-  { id: "B", name: "Avatar B" },
-  { id: "C", name: "Avatar C" },
-  { id: "D", name: "Avatar D" },
-  { id: "E", name: "Avatar E" },
-  { id: "F", name: "Avatar F" },
-  { id: "G", name: "Avatar G" },
-  { id: "H", name: "Avatar H" },
+  { id: Avatars.Bee, name: "Bee" },
+  { id: Avatars.Frog, name: "Frog" },
+  { id: Avatars.Monkey, name: "Monkey" },
+  { id: Avatars.Cat, name: "Cat" },
+  { id: Avatars.Koala, name: "Koala" },
+  { id: Avatars.Beetle, name: "Beetle" },
+  { id: Avatars.Fox, name: "Fox" },
+  { id: Avatars.Pig, name: "Pig" },
 ];
 
 export default function CreateProfileScreen({ navigation }: any) {
   const [householdName, setHouseholdName] = useState("");
   const [selectedAvatar, setSelectedAvatar] = useState<string | null>(null);
-
+  const {theme } = useTheme();
   const saveProfile = () => {
     navigation.navigate("HouseholdAccount");
   };
@@ -61,16 +64,18 @@ export default function CreateProfileScreen({ navigation }: any) {
             style={[
               styles.avatar,
               selectedAvatar === avatar.id ? styles.selectedAvatar : null,
+              { backgroundColor: AvatarColors[avatar.id as Avatars] },
             ]}
-            onPress={() => setSelectedAvatar(avatar.id)}
+            onPress={() => setSelectedAvatar(avatar.id as Avatars)}
           >
             <Text style={styles.avatarText}>{avatar.name}</Text>
           </TouchableOpacity>
         ))}
       </View>
-      <TouchableOpacity style={styles.button} onPress={saveProfile}>
-        <Text style={styles.buttonText}>Skapa</Text>
-      </TouchableOpacity>
+
+      <Button style={theme.button as any} onPress={saveProfile}>
+        <Text style={theme.buttonText}>Skapa</Text>
+      </Button>
     </View>
   );
 }
@@ -106,34 +111,25 @@ const styles = StyleSheet.create({
     width: "100%",
     borderColor: "gray",
     borderWidth: 1,
-    marginBottom: 190,
+    marginBottom: 150,
     padding: 10,
   },
-  button: {
-    backgroundColor: "yellow",
-    padding: 10,
-    alignItems: "center",
-    margin: 20,
-    borderRadius: 10,
-    width: 300,
-  },
-  buttonText: {
-    color: "black",
-    fontSize: 20,
-  },
+
   avatarsContainer: {
     flexDirection: "row",
-    justifyContent: "space-between",
-    paddingHorizontal: 20,
+    flexWrap: "wrap",
+    justifyContent: "center",
+    alignItems: "center",
   },
   avatar: {
     backgroundColor: "white",
-    width: 50,
-    height: 50,
+    width: 60,
+    height: 60,
     borderRadius: 25,
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 100,
+    marginRight: 10,
+    marginBottom: 20,
   },
   selectedAvatar: {
     backgroundColor: "lightblue",
