@@ -14,7 +14,7 @@ import { Card, Paragraph, Title } from "react-native-paper";
 import CircleComponent from "../components/CircleComponent";
 import { households } from "../data";
 import { useAppDispatch, useAppSelector } from "../store/store";
-import { addTask, editTask } from "../store/tasks/taskSlice";
+import { addTask } from "../store/tasks/taskSlice";
 import { Task } from "../types";
 
 //här skapar man en task som ägare för hushållet
