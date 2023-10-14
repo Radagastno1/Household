@@ -17,8 +17,11 @@ import CircleComponent from "../components/CircleComponent";
 export default function CreateTaskScreen({ navigation }: any) {
   const [intervalDataPressed, setIntervalDataPressed] = useState(false);
   const [energyDataPressed, setEnergyDataPressed] = useState(false);
-  const [selectedValue, setSelectedValue] = useState(7);
-  const [selectedEnergy, setSelectedEnergy] = useState(7);
+
+  const [selectedInterval, setSelectedInterval] = useState(7);
+  const [selectedEnergy, setSelectedEnergy] = useState(2);
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
 
   const intervalData: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   const energyData: number[] = [1, 2, 4, 6, 8];
@@ -34,11 +37,14 @@ export default function CreateTaskScreen({ navigation }: any) {
         keyboardShouldPersistTaps="always"
       >
         <View style={styles.container}>
+          <Text>{title}</Text>
+          <Text>{description}</Text>
           <TextInput
             placeholder="Titel"
             style={styles.input}
             textAlignVertical="center"
             returnKeyType="done"
+            onChangeText={(text) => setTitle(text)}
           ></TextInput>
           <TextInput
             placeholder="Beskrivning"
@@ -48,6 +54,7 @@ export default function CreateTaskScreen({ navigation }: any) {
             blurOnSubmit={true}
             textAlignVertical="top"
             returnKeyType="done"
+            onChangeText={(text) => setDescription(text)}
           ></TextInput>
           <Card style={styles.card}>
             <Card.Content style={styles.cardContent}>
@@ -67,7 +74,7 @@ export default function CreateTaskScreen({ navigation }: any) {
                     onPress={() => setIntervalDataPressed(true)}
                   >
                     <CircleComponent
-                      number={selectedValue}
+                      number={selectedInterval}
                       backgroundColor="red"
                       color="white"
                     />
@@ -82,7 +89,7 @@ export default function CreateTaskScreen({ navigation }: any) {
                       <TouchableOpacity
                         key={number.toString()}
                         onPress={() => {
-                          setSelectedValue(number),
+                          setSelectedInterval(number),
                             setIntervalDataPressed(false);
                         }}
                       >
