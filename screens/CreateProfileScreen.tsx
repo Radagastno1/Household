@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { Theme, Avatars, AvatarColors } from "../data/theme";
+import { AvatarColors, Avatars } from "../data/avatars";
 import { Button } from "react-native-paper";
+
 import {
   Text,
   View,
@@ -8,6 +9,7 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
+import { useTheme } from "../contexts/themeContext";
 
 type Avatar = {
   id: string;
@@ -28,7 +30,7 @@ const avatars: Avatar[] = [
 export default function CreateProfileScreen({ navigation }: any) {
   const [householdName, setHouseholdName] = useState("");
   const [selectedAvatar, setSelectedAvatar] = useState<string | null>(null);
-
+  const {theme } = useTheme();
   const saveProfile = () => {
     navigation.navigate("HouseholdAccount");
   };
@@ -71,8 +73,8 @@ export default function CreateProfileScreen({ navigation }: any) {
         ))}
       </View>
 
-      <Button style={Theme.button as any} onPress={saveProfile}>
-        <Text style={Theme.buttonText}>Skapa</Text>
+      <Button style={theme.button as any} onPress={saveProfile}>
+        <Text style={theme.buttonText}>Skapa</Text>
       </Button>
     </View>
   );
