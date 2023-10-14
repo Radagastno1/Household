@@ -14,7 +14,7 @@ import { Card, Paragraph, Title } from "react-native-paper";
 import CircleComponent from "../components/CircleComponent";
 
 //här skapar man en task som ägare för hushållet
-export default function CreateTaskScreen() {
+export default function CreateTaskScreen({ navigation }: any) {
   const [intervalDataPressed, setIntervalDataPressed] = useState(false);
   const [energyDataPressed, setEnergyDataPressed] = useState(false);
   const [selectedValue, setSelectedValue] = useState(7);
@@ -151,11 +151,21 @@ export default function CreateTaskScreen() {
 
         {/* <View style={styles.fillOutContainer}></View> */}
         <View style={styles.buttonsContainer}>
-          <TouchableOpacity style={[styles.button]} onPress={() => {}}>
+          <TouchableOpacity
+            style={[styles.button]}
+            onPress={() => {
+              navigation.navigate("Tab");
+            }}
+          >
             <Feather name="plus-circle" size={24} color="black" />
             <Text style={styles.buttonText}>Spara</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={[styles.button]} onPress={() => {}}>
+          <TouchableOpacity
+            style={[styles.button]}
+            onPress={() => {
+              navigation.navigate("Tab");
+            }}
+          >
             <AntDesign name="closecircleo" size={24} color="black" />
             <Text style={styles.buttonText}>Stäng</Text>
           </TouchableOpacity>
