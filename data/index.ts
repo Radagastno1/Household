@@ -145,7 +145,8 @@ export const tasks: Task[] = [
     title: "Damma vardagsrummet",
     description: "Damma vardagsrummets ytor",
     energiWeight: 4,
-    creatingDate: new Date("2023-10-01"), //default blir dagens datum
+    // creatingDate: new Date("2023-10-01"), //default blir dagens datum
+     creatingDate: "2023-10-01", //default blir dagens datum
     interval: 5, //dagar emellan?
     householdId: "household1",
   },
@@ -154,7 +155,7 @@ export const tasks: Task[] = [
     title: "Laga middag",
     description: "Laga dagens middag",
     energiWeight: 6,
-    creatingDate: new Date("2023-10-03"),
+    creatingDate: "2023-10-03",
     interval: 1,
     householdId: "household1",
   },
@@ -164,7 +165,7 @@ export const tasks: Task[] = [
     description:
       "Vattna alla blommor i hushållet. Tänk på att vattna orkideerna underifrån!",
     energiWeight: 2,
-    creatingDate: new Date("2023-10-04"),
+    creatingDate: "2023-10-04",
     interval: 4,
     householdId: "household1",
   },
@@ -173,7 +174,7 @@ export const tasks: Task[] = [
     title: "Mata katten",
     description: "Både torr och blötmat!",
     energiWeight: 2,
-    creatingDate: new Date("2023-10-02"), //default blir dagens datum
+    creatingDate: "2023-10-02", //default blir dagens datum
     interval: 1, //dagar emellan?
     householdId: "household1",
   },
@@ -182,7 +183,7 @@ export const tasks: Task[] = [
     title: "Dammsuga",
     description: "Alla ytor, glöm inte under mattorna med!",
     energiWeight: 6,
-    creatingDate: new Date("2023-10-06"), //default blir dagens datum
+    creatingDate: "2023-10-06", //default blir dagens datum
     interval: 6, //dagar emellan?
     householdId: "household1",
   },
@@ -191,7 +192,7 @@ export const tasks: Task[] = [
     title: "Dammsuga",
     description: "Alla ytor, glöm inte under mattorna med!",
     energiWeight: 4,
-    creatingDate: new Date("2023-10-01"), //default blir dagens datum
+    creatingDate: "2023-10-01", //default blir dagens datum
     interval: 3, //dagar emellan?
     householdId: "household2",
   },
@@ -200,7 +201,7 @@ export const tasks: Task[] = [
     title: "Gå ut med hunden",
     description: "Glöm inte bajspåsen!",
     energiWeight: 4,
-    creatingDate: new Date("2023-10-04"), //default blir dagens datum
+    creatingDate: "2023-10-04", //default blir dagens datum
     interval: 1, //dagar emellan?
     householdId: "household2",
   },
@@ -209,7 +210,7 @@ export const tasks: Task[] = [
     title: "Tvätta",
     description: "Läs noga på tvättråden!",
     energiWeight: 2,
-    creatingDate: new Date("2023-10-04"), //default blir dagens datum
+    creatingDate: "2023-10-04", //default blir dagens datum
     interval: 5, //dagar emellan?
     householdId: "household2",
   },
@@ -218,7 +219,7 @@ export const tasks: Task[] = [
     title: "Moppa golvet",
     description: "Moppa alla golvytor",
     energiWeight: 6,
-    creatingDate: new Date("2023-10-02"), //default blir dagens datum
+    creatingDate: "2023-10-02", //default blir dagens datum
     interval: 14, //dagar emellan?
     householdId: "household2",
   },
@@ -227,7 +228,7 @@ export const tasks: Task[] = [
     title: "Handla",
     description: "Betala med mastercardet",
     energiWeight: 8,
-    creatingDate: new Date("2023-10-04"), //default blir dagens datum
+    creatingDate: "2023-10-04", //default blir dagens datum
     interval: 7, //dagar emellan?
     householdId: "household2",
   },
