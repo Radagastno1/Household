@@ -13,6 +13,8 @@ import {
 import { Card, Paragraph, Title } from "react-native-paper";
 import CircleComponent from "../components/CircleComponent";
 import { households } from "../data";
+import { useAppDispatch } from "../store/store";
+import { addTask } from "../store/tasks/taskSlice";
 import { Task } from "../types";
 
 //här skapar man en task som ägare för hushållet
@@ -29,19 +31,25 @@ export default function CreateTaskScreen({ navigation }: any) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
 
+  const dispatch = useAppDispatch();
+
   const intervalData: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   const energyData: number[] = [1, 2, 4, 6, 8];
 
   const handleCreateTask = () => {
-    const newTask: Task = {
-      id: "something",
-      title: title,
-      description: description,
-      energiWeight: selectedEnergy,
-      interval: selectedInterval,
-      creatingDate: new Date(),
-      householdId: householdId,
-    };
+    if (title && description) {
+      const newTask: Task = {
+        id: "something",
+        title: title,
+        description: description,
+        energiWeight: selectedEnergy,
+        interval: selectedInterval,
+        creatingDate: new Date(),
+        householdId: householdId,
+      };
+      dispatch(addTask(newTask));
+    }
+    navigation.navigate("Tab");
   };
 
   return (
@@ -179,12 +187,13 @@ export default function CreateTaskScreen({ navigation }: any) {
           <TouchableOpacity
             style={[styles.button]}
             onPress={() => {
-              navigation.navigate("Tab");
+              handleCreateTask();
             }}
           >
             <Feather name="plus-circle" size={24} color="black" />
             <Text style={styles.buttonText}>Spara</Text>
           </TouchableOpacity>
+
           <TouchableOpacity
             style={[styles.button]}
             onPress={() => {
