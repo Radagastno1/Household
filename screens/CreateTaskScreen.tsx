@@ -11,8 +11,7 @@ import {
   View,
 } from "react-native";
 import { Card, Paragraph, Title } from "react-native-paper";
-import CarouselComponent from "../components/CarouselComponent";
-import { useAppSelector } from "../store/store";
+import CircleComponent from "../components/CircleComponent";
 
 //här skapar man en task som ägare för hushållet
 export default function CreateTaskScreen() {
@@ -20,15 +19,6 @@ export default function CreateTaskScreen() {
   const [selectedValue, setSelectedValue] = useState(7);
 
   const intervalData: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-
-  // const tasks = useAppSelector((state) => state.task);
-  // const firstTask = tasks.tasks[0];
-
-  // const renderIntervalData = ({ item }: { item: number }) => (
-  //   <View style={styles.carouselItem}>
-  //     <Text style={styles.carouselText}>{item}</Text>
-  //   </View>
-  // );
 
   return (
     <KeyboardAvoidingView
@@ -58,23 +48,38 @@ export default function CreateTaskScreen() {
           ></TextInput>
           <Card style={styles.card}>
             <Card.Content style={styles.cardContent}>
-              <Title>Återkommer:</Title>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  backgroundColor: "pink",
+                }}
+              >
+                <View style={{ backgroundColor: "red" }}>
+                  <Title>Återkommer:</Title>
+                </View>
+
+                <View style={{ flexDirection: "row", backgroundColor: "blue" }}>
+                  <Title>Var </Title>
+                  <TouchableOpacity
+                    onPress={() => setIntervalDataPressed(true)}
+                  >
+                    <CircleComponent number={selectedValue} color="lightgrey" />
+                  </TouchableOpacity>
+                  <Title> dag</Title>
+                </View>
+              </View>
+
               <View style={{ flexDirection: "row" }}>
-                <Title>Var </Title>
-                <Title
-                  style={styles.circle}
-                  onPress={() => setIntervalDataPressed(true)}
-                >
-                  {selectedValue}
-                </Title>
-                {intervalDataPressed ? (
-                  <CarouselComponent
-                    data={intervalData}
-                    onSnapToItem={setSelectedValue}
-                    selectedValue={selectedValue}
-                  />
-                ) : null}
-                <Title> dag</Title>
+                {intervalDataPressed
+                  ? intervalData.map((number) => (
+                      <TouchableOpacity
+                        onPress={() => setSelectedValue(number)}
+                      >
+                        <CircleComponent number={number} color="lightgrey" />
+                      </TouchableOpacity>
+                    ))
+                  : null}
               </View>
             </Card.Content>
           </Card>
@@ -136,9 +141,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
   },
   cardContent: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    flexDirection: "column",
     paddingVertical: 10,
   },
   circle: {
