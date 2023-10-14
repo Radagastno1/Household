@@ -42,14 +42,17 @@ export default function CreateTaskScreen({ navigation }: any) {
   const intervalData: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   const energyData: number[] = [1, 2, 4, 6, 8];
 
-  const testEditTask = () => {
-    if (allTasksForHousehold.length >= 5) {
-      const lastTaskInList = allTasksForHousehold[5];
-      lastTaskInList.title = "MATA KATTEN";
-      console.log("last task i listan hete");
-      dispatch(editTask(lastTaskInList));
-    }
-  };
+  //testar så att edit funkar
+  // const testEditTask = () => {
+  //   if (allTasksForHousehold.length >= 5) {
+  //     //I just pick the last one for now, but here it will be whatever task we are on in the detail screen
+  //     const lastTaskInList = allTasksForHousehold[5];
+  //     //here we edit the name for example to MATA KATTEN
+  //     const updatedTask = { ...lastTaskInList, title: "MATA KATTEN" };
+  //     //then dispatch to taskSlice
+  //     dispatch(editTask(updatedTask));
+  //   }
+  // };
 
   const handleCreateTask = () => {
     if (title && description) {
@@ -220,13 +223,13 @@ export default function CreateTaskScreen({ navigation }: any) {
 
         {/* TESTAR BARA ATT SKRIVA UT ALLA TASKS FÖR ETT HUSHÅLL SÅ JAG SER ATT DET FUNKAR*/}
         <View style={{ flexDirection: "column" }}>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={{ padding: 20, backgroundColor: "red" }}
             onPress={() => testEditTask()}
           >
             <Text>Redigera första tasken till att heta MATA KATT</Text>
-          </TouchableOpacity>
-          {allTasksForHousehold
+          </TouchableOpacity> */}
+          {/* {allTasksForHousehold
             ? allTasksForHousehold.map((t) => (
                 <Text key={t.id}>
                   Titel: {t.title}
@@ -237,7 +240,7 @@ export default function CreateTaskScreen({ navigation }: any) {
                   Datum: {t.creatingDate.toString()}
                 </Text>
               ))
-            : null}
+            : null} */}
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
