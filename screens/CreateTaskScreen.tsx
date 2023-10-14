@@ -16,9 +16,12 @@ import CircleComponent from "../components/CircleComponent";
 //här skapar man en task som ägare för hushållet
 export default function CreateTaskScreen() {
   const [intervalDataPressed, setIntervalDataPressed] = useState(false);
+  const [energyDataPressed, setEnergyDataPressed] = useState(false);
   const [selectedValue, setSelectedValue] = useState(7);
+  const [selectedEnergy, setSelectedEnergy] = useState(7);
 
   const intervalData: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  const energyData: number[] = [2, 4, 6, 8, 10];
 
   return (
     <KeyboardAvoidingView
@@ -83,13 +86,42 @@ export default function CreateTaskScreen() {
               </View>
             </Card.Content>
           </Card>
+
           <Card style={styles.card}>
             <Card.Content style={styles.cardContent}>
-              <View>
-                <Title>Värde:</Title>
-                <Paragraph>Hur energikrävande är sysslan?</Paragraph>
+              <View
+                style={{
+                  backgroundColor: "pink",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
+                <View style={{ backgroundColor: "red" }}>
+                  <Title>Värde:</Title>
+                  <Paragraph>Hur energikrävande är sysslan?</Paragraph>
+                </View>
+
+                <View style={{ backgroundColor: "blue" }}>
+                  <TouchableOpacity onPress={() => setEnergyDataPressed(true)}>
+                    <CircleComponent
+                      number={selectedEnergy}
+                      color="lightgrey"
+                    />
+                  </TouchableOpacity>
+                </View>
               </View>
-              <Title style={styles.circle}>2</Title>
+
+              <View style={{ flexDirection: "row" }}>
+                {energyDataPressed
+                  ? energyData.map((number) => (
+                      <TouchableOpacity
+                        onPress={() => setSelectedEnergy(number)}
+                      >
+                        <CircleComponent number={number} color="lightgrey" />
+                      </TouchableOpacity>
+                    ))
+                  : null}
+              </View>
             </Card.Content>
           </Card>
         </View>
@@ -142,6 +174,10 @@ const styles = StyleSheet.create({
   },
   cardContent: {
     flexDirection: "column",
+    paddingVertical: 10,
+  },
+  energuCardContent: {
+    flexDirection: "row",
     paddingVertical: 10,
   },
   circle: {
