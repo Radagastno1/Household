@@ -3,13 +3,18 @@ import { StyleSheet, Text, View } from "react-native";
 
 interface CircleProps {
   number: number;
+  backgroundColor: string;
   color: string;
 }
 
-export default function CircleComponent({ number, color }: CircleProps) {
+export default function CircleComponent({
+  number,
+  backgroundColor,
+  color,
+}: CircleProps) {
   return (
-    <View style={[styles.circle, { backgroundColor: color }]}>
-      <Text style={styles.number}>{number}</Text>
+    <View style={[styles.circle, { backgroundColor: backgroundColor }]}>
+      <Text style={[styles.number, { color: color }]}>{number}</Text>
     </View>
   );
 }
@@ -23,7 +28,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   number: {
-    fontSize: 24,
-    color: "black",
+    fontSize: 18,
   },
 });

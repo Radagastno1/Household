@@ -21,7 +21,7 @@ export default function CreateTaskScreen() {
   const [selectedEnergy, setSelectedEnergy] = useState(7);
 
   const intervalData: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-  const energyData: number[] = [2, 4, 6, 8, 10];
+  const energyData: number[] = [1, 2, 4, 6, 8];
 
   return (
     <KeyboardAvoidingView
@@ -30,7 +30,7 @@ export default function CreateTaskScreen() {
       enabled
     >
       <ScrollView
-        contentContainerStyle={styles.container}
+        contentContainerStyle={styles.scrollViewContainer}
         keyboardShouldPersistTaps="always"
       >
         <View style={styles.container}>
@@ -55,19 +55,22 @@ export default function CreateTaskScreen() {
                 style={{
                   flexDirection: "row",
                   justifyContent: "space-between",
-                  backgroundColor: "pink",
                 }}
               >
-                <View style={{ backgroundColor: "red" }}>
+                <View>
                   <Title>Återkommer:</Title>
                 </View>
 
-                <View style={{ flexDirection: "row", backgroundColor: "blue" }}>
+                <View style={{ flexDirection: "row" }}>
                   <Title>Var </Title>
                   <TouchableOpacity
                     onPress={() => setIntervalDataPressed(true)}
                   >
-                    <CircleComponent number={selectedValue} color="lightgrey" />
+                    <CircleComponent
+                      number={selectedValue}
+                      backgroundColor="red"
+                      color="white"
+                    />
                   </TouchableOpacity>
                   <Title> dag</Title>
                 </View>
@@ -77,12 +80,17 @@ export default function CreateTaskScreen() {
                 {intervalDataPressed
                   ? intervalData.map((number) => (
                       <TouchableOpacity
+                        key={number.toString()}
                         onPress={() => {
                           setSelectedValue(number),
                             setIntervalDataPressed(false);
                         }}
                       >
-                        <CircleComponent number={number} color="lightgrey" />
+                        <CircleComponent
+                          number={number}
+                          backgroundColor="lightgrey"
+                          color="black"
+                        />
                       </TouchableOpacity>
                     ))
                   : null}
@@ -94,17 +102,16 @@ export default function CreateTaskScreen() {
             <Card.Content style={styles.cardContent}>
               <View
                 style={{
-                  backgroundColor: "pink",
                   flexDirection: "row",
                   justifyContent: "space-between",
                 }}
               >
-                <View style={{ backgroundColor: "red" }}>
+                <View>
                   <Title>Värde:</Title>
                   <Paragraph>Hur energikrävande är sysslan?</Paragraph>
                 </View>
 
-                <View style={{ backgroundColor: "blue" }}>
+                <View style={{ justifyContent: "center" }}>
                   <TouchableOpacity
                     onPress={() => {
                       setEnergyDataPressed(true);
@@ -112,7 +119,8 @@ export default function CreateTaskScreen() {
                   >
                     <CircleComponent
                       number={selectedEnergy}
-                      color="lightgrey"
+                      backgroundColor="lightgrey"
+                      color="black"
                     />
                   </TouchableOpacity>
                 </View>
@@ -122,12 +130,17 @@ export default function CreateTaskScreen() {
                 {energyDataPressed
                   ? energyData.map((number) => (
                       <TouchableOpacity
+                        key={number.toString()}
                         onPress={() => {
                           setSelectedEnergy(number),
                             setEnergyDataPressed(false);
                         }}
                       >
-                        <CircleComponent number={number} color="lightgrey" />
+                        <CircleComponent
+                          number={number}
+                          backgroundColor="lightgrey"
+                          color="black"
+                        />
                       </TouchableOpacity>
                     ))
                   : null}
@@ -135,7 +148,8 @@ export default function CreateTaskScreen() {
             </Card.Content>
           </Card>
         </View>
-        <View style={styles.fillOutContainer}></View>
+
+        {/* <View style={styles.fillOutContainer}></View> */}
         <View style={styles.buttonsContainer}>
           <TouchableOpacity style={[styles.button]} onPress={() => {}}>
             <Feather name="plus-circle" size={24} color="black" />
@@ -156,12 +170,15 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   container: {
+    marginTop: 80,
     flex: 1,
-    justifyContent: "space-around",
+    // justifyContent: "space-around",
     padding: 10,
   },
-  fillOutContainer: {
-    flexGrow: 1 / 3,
+  scrollViewContainer: {
+    flexDirection: "column",
+    justifyContent: "space-between",
+    flex: 1,
   },
   input: {
     paddingVertical: 15,
@@ -172,6 +189,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     backgroundColor: "white",
     elevation: 5,
+    marginVertical: 10,
   },
   shadowProp: {
     shadowColor: "#171717",
@@ -181,21 +199,11 @@ const styles = StyleSheet.create({
   },
   card: {
     backgroundColor: "white",
+    marginVertical: 10,
   },
   cardContent: {
     flexDirection: "column",
-    paddingVertical: 10,
-  },
-  energuCardContent: {
-    flexDirection: "row",
-    paddingVertical: 10,
-  },
-  circle: {
-    borderRadius: 50,
-    height: 35,
-    width: 35,
-    backgroundColor: "lightgrey",
-    textAlign: "center",
+    paddingVertical: 15,
   },
   buttonsContainer: {
     flexDirection: "row",
@@ -213,24 +221,5 @@ const styles = StyleSheet.create({
     color: "black",
     fontSize: 16,
     paddingHorizontal: 10,
-  },
-  carouselItem: {
-    backgroundColor: "lightgray",
-    borderRadius: 5,
-    padding: 10,
-    marginLeft: 5,
-    marginRight: 5,
-  },
-  carouselText: {
-    textAlign: "center",
-  },
-  paginationContainer: {
-    paddingTop: 10,
-  },
-  paginationDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    marginHorizontal: 8,
   },
 });
