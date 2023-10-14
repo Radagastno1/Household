@@ -10,6 +10,7 @@ import TopTabNavigator from "./TopTabNavigator";
 const Stack = createNativeStackNavigator();
 
 export default function HomeStackNavigator() {
+    
   return (
     <Stack.Navigator>
       <Stack.Screen
