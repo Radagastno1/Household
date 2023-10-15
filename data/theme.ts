@@ -32,12 +32,12 @@ const theme: Theme = {
   fonts: {
   },
   button: {
-    backgroundColor: 'yellow',
+    backgroundColor: '#FFD700',
     padding: 10,
     alignItems: 'center',
-    margin: 20,
+    margin: 10,
     borderRadius: 10,
-    width: 300,
+    width: 360,
   },
   buttonText: {
     color: 'black',
