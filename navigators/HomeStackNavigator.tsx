@@ -32,6 +32,7 @@ export default function HomeStackNavigator() {
         name="CreateProfile"
         component={CreateProfileScreen}
         options={{ headerShown: false }}
+        initialParams={{ id: "household1" }}
       />
       <Stack.Screen name="Tab" component={TopTabNavigator} />
     </Stack.Navigator>
