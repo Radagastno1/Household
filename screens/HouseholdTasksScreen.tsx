@@ -1,29 +1,44 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { TouchableOpacity, Image, Platform } from "react-native";
+import { TouchableOpacity, Image, Platform, ScrollView } from "react-native";
 import { Appbar, Card, Text, Button } from "react-native-paper";
 import { RootStackParamList } from "../navigators/RootNavigator";
 import { View, StyleSheet } from "react-native";
-import { profiles } from "../data/index";
+import { profiles, tasks } from "../data/index";
 import { Profile } from "../types";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { TabBar, TabView } from "react-native-tab-view";
-import { AntDesign } from '@expo/vector-icons';
+import { AntDesign } from "@expo/vector-icons";
+import { households } from "../data";
+import { useAppDispatch, useAppSelector } from "../store/store";
+import { filterTaskListByHouseId } from "../store/tasks/taskSlice";
+
 // ska knna gå till lägg till ny task OM du är ägare för hushålllet
 //här listas alla sysslor i hushållet. nullas från avatarer varje midnatt.
 //vilka som gjort sysslan ska visas bredvid sysslan
 //hur många dagar sedan den gjordes
 //samt om den är försenad visa siffran med röd färg
 
-export default function HouseholdTasksScreen(
-  { navigation }: any,
-  profileId: string,
-) {
+export default function HouseholdTasksScreen({ navigation }: any) {
+  const [profileId, setProfileId] = useState("profile6");
+  // Use useSelector to access the profiles
+  const profile = profiles.find((p) => p.id == profileId);
+  const household = households.find((h) => h.id == profile?.householdId);
+  const taskSlice = useAppSelector((state) => state.task);
+  const dispatch = useAppDispatch();
+
+  const isOwner = profile?.isOwner;
+  useEffect(() => {
+    if (profile && household) {
+      dispatch(filterTaskListByHouseId({ tasks, household_Id: household?.id }));
+    }
+  }, [dispatch, profile, household]);
+
   return (
     <View style={styles.container}>
       <Appbar.Header style={styles.customHeader}>
         {/* <Appbar.BackAction onPress={_backHome} /> */}
         <View style={styles.title}>
-          <Appbar.Content title="Househållet Namn" />
+          <Appbar.Content title={household?.name} />
         </View>
         <View style={styles.imageContainer}>
           <Appbar.Action
@@ -37,51 +52,58 @@ export default function HouseholdTasksScreen(
           />
         </View>
       </Appbar.Header>
+      <ScrollView
+        style={
+          isOwner ? styles.scrollContainerOwner : styles.scrollContainerNonOwner
+        }
+      >
+        {taskSlice.tasks.map((task) => (
+          <Card key={task.id} style={styles.card}>
+            <View style={styles.taskItem}>
+              <View>
+                <Text variant="titleLarge">{task.title}</Text>
+              </View>
+              <View>
+                <Text variant="bodyMedium">avatarer1</Text>
+              </View>
+            </View>
+          </Card>
+        ))}
 
-      <Card style={styles.card}>
-        <View style={styles.taskItem}>
-          <View>
-            <Text variant="titleLarge">Syssla1</Text>
+        <Card style={styles.card}>
+          <View style={styles.taskItem}>
+            <View>
+              <Text variant="titleLarge">test</Text>
+            </View>
+            <View>
+              <Text variant="bodyMedium">avatarer1</Text>
+            </View>
           </View>
-          <View>
-            <Text variant="bodyMedium">avatarer1</Text>
+        </Card>
+        <Card style={styles.card}>
+          <View style={styles.taskItem}>
+            <View>
+              <Text variant="titleLarge">test</Text>
+            </View>
+            <View>
+              <Text variant="bodyMedium">avatarer1</Text>
+            </View>
           </View>
-        </View>
-      </Card>
-      <Card style={styles.card}>
-        <View style={styles.taskItem}>
-          <View>
-            <Text variant="titleLarge">Syssla2</Text>
-          </View>
-          <View>
-            <Text variant="bodyMedium">avatarer2</Text>
-          </View>
-        </View>
-      </Card>
-      <Card style={styles.card}>
-        <View style={styles.taskItem}>
-          <View>
-            <Text variant="titleLarge">Syssla3</Text>
-          </View>
-          <View>
-            <Text variant="bodyMedium">avatarer3</Text>
-          </View>
-        </View>
-      </Card>
+        </Card>
+      </ScrollView>
       <View style={styles.buttonContainer}>
-        {/* {profile.isOwner &&( */}
-       
-        <Button
-           icon={({ size, color }) => (
-            <AntDesign name="pluscircleo" size={20} color="black" />
-          )}
-          mode="outlined"
-          onPress={() => console.log("Lägg Till")}
-          style={styles.button}
-        >
-          Lägg Till
-        </Button>
-        {/* )} */}
+        {isOwner && (
+          <Button
+            icon={({ size, color }) => (
+              <AntDesign name="pluscircleo" size={20} color="black" />
+            )}
+            mode="outlined"
+            onPress={() => navigation.navigate("HandleTask")}
+            style={styles.button}
+          >
+            Lägg Till
+          </Button>
+        )}
       </View>
     </View>
   );
@@ -99,6 +121,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     alignContent: "center",
+  },
+  scrollContainerNonOwner: {
+    flex: 1,
+    maxHeight: "100%", // Max height for non-owners
+  },
+  scrollContainerOwner: {
+    flex: 1,
+    maxHeight: "80%",
   },
   imageContainer: {
     marginBottom: 20,
@@ -132,5 +162,6 @@ const styles = StyleSheet.create({
   button: {
     height: 40,
     width: 120,
+    borderColor: "black",
   },
 });

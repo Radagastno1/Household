@@ -1,13 +1,20 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { Task } from "../../types";
-import { tasks } from "../../data";
+import { Task, TaskCompletion } from "../../types";
+import { taskCompletions, tasks } from "../../data";
+
+
 
 interface TaskState {
   tasks: Task[];
 }
+interface TaskCompletionState{
+    taskCompletions:TaskCompletion[];
+}
 export const initialState: TaskState = {
   tasks: tasks,
 };
+
+
 
 const taskSlice = createSlice({
   name: "task",
@@ -25,8 +32,12 @@ const taskSlice = createSlice({
         state.tasks[editedTaskIndex] = action.payload;
       }
     },
+    filterTaskListByHouseId: (state, action: PayloadAction<{ tasks: Task[]; household_Id: string }>) => {
+        const { tasks, household_Id } = action.payload;
+        state.tasks = tasks.filter((task) => task.householdId === household_Id);
+      },
   },
 });
 
-export const { addTask, editTask } = taskSlice.actions;
+export const { addTask, editTask,filterTaskListByHouseId } = taskSlice.actions;
 export const taskReducer = taskSlice.reducer;
