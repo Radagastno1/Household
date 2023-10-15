@@ -170,5 +170,6 @@ const styles = StyleSheet.create({
     height: 40,
     width: 120,
     borderColor: "black",
+    backgroundColor: "white",
   },
 });
