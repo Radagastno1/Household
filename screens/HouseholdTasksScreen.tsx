@@ -1,16 +1,13 @@
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { TouchableOpacity, Image, Platform, ScrollView } from "react-native";
+import {  Image, ScrollView } from "react-native";
 import { Appbar, Card, Text, Button } from "react-native-paper";
-import { RootStackParamList } from "../navigators/RootNavigator";
 import { View, StyleSheet } from "react-native";
 import { profiles, tasks } from "../data/index";
-import { Profile } from "../types";
 import React, { useEffect, useState } from "react";
-import { TabBar, TabView } from "react-native-tab-view";
 import { AntDesign } from "@expo/vector-icons";
 import { households } from "../data";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { filterTaskListByHouseId } from "../store/tasks/taskSlice";
+import { useNavigation } from "@react-navigation/native";
 
 // ska knna gå till lägg till ny task OM du är ägare för hushålllet
 //här listas alla sysslor i hushållet. nullas från avatarer varje midnatt.
@@ -32,6 +29,12 @@ export default function HouseholdTasksScreen({ navigation }: any) {
       dispatch(filterTaskListByHouseId({ tasks, household_Id: household?.id }));
     }
   }, [dispatch, profile, household]);
+
+
+
+  const handleTaskPress = (taskId:string) => {
+    navigation.navigate('ShowTask', { taskId });
+  };
 
   return (
     <View style={styles.container}>
@@ -58,7 +61,11 @@ export default function HouseholdTasksScreen({ navigation }: any) {
         }
       >
         {taskSlice.tasks.map((task) => (
-          <Card key={task.id} style={styles.card}>
+          <Card 
+          key={task.id} 
+          style={styles.card}
+          onPress={()=>handleTaskPress(task.id)}
+          >
             <View style={styles.taskItem}>
               <View>
                 <Text variant="titleLarge">{task.title}</Text>

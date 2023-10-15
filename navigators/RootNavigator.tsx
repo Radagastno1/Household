@@ -17,7 +17,7 @@ export type RootStackParamList = {
   Auth: typeof AuthNavigator;
   HomeStack: typeof HomeStackNavigator;
   HandleTask: undefined;
-  ShowTask: undefined;
+  ShowTask: {taskId:string};
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
