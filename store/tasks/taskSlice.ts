@@ -32,11 +32,12 @@ const taskSlice = createSlice({
         state.tasks[editedTaskIndex] = action.payload;
       }
     },
-    taskList:(state,action: PayloadAction<Task[]>)=>{
-      state.tasks = action.payload
-    },
+    filterTaskListByHouseId: (state, action: PayloadAction<{ tasks: Task[]; household_Id: string }>) => {
+        const { tasks, household_Id } = action.payload;
+        state.tasks = tasks.filter((task) => task.householdId === household_Id);
+      },
   },
 });
 
-export const { addTask, editTask,taskList } = taskSlice.actions;
+export const { addTask, editTask,filterTaskListByHouseId } = taskSlice.actions;
 export const taskReducer = taskSlice.reducer;

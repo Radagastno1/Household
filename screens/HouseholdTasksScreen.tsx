@@ -3,54 +3,35 @@ import { TouchableOpacity, Image, Platform, ScrollView } from "react-native";
 import { Appbar, Card, Text, Button } from "react-native-paper";
 import { RootStackParamList } from "../navigators/RootNavigator";
 import { View, StyleSheet } from "react-native";
-import { profiles } from "../data/index";
+import { profiles, tasks } from "../data/index";
 import { Profile } from "../types";
 import React, { useEffect, useState } from "react";
 import { TabBar, TabView } from "react-native-tab-view";
-import { AntDesign } from '@expo/vector-icons';
+import { AntDesign } from "@expo/vector-icons";
 import { households } from "../data";
 import { useAppDispatch, useAppSelector } from "../store/store";
-import { taskList } from "../store/tasks/taskSlice";
+import { filterTaskListByHouseId } from "../store/tasks/taskSlice";
+
 // ska knna gå till lägg till ny task OM du är ägare för hushålllet
 //här listas alla sysslor i hushållet. nullas från avatarer varje midnatt.
 //vilka som gjort sysslan ska visas bredvid sysslan
 //hur många dagar sedan den gjordes
 //samt om den är försenad visa siffran med röd färg
 
-export default function HouseholdTasksScreen(
-  { navigation }: any,
- 
-) {
-    const [profileId, setProfileId] = useState('profile1');
-    const profile = profiles.find((p)=>p.id == profileId);
-     const household = households.find((h)=>h.id == profile?.householdId)
-     const taskSlice = useAppSelector((state) => state.task);
-     const allTasksForHousehold = taskSlice.tasks.filter(
-       (t) => t.householdId === household?.id,
-     );
-     const dispatch = useAppDispatch();
-      // Use useSelector to access the profiles in your Redux state
- 
+export default function HouseholdTasksScreen({ navigation }: any) {
+  const [profileId, setProfileId] = useState("profile6");
+  // Use useSelector to access the profiles
+  const profile = profiles.find((p) => p.id == profileId);
+  const household = households.find((h) => h.id == profile?.householdId);
+  const taskSlice = useAppSelector((state) => state.task);
+  const dispatch = useAppDispatch();
 
-  // Find the specific profile by profileId
- 
-
-//   useEffect(() => {
-//     if (profile && household) {
-//       // Dispatch the taskList action to fetch tasks and update the store
-//       // Replace with the actual logic to fetch tasks for the specific profile
-//     //   const fetchedTasks = yourApiCallToFetchTasksForProfile(profileId);
-//       dispatch(taskList(allTasksForHousehold));
-//     }
-//   }, [dispatch, profile, profileId]);
-
-
-    //  useEffect(() => {
-    //     // Dispatch the taskList action to fetch tasks and update the store
-    //     // Replace with the actual logic to fetch tasks from your API or wherever
-    //     const fetchedTasks = yourApiCallToFetchTasks();
-    //     dispatch(taskList(fetchedTasks));
-    //   }, [dispatch]);
+  const isOwner = profile?.isOwner;
+  useEffect(() => {
+    if (profile && household) {
+      dispatch(filterTaskListByHouseId({ tasks, household_Id: household?.id }));
+    }
+  }, [dispatch, profile, household]);
 
   return (
     <View style={styles.container}>
@@ -71,36 +52,58 @@ export default function HouseholdTasksScreen(
           />
         </View>
       </Appbar.Header>
-      <ScrollView style={styles.scrollContainer}>
-{allTasksForHousehold.map((task)=>(
-    <Card style={styles.card}>
-        <View style={styles.taskItem}>
-          <View>
-            <Text variant="titleLarge">{task.title}</Text>
+      <ScrollView
+        style={
+          isOwner ? styles.scrollContainerOwner : styles.scrollContainerNonOwner
+        }
+      >
+        {taskSlice.tasks.map((task) => (
+          <Card key={task.id} style={styles.card}>
+            <View style={styles.taskItem}>
+              <View>
+                <Text variant="titleLarge">{task.title}</Text>
+              </View>
+              <View>
+                <Text variant="bodyMedium">avatarer1</Text>
+              </View>
+            </View>
+          </Card>
+        ))}
+
+        <Card style={styles.card}>
+          <View style={styles.taskItem}>
+            <View>
+              <Text variant="titleLarge">test</Text>
+            </View>
+            <View>
+              <Text variant="bodyMedium">avatarer1</Text>
+            </View>
           </View>
-          <View>
-            <Text variant="bodyMedium">avatarer1</Text>
+        </Card>
+        <Card style={styles.card}>
+          <View style={styles.taskItem}>
+            <View>
+              <Text variant="titleLarge">test</Text>
+            </View>
+            <View>
+              <Text variant="bodyMedium">avatarer1</Text>
+            </View>
           </View>
-        </View>
-      </Card>
-))}
- </ScrollView>     
-      
-      
+        </Card>
+      </ScrollView>
       <View style={styles.buttonContainer}>
-        {/* {profile.isOwner &&( */}
-       
-        <Button
-           icon={({ size, color }) => (
-            <AntDesign name="pluscircleo" size={20} color="black" />
-          )}
-          mode="outlined"
-          onPress={() => navigation.navigate("HandleTask")}
-          style={styles.button}
-        >
-          Lägg Till
-        </Button>
-        {/* )} */}
+        {isOwner && (
+          <Button
+            icon={({ size, color }) => (
+              <AntDesign name="pluscircleo" size={20} color="black" />
+            )}
+            mode="outlined"
+            onPress={() => navigation.navigate("HandleTask")}
+            style={styles.button}
+          >
+            Lägg Till
+          </Button>
+        )}
       </View>
     </View>
   );
@@ -119,9 +122,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignContent: "center",
   },
-  scrollContainer: {
-    // Add any styling for the ScrollView container here
+  scrollContainerNonOwner: {
     flex: 1,
+    maxHeight: "100%", // Max height for non-owners
+  },
+  scrollContainerOwner: {
+    flex: 1,
+    maxHeight: "80%",
   },
   imageContainer: {
     marginBottom: 20,
@@ -155,5 +162,6 @@ const styles = StyleSheet.create({
   button: {
     height: 40,
     width: 120,
+    borderColor: "black",
   },
 });
