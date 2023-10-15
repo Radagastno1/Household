@@ -12,6 +12,7 @@ export const initialState: ProfileState = {
     userId: "",
     householdId: "",
     avatar: "",
+    avatarsColors: "",
     isOwner: false,
     isActive: false,
   },
