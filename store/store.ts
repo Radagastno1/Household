@@ -4,13 +4,15 @@ import { profileReducer } from "./profile/profileSlice";
 import { taskReducer } from "./tasks/taskSlice";
 import { userReducer } from "./user/userSlice";
 import { taskCompletionReducer } from "./taskCompletionSlice";
+import { userAccountReducer } from "./user/userAccountSlice";
+
 
 const store = configureStore({
   reducer: {
     task: taskReducer,
-    user: userReducer,
     profile: profileReducer,
     taskCompletion: taskCompletionReducer,
+    userAccount: userAccountReducer,
   },
 });
 
