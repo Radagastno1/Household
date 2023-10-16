@@ -6,9 +6,11 @@ import ProfileAccountScreen from "../screens/ProfileAccountScreen";
 import HandleHouseholdScreen from "../screens/HandleHouseholdScreen";
 import CreateProfileScreen from "../screens/CreateProfileScreen";
 import TopTabNavigator from "./TopTabNavigator";
+import CustomHeader from "../shared/CustomHeader";
 
 const Stack = createNativeStackNavigator();
 
+  
 export default function HomeStackNavigator() {
     
   return (
@@ -34,7 +36,12 @@ export default function HomeStackNavigator() {
         options={{ headerShown: false }}
         initialParams={{ id: "household1" }}
       />
-      <Stack.Screen name="Tab" component={TopTabNavigator} />
+      <Stack.Screen name="Tab" component={TopTabNavigator} 
+      options={({route,navigation})=>({
+        header: () => <CustomHeader title={(route.params as { name?: string })?.name || "Custom Header"} navigation={navigation.navigation}/>,
+      })}
+      />
+        
     </Stack.Navigator>
   );
 }

@@ -40,8 +40,8 @@ export default function HouseholdTasksScreen({ navigation }: any) {
 
   return (
     <View style={styles.container}>
-      <Appbar.Header style={styles.customHeader}>
-        {/* <Appbar.BackAction onPress={_backHome} /> */}
+      {/* <Appbar.Header style={styles.customHeader}>
+        <Appbar.BackAction onPress={_backHome} />
         <View style={styles.title}>
           <Appbar.Content title={household?.name} />
         </View>
@@ -56,7 +56,7 @@ export default function HouseholdTasksScreen({ navigation }: any) {
             onPress={() => navigation.navigate("HouseholdAccount")}
           />
         </View>
-      </Appbar.Header>
+      </Appbar.Header> */}
       <ScrollView
         style={
           isOwner ? styles.scrollContainerOwner : styles.scrollContainerNonOwner
