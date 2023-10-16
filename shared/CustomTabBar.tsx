@@ -57,9 +57,10 @@
 
 // export default CustomTabBar;
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity,} from 'react-native';
 import { TabBar } from 'react-native-tab-view';
 import { AntDesign } from '@expo/vector-icons';
+import {TabRouterOptions} from '@react-navigation/native';
 
 
 
@@ -75,10 +76,32 @@ const CustomTabBar: React.FC<CustomTabBarProps> = (props) => {
   const activeRoute = state.routes[state.index];
   const tabLabel = descriptors[activeRoute.key].options.tabBarLabel || activeRoute.name;
 
+  const goBack = () => {
+    // Navigate to the previous screen when the left arrow is pressed
+    const currentIndex = state.routes.findIndex((route: { key: any; }) => route.key === activeRoute.key);
+    if (currentIndex > 0) {
+      const prevRoute = state.routes[currentIndex - 1];
+      navigation.navigate(prevRoute.name);
+    }else{navigation.navigate("ProfileAccount")}
+    
+  };
+
+  const goForward = () => {
+    // Navigate to the next screen when the right arrow is pressed
+    const currentIndex = state.routes.findIndex((route: { key: any; }) => route.key === activeRoute.key);
+    if (currentIndex < state.routes.length - 1) {
+      const nextRoute = state.routes[currentIndex + 1];
+      navigation.navigate(nextRoute.name);
+    }
+  };
+
+
+
   return (
     <View style={styles.container}>
           <TouchableOpacity 
-          onPress={() => navigation.navigate("ProfileAccount")}>
+        //   onPress={() => navigation.navigate("ProfileAccount")}
+        onPress={goBack}>
             
           <AntDesign name="arrowleft" size={24} color="black" />
       </TouchableOpacity>
