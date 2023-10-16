@@ -71,6 +71,11 @@ export default function TaskDetailScreen({ navigation, route }: any) {
           </View>
         </View>
       </View>
+      <View>
+        <View style={styles.avatarContainer}>
+          <Text >Avatar</Text>
+        </View>
+      </View>
       <View style={styles.klarButtonContainer}>
         <Button
           mode="text"
@@ -78,6 +83,9 @@ export default function TaskDetailScreen({ navigation, route }: any) {
           style={[styles.klarButton, theme.button]}
         >
           <Text style={[styles.klarButton, theme.buttonText]}>Klar</Text>
+        </Button>
+        <Button mode="text" onPress={() => navigation.navigate("Tab")}>
+          <Text style={[styles.klarButton, theme.buttonText]}>Till Tasks</Text>
         </Button>
       </View>
     </View>
@@ -122,25 +130,27 @@ const styles = StyleSheet.create({
 
   intervalValueContainer: {
     flexDirection: "row",
-    flex: 1,
-    justifyContent:"space-between"
+    justifyContent: "space-between",
   },
-  intervalContainer:{
-marginRight:10,
-alignItems:"center"
+  intervalContainer: {
+    marginRight: 10,
+    alignItems: "center",
   },
   circle: {
     width: 60,
     height: 60,
-    borderRadius: 50, 
-    backgroundColor: "lightgrey", 
+    borderRadius: 50,
+    backgroundColor: "lightgrey",
     alignItems: "center",
     justifyContent: "center",
     margin: 10,
   },
-  intervalValueText: {
-
+  intervalValueText: {},
+  avatarContainer: {
+    marginBottom: 40,
+    textAlign: "left",
   },
+  avatarText: {},
   changeButton: {
     height: 40,
     width: 100,

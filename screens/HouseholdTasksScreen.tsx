@@ -7,7 +7,7 @@ import { AntDesign } from "@expo/vector-icons";
 import { households } from "../data";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { filterTaskListByHouseId } from "../store/tasks/taskSlice";
-import { useNavigation } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 
 // ska knna gå till lägg till ny task OM du är ägare för hushålllet
 //här listas alla sysslor i hushållet. nullas från avatarer varje midnatt.
@@ -24,11 +24,13 @@ export default function HouseholdTasksScreen({ navigation }: any) {
   const dispatch = useAppDispatch();
 
   const isOwner = profile?.isOwner;
+  const isFocused = useIsFocused();
   useEffect(() => {
+    if (isFocused) {
     if (profile && household) {
       dispatch(filterTaskListByHouseId({ tasks, household_Id: household?.id }));
-    }
-  }, [dispatch, profile, household]);
+    }}
+  }, [dispatch, isFocused,]);
 
 
 
@@ -121,13 +123,15 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   customHeader: {
-    height: 40,
+    height: 50,
   },
   title: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "center",
-    alignContent: "center",
+    marginTop: 10,
+  },
+  imageContainer: {
+    marginBottom: 10,
   },
   scrollContainerNonOwner: {
     flex: 1,
@@ -137,9 +141,7 @@ const styles = StyleSheet.create({
     flex: 1,
     maxHeight: "80%",
   },
-  imageContainer: {
-    marginBottom: 20,
-  },
+  
   beeHomeImage: {
     width: 20,
     height: 30,
