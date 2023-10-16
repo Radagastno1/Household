@@ -5,21 +5,8 @@ import { taskCompletions, tasks } from "../../data";
 interface TaskState {
   tasks: Task[];
 }
-interface TaskCompletionState {
-  taskCompletions: TaskCompletion[];
-}
+
 export const initialState: TaskState = {
-  tasks: [
-    {
-      id: "task1",
-      title: "Damma vardagsrummet",
-      description: "Damma vardagsrummets ytor",
-      energiWeight: 4,
-      creatingDate: new Date("2023-10-01").toISOString(),
-      interval: 5,
-      householdId: "household1",
-    },
-  ],
   tasks: tasks,
 };
 
