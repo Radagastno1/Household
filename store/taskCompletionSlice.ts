@@ -20,14 +20,14 @@ const taskCompletionSlice = createSlice({
       //en task id och en profile id  måste komma in här
       //en taskCompletion - objekt skapas (id, taskId, profileId, completionDate)
       //man kan ju också skapa objektet utifrån om man vill det hellre?
-
+      console.log("profile id som kommer in:", action.payload.profileId);
       const todaysDate = new Date();
 
       const newTaskCompletion: TaskCompletion = {
         id: todaysDate.getUTCMilliseconds.toString().slice(-4),
         taskId: action.payload.taskId,
         profileId: action.payload.profileId,
-        completionDate: new Date(),
+        completionDate: new Date().toISOString(),
       };
 
       state.taskCompletions.push(newTaskCompletion);

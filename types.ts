@@ -38,7 +38,8 @@ export interface TaskCompletion {
   id: string;
   taskId: string;
   profileId: string;
-  completionDate: Date;
+  // completionDate: Date;
+  completionDate: string;
 }
 
 // Show how to make a day function work between task-data and taskCompletion-data
