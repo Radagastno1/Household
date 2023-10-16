@@ -36,13 +36,13 @@ export default function HomeStackNavigator() {
       <Stack.Screen
         name="Tab"
         component={TopTabNavigator}
-        options={({ route, navigation }) => ({
+        options={({ route, navigation}) => ({
           header: () => (
             <CustomHeader
               title={
                 (route.params as { name?: string })?.name || "Custom Header"
               }
-              navigation={navigation.navigation}
+              navigation={navigation}
             />
           ),
         })}
