@@ -1,12 +1,14 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { TaskCompletion } from "../types";
+import { Task, TaskCompletion } from "../types";
+import { useAppSelector } from "./store";
+import { taskCompletions } from "../data";
 
 interface TaskCompletionState {
   taskCompletions: TaskCompletion[];
 }
 
 const initialState: TaskCompletionState = {
-  taskCompletions: [],
+  taskCompletions: taskCompletions,
 };
 
 const taskCompletionSlice = createSlice({
