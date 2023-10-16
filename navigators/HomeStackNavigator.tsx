@@ -10,6 +10,7 @@ import TopTabNavigator from "./TopTabNavigator";
 const Stack = createNativeStackNavigator();
 
 export default function HomeStackNavigator() {
+    
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -31,6 +32,7 @@ export default function HomeStackNavigator() {
         name="CreateProfile"
         component={CreateProfileScreen}
         options={{ headerShown: false }}
+        initialParams={{ id: "household1" }}
       />
       <Stack.Screen name="Tab" component={TopTabNavigator} />
     </Stack.Navigator>

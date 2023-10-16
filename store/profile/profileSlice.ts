@@ -12,6 +12,7 @@ export const initialState: ProfileState = {
     userId: "",
     householdId: "",
     avatar: "",
+    avatarsColors: "",
     isOwner: false,
     isActive: false,
   },
@@ -24,6 +25,7 @@ const profileSlice = createSlice({
     setProfile: (state, action: PayloadAction<Profile>) => {
       state.profile = action.payload;
     },
+    
   },
 });
 

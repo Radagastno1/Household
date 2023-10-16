@@ -4,9 +4,6 @@ import { profileReducer } from "./profile/profileSlice";
 import { taskReducer } from "./tasks/taskSlice";
 import { userAccountReducer } from "./user/userAccountSlice";
 
-// import { balanceReducer } from "./balanceSlice";
-// import { userReducer } from "./userSlice";
-
 const store = configureStore({
   reducer: {
     task: taskReducer,

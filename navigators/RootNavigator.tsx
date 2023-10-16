@@ -10,13 +10,14 @@ import TaskDetailScreen from "../screens/TaskDetailScreen";
 import HouseholdAccountScreen from "../screens/HouseholdAccountScreen";
 import AuthNavigator from "./AuthNavigator";
 import HomeStackNavigator from "./HomeStackNavigator";
+import { TabBar } from 'react-native-tab-view';
 
 //kolla om dela upp navigationen, från profileaccount ny stack?
 export type RootStackParamList = {
   Auth: typeof AuthNavigator;
   HomeStack: typeof HomeStackNavigator;
   HandleTask: undefined;
-  ShowTask: undefined;
+  ShowTask: {taskId:string};
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
