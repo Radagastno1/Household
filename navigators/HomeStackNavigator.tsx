@@ -1,4 +1,3 @@
-import { View, Text } from "react-native";
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import HouseholdAccountScreen from "../screens/HouseholdAccountScreen";
@@ -10,9 +9,7 @@ import CustomHeader from "../shared/CustomHeader";
 
 const Stack = createNativeStackNavigator();
 
-  
 export default function HomeStackNavigator() {
-    
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -36,12 +33,20 @@ export default function HomeStackNavigator() {
         options={{ headerShown: false }}
         initialParams={{ id: "household1" }}
       />
-      <Stack.Screen name="Tab" component={TopTabNavigator} 
-      options={({route,navigation})=>({
-        header: () => <CustomHeader title={(route.params as { name?: string })?.name || "Custom Header"} navigation={navigation.navigation}/>,
-      })}
+      <Stack.Screen
+        name="Tab"
+        component={TopTabNavigator}
+        options={({ route, navigation }) => ({
+          header: () => (
+            <CustomHeader
+              title={
+                (route.params as { name?: string })?.name || "Custom Header"
+              }
+              navigation={navigation.navigation}
+            />
+          ),
+        })}
       />
-        
     </Stack.Navigator>
   );
 }

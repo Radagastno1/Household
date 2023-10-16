@@ -8,12 +8,8 @@ import { RootStackParamList } from "../navigators/RootNavigator";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { findTaskById } from "../store/tasks/taskSlice";
-import { AntDesign } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
-// type Props = {
-// navigation: NativeStackScreenProps<RootStackParamList, "ShowTask">;
-// route: RouteProp<RootStackParamList, "ShowTask">;
-// }
+
 export default function TaskDetailScreen({ navigation, route }: any) {
   const { theme } = useTheme();
   const { taskId } = route.params;
@@ -73,7 +69,7 @@ export default function TaskDetailScreen({ navigation, route }: any) {
       </View>
       <View>
         <View style={styles.avatarContainer}>
-          <Text >Avatar</Text>
+          <Text>Avatar</Text>
         </View>
       </View>
       <View style={styles.klarButtonContainer}>

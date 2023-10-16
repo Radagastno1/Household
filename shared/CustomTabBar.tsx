@@ -56,13 +56,11 @@
 // });
 
 // export default CustomTabBar;
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity,} from 'react-native';
-import { TabBar } from 'react-native-tab-view';
-import { AntDesign } from '@expo/vector-icons';
-import {TabRouterOptions} from '@react-navigation/native';
-
-
+import React from "react";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { TabBar } from "react-native-tab-view";
+import { AntDesign } from "@expo/vector-icons";
+import { TabRouterOptions } from "@react-navigation/native";
 
 interface CustomTabBarProps {
   state: any;
@@ -74,44 +72,44 @@ interface CustomTabBarProps {
 const CustomTabBar: React.FC<CustomTabBarProps> = (props) => {
   const { state, descriptors, navigation, position } = props;
   const activeRoute = state.routes[state.index];
-  const tabLabel = descriptors[activeRoute.key].options.tabBarLabel || activeRoute.name;
+  const tabLabel =
+    descriptors[activeRoute.key].options.tabBarLabel || activeRoute.name;
 
   const goBack = () => {
     // Navigate to the previous screen when the left arrow is pressed
-    const currentIndex = state.routes.findIndex((route: { key: any; }) => route.key === activeRoute.key);
+    const currentIndex = state.routes.findIndex(
+      (route: { key: any }) => route.key === activeRoute.key,
+    );
     if (currentIndex > 0) {
       const prevRoute = state.routes[currentIndex - 1];
       navigation.navigate(prevRoute.name);
-    }else{navigation.navigate("ProfileAccount")}
-    
+    } else {
+      navigation.navigate("ProfileAccount");
+    }
   };
 
   const goForward = () => {
-    // Navigate to the next screen when the right arrow is pressed
-    const currentIndex = state.routes.findIndex((route: { key: any; }) => route.key === activeRoute.key);
+    const currentIndex = state.routes.findIndex(
+      (route: { key: any }) => route.key === activeRoute.key,
+    );
     if (currentIndex < state.routes.length - 1) {
       const nextRoute = state.routes[currentIndex + 1];
       navigation.navigate(nextRoute.name);
     }
   };
 
-
-
   return (
     <View style={styles.container}>
-          <TouchableOpacity 
-        //   onPress={() => navigation.navigate("ProfileAccount")}
-        onPress={goBack}>
-            
-          <AntDesign name="arrowleft" size={24} color="black" />
+      <TouchableOpacity
+        onPress={goBack}
+      >
+        <AntDesign name="arrowleft" size={24} color="black" />
       </TouchableOpacity>
       <View style={[styles.tab, styles.activeTab]}>
         <Text style={styles.tabText}>{tabLabel}</Text>
       </View>
-      <TouchableOpacity 
-          onPress={() => navigation.navigate("Stat1")}>
-            <AntDesign name="arrowright" size={24} color="black" />
-            
+      <TouchableOpacity onPress={goForward}>
+        <AntDesign name="arrowright" size={24} color="black" />
       </TouchableOpacity>
     </View>
   );
@@ -119,26 +117,24 @@ const CustomTabBar: React.FC<CustomTabBarProps> = (props) => {
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
-    height:50,
-    alignItems:"center",
-    justifyContent:"center",
-    marginLeft:10,
-    marginRight:10,
+    flexDirection: "row",
+    height: 50,
+    alignItems: "center",
+    justifyContent: "center",
+    marginLeft: 10,
+    marginRight: 10,
   },
   tab: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    height:"100%"
+    justifyContent: "center",
+    alignItems: "center",
+    height: "100%",
   },
-  activeTab: {
-   
-  },
+  activeTab: {},
   tabText: {
-    color: 'black',
-    fontWeight:"bold",
-    fontSize:15,
+    color: "black",
+    fontWeight: "bold",
+    fontSize: 15,
   },
 });
 

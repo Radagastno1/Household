@@ -1,5 +1,5 @@
-import {  Image, ScrollView } from "react-native";
-import { Appbar, Card, Text, Button } from "react-native-paper";
+import { ScrollView } from "react-native";
+import { Card, Text, Button } from "react-native-paper";
 import { View, StyleSheet } from "react-native";
 import { profiles, tasks } from "../data/index";
 import React, { useEffect, useState } from "react";
@@ -7,7 +7,7 @@ import { AntDesign } from "@expo/vector-icons";
 import { households } from "../data";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { filterTaskListByHouseId } from "../store/tasks/taskSlice";
-import { useIsFocused, useNavigation } from "@react-navigation/native";
+import { useIsFocused } from "@react-navigation/native";
 
 // ska knna gå till lägg till ny task OM du är ägare för hushålllet
 //här listas alla sysslor i hushållet. nullas från avatarer varje midnatt.
@@ -27,46 +27,30 @@ export default function HouseholdTasksScreen({ navigation }: any) {
   const isFocused = useIsFocused();
   useEffect(() => {
     if (isFocused) {
-    if (profile && household) {
-      dispatch(filterTaskListByHouseId({ tasks, household_Id: household?.id }));
-    }}
-  }, [dispatch, isFocused,]);
+      if (profile && household) {
+        dispatch(
+          filterTaskListByHouseId({ tasks, household_Id: household?.id }),
+        );
+      }
+    }
+  }, [dispatch, isFocused]);
 
-
-
-  const handleTaskPress = (taskId:string) => {
-    navigation.navigate('ShowTask', { taskId });
+  const handleTaskPress = (taskId: string) => {
+    navigation.navigate("ShowTask", { taskId });
   };
 
   return (
     <View style={styles.container}>
-      {/* <Appbar.Header style={styles.customHeader}>
-        <Appbar.BackAction onPress={_backHome} />
-        <View style={styles.title}>
-          <Appbar.Content title={household?.name} />
-        </View>
-        <View style={styles.imageContainer}>
-          <Appbar.Action
-            icon={({ size, color }) => (
-              <Image
-                source={require("../assets/bee-home.png")}
-                style={styles.beeHomeImage}
-              />
-            )}
-            onPress={() => navigation.navigate("HouseholdAccount")}
-          />
-        </View>
-      </Appbar.Header> */}
       <ScrollView
         style={
           isOwner ? styles.scrollContainerOwner : styles.scrollContainerNonOwner
         }
       >
         {taskSlice.tasks.map((task) => (
-          <Card 
-          key={task.id} 
-          style={styles.card}
-          onPress={()=>handleTaskPress(task.id)}
+          <Card
+            key={task.id}
+            style={styles.card}
+            onPress={() => handleTaskPress(task.id)}
           >
             <View style={styles.taskItem}>
               <View>
@@ -141,7 +125,7 @@ const styles = StyleSheet.create({
     flex: 1,
     maxHeight: "80%",
   },
-  
+
   beeHomeImage: {
     width: 20,
     height: 30,
