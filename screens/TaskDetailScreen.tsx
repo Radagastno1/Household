@@ -27,33 +27,57 @@ export default function TaskDetailScreen({ navigation, route }: any) {
 
   return (
     <View style={styles.container}>
-      <Card style={styles.card}>
-        <View style={styles.taskItem}>
-          <View>
-            <Text variant="titleLarge">{taskSlice.tasks[0].title}</Text>
+      <View style={styles.cardContainer}>
+        <Card style={styles.card}>
+          <View style={styles.taskItem}>
+            <View style={styles.titleContainer}>
+              <Text variant="titleLarge">{taskSlice.tasks[0].title}</Text>
+            </View>
+            <View>
+              {/* {isOwner && ( */}
+              <Button
+                icon={({ size, color }) => (
+                  <MaterialIcons name="edit" size={24} color="black" />
+                )}
+                mode="elevated"
+                onPress={() => navigation.navigate("HandleTask")}
+                style={styles.changeButton}
+              >
+                Ändra
+              </Button>
+              {/* )} */}
+            </View>
           </View>
-          <View>
-            {/* {isOwner && ( */}
-            <Button
-              icon={({ size, color }) => (
-                <MaterialIcons name="edit" size={24} color="black" />
-              )}
-              mode="outlined"
-              onPress={() => navigation.navigate("HandleTask")}
-              style={styles.changeButton}
-            >
-              Ändra
-            </Button>
-            {/* )} */}
-          </View>
-        </View>
-      </Card>
-      <View>
+        </Card>
+      </View>
+      <View style={styles.descriptionContainer}>
         <Text variant="bodyMedium">{taskSlice.tasks[0].description}</Text>
       </View>
-      <View style={[styles.buttonContainer, theme.button]}>
-        <Button mode="outlined" onPress={() => console.log("klar")}>
-          Klar
+      <View style={styles.intervalValueContainer}>
+        <View style={styles.intervalContainer}>
+          <View>
+            <Text style={styles.intervalValueText}>Återcommande</Text>
+          </View>
+          <View style={styles.circle}>
+            <Text style={styles.intervalValueText}>1</Text>
+          </View>
+        </View>
+        <View style={styles.intervalContainer}>
+          <View>
+            <Text style={styles.intervalValueText}>Värde</Text>
+          </View>
+          <View style={styles.circle}>
+            <Text style={styles.intervalValueText}>1</Text>
+          </View>
+        </View>
+      </View>
+      <View style={styles.klarButtonContainer}>
+        <Button
+          mode="text"
+          onPress={() => console.log("klar")}
+          style={[styles.klarButton, theme.button]}
+        >
+          <Text style={[styles.klarButton, theme.buttonText]}>Klar</Text>
         </Button>
       </View>
     </View>
@@ -67,10 +91,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  cardContainer: {
+    width: "100%",
+    flex: 1,
+    marginTop: 20,
+  },
   card: {
-    
     margin: 16,
-   
     borderRadius: 8,
     backgroundColor: "white",
     shadowColor: "#000",
@@ -78,19 +105,41 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
+    justifyContent: "space-between",
   },
+
   taskItem: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
   },
   titleContainer: {
-    flex: 1, // Take up available space
-    // Add padding to create space around the title
-     // Adjust this value as needed
+    padding: 10,
   },
-  buttonContainer: {
-    // Add any container-specific styles here
+  descriptionContainer: {
+    flex: 1,
+  },
+
+  intervalValueContainer: {
+    flexDirection: "row",
+    flex: 1,
+    justifyContent:"space-between"
+  },
+  intervalContainer:{
+marginRight:10,
+alignItems:"center"
+  },
+  circle: {
+    width: 60,
+    height: 60,
+    borderRadius: 50, 
+    backgroundColor: "lightgrey", 
+    alignItems: "center",
+    justifyContent: "center",
+    margin: 10,
+  },
+  intervalValueText: {
+
   },
   changeButton: {
     height: 40,
@@ -99,5 +148,11 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
+    margin: 10,
   },
+  klarButtonContainer: {
+    // marginBottom:40,
+    flex: 1,
+  },
+  klarButton: {},
 });
