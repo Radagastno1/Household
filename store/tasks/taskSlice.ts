@@ -11,7 +11,7 @@ export const initialState: TaskState = {
       title: "Damma vardagsrummet",
       description: "Damma vardagsrummets ytor",
       energiWeight: 4,
-      creatingDate: new Date("2023-10-01"),
+      creatingDate: new Date("2023-10-01").toISOString(),
       interval: 5,
       householdId: "household1",
     },
