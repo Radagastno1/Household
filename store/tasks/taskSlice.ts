@@ -5,9 +5,7 @@ import { taskCompletions, tasks } from "../../data";
 interface TaskState {
   tasks: Task[];
 }
-interface TaskCompletionState {
-  taskCompletions: TaskCompletion[];
-}
+
 export const initialState: TaskState = {
   tasks: tasks,
 };
