@@ -1,21 +1,55 @@
+
 import { Text, Button, Card } from "react-native-paper";
 import { View, StyleSheet } from "react-native";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useTheme } from "../contexts/themeContext";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { findTaskById } from "../store/tasks/taskSlice";
 import { MaterialIcons } from "@expo/vector-icons";
+import {
+  findAvatarInCompletionByTaskId,
+  findCompletionsByTaskAndProfielId,
+  setTaskAsCompleted,
+} from "../store/taskCompletionSlice";
+import { useSelector } from "react-redux";
 
 export default function TaskDetailScreen({ navigation, route }: any) {
   const { theme } = useTheme();
   const { taskId } = route.params;
+  const [avatar, setAvatar] = useState<string>();
   const taskSlice = useAppSelector((state) => state.task);
   const dispatch = useAppDispatch();
+
+  const taskCompletionSlice = useAppSelector((state) => state.taskCompletion);
+  const profileSlice = useAppSelector((state) => state.profile);
+  const profileId = profileSlice.activeProfile?.id;
+  console.log("profileId:", profileId);
   useEffect(() => {
     if (taskId) {
       dispatch(findTaskById({ id: taskId }));
     }
   }, [dispatch, taskId]);
+  console.log("taskId:", taskId);
+
+  const handleTaskCompletion = async (taskId: string, profileId: string) => {
+    if (taskId && profileId) {
+      dispatch(setTaskAsCompleted({ taskId, profileId }));
+      // just used to find the latest completion object to test the fuction
+      await dispatch(findCompletionsByTaskAndProfielId({ taskId, profileId }));
+
+      setAvatar(profileSlice.activeProfile?.avatar);
+    } else {
+      // Handle the case when either taskId or profileId is undefined.
+      console.error("Task ID or profile ID is undefined.");
+    }
+  };
+  const foundCompletion = useAppSelector((state) =>
+    taskCompletionSlice.taskCompletions.find(
+      (completion) =>
+        completion.taskId === taskId && completion.profileId === profileId,
+    ),
+  );
+  console.log(foundCompletion);
 
   return (
     <View style={styles.container}>
@@ -65,13 +99,15 @@ export default function TaskDetailScreen({ navigation, route }: any) {
       </View>
       <View>
         <View style={styles.avatarContainer}>
-          <Text>Avatar</Text>
+          <Text>{avatar}</Text>
         </View>
       </View>
       <View style={styles.klarButtonContainer}>
         <Button
           mode="text"
-          onPress={() => console.log("klar")}
+          onPress={() => {
+            handleTaskCompletion(taskId, profileId ?? "");
+          }}
           style={[styles.klarButton, theme.button]}
         >
           <Text style={[styles.klarButton, theme.buttonText]}>Klar</Text>
@@ -158,3 +194,13 @@ const styles = StyleSheet.create({
   },
   klarButton: {},
 });
+
+
+
+
+
+
+
+
+
+
