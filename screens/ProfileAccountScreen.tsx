@@ -1,14 +1,14 @@
 import { View, StyleSheet, StatusBar } from "react-native";
-import React from "react";
-import { useSelector } from "react-redux";
-import { RootState, useAppDispatch, useAppSelector } from "../store/store";
-import { Appbar, Card, Text, Button, IconButton } from "react-native-paper";
+import React, { useEffect } from "react";
+import {  useAppDispatch, useAppSelector } from "../store/store";
+import {  Card, Text, Button, IconButton } from "react-native-paper";
 import { useTheme } from "../contexts/themeContext";
 import HouseholdProfileModal from "../modules/HouseholdMemberModal";
 import { useState } from "react";
-import { Profile } from "../types";
 import { setProfileByHouseholdAndUser } from "../store/profile/profileSlice";
+import { households } from "../data";
 // import { getProfileByHouseholdAndUser } from "../store/profile/profileSlice";
+
 
 export default function ProfileAccountScreen({ navigation }: any) {
   //du måste kolla getActiveHousehold från householdreducern
@@ -23,7 +23,15 @@ export default function ProfileAccountScreen({ navigation }: any) {
   
   const { theme } = useTheme();
   const [isModalVisible, setModalVisible] = useState(false);
-
+  const [headerTitle, setHeaderTitle] = useState<string>("TinaHome");
+  useEffect(() => {
+    if (activeProfile) {
+      const household = households.find((h) => h.id === activeProfile.householdId);
+      if (household) {
+        setHeaderTitle(household.name);
+      }
+    }
+  }, [activeProfile]);
   return (
     <View style={styles.container}>
       <View
@@ -38,7 +46,7 @@ export default function ProfileAccountScreen({ navigation }: any) {
       <View style={{ marginTop: 50 }}>
         <Button
           mode="contained"
-          onPress={() => navigation.navigate("Tab")}
+          onPress={() => navigation.navigate("Tab", { name: headerTitle })}
           style={theme.button as any}
           labelStyle={theme.buttonText}
         >
