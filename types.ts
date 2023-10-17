@@ -28,8 +28,7 @@ export interface Task {
   title: string;
   description: string;
   energiWeight: number;
-  // creatingDate: Date; //default blir dagens datum
-  creatingDate: string;
+  creatingDate: string; //default blir dagens datum
   interval: number; //dagar emellan?
   householdId: string;
 }
@@ -38,7 +37,7 @@ export interface TaskCompletion {
   id: string;
   taskId: string;
   profileId: string;
-  completionDate: Date;
+  completionDate: string;
 }
 
 // Show how to make a day function work between task-data and taskCompletion-data

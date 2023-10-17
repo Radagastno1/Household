@@ -24,7 +24,6 @@ export default function ProfileAccountScreen({ navigation }: any) {
   }, [profile]);
   return (
     <View style={styles.container}>
-      <StatusBar backgroundColor={profile.avatarsColors} />
       <View
         style={[
           styles.profileTitleContainer,

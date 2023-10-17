@@ -1,13 +1,13 @@
-import { ScrollView } from "react-native";
-import { Card, Text, Button } from "react-native-paper";
-import { View, StyleSheet } from "react-native";
-import { profiles, tasks } from "../data/index";
-import React, { useEffect, useState } from "react";
 import { AntDesign } from "@expo/vector-icons";
+import { useIsFocused } from "@react-navigation/native";
+import React, { useEffect, useState } from "react";
+import { Image, ScrollView, StyleSheet, View } from "react-native";
+import { Appbar, Button, Card, Text } from "react-native-paper";
 import { households } from "../data";
+import { profiles, tasks } from "../data/index";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { filterTaskListByHouseId } from "../store/tasks/taskSlice";
-import { useIsFocused } from "@react-navigation/native";
+import { Task } from "../types";
 
 // ska knna gå till lägg till ny task OM du är ägare för hushålllet
 //här listas alla sysslor i hushållet. nullas från avatarer varje midnatt.
@@ -21,6 +21,7 @@ export default function HouseholdTasksScreen({ navigation }: any) {
   const profile = profiles.find((p) => p.id == profileId);
   const household = households.find((h) => h.id == profile?.householdId);
   const taskSlice = useAppSelector((state) => state.task);
+  const taskCompletions = useAppSelector((state) => state.taskCompletion);
   const dispatch = useAppDispatch();
 
   const isOwner = profile?.isOwner;
@@ -38,6 +39,40 @@ export default function HouseholdTasksScreen({ navigation }: any) {
   const handleTaskPress = (taskId: string) => {
     navigation.navigate("ShowTask", { taskId });
   };
+
+  function getDaysSinceLastCompletion(task: Task) {
+    let lastCompletionDate: Date;
+
+    //alla taskcompletions som hänt för tasken
+    const taskCompletionsForTask = taskCompletions.taskCompletions.filter(
+      (completion) => completion.taskId === task.id,
+    );
+
+    if (taskCompletionsForTask.length === 0) {
+      //om ingen har gjort en första completion så är senast datumet när tasken skapades
+      lastCompletionDate = new Date(task.creatingDate);
+    } else {
+      //hämta senast gjorda taskCompletions datum
+      lastCompletionDate = new Date(
+        taskCompletionsForTask.slice().sort((a, b) => {
+          return (
+            new Date(b.completionDate).getTime() -
+            new Date(a.completionDate).getTime()
+          );
+        })[0].completionDate,
+      );
+    }
+
+    // skillnad senaste completion datumet och dagens datum
+    const currentDate = new Date();
+    const timeDifference = currentDate.getTime() - lastCompletionDate.getTime();
+
+    // tiden till dagar
+    const daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+
+    console.log("task:", task.id, " har day dufference:", daysDifference);
+    return daysDifference;
+  }
 
   return (
     <View style={styles.container}>

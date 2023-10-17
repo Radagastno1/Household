@@ -1,13 +1,12 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { Task, TaskCompletion } from "../../types";
-import { taskCompletions, tasks } from "../../data";
+import { tasks } from "../../data";
+import { Task } from "../../types";
+import { useAppSelector } from "../store";
 
 interface TaskState {
   tasks: Task[];
 }
-interface TaskCompletionState {
-  taskCompletions: TaskCompletion[];
-}
+
 export const initialState: TaskState = {
   tasks: tasks,
 };
@@ -48,5 +47,7 @@ const taskSlice = createSlice({
   },
 });
 
-export const { addTask, editTask, filterTaskListByHouseId, findTaskById } = taskSlice.actions;
+export const { addTask, editTask, filterTaskListByHouseId, findTaskById } =
+  taskSlice.actions;
+
 export const taskReducer = taskSlice.reducer;
