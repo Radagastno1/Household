@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Image, View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Appbar } from "react-native-paper";
 import { useSelector } from "react-redux";
-import { RootState } from "../store/store";
+import { RootState, useAppSelector } from "../store/store";
 import { households } from "../data";
 
 interface CustomHeaderProps {
@@ -14,8 +14,9 @@ interface CustomHeaderProps {
 const CustomHeader: React.FC<CustomHeaderProps> = ({ title, navigation }) => {
   const isFocused = useIsFocused();
   const [houseTitle, setHouseTitle] = useState<string>("TinaHouse");
-  const profile = useSelector((state: RootState) => state.profile.profile);
-  const household = households.find((h) => h.id === profile.householdId);
+  const activeProfile = useAppSelector((state) => state.profile.activeProfile);
+  
+  const household = households.find((h) => h.id === activeProfile?.householdId);
   useEffect(() => {
     if (isFocused) {
       if (household) {
