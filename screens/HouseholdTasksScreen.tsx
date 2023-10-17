@@ -1,8 +1,8 @@
 import { AntDesign } from "@expo/vector-icons";
 import { useIsFocused } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
-import { Image, ScrollView, StyleSheet, View } from "react-native";
-import { Appbar, Button, Card, Text } from "react-native-paper";
+import { ScrollView, StyleSheet, View } from "react-native";
+import {  Button, Card, Text } from "react-native-paper";
 import { households } from "../data";
 import { profiles, tasks } from "../data/index";
 import { useAppDispatch, useAppSelector } from "../store/store";
