@@ -45,7 +45,7 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({ title, navigation }) => {
 const styles = StyleSheet.create({
   header: {
     flexDirection: "row",
-    height: 60,
+    height: 80,
     justifyContent: "space-between",
     alignItems: "center",
     backgroundColor: "white",
