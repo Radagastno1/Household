@@ -1,11 +1,15 @@
 import { View, StyleSheet, StatusBar } from "react-native";
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
-import { RootState } from "../store/store";
+import { RootState, useAppDispatch, useAppSelector } from "../store/store";
 import { Appbar, Card, Text, Button, IconButton } from "react-native-paper";
 import { useTheme } from "../contexts/themeContext";
 import HouseholdProfileModal from "../modules/HouseholdMemberModal";
 import { useState } from "react";
+import { Profile } from "../types";
+import { setProfileByHouseholdAndUser } from "../store/profile/profileSlice";
+// import { getProfileByHouseholdAndUser } from "../store/profile/profileSlice";
+
 
 export default function ProfileAccountScreen({ navigation }: any) {
   //du måste kolla getActiveHousehold från householdreducern
