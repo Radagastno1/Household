@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import { profileReducer } from "./profile/profileSlice";
 import { taskReducer } from "./tasks/taskSlice";
+import userAuthReducer from "./user/userAuthSlice";
 import { userReducer } from "./user/userSlice";
 
 const store = configureStore({
@@ -9,6 +10,7 @@ const store = configureStore({
     task: taskReducer,
     user: userReducer,
     profile: profileReducer,
+    userAuth: userAuthReducer,
   },
 });
 

@@ -1,12 +1,11 @@
-import { DefaultTheme } from 'react-native-paper';
+import { DefaultTheme } from "react-native-paper";
 
 export type Theme = {
   colors: {
     primary: string;
     background: string;
   };
-  fonts: {
-  };
+  fonts: {};
   button: {
     backgroundColor: string;
     padding: number;
@@ -19,38 +18,28 @@ export type Theme = {
     color: string;
     fontSize: number;
   };
- 
 };
 
 const theme: Theme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-    primary: 'blue',
-    background: 'white',
+    primary: "yellow",
+    background: "white",
   },
-  fonts: {
-  },
+  fonts: {},
   button: {
-    backgroundColor: '#FFD700',
+    backgroundColor: "#FFD700",
     padding: 10,
-    alignItems: 'center',
+    alignItems: "center",
     margin: 10,
     borderRadius: 10,
     width: 360,
   },
   buttonText: {
-    color: 'black',
+    color: "black",
     fontSize: 16,
   },
 };
 
 export default theme;
-
-
-
-
-  
-  
-  
-  
