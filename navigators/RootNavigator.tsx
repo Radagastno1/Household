@@ -1,23 +1,25 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import CreateTaskScreen from "../screens/CreateTaskScreen";
-import CreateUserAccountScreen from "../screens/CreateUserAccountScreen";
 import HandleHouseholdScreen from "../screens/HandleHouseholdScreen";
-import HouseholdTasksScreen from "../screens/HouseholdTasksScreen";
-import SignInScreen from "../screens/SignInScreen";
-import StatisticScreen from "../screens/StatisticScreen";
 import TaskDetailScreen from "../screens/TaskDetailScreen";
 import HouseholdAccountScreen from "../screens/HouseholdAccountScreen";
 import AuthNavigator from "./AuthNavigator";
-import HomeStackNavigator from "./HomeStackNavigator";
-import { TabBar } from 'react-native-tab-view';
+import ProfileAccountScreen from "../screens/ProfileAccountScreen";
+import TopTabNavigator from "./TopTabNavigator";
+import CreateProfileScreen from "../screens/CreateProfileScreen";
 
 //kolla om dela upp navigationen, från profileaccount ny stack?
 export type RootStackParamList = {
   Auth: typeof AuthNavigator;
-  HomeStack: typeof HomeStackNavigator;
   HandleTask: undefined;
-  ShowTask: {taskId:string};
+  ShowTask: { taskId: string };
+  HouseholdAccount: undefined;
+  ProfileAccount: undefined;
+  HandleHousehold: undefined;
+  CreateProfile: { householdId: string };
+  CreateProfileScreen: undefined;
+  Tab: typeof TopTabNavigator;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -32,16 +34,33 @@ export default function RootNavigator() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Navigator>
         {user ? (
           <>
             <Stack.Screen name="Auth" component={AuthNavigator} />
           </>
         ) : (
           <>
-            <Stack.Screen name="HomeStack" component={HomeStackNavigator} />
+            <Stack.Screen
+              name="HouseholdAccount"
+              component={HouseholdAccountScreen}
+            />
+            <Stack.Screen
+              name="ProfileAccount"
+              component={ProfileAccountScreen}
+            />
+            <Stack.Screen
+              name="HandleHousehold"
+              component={HandleHouseholdScreen}
+            />
+            <Stack.Screen
+              name="CreateProfile"
+              component={CreateProfileScreen}
+              initialParams={{ householdId: "household1" }}
+            />
             <Stack.Screen name="HandleTask" component={CreateTaskScreen} />
             <Stack.Screen name="ShowTask" component={TaskDetailScreen} />
+            <Stack.Screen name="Tab" component={TopTabNavigator} />
             <Stack.Screen name="Auth" component={AuthNavigator} />
           </>
         )}
