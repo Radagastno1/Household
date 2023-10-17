@@ -2,22 +2,21 @@ import { View, StyleSheet, StatusBar } from "react-native";
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../store/store";
-import { Appbar, Card, Text, Button, IconButton } from "react-native-paper";
+import {  Card, Text, Button, IconButton } from "react-native-paper";
 import { useTheme } from "../contexts/themeContext";
 import HouseholdProfileModal from "../modules/HouseholdMemberModal";
 import { useState } from "react";
 import { households } from "../data";
-import CustomHeader from "../shared/CustomHeader";
+
 
 export default function ProfileAccountScreen({ navigation }: any) {
   const profile = useSelector((state: RootState) => state.profile.profile);
   const { theme } = useTheme();
   const [isModalVisible, setModalVisible] = useState(false);
-  const [headerTitle, setHeaderTitle] = useState<string>('TinaHome');
+  const [headerTitle, setHeaderTitle] = useState<string>("TinaHome");
   useEffect(() => {
-    
     if (profile) {
-        const household = households.find((h) => h.id === profile.householdId);
+      const household = households.find((h) => h.id === profile.householdId);
       if (household) {
         setHeaderTitle(household.name);
       }
@@ -38,7 +37,7 @@ export default function ProfileAccountScreen({ navigation }: any) {
       <View style={{ marginTop: 50 }}>
         <Button
           mode="contained"
-          onPress={() => navigation.navigate("Tab",{name:headerTitle})}
+          onPress={() => navigation.navigate("Tab", { name: headerTitle })}
           style={theme.button as any}
           labelStyle={theme.buttonText}
         >

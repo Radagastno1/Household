@@ -1,6 +1,10 @@
-import React from "react";
+import { useIsFocused } from "@react-navigation/native";
+import React, { useEffect, useState } from "react";
 import { Image, View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Appbar } from "react-native-paper";
+import { useSelector } from "react-redux";
+import { RootState } from "../store/store";
+import { households } from "../data";
 
 interface CustomHeaderProps {
   title: string;
@@ -8,10 +12,21 @@ interface CustomHeaderProps {
 }
 
 const CustomHeader: React.FC<CustomHeaderProps> = ({ title, navigation }) => {
+  const isFocused = useIsFocused();
+  const [houseTitle, setHouseTitle] = useState<string>("TinaHouse");
+  const profile = useSelector((state: RootState) => state.profile.profile);
+  const household = households.find((h) => h.id === profile.householdId);
+  useEffect(() => {
+    if (isFocused) {
+      if (household) {
+        setHouseTitle(household.name);
+      }
+    }
+  }, [isFocused]);
   return (
     <View style={styles.header}>
       <View style={styles.headerTextContainer}>
-        <Text style={styles.headerText}>{title}</Text>
+        <Text style={styles.headerText}>{houseTitle}</Text>
       </View>
       <TouchableOpacity onPress={() => navigation.navigate("HouseholdAccount")}>
         <Appbar.Action
@@ -30,7 +45,7 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({ title, navigation }) => {
 const styles = StyleSheet.create({
   header: {
     flexDirection: "row",
-    height: 60, 
+    height: 60,
     justifyContent: "space-between",
     alignItems: "center",
     backgroundColor: "white",
