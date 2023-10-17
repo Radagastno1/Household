@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import { Checkbox, Modal, Portal, TextInput } from "react-native-paper";
 import { useDispatch } from "react-redux";
+import theme from "../data/theme";
 import { useAppSelector } from "../store/store";
 import { createAccount } from "../store/user/userAccountSlice";
 import { User } from "../types";
@@ -46,7 +47,7 @@ const CreateUserAccountScreen: React.FC<{ navigation: any }> = ({
     } else {
       // Create the new user object
       const newUser: User = {
-        id: "1", // You can set an appropriate ID
+        id: "1",
         name: newName,
         username: newUserName,
         password: newPassword,
@@ -140,7 +141,6 @@ const CreateUserAccountScreen: React.FC<{ navigation: any }> = ({
         <Text style={styles.warning}>{passwordMismatchWarning}</Text>
       ) : null}
 
-      {/* Checkbox and clickable text */}
       <TouchableWithoutFeedback onPress={toggleCheckbox}>
         <View style={styles.checkboxContainer}>
           <Checkbox status={isChecked ? "checked" : "unchecked"} />
@@ -156,7 +156,6 @@ const CreateUserAccountScreen: React.FC<{ navigation: any }> = ({
         </View>
       </TouchableWithoutFeedback>
 
-      {/* Terms and conditions */}
       <Portal>
         <Modal visible={visible} onDismiss={hideModal}>
           <View style={styles.modalContainer}>
@@ -165,7 +164,6 @@ const CreateUserAccountScreen: React.FC<{ navigation: any }> = ({
         </Modal>
       </Portal>
 
-      {/* Warning for Checkbox */}
       <Portal>
         <Modal visible={showWarning} onDismiss={() => setShowWarning(false)}>
           <View style={styles.warningContainer}>
@@ -182,7 +180,7 @@ const CreateUserAccountScreen: React.FC<{ navigation: any }> = ({
 
       <TouchableOpacity
         style={{
-          backgroundColor: "yellow",
+          backgroundColor: theme.colors.primary,
           padding: 10,
           alignItems: "center",
           margin: 20,
@@ -190,13 +188,17 @@ const CreateUserAccountScreen: React.FC<{ navigation: any }> = ({
         }}
         onPress={handleCreateAccount}
       >
-        <Text style={{ color: "black", fontSize: 18 }}>Skapa konto</Text>
+        <Text style={{ color: "black", fontSize: theme.buttonText.fontSize }}>
+          Skapa konto
+        </Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.loginButton}
         onPress={() => navigation.navigate("Login")}
       >
-        <Text style={{ color: "black", fontSize: 18 }}>Tillbaka</Text>
+        <Text style={{ color: "black", fontSize: theme.buttonText.fontSize }}>
+          Tillbaka
+        </Text>
       </TouchableOpacity>
     </View>
   );
