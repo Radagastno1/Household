@@ -1,16 +1,30 @@
 import { View, StyleSheet, StatusBar } from "react-native";
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
-import { RootState } from "../store/store";
-import {  Card, Text, Button, IconButton } from "react-native-paper";
+
+
+
+import { RootState, useAppDispatch, useAppSelector } from "../store/store";
+import { Appbar, Card, Text, Button, IconButton } from "react-native-paper";
 import { useTheme } from "../contexts/themeContext";
 import HouseholdProfileModal from "../modules/HouseholdMemberModal";
 import { useState } from "react";
-import { households } from "../data";
+import { Profile } from "../types";
+import { setProfileByHouseholdAndUser } from "../store/profile/profileSlice";
+// import { getProfileByHouseholdAndUser } from "../store/profile/profileSlice";
 
 
 export default function ProfileAccountScreen({ navigation }: any) {
-  const profile = useSelector((state: RootState) => state.profile.profile);
+  //du måste kolla getActiveHousehold från householdreducern
+  //då har du ett household som du är inne på
+  //då hämtar du getProfileForHousehold(userId, householdId);
+  //dessa får komma in när det finns att hämta i reducerns state
+  const userId = "user1";
+  const householdId = "household1";
+  const dispatch = useAppDispatch();
+  dispatch(setProfileByHouseholdAndUser({userId:userId, householdId:householdId}))
+  const activeProfile = useAppSelector((state) => state.profile.activeProfile);
+  
   const { theme } = useTheme();
   const [isModalVisible, setModalVisible] = useState(false);
   const [headerTitle, setHeaderTitle] = useState<string>("TinaHome");
@@ -27,12 +41,12 @@ export default function ProfileAccountScreen({ navigation }: any) {
       <View
         style={[
           styles.profileTitleContainer,
-          { backgroundColor: profile.avatarsColors },
+          { backgroundColor: activeProfile?.avatarsColors},
         ]}
       >
         <Text style={styles.profileTitle}>{}</Text>
       </View>
-      <Text>Avatar: {profile.avatar}</Text>
+      <Text>Avatar: {activeProfile?.avatar}</Text>
       <View style={{ marginTop: 50 }}>
         <Button
           mode="contained"
@@ -45,7 +59,7 @@ export default function ProfileAccountScreen({ navigation }: any) {
         <Card style={styles.card}>
           <View style={styles.taskItem}>
             <View style={styles.nameContainer}>
-              <Text style={styles.profileTitle}>{profile.profileName}</Text>
+              <Text style={styles.profileTitle}>{activeProfile?.profileName}</Text>
             </View>
             <IconButton icon="pencil" size={20} onPress={() => {}} />
           </View>
