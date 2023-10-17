@@ -16,19 +16,21 @@ import { Task } from "../types";
 //samt om den är försenad visa siffran med röd färg
 
 export default function HouseholdTasksScreen({ navigation }: any) {
-  const [profileId, setProfileId] = useState("profile6");
+  const [avatar, setAvatar] = useState<string>("");
+
   // Use useSelector to access the profiles
-  const profile = profiles.find((p) => p.id == profileId);
-  const household = households.find((h) => h.id == profile?.householdId);
+  const activeProfile = useAppSelector((state) => state.profile.activeProfile);
+  
+  const household = households.find((h) => h.id === activeProfile?.householdId);
   const taskSlice = useAppSelector((state) => state.task);
   const taskCompletions = useAppSelector((state) => state.taskCompletion);
   const dispatch = useAppDispatch();
 
-  const isOwner = profile?.isOwner;
+  const isOwner = activeProfile?.isOwner;
   const isFocused = useIsFocused();
   useEffect(() => {
     if (isFocused) {
-      if (profile && household) {
+      if (activeProfile && household) {
         dispatch(
           filterTaskListByHouseId({ tasks, household_Id: household?.id }),
         );
@@ -63,6 +65,8 @@ export default function HouseholdTasksScreen({ navigation }: any) {
       );
     }
 
+
+
     // skillnad senaste completion datumet och dagens datum
     const currentDate = new Date();
     const timeDifference = currentDate.getTime() - lastCompletionDate.getTime();
@@ -92,7 +96,10 @@ export default function HouseholdTasksScreen({ navigation }: any) {
                 <Text variant="titleLarge">{task.title}</Text>
               </View>
               <View>
-                <Text variant="bodyMedium">avatarer1</Text>
+                <Text variant="bodyMedium">{avatar}</Text>
+              </View>
+              <View>
+                <Text variant="bodyMedium">interval</Text>
               </View>
             </View>
           </Card>
@@ -108,6 +115,7 @@ export default function HouseholdTasksScreen({ navigation }: any) {
             </View>
           </View>
         </Card>
+
         <Card style={styles.card}>
           <View style={styles.taskItem}>
             <View>
@@ -119,6 +127,7 @@ export default function HouseholdTasksScreen({ navigation }: any) {
           </View>
         </Card>
       </ScrollView>
+
       <View style={styles.buttonContainer}>
         {isOwner && (
           <Button
