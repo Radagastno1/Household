@@ -12,7 +12,6 @@ export interface Profile {
   userId: string;
   householdId: string;
   avatar: string;
-  avatarsColors: string; // la till denna färgen sålänge
   isOwner: boolean;
   isActive: boolean;
 }
