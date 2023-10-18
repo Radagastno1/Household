@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 import { Button, Card, Text } from "react-native-paper";
 import { households } from "../data";
-import { tasks } from "../data/index";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { filterTaskListByHouseId } from "../store/tasks/taskSlice";
 import { Task } from "../types";
@@ -30,9 +29,12 @@ export default function HouseholdTasksScreen({ navigation }: any) {
   const isFocused = useIsFocused();
   useEffect(() => {
     if (isFocused) {
+      console.log("fokuserad");
       if (activeProfile && household) {
         dispatch(
-          filterTaskListByHouseId({ tasks, household_Id: household?.id }),
+          filterTaskListByHouseId({
+            household_Id: household?.id,
+          }),
         );
       }
     }
@@ -83,7 +85,7 @@ export default function HouseholdTasksScreen({ navigation }: any) {
           isOwner ? styles.scrollContainerOwner : styles.scrollContainerNonOwner
         }
       >
-        {taskSlice.tasks.map((task) => (
+        {taskSlice.filteredTasks.map((task) => (
           <Card
             key={task.id}
             style={styles.card}

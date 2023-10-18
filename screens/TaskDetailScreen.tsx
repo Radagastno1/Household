@@ -4,18 +4,12 @@ import { StyleSheet, View } from "react-native";
 import { Button, Card, Text } from "react-native-paper";
 import { useTheme } from "../contexts/themeContext";
 import { useAppDispatch, useAppSelector } from "../store/store";
-import { findTaskById } from "../store/tasks/taskSlice";
 
 export default function TaskDetailScreen({ navigation, route }: any) {
   const { theme } = useTheme();
   const { taskId } = route.params;
   const taskSlice = useAppSelector((state) => state.task);
   const dispatch = useAppDispatch();
-  useEffect(() => {
-    if (taskId) {
-      dispatch(findTaskById({ id: taskId }));
-    }
-  }, [dispatch, taskId]);
 
   return (
     <View style={styles.container}>

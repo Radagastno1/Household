@@ -27,7 +27,7 @@ export default function CreateTaskScreen({ navigation, route }: any) {
   const [isCreateMode, setIsCreateMode] = useState(true);
   const [taskToEdit, setTaskToEdit] = useState<Task>();
 
-  const householdId = "household2";
+  const householdId = "household1";
   // const household = households.find((h) => h.id == householdId);
 
   const [intervalDataPressed, setIntervalDataPressed] = useState(false);
@@ -89,7 +89,7 @@ export default function CreateTaskScreen({ navigation, route }: any) {
     if (isCreateMode) {
       if (title && description) {
         const newTask: Task = {
-          id: todaysDate.getUTCMilliseconds.toString().slice(-4),
+          id: todaysDate.getUTCMilliseconds().toString().slice(-4),
           title: title,
           description: description,
           energiWeight: selectedEnergy,
@@ -97,11 +97,13 @@ export default function CreateTaskScreen({ navigation, route }: any) {
           creatingDate: new Date().toISOString(),
           householdId: householdId,
         };
+        console.log("den nya tasken innan dispatch:", newTask);
         dispatch(addTask(newTask));
-        dispatch(filterTaskListByHouseId({ tasks, household_Id: householdId }));
+        dispatch(filterTaskListByHouseId({ household_Id: householdId }));
       }
     } else {
-      if (title && description && taskToEdit) {
+      console.log("I ELSE");
+      if (taskToEdit) {
         const editedTask: Task = {
           id: taskToEdit.id,
           title: title,
@@ -111,8 +113,9 @@ export default function CreateTaskScreen({ navigation, route }: any) {
           creatingDate: new Date().toISOString(),
           householdId: householdId,
         };
+        console.log("den redigerade tasken innan dispatch:", editedTask);
         dispatch(editTask(editedTask));
-        dispatch(filterTaskListByHouseId({ tasks, household_Id: householdId }));
+        dispatch(filterTaskListByHouseId({ household_Id: householdId }));
       }
     }
 
