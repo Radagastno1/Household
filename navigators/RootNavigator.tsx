@@ -44,10 +44,10 @@ export default function RootNavigator() {
           isLoading ? "SplashScreen" : userSlice ? "Auth" : "Login"
         }
       >
-        <Stack.Screen name="SplashScreen" component={SplashScreen} />
+        {/* <Stack.Screen name="SplashScreen" component={SplashScreen} />
         <Stack.Screen name="Auth" component={AuthNavigator} />
         <Stack.Screen name="Login" component={SignInScreen} />
-        <Stack.Screen name="Signup" component={CreateUserAccountScreen} />
+        <Stack.Screen name="Signup" component={CreateUserAccountScreen} /> */}
         <Stack.Screen
           name="HouseholdAccount"
           component={HouseholdAccountScreen}
@@ -63,7 +63,9 @@ export default function RootNavigator() {
           initialParams={{ householdId: "household1" }}
         />
         <Stack.Screen name="HandleTask" component={CreateTaskScreen} />
-        <Stack.Screen name="ShowTask" component={TaskDetailScreen} />
+        <Stack.Screen name="ShowTask" 
+        component={TaskDetailScreen} 
+        />
         <Stack.Screen name="Tab" component={TopTabNavigator} />
       </Stack.Navigator>
     </NavigationContainer>
