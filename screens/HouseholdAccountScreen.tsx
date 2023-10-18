@@ -1,23 +1,7 @@
+import React, { useEffect } from "react";
 import { View, Text, StyleSheet, Button } from "react-native";
-import React from "react";
-import HouseholdForm from '../components/HouseholdForm';
-
-export default function HouseholdAccountScreen({ navigation }: any) {
-  return (
-    <View style={styles.container}>
-      <Text>Här listas alla households</Text>
-      <Button
-        title="Hushåll 1"
-        onPress={() => navigation.navigate("ProfileAccount")}
-      />
-      <Button
-        title="Skapa ett hushåll"
-        onPress={() => navigation.navigate("HandleHousehold")}
-      />
-      <Button title="Logga ut" onPress={() => navigation.navigate("Auth")} />
-    </View>
-  );
-}
+import { useAppSelector } from "../store/store"; 
+import { Household } from "../types";
 
 const styles = StyleSheet.create({
   container: {
@@ -27,3 +11,31 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 });
+
+export default function HouseholdAccountScreen({ navigation }: any) {
+  const activeUser = useAppSelector((state) => state.userAccount.user);
+  const connectedHouseholds = activeUser.households;
+
+  useEffect(() => {
+    // Hämta användarens hushåll när komponenten laddas
+    // Implementera hämtning av hushåll här och uppdatera connectedHouseholds
+  }, []);
+
+  return (
+    <View style={styles.container}>
+      <Text>Här listas alla households:</Text>
+      {connectedHouseholds.map((household: Household, index: number) => (
+        <Text key={index}>{household.name}</Text>
+      ))}
+      <Button
+        title="Skapa nytt hushåll"
+        onPress={() => navigation.navigate("CreateProfileScreen")}
+      />
+      <Button
+        title="Hushåll 1"
+        onPress={() => navigation.navigate("ProfileAccount")}
+      />
+      <Button title="Logga ut" onPress={() => navigation.navigate("Auth")} />
+    </View>
+  );
+}
