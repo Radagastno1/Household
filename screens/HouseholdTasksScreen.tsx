@@ -48,7 +48,7 @@ export default function HouseholdTasksScreen({ navigation }: any) {
     let lastCompletionDate: Date;
 
     //alla taskcompletions som hänt för tasken
-    const taskCompletionsForTask = taskCompletions.taskCompletions.filter(
+    const taskCompletionsForTask = taskCompletions.completions.filter(
       (completion) => completion.taskId === task.id,
     );
 
