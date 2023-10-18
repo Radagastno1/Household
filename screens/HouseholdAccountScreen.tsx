@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { View, Text, StyleSheet, Button } from "react-native";
-import { useAppSelector } from "../store/store"; 
+import { useAppSelector } from "../store/store";
 import { Household } from "../types";
 
 const styles = StyleSheet.create({
@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
 
 export default function HouseholdAccountScreen({ navigation }: any) {
   const activeUser = useAppSelector((state) => state.userAccount.user);
-  const connectedHouseholds = activeUser.households;
+  const connectedHouseholds = activeUser.households || []; // Default to an empty array if it's undefined
 
   useEffect(() => {
     // Hämta användarens hushåll när komponenten laddas
