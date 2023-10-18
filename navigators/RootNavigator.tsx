@@ -26,7 +26,6 @@ export type RootStackParamList = {
   ProfileAccount: undefined;
   HandleHousehold: undefined;
   CreateProfile: { householdId: string };
-  CreateProfileScreen: undefined;
   Tab: typeof TopTabNavigator;
 };
 

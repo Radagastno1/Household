@@ -6,6 +6,7 @@ import { taskCompletionReducer } from "./taskCompletionSlice";
 import { taskReducer } from "./tasks/taskSlice";
 import { userAccountReducer } from "./user/userAccountSlice";
 import userAuthReducer from "./user/userAuthSlice";
+import { householdReducer } from "./household/householdSlice";
 
 const store = configureStore({
   reducer: {
@@ -15,6 +16,7 @@ const store = configureStore({
     taskCompletion: taskCompletionReducer,
     userAccount: userAccountReducer,
     app: appReducer,
+    household: householdReducer,
   },
 });
 
