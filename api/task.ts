@@ -31,12 +31,12 @@ function mapTaskToTaskDat(task: Task) {
     energiWeight: task.energiWeight,
     creatingDate: task.creatingDate,
     interval: task.interval,
-    householdId: task.householdId,
+    householdId: "fYHVLNiQvWEG9KNUGqBT",
   };
   return newTaskData;
 }
 
-export const addTask = async (task: Task) => {
+export const addTaskToDB = async (task: Task) => {
   const taskCollectionRef = collection(db, "tasks");
 
   try {
