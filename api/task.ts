@@ -1,19 +1,19 @@
 import * as firebase from "firebase/app";
 import "firebase/firestore";
+import { addDoc, collection, getFirestore } from "firebase/firestore";
 import { Task } from "../types";
 
-// const firebaseConfig = {
-//   apiKey: "Din API-nyckel",
-//   authDomain: "Din-auth-domain.firebaseapp.com",
-//   projectId: "Ditt-projekt-id",
-//   storageBucket: "Ditt-storage-bucket.appspot.com",
-//   messagingSenderId: "Ditt-messaging-sender-id",
-//   appId: "Din-app-id",
-// };
+const firebaseConfig = {
+  // apiKey: "API-nyckel",
+  authDomain: "inget-authentication-krävs",
+  projectId: "testbuzzter",
+  storageBucket: "Ditt-storage-bucket.appspot.com",
+  messagingSenderId: "83218627575",
+  //   appId: "app-id",
+};
 
-// firebase.initializeApp(firebaseConfig);
-
-// const db = firebase.firestore();
+const app = firebase.initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
 interface TaskData {
   title: string;
@@ -37,13 +37,12 @@ function mapTaskToTaskDat(task: Task) {
 }
 
 export const addTask = async (task: Task) => {
+  const taskCollectionRef = collection(db, "tasks");
+
   try {
-    const taskDataToAdd = mapTaskToTaskDat(task);
-    const taskRef = await db.collection("tasks").add(taskDataToAdd);
+    const taskRef = await addDoc(taskCollectionRef, mapTaskToTaskDat(task));
     console.log("Uppgift tillagd med ID:", taskRef.id);
-    return taskRef.id;
   } catch (error) {
     console.error("Fel vid tillägg av uppgift:", error);
-    throw error;
   }
 };
