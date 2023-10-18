@@ -4,14 +4,23 @@ import CreateProfileScreen from "../screens/CreateProfileScreen";
 import CreateTaskScreen from "../screens/CreateTaskScreen";
 import HandleHouseholdScreen from "../screens/HandleHouseholdScreen";
 import HouseholdAccountScreen from "../screens/HouseholdAccountScreen";
+
+import AuthNavigator from "./AuthNavigator";
+import { TabBar } from "react-native-tab-view";
+
 import ProfileAccountScreen from "../screens/ProfileAccountScreen";
 import SplashScreen from "../screens/SplashScreen";
 import TaskDetailScreen from "../screens/TaskDetailScreen";
 import { useAppSelector } from "../store/store";
 import AuthNavigator from "./AuthNavigator";
 import TopTabNavigator from "./TopTabNavigator";
+
 import CreateUserAccountScreen from "../screens/CreateUserAccountScreen";
 import SignInScreen from "../screens/SignInScreen";
+
+import CreateProfileScreen from "../screens/CreateProfileScreen";
+import CustomHeader from "../shared/CustomHeader";
+
 
 export type RootStackParamList = {
   SplashScreen: undefined;
@@ -60,6 +69,51 @@ export default function RootNavigator() {
         <Stack.Screen name="HandleTask" component={CreateTaskScreen} />
         <Stack.Screen name="ShowTask" component={TaskDetailScreen} />
         <Stack.Screen name="Tab" component={TopTabNavigator} />
+
+      <Stack.Navigator>
+        {user ? (
+          <>
+            <Stack.Screen name="Auth" component={AuthNavigator} />
+          </>
+        ) : (
+          <>
+            <Stack.Screen
+              name="HouseholdAccount"
+              component={HouseholdAccountScreen}
+            />
+            <Stack.Screen
+              name="ProfileAccount"
+              component={ProfileAccountScreen}
+            />
+            <Stack.Screen
+              name="HandleHousehold"
+              component={HandleHouseholdScreen}
+            />
+            <Stack.Screen
+              name="CreateProfile"
+              component={CreateProfileScreen}
+              initialParams={{ householdId: "household1" }}
+            />
+            <Stack.Screen name="HandleTask" component={CreateTaskScreen} />
+            <Stack.Screen name="ShowTask" component={TaskDetailScreen} options={{ headerShown: false }} />
+            <Stack.Screen 
+            name="Tab" 
+            component={TopTabNavigator} 
+            options={({ route, navigation}) => ({
+                header: () => (
+                  <CustomHeader
+                    title={
+                      (route.params as { name?: string })?.name || "Custom Header"
+                    }
+                    navigation={navigation}
+                  />
+                ),
+              })}
+            />
+            <Stack.Screen name="Auth" component={AuthNavigator} />
+          </>
+        )}
+
       </Stack.Navigator>
     </NavigationContainer>
   );
