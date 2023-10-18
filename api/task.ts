@@ -1,18 +1,8 @@
-import * as firebase from "firebase/app";
 import "firebase/firestore";
 import { addDoc, collection, getFirestore } from "firebase/firestore";
 import { Task } from "../types";
+import { app } from "./config";
 
-const firebaseConfig = {
-  // apiKey: "API-nyckel",
-  authDomain: "inget-authentication-krävs",
-  projectId: "testbuzzter",
-  storageBucket: "Ditt-storage-bucket.appspot.com",
-  messagingSenderId: "83218627575",
-  //   appId: "app-id",
-};
-
-const app = firebase.initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 interface TaskData {
