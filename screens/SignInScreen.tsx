@@ -52,7 +52,7 @@ export const SignInScreen = ({ navigation }: any) => {
       dispatch(loginUser(user)); // Dispatch the loginUser action
       console.log("Authentication successful");
       console.log("User data:", user);
-      navigation.navigate("HomeStack");
+      navigation.navigate("HouseholdAccount");
     } else {
       console.error("Authentication failed");
     }

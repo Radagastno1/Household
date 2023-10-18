@@ -1,4 +1,5 @@
 export interface User {
+  [x: string]: any;
   id: string;
   name: string;
   username: string;
@@ -38,6 +39,10 @@ export interface TaskCompletion {
   taskId: string;
   profileId: string;
   completionDate: string;
+}
+
+export interface AppState {
+  isLoading: boolean;
 }
 
 // Show how to make a day function work between task-data and taskCompletion-data

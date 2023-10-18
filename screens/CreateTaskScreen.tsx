@@ -1,5 +1,5 @@
 import { AntDesign, Feather } from "@expo/vector-icons";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   KeyboardAvoidingView,
   Platform,
@@ -12,22 +12,34 @@ import {
 } from "react-native";
 import { Card, Paragraph, Title } from "react-native-paper";
 import CircleComponent from "../components/CircleComponent";
-import { households } from "../data";
+import { tasks } from "../data";
 import { useAppDispatch, useAppSelector } from "../store/store";
-import { addTask } from "../store/tasks/taskSlice";
+import {
+  addTask,
+  editTask,
+  filterTaskListByHouseId,
+} from "../store/tasks/taskSlice";
 import { Task } from "../types";
 
 //här skapar man en task som ägare för hushållet
-export default function CreateTaskScreen({ navigation }: any) {
+export default function CreateTaskScreen({ navigation, route }: any) {
   //LÅTSAS ATT JAG KOLLAR MOT HUSHÅLLSSTATET VILKET HUSHÅLL ANVÄNDAREN ÄR PÅ HÄR
+  const [isCreateMode, setIsCreateMode] = useState(true);
+  const [taskToEdit, setTaskToEdit] = useState<Task>();
+
   const householdId = "household1";
-  const household = households.find((h) => h.id == householdId);
+  // const household = households.find((h) => h.id == householdId);
 
   const [intervalDataPressed, setIntervalDataPressed] = useState(false);
   const [energyDataPressed, setEnergyDataPressed] = useState(false);
 
-  const [selectedInterval, setSelectedInterval] = useState(7);
-  const [selectedEnergy, setSelectedEnergy] = useState(2);
+  const [selectedInterval, setSelectedInterval] = useState(
+    taskToEdit ? taskToEdit.interval : 7,
+  );
+  const [selectedEnergy, setSelectedEnergy] = useState(
+    taskToEdit ? taskToEdit.interval : 2,
+  );
+
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
 
@@ -35,9 +47,26 @@ export default function CreateTaskScreen({ navigation }: any) {
 
   //FÖR ATT TESTA HÄMTA TASKEN FÖR ETT HUSHÅLL SÅ JAG SER ATT DOM SKAPADES KORREKT
   const taskSlice = useAppSelector((state) => state.task);
-  const allTasksForHousehold = taskSlice.tasks.filter(
-    (t) => t.householdId === householdId,
-  );
+  // const allTasksForHousehold = taskSlice.tasks.filter(
+  //   (t) => t.householdId === householdId,
+  // );
+
+  useEffect(() => {
+    const { taskId } = route.params;
+    const incomingTaskId = taskId;
+    console.log("taskid är: ", incomingTaskId);
+    if (incomingTaskId == "0") {
+      setIsCreateMode(true);
+    } else {
+      const taskToEdit = taskSlice?.tasks.find((t) => t.id === incomingTaskId);
+      if (taskToEdit) {
+        setTaskToEdit(taskToEdit);
+        setIsCreateMode(false);
+      } else {
+        //navigera tillbaka?
+      }
+    }
+  }, []);
 
   const intervalData: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   const energyData: number[] = [1, 2, 4, 6, 8];
@@ -54,19 +83,42 @@ export default function CreateTaskScreen({ navigation }: any) {
   //   }
   // };
 
-  const handleCreateTask = () => {
-    if (title && description) {
-      const newTask: Task = {
-        id: "something",
-        title: title,
-        description: description,
-        energiWeight: selectedEnergy,
-        interval: selectedInterval,
-        creatingDate: new Date().toISOString(),
-        householdId: householdId,
-      };
-      dispatch(addTask(newTask));
+  const handleTask = () => {
+    const todaysDate = new Date();
+
+    if (isCreateMode) {
+      if (title && description) {
+        const newTask: Task = {
+          id: todaysDate.getUTCMilliseconds().toString().slice(-4),
+          title: title,
+          description: description,
+          energiWeight: selectedEnergy,
+          interval: selectedInterval,
+          creatingDate: new Date().toISOString(),
+          householdId: householdId,
+        };
+        console.log("den nya tasken innan dispatch:", newTask);
+        dispatch(addTask(newTask));
+        dispatch(filterTaskListByHouseId({ household_Id: householdId }));
+      }
+    } else {
+      console.log("I ELSE");
+      if (taskToEdit) {
+        const editedTask: Task = {
+          id: taskToEdit.id,
+          title: title,
+          description: description,
+          energiWeight: selectedEnergy,
+          interval: selectedInterval,
+          creatingDate: new Date().toISOString(),
+          householdId: householdId,
+        };
+        console.log("den redigerade tasken innan dispatch:", editedTask);
+        dispatch(editTask(editedTask));
+        dispatch(filterTaskListByHouseId({ household_Id: householdId }));
+      }
     }
+
     navigation.navigate("Tab");
   };
 
@@ -87,6 +139,7 @@ export default function CreateTaskScreen({ navigation }: any) {
             textAlignVertical="center"
             returnKeyType="done"
             onChangeText={(text) => setTitle(text)}
+            defaultValue={taskToEdit?.title}
           ></TextInput>
           <TextInput
             placeholder="Beskrivning"
@@ -97,6 +150,7 @@ export default function CreateTaskScreen({ navigation }: any) {
             textAlignVertical="top"
             returnKeyType="done"
             onChangeText={(text) => setDescription(text)}
+            defaultValue={taskToEdit?.description}
           ></TextInput>
           <Card style={styles.card}>
             <Card.Content style={styles.cardContent}>
@@ -115,11 +169,19 @@ export default function CreateTaskScreen({ navigation }: any) {
                   <TouchableOpacity
                     onPress={() => setIntervalDataPressed(true)}
                   >
-                    <CircleComponent
-                      number={selectedInterval}
-                      backgroundColor="red"
-                      color="white"
-                    />
+                    {isCreateMode ? (
+                      <CircleComponent
+                        number={selectedInterval}
+                        backgroundColor="red"
+                        color="white"
+                      />
+                    ) : (
+                      <CircleComponent
+                        number={taskToEdit?.interval ?? 0}
+                        backgroundColor="red"
+                        color="white"
+                      />
+                    )}
                   </TouchableOpacity>
                   <Title> dag</Title>
                 </View>
@@ -166,11 +228,19 @@ export default function CreateTaskScreen({ navigation }: any) {
                       setEnergyDataPressed(true);
                     }}
                   >
-                    <CircleComponent
-                      number={selectedEnergy}
-                      backgroundColor="lightgrey"
-                      color="black"
-                    />
+                    {isCreateMode ? (
+                      <CircleComponent
+                        number={selectedEnergy}
+                        backgroundColor="lightgrey"
+                        color="black"
+                      />
+                    ) : (
+                      <CircleComponent
+                        number={taskToEdit?.energiWeight ?? 0}
+                        backgroundColor="lightgrey"
+                        color="black"
+                      />
+                    )}
                   </TouchableOpacity>
                 </View>
               </View>
@@ -203,7 +273,7 @@ export default function CreateTaskScreen({ navigation }: any) {
           <TouchableOpacity
             style={[styles.button]}
             onPress={() => {
-              handleCreateTask();
+              handleTask();
             }}
           >
             <Feather name="plus-circle" size={24} color="black" />

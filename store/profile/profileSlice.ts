@@ -21,16 +21,22 @@ const profileSlice = createSlice({
     setProfile: (state, action: PayloadAction<Profile>) => {
       state.profiles = [...state.profiles, action.payload];
     },
-    editProfileName: (state, action: PayloadAction<Profile>) => {
-      state.profiles = [...state.profiles, action.payload];
+    // editProfileName: (state, action: PayloadAction<Profile>) => {
+    //   state.profiles = [...state.profiles, action.payload];
+    // },
+    editProfileName: (state, action: PayloadAction<{ profileId: string, newProfileName: string }>) => {
+      const profileToEdit = state.profiles.find(profile => profile.id === action.payload.profileId);
+      if (profileToEdit) {
+        profileToEdit.profileName = action.payload.newProfileName;
+      }
     },
     setProfileByHouseholdAndUser:(state, action:PayloadAction<{userId:string, householdId:string}>) => {
       const activeProfile = state.profiles.find(p => p.householdId === action.payload.householdId && p.userId === action.payload.userId)
       if (activeProfile) {
         state.activeProfile = activeProfile;
       }
-    }
-    
+    },
+   
   },
 });
 
