@@ -3,7 +3,11 @@ import { View, Text, StyleSheet, Button } from "react-native";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { Household } from "../types";
 import { Id } from "@reduxjs/toolkit/dist/tsHelpers";
-import { householdReducer, setHouseholdByHouseholdId, sethousehold } from "../store/household/householdSlice";
+import {
+  householdReducer,
+  setHouseholdByHouseholdId,
+  sethousehold,
+} from "../store/household/householdSlice";
 
 const styles = StyleSheet.create({
   container: {
@@ -16,7 +20,7 @@ const styles = StyleSheet.create({
 
 export default function HouseholdAccountScreen({ navigation }: any) {
   const activeUser = useAppSelector((state) => state.userAccount.user);
-  const dispatch = useAppDispatch() 
+  const dispatch = useAppDispatch();
   const connectedHouseholds = activeUser.households || []; // Default to an empty array if it's undefined
 
   useEffect(() => {
@@ -25,8 +29,8 @@ export default function HouseholdAccountScreen({ navigation }: any) {
   }, []);
 
   const enterHousehold = (householdId: string) => {
-    dispatch(setHouseholdByHouseholdId({householdId: householdId}))
-    navigation.navigate("ProfileAccount")
+    dispatch(setHouseholdByHouseholdId({ householdId: householdId }));
+    navigation.navigate("ProfileAccount");
   };
 
   return (
@@ -39,11 +43,7 @@ export default function HouseholdAccountScreen({ navigation }: any) {
         title="Skapa nytt hushåll"
         onPress={() => navigation.navigate("CreateProfile")}
       />
-      <Button
-        title="Hushåll 1"
-        onPress={() => enterHousehold("household2")
-      }
-      />
+      <Button title="Hushåll 1" onPress={() => enterHousehold("household1")} />
       <Button title="Logga ut" onPress={() => navigation.navigate("Auth")} />
     </View>
   );
