@@ -11,6 +11,7 @@ import {
   findAllAvatarFortodayCompletionByTaskId,
   setTaskAsCompleted, 
 } from "../store/taskCompletionSlice";
+import { findTaskById } from "../store/tasks/taskSlice";
 
 
 export default function TaskDetailScreen({ navigation, route }: any) {
