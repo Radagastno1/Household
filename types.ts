@@ -40,6 +40,10 @@ export interface TaskCompletion {
   completionDate: string;
 }
 
+export interface AppState {
+  isLoading: boolean;
+}
+
 // Show how to make a day function work between task-data and taskCompletion-data
 // task created today 2023-10-12
 // interval : 3 days

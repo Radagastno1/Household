@@ -1,12 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
+import appReducer from "./appSlice";
 import { profileReducer } from "./profile/profileSlice";
-import { taskReducer } from "./tasks/taskSlice";
-import userAuthReducer from "./user/userAuthSlice";
-import { userReducer } from "./user/userSlice";
 import { taskCompletionReducer } from "./taskCompletionSlice";
+import { taskReducer } from "./tasks/taskSlice";
 import { userAccountReducer } from "./user/userAccountSlice";
-
+import userAuthReducer from "./user/userAuthSlice";
 
 const store = configureStore({
   reducer: {
@@ -15,6 +14,7 @@ const store = configureStore({
     userAuth: userAuthReducer,
     taskCompletion: taskCompletionReducer,
     userAccount: userAccountReducer,
+    app: appReducer,
   },
 });
 
