@@ -36,6 +36,21 @@ const profileSlice = createSlice({
         state.activeProfile = activeProfile;
       }
     },
+
+    editAvatarSelection: (state, action: PayloadAction<{ userId: string, avatar: string }>) => {
+      const userProfiles = state.profiles.filter(profile => profile.userId === action.payload.userId);
+      for (const profile of userProfiles) {
+        if (profile.avatar === action.payload.avatar) {
+          // Avatar redan vald av användaren
+          return;
+        }
+      }
+    
+      const profileToEdit = userProfiles.find(profile => profile.userId === action.payload.userId);
+      if (profileToEdit) {
+        profileToEdit.avatar = action.payload.avatar;
+      }
+    }
    
   },
 });
