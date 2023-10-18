@@ -37,7 +37,7 @@ export default function HouseholdAccountScreen({ navigation }: any) {
       ))}
       <Button
         title="Skapa nytt hushåll"
-        onPress={() => navigation.navigate("CreateProfileScreen")}
+        onPress={() => navigation.navigate("CreateProfile")}
       />
       <Button
         title="Hushåll 1"
