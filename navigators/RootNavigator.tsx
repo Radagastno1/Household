@@ -14,7 +14,7 @@ import CustomHeader from "../shared/CustomHeader";
 //kolla om dela upp navigationen, från profileaccount ny stack?
 export type RootStackParamList = {
   Auth: typeof AuthNavigator;
-  HandleTask: undefined;
+  HandleTask: { taskId: string };
   ShowTask: { taskId: string };
   HouseholdAccount: undefined;
   ProfileAccount: undefined;
@@ -61,15 +61,20 @@ export default function RootNavigator() {
               initialParams={{ householdId: "household1" }}
             />
             <Stack.Screen name="HandleTask" component={CreateTaskScreen} />
-            <Stack.Screen name="ShowTask" component={TaskDetailScreen} options={{ headerShown: false }} />
-            <Stack.Screen 
-            name="Tab" 
-            component={TopTabNavigator} 
-            options={({ route, navigation}) => ({
+            <Stack.Screen
+              name="ShowTask"
+              component={TaskDetailScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Tab"
+              component={TopTabNavigator}
+              options={({ route, navigation }) => ({
                 header: () => (
                   <CustomHeader
                     title={
-                      (route.params as { name?: string })?.name || "Custom Header"
+                      (route.params as { name?: string })?.name ||
+                      "Custom Header"
                     }
                     navigation={navigation}
                   />
