@@ -47,7 +47,7 @@ const taskCompletionSlice = createSlice({
       //filter the completions with the same taskId
       const filteredCompletions = state.completions.filter(
         (completion) =>
-          completion.completionDate.split("T")[0] === today.split("T")[0],
+          completion.completionDate.split("T")[0] === today.split("T")[0] && completion.taskId === taskId,
       );
       // get the unique profileIds
       const uniqueProfileIds = [

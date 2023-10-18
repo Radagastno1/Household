@@ -296,15 +296,28 @@ export const taskCompletions: TaskCompletion[] = [
     completionDate: new Date("2023-10-09").toISOString(),
   },
   {
-    id: "completion10",
+    id: "completion11",
     taskId: "task6",
     profileId: "profile2",
     completionDate: new Date("2023-10-15").toISOString(),
   },
   {
-    id: "completion10",
-    taskId: "task6",
-    profileId: "profile2",
+    id: "completion12",
+    taskId: "task1",
+    profileId: "profile3",
     completionDate: new Date().toISOString(),
   },
+  {
+    id: "completion13",
+    taskId: "task5",
+    profileId: "profile5",
+    completionDate: new Date().toISOString(),
+  },
+  {
+    id: "completion14",
+    taskId: "task4",
+    profileId: "profile4",
+    completionDate: new Date().toISOString(),
+  },
+  
 ];

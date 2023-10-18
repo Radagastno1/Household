@@ -25,16 +25,12 @@ export default function TaskDetailScreen({ navigation, route }: any) {
     dispatch(findAllAvatarFortodayCompletionByTaskId({ taskId }));
   };
 
-  const fetchTask = ()=>{
-    dispatch(findTaskById(taskId));
-  };
-
   const profileSlice = useAppSelector((state) => state.profile);
   const profileId = profileSlice.activeProfile?.id;
 
   useEffect(() => {
     if (taskId) {
-      fetchTask();
+        dispatch(findTaskById({taskId}));
       fetchAvatars();
     }
   }, [dispatch, taskId]);
@@ -54,7 +50,7 @@ export default function TaskDetailScreen({ navigation, route }: any) {
         <Card style={styles.card}>
           <View style={styles.taskItem}>
             <View style={styles.titleContainer}>
-              <Text variant="titleLarge">{taskSlice.tasks[0].title}</Text>
+              <Text variant="titleLarge">{taskSlice.selectedTask?.title}</Text>
             </View>
             <View>
               {/* {isOwner && ( */}
@@ -76,7 +72,7 @@ export default function TaskDetailScreen({ navigation, route }: any) {
         </Card>
       </View>
       <View style={styles.descriptionContainer}>
-        <Text variant="bodyMedium">{taskSlice.tasks[0].description}</Text>
+        <Text variant="bodyMedium">{taskSlice.selectedTask?.description}</Text>
       </View>
       <View style={styles.intervalValueContainer}>
         <View style={styles.intervalContainer}>
@@ -84,7 +80,7 @@ export default function TaskDetailScreen({ navigation, route }: any) {
             <Text style={styles.intervalText}>Återcommande</Text>
           </View>
           <View style={styles.circle}>
-            <Text style={styles.intervalNumber}>{taskSlice.tasks[0].interval}</Text>
+            <Text style={styles.intervalNumber}>{taskSlice.selectedTask?.interval}</Text>
           </View>
         </View>
         <View style={styles.valueContainer}>
@@ -92,7 +88,7 @@ export default function TaskDetailScreen({ navigation, route }: any) {
             <Text style={styles.valueText}>Värde</Text>
           </View>
           <View style={styles.circle}>
-            <Text style={styles.valueNumber}>{taskSlice.tasks[0].energiWeight}</Text>
+            <Text style={styles.valueNumber}>{taskSlice.selectedTask?.energiWeight}</Text>
           </View>
         </View>
       </View>
