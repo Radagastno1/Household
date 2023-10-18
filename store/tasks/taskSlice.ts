@@ -1,7 +1,6 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { tasks } from "../../data";
 import { Task } from "../../types";
-import { useAppSelector } from "../store";
 
 interface TaskState {
   tasks: Task[];
@@ -36,6 +35,10 @@ const taskSlice = createSlice({
         console.log("nu är state filtered tasks listan;", state.filteredTasks);
       }
     },
+    deleteTask: (state, action: PayloadAction<string>) => {
+      const taskIdToDelete = action.payload;
+      state.tasks = state.tasks.filter((task) => task.id !== taskIdToDelete);
+    },
     filterTaskListByHouseId: (
       state,
       action: PayloadAction<{ household_Id: string }>,
@@ -51,7 +54,7 @@ const taskSlice = createSlice({
     findTaskById: (state, action: PayloadAction<{ taskId: string }>) => {
       const { taskId } = action.payload;
       const foundTask = state.tasks.find((task) => task.id === taskId);
-console.log('finding id',taskId)
+      console.log("finding id", taskId);
       if (foundTask) {
         state.selectedTask = foundTask; // Update state.tasks with the found task
       } else {
