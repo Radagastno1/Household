@@ -43,10 +43,10 @@ export default function RootNavigator() {
           isLoading ? "SplashScreen" : userSlice ? "Auth" : "Login"
         }
       >
-        <Stack.Screen name="SplashScreen" component={SplashScreen} />
+        {/* <Stack.Screen name="SplashScreen" component={SplashScreen} />
         <Stack.Screen name="Auth" component={AuthNavigator} />
         <Stack.Screen name="Login" component={SignInScreen} />
-        <Stack.Screen name="Signup" component={CreateUserAccountScreen} />
+        <Stack.Screen name="Signup" component={CreateUserAccountScreen} /> */}
         <Stack.Screen
           name="HouseholdAccount"
           component={HouseholdAccountScreen}
