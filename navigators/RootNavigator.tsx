@@ -66,7 +66,8 @@ export default function RootNavigator() {
         <Stack.Screen name="ShowTask" 
         
         component={TaskDetailScreen} />
-        <Stack.Screen name="Tab" 
+        <Stack.Screen 
+        name="Tab" 
         component={TopTabNavigator}
         options={({ route, navigation}) => ({
             header: () => (
