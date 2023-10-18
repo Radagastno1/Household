@@ -1,8 +1,8 @@
 import { AntDesign } from "@expo/vector-icons";
 import { useIsFocused } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
-import { Button, Card, Text } from "react-native-paper";
+import { ScrollView, StyleSheet, View, Image } from "react-native";
+import { Appbar, Button, Card, Text } from "react-native-paper";
 import { households } from "../data";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { filterTaskListByHouseId } from "../store/tasks/taskSlice";
@@ -80,6 +80,23 @@ export default function HouseholdTasksScreen({ navigation }: any) {
 
   return (
     <View style={styles.container}>
+      <Appbar.Header style={styles.customHeader}>
+        {/* <Appbar.BackAction onPress={_backHome} /> */}
+        <View style={styles.title}>
+          <Appbar.Content title={household?.name} />
+        </View>
+        <View style={styles.imageContainer}>
+          <Appbar.Action
+            icon={({ size, color }) => (
+              <Image
+                source={require("../assets/bee-home.png")}
+                style={styles.beeHomeImage}
+              />
+            )}
+            onPress={() => navigation.navigate("HouseholdAccount")}
+          />
+        </View>
+      </Appbar.Header>
       <ScrollView
         style={
           isOwner ? styles.scrollContainerOwner : styles.scrollContainerNonOwner
