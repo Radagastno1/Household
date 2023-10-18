@@ -80,7 +80,7 @@ export default function TaskDetailScreen({ navigation, route }: any) {
             <Text style={styles.intervalText}>Återcommande</Text>
           </View>
           <View style={styles.circle}>
-            <Text style={styles.intervalNumber}>{taskSlice.tasks[0].interval}</Text>
+            <Text style={styles.intervalNumber}>{taskSlice.selectedTask?.interval}</Text>
           </View>
         </View>
         <View style={styles.valueContainer}>
@@ -88,7 +88,7 @@ export default function TaskDetailScreen({ navigation, route }: any) {
             <Text style={styles.valueText}>Värde</Text>
           </View>
           <View style={styles.circle}>
-            <Text style={styles.valueNumber}>{taskSlice.tasks[0].energiWeight}</Text>
+            <Text style={styles.valueNumber}>{taskSlice.selectedTask?.energiWeight}</Text>
           </View>
         </View>
       </View>
