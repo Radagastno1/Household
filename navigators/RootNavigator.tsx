@@ -14,6 +14,7 @@ import TopTabNavigator from "./TopTabNavigator";
 import CreateUserAccountScreen from "../screens/CreateUserAccountScreen";
 import SignInScreen from "../screens/SignInScreen";
 import AuthNavigator from "./AuthNavigator";
+import CustomHeader from "../shared/CustomHeader";
 
 export type RootStackParamList = {
   SplashScreen: undefined;
@@ -65,7 +66,19 @@ export default function RootNavigator() {
         <Stack.Screen name="ShowTask" 
         
         component={TaskDetailScreen} />
-        <Stack.Screen name="Tab" component={TopTabNavigator} />
+        <Stack.Screen name="Tab" 
+        component={TopTabNavigator}
+        options={({ route, navigation}) => ({
+            header: () => (
+              <CustomHeader
+                title={
+                  (route.params as { name?: string })?.name || "Custom Header"
+                }
+                navigation={navigation}
+              />
+            ),
+          })} 
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
