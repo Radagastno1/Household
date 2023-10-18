@@ -92,7 +92,7 @@ olika hushållen.
 Sysslor (3)
 [] En användare ska kunna lägga till en ljudinspelning och en bild för att beskriva sysslan
 ytterligare.
-[] En ägare ska kunna ta bort en syssla.
+[X] En ägare ska kunna ta bort en syssla.
 [] När en syssla tas bort ska användaren få en varning om att all statistik gällande sysslan
 också kommer att tas bort och få valet att arkivera sysslan istället.
 
