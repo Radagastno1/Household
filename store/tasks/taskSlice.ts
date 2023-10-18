@@ -6,11 +6,13 @@ import { useAppSelector } from "../store";
 interface TaskState {
   tasks: Task[];
   filteredTasks: Task[];
+  selectedTask: Task | null;
 }
 
 export const initialState: TaskState = {
   tasks: tasks,
   filteredTasks: [],
+  selectedTask: null,
 };
 
 const taskSlice = createSlice({
@@ -49,9 +51,9 @@ const taskSlice = createSlice({
     findTaskById: (state, action: PayloadAction<{ taskId: string }>) => {
       const { taskId } = action.payload;
       const foundTask = state.tasks.find((task) => task.id === taskId);
-
+console.log('finding id',taskId)
       if (foundTask) {
-        state.tasks = [foundTask]; // Update state.tasks with the found task
+        state.selectedTask = foundTask; // Update state.tasks with the found task
       } else {
         // Task with the given id not found, you can handle this case accordingly
       }
