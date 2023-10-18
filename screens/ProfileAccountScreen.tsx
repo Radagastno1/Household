@@ -49,7 +49,7 @@ export default function ProfileAccountScreen({ navigation }: any) {
       <View
         style={[
           styles.profileTitleContainer,
-          { backgroundColor: activeProfile?.avatarsColors},
+          { backgroundColor: activeProfile?.avatar},
         ]}
       >
         <Text style={styles.profileTitle}>{}</Text>

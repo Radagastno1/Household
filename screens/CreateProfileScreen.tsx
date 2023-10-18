@@ -1,9 +1,11 @@
 import React, { useState } from "react";
-import { AvatarColors, Avatars } from "../data/avatars";
+import { AvatarColors, Avatars, AvatarUrls } from "../data/avatars";
 import { Button } from "react-native-paper";
 import { households } from "../data";
 import { useDispatch } from 'react-redux';
 import { setProfile } from "../store/profile/profileSlice";
+import { Image } from "react-native";
+
 
 
 import {
@@ -18,18 +20,19 @@ import { useAppSelector } from "../store/store";
 
 type Avatar = {
   id: string;
-  name: string;
 };
 
+
+
 const avatars: Avatar[] = [
-  { id: Avatars.Bee, name: "Bee" },
-  { id: Avatars.Frog, name: "Frog" },
-  { id: Avatars.Monkey, name: "Monkey" },
-  { id: Avatars.Cat, name: "Cat" },
-  { id: Avatars.Koala, name: "Koala" },
-  { id: Avatars.Beetle, name: "Beetle" },
-  { id: Avatars.Fox, name: "Fox" },
-  { id: Avatars.Pig, name: "Pig" },
+  { id: Avatars.Bee },
+  { id: Avatars.Frog},
+  { id: Avatars.Monkey },
+  { id: Avatars.Cat },
+  { id: Avatars.Koala },
+  { id: Avatars.Beetle },
+  { id: Avatars.Fox },
+  { id: Avatars.Pig },
 ];
 
 export default function CreateProfileScreen({ navigation, route }: any) {
@@ -78,26 +81,25 @@ export default function CreateProfileScreen({ navigation, route }: any) {
         style={styles.input}
         onChangeText={(text) => setHouseholdName(text)}
       />
-      <View style={styles.sectionContainer}>
-        <View style={styles.rectContainer}>
-          <Text style={styles.rectText}>Välj din avatar</Text>
-        </View>
-      </View>
-      <View style={styles.avatarsContainer}>
-        {avatars.map((avatar) => (
-          <TouchableOpacity
-            key={avatar.id}
-            style={[
-              styles.avatar,
-              selectedAvatar === avatar.id ? styles.selectedAvatar : null,
-              { backgroundColor: AvatarColors[avatar.id as Avatars] },
-            ]}
-            onPress={() => setSelectedAvatar(avatar.id as Avatars)}
-          >
-            <Text style={styles.avatarText}>{avatar.name}</Text>
-          </TouchableOpacity>
-        ))}
-      </View>
+<View style={styles.avatarsContainer}>
+  {avatars.map((avatar) => (
+    <TouchableOpacity
+      key={avatar.id}
+      style={[
+        styles.avatar,
+        selectedAvatar === avatar.id ? styles.selectedAvatar : undefined,
+        { backgroundColor: AvatarColors[avatar.id as Avatars] },
+      ]}
+      onPress={() => setSelectedAvatar(avatar.id as Avatars)}
+    >
+      <Image
+        source={{ uri: AvatarUrls[avatar.id as Avatars] }}
+        style={{ width: 40, height: 40 }}
+      />
+    </TouchableOpacity>
+  ))}
+</View>
+
 
       <Button style={theme.button as any} onPress={saveProfile}>
         <Text style={theme.buttonText}>Skapa</Text>
