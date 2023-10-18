@@ -29,8 +29,8 @@ const profileSlice = createSlice({
       if (activeProfile) {
         state.activeProfile = activeProfile;
       }
-    }
-    
+    },
+   
   },
 });
 
