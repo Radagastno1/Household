@@ -34,9 +34,9 @@ const taskSlice = createSlice({
       const { tasks, household_Id } = action.payload;
       state.tasks = tasks.filter((task) => task.householdId === household_Id);
     },
-    findTaskById: (state, action: PayloadAction<{ id: string }>) => {
-      const { id } = action.payload;
-      const foundTask = state.tasks.find((task) => task.id === id);
+    findTaskById: (state, action: PayloadAction<{ taskId: string }>) => {
+      const { taskId } = action.payload;
+      const foundTask = state.tasks.find((task) => task.id === taskId);
 
       if (foundTask) {
         state.tasks = [foundTask]; // Update state.tasks with the found task

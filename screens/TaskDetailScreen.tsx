@@ -1,55 +1,49 @@
-
 import { Text, Button, Card } from "react-native-paper";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Task } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useTheme } from "../contexts/themeContext";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { findTaskById } from "../store/tasks/taskSlice";
 import { MaterialIcons } from "@expo/vector-icons";
 import {
-  findAvatarInCompletionByTaskId,
-  findCompletionsByTaskAndProfielId,
-  setTaskAsCompleted,
+  findAllAvatarFortodayCompletionByTaskId,
+  setTaskAsCompleted, 
 } from "../store/taskCompletionSlice";
-import { useSelector } from "react-redux";
 
 export default function TaskDetailScreen({ navigation, route }: any) {
+    const [task, setTask] = useState<Task>();
   const { theme } = useTheme();
   const { taskId } = route.params;
-  const [avatar, setAvatar] = useState<string>();
+
   const taskSlice = useAppSelector((state) => state.task);
   const dispatch = useAppDispatch();
-
   const taskCompletionSlice = useAppSelector((state) => state.taskCompletion);
+  const fetchAvatars = () => {
+    dispatch(findAllAvatarFortodayCompletionByTaskId({ taskId }));
+  };
+
+  const fetchTask = ()=>{
+    dispatch(findTaskById(taskId));
+  };
+
   const profileSlice = useAppSelector((state) => state.profile);
   const profileId = profileSlice.activeProfile?.id;
-  console.log("profileId:", profileId);
+
   useEffect(() => {
     if (taskId) {
-      dispatch(findTaskById({ id: taskId }));
+      fetchTask();
+      fetchAvatars();
     }
   }, [dispatch, taskId]);
-  console.log("taskId:", taskId);
 
   const handleTaskCompletion = async (taskId: string, profileId: string) => {
     if (taskId && profileId) {
       dispatch(setTaskAsCompleted({ taskId, profileId }));
-      // just used to find the latest completion object to test the fuction
-      await dispatch(findCompletionsByTaskAndProfielId({ taskId, profileId }));
-
-      setAvatar(profileSlice.activeProfile?.avatar);
+      fetchAvatars();
     } else {
-      // Handle the case when either taskId or profileId is undefined.
       console.error("Task ID or profile ID is undefined.");
     }
   };
-  const foundCompletion = useAppSelector((state) =>
-    taskCompletionSlice.taskCompletions.find(
-      (completion) =>
-        completion.taskId === taskId && completion.profileId === profileId,
-    ),
-  );
-  console.log(foundCompletion);
 
   return (
     <View style={styles.container}>
@@ -82,24 +76,28 @@ export default function TaskDetailScreen({ navigation, route }: any) {
       <View style={styles.intervalValueContainer}>
         <View style={styles.intervalContainer}>
           <View>
-            <Text style={styles.intervalValueText}>Återcommande</Text>
+            <Text style={styles.intervalText}>Återcommande</Text>
           </View>
           <View style={styles.circle}>
-            <Text style={styles.intervalValueText}>1</Text>
+            <Text style={styles.intervalNumber}>{taskSlice.tasks[0].interval}</Text>
           </View>
         </View>
-        <View style={styles.intervalContainer}>
+        <View style={styles.valueContainer}>
           <View>
-            <Text style={styles.intervalValueText}>Värde</Text>
+            <Text style={styles.valueText}>Värde</Text>
           </View>
           <View style={styles.circle}>
-            <Text style={styles.intervalValueText}>1</Text>
+            <Text style={styles.valueNumber}>{taskSlice.tasks[0].energiWeight}</Text>
           </View>
         </View>
       </View>
       <View>
         <View style={styles.avatarContainer}>
-          <Text>{avatar}</Text>
+          {taskCompletionSlice.avatars.map((avatar, index) => (
+            <View key={index} style={styles.avatarText}>
+              <Text>{avatar}</Text>
+            </View>
+          ))}
         </View>
       </View>
       <View style={styles.klarButtonContainer}>
@@ -161,9 +159,11 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   intervalContainer: {
-    marginRight: 10,
+    marginRight: 20,
     alignItems: "center",
   },
+  intervalText: {},
+  intervalNumber: {},
   circle: {
     width: 60,
     height: 60,
@@ -173,12 +173,20 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     margin: 10,
   },
-  intervalValueText: {},
+  valueContainer: {
+    marginLeft: 20,
+    alignItems: "center",
+  },
+  valueText: {},
+  valueNumber: {},
   avatarContainer: {
-    marginBottom: 40,
+    marginBottom: 50,
+    flexDirection: "row",
+  },
+  avatarText: {
+    marginRight: 10,
     textAlign: "left",
   },
-  avatarText: {},
   changeButton: {
     height: 40,
     width: 100,
@@ -194,13 +202,3 @@ const styles = StyleSheet.create({
   },
   klarButton: {},
 });
-
-
-
-
-
-
-
-
-
-

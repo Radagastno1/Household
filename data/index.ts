@@ -311,4 +311,10 @@ export const taskCompletions: TaskCompletion[] = [
     profileId: "profile2",
     completionDate: new Date("2023-10-15").toISOString(),
   },
+  {
+    id: "completion10",
+    taskId: "task6",
+    profileId: "profile2",
+    completionDate: new Date().toISOString(),
+  },
 ];
