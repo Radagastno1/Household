@@ -1,21 +1,15 @@
-import { Text, Button, Card } from "react-native-paper";
-import { View, StyleSheet } from "react-native";
+import { MaterialIcons } from "@expo/vector-icons";
 import React, { useEffect } from "react";
+import { StyleSheet, View } from "react-native";
+import { Button, Card, Text } from "react-native-paper";
 import { useTheme } from "../contexts/themeContext";
 import { useAppDispatch, useAppSelector } from "../store/store";
-import { findTaskById } from "../store/tasks/taskSlice";
-import { MaterialIcons } from "@expo/vector-icons";
 
 export default function TaskDetailScreen({ navigation, route }: any) {
   const { theme } = useTheme();
   const { taskId } = route.params;
   const taskSlice = useAppSelector((state) => state.task);
   const dispatch = useAppDispatch();
-  useEffect(() => {
-    if (taskId) {
-      dispatch(findTaskById({ id: taskId }));
-    }
-  }, [dispatch, taskId]);
 
   return (
     <View style={styles.container}>
@@ -32,7 +26,9 @@ export default function TaskDetailScreen({ navigation, route }: any) {
                   <MaterialIcons name="edit" size={24} color="black" />
                 )}
                 mode="elevated"
-                onPress={() => navigation.navigate("HandleTask")}
+                onPress={() =>
+                  navigation.navigate("HandleTask", { taskId: taskId })
+                }
                 style={styles.changeButton}
               >
                 Ändra

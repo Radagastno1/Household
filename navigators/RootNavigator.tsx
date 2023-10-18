@@ -20,7 +20,7 @@ export type RootStackParamList = {
   Auth: typeof AuthNavigator;
   Login: undefined;
   Signup: undefined;
-  HandleTask: undefined;
+  HandleTask: { taskId: string };
   ShowTask: { taskId: string };
   HouseholdAccount: undefined;
   ProfileAccount: undefined;

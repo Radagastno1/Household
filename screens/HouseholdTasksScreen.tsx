@@ -2,9 +2,8 @@ import { AntDesign } from "@expo/vector-icons";
 import { useIsFocused } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
-import {  Button, Card, Text } from "react-native-paper";
+import { Button, Card, Text } from "react-native-paper";
 import { households } from "../data";
-import { profiles, tasks } from "../data/index";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { filterTaskListByHouseId } from "../store/tasks/taskSlice";
 import { Task } from "../types";
@@ -20,7 +19,7 @@ export default function HouseholdTasksScreen({ navigation }: any) {
 
   // Use useSelector to access the profiles
   const activeProfile = useAppSelector((state) => state.profile.activeProfile);
-  
+
   const household = households.find((h) => h.id === activeProfile?.householdId);
   const taskSlice = useAppSelector((state) => state.task);
   const taskCompletions = useAppSelector((state) => state.taskCompletion);
@@ -30,9 +29,12 @@ export default function HouseholdTasksScreen({ navigation }: any) {
   const isFocused = useIsFocused();
   useEffect(() => {
     if (isFocused) {
+      console.log("fokuserad");
       if (activeProfile && household) {
         dispatch(
-          filterTaskListByHouseId({ tasks, household_Id: household?.id }),
+          filterTaskListByHouseId({
+            household_Id: household?.id,
+          }),
         );
       }
     }
@@ -65,8 +67,6 @@ export default function HouseholdTasksScreen({ navigation }: any) {
       );
     }
 
-
-
     // skillnad senaste completion datumet och dagens datum
     const currentDate = new Date();
     const timeDifference = currentDate.getTime() - lastCompletionDate.getTime();
@@ -85,7 +85,7 @@ export default function HouseholdTasksScreen({ navigation }: any) {
           isOwner ? styles.scrollContainerOwner : styles.scrollContainerNonOwner
         }
       >
-        {taskSlice.tasks.map((task) => (
+        {taskSlice.filteredTasks.map((task) => (
           <Card
             key={task.id}
             style={styles.card}
@@ -135,7 +135,7 @@ export default function HouseholdTasksScreen({ navigation }: any) {
               <AntDesign name="pluscircleo" size={20} color="black" />
             )}
             mode="outlined"
-            onPress={() => navigation.navigate("HandleTask")}
+            onPress={() => navigation.navigate("HandleTask", { taskId: "0" })}
             style={styles.button}
           >
             Lägg Till
