@@ -62,7 +62,9 @@ export default function RootNavigator() {
           initialParams={{ householdId: "household1" }}
         />
         <Stack.Screen name="HandleTask" component={CreateTaskScreen} />
-        <Stack.Screen name="ShowTask" component={TaskDetailScreen} />
+        <Stack.Screen name="ShowTask" 
+        
+        component={TaskDetailScreen} />
         <Stack.Screen name="Tab" component={TopTabNavigator} />
       </Stack.Navigator>
     </NavigationContainer>
