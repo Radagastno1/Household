@@ -12,8 +12,13 @@ import {
 } from "react-native";
 import { Card, Paragraph, Title } from "react-native-paper";
 import CircleComponent from "../components/CircleComponent";
+import { tasks } from "../data";
 import { useAppDispatch, useAppSelector } from "../store/store";
-import { addTask, editTask } from "../store/tasks/taskSlice";
+import {
+  addTask,
+  editTask,
+  filterTaskListByHouseId,
+} from "../store/tasks/taskSlice";
 import { Task } from "../types";
 
 //här skapar man en task som ägare för hushållet
@@ -93,6 +98,7 @@ export default function CreateTaskScreen({ navigation, route }: any) {
           householdId: householdId,
         };
         dispatch(addTask(newTask));
+        dispatch(filterTaskListByHouseId({ tasks, household_Id: householdId }));
       }
     } else {
       if (title && description && taskToEdit) {
@@ -106,6 +112,7 @@ export default function CreateTaskScreen({ navigation, route }: any) {
           householdId: householdId,
         };
         dispatch(editTask(editedTask));
+        dispatch(filterTaskListByHouseId({ tasks, household_Id: householdId }));
       }
     }
 
