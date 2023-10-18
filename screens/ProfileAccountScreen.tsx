@@ -1,11 +1,11 @@
 import { View, StyleSheet, StatusBar } from "react-native";
 import React, { useEffect } from "react";
 import {  useAppDispatch, useAppSelector } from "../store/store";
-import {  Card, Text, Button, IconButton } from "react-native-paper";
+import {  Card, Text, Button, IconButton, TextInput } from "react-native-paper";
 import { useTheme } from "../contexts/themeContext";
 import HouseholdProfileModal from "../modules/HouseholdMemberModal";
 import { useState } from "react";
-import { setProfileByHouseholdAndUser } from "../store/profile/profileSlice";
+import { setProfileByHouseholdAndUser, editProfileName } from "../store/profile/profileSlice";
 import { households } from "../data";
 // import { getProfileByHouseholdAndUser } from "../store/profile/profileSlice";
 
@@ -20,6 +20,10 @@ export default function ProfileAccountScreen({ navigation }: any) {
   const dispatch = useAppDispatch();
   dispatch(setProfileByHouseholdAndUser({userId:userId, householdId:householdId}))
   const activeProfile = useAppSelector((state) => state.profile.activeProfile);
+
+  const [isEditing, setIsEditing] = useState(false);
+  const [updatedProfileName, setUpdatedProfilename] = useState(activeProfile?.profileName);
+
   
   const { theme } = useTheme();
   const [isModalVisible, setModalVisible] = useState(false);
@@ -32,6 +36,14 @@ export default function ProfileAccountScreen({ navigation }: any) {
       }
     }
   }, [activeProfile]);
+
+  const handleSaveClick = () => {
+    if(activeProfile){
+      dispatch(editProfileName({ profileId: activeProfile?.id, newProfileName: updatedProfileName ?? activeProfile.profileName }));
+      setIsEditing(false);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View
@@ -55,11 +67,20 @@ export default function ProfileAccountScreen({ navigation }: any) {
         <Card style={styles.card}>
           <View style={styles.taskItem}>
             <View style={styles.nameContainer}>
-              <Text style={styles.profileTitle}>{activeProfile?.profileName}</Text>
+              {isEditing ? (
+                <TextInput placeholder={activeProfile?.profileName}
+                onChangeText={ (text) => {setUpdatedProfilename(text)}}/>
+              ) : (
+                    <Text  style={styles.profileTitle}>{activeProfile?.profileName}</Text>
+              )}
             </View>
-            <IconButton icon="pencil" size={20} onPress={() => {}} />
+            <IconButton icon="pencil" size={20} onPress={() => {setIsEditing(true)}} />
           </View>
         </Card>
+        
+        {isEditing ? (
+        <Button onPress={handleSaveClick}>Spara</Button>
+        ) : (null)}
 
         <Card style={styles.card}>
           <View style={styles.taskItem}>
