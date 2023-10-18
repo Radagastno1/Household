@@ -64,7 +64,7 @@ export default function RootNavigator() {
         />
         <Stack.Screen name="HandleTask" component={CreateTaskScreen} />
         <Stack.Screen name="ShowTask" 
-        
+         options={{ headerShown: false }}
         component={TaskDetailScreen} />
         <Stack.Screen 
         name="Tab" 
