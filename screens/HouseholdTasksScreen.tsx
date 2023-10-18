@@ -1,13 +1,12 @@
-import {  Image, ScrollView } from "react-native";
-import { Appbar, Card, Text, Button } from "react-native-paper";
-import { View, StyleSheet } from "react-native";
-import { profiles, tasks } from "../data/index";
-import React, { useEffect, useState } from "react";
 import { AntDesign } from "@expo/vector-icons";
+import { useIsFocused } from "@react-navigation/native";
+import React, { useEffect, useState } from "react";
+import { ScrollView, StyleSheet, View } from "react-native";
+import { Button, Card, Text } from "react-native-paper";
 import { households } from "../data";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { filterTaskListByHouseId } from "../store/tasks/taskSlice";
-import { useIsFocused, useNavigation } from "@react-navigation/native";
+import { Task } from "../types";
 
 // ska knna gå till lägg till ny task OM du är ägare för hushålllet
 //här listas alla sysslor i hushållet. nullas från avatarer varje midnatt.
@@ -16,64 +15,91 @@ import { useIsFocused, useNavigation } from "@react-navigation/native";
 //samt om den är försenad visa siffran med röd färg
 
 export default function HouseholdTasksScreen({ navigation }: any) {
-  const [profileId, setProfileId] = useState("profile6");
+  const [avatar, setAvatar] = useState<string>("");
+
   // Use useSelector to access the profiles
-  const profile = profiles.find((p) => p.id == profileId);
-  const household = households.find((h) => h.id == profile?.householdId);
+  const activeProfile = useAppSelector((state) => state.profile.activeProfile);
+
+  const household = households.find((h) => h.id === activeProfile?.householdId);
   const taskSlice = useAppSelector((state) => state.task);
+  const taskCompletions = useAppSelector((state) => state.taskCompletion);
   const dispatch = useAppDispatch();
 
-  const isOwner = profile?.isOwner;
+  const isOwner = activeProfile?.isOwner;
   const isFocused = useIsFocused();
   useEffect(() => {
     if (isFocused) {
-    if (profile && household) {
-      dispatch(filterTaskListByHouseId({ tasks, household_Id: household?.id }));
-    }}
-  }, [dispatch, isFocused,]);
+      console.log("fokuserad");
+      if (activeProfile && household) {
+        dispatch(
+          filterTaskListByHouseId({
+            household_Id: household?.id,
+          }),
+        );
+      }
+    }
+  }, [dispatch, isFocused]);
 
-
-
-  const handleTaskPress = (taskId:string) => {
-    navigation.navigate('ShowTask', { taskId });
+  const handleTaskPress = (taskId: string) => {
+    navigation.navigate("ShowTask", { taskId });
   };
+
+  function getDaysSinceLastCompletion(task: Task) {
+    let lastCompletionDate: Date;
+
+    //alla taskcompletions som hänt för tasken
+    const taskCompletionsForTask = taskCompletions.taskCompletions.filter(
+      (completion) => completion.taskId === task.id,
+    );
+
+    if (taskCompletionsForTask.length === 0) {
+      //om ingen har gjort en första completion så är senast datumet när tasken skapades
+      lastCompletionDate = new Date(task.creatingDate);
+    } else {
+      //hämta senast gjorda taskCompletions datum
+      lastCompletionDate = new Date(
+        taskCompletionsForTask.slice().sort((a, b) => {
+          return (
+            new Date(b.completionDate).getTime() -
+            new Date(a.completionDate).getTime()
+          );
+        })[0].completionDate,
+      );
+    }
+
+    // skillnad senaste completion datumet och dagens datum
+    const currentDate = new Date();
+    const timeDifference = currentDate.getTime() - lastCompletionDate.getTime();
+
+    // tiden till dagar
+    const daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+
+    console.log("task:", task.id, " har day dufference:", daysDifference);
+    return daysDifference;
+  }
 
   return (
     <View style={styles.container}>
-      <Appbar.Header style={styles.customHeader}>
-        {/* <Appbar.BackAction onPress={_backHome} /> */}
-        <View style={styles.title}>
-          <Appbar.Content title={household?.name} />
-        </View>
-        <View style={styles.imageContainer}>
-          <Appbar.Action
-            icon={({ size, color }) => (
-              <Image
-                source={require("../assets/bee-home.png")}
-                style={styles.beeHomeImage}
-              />
-            )}
-            onPress={() => navigation.navigate("HouseholdAccount")}
-          />
-        </View>
-      </Appbar.Header>
       <ScrollView
         style={
           isOwner ? styles.scrollContainerOwner : styles.scrollContainerNonOwner
         }
       >
-        {taskSlice.tasks.map((task) => (
-          <Card 
-          key={task.id} 
-          style={styles.card}
-          onPress={()=>handleTaskPress(task.id)}
+        {taskSlice.filteredTasks.map((task) => (
+          <Card
+            key={task.id}
+            style={styles.card}
+            onPress={() => handleTaskPress(task.id)}
           >
             <View style={styles.taskItem}>
               <View>
                 <Text variant="titleLarge">{task.title}</Text>
               </View>
               <View>
-                <Text variant="bodyMedium">avatarer1</Text>
+                <Text variant="bodyMedium">{avatar}</Text>
+              </View>
+              <View>
+                <Text variant="bodyMedium">interval</Text>
               </View>
             </View>
           </Card>
@@ -89,6 +115,7 @@ export default function HouseholdTasksScreen({ navigation }: any) {
             </View>
           </View>
         </Card>
+
         <Card style={styles.card}>
           <View style={styles.taskItem}>
             <View>
@@ -100,6 +127,7 @@ export default function HouseholdTasksScreen({ navigation }: any) {
           </View>
         </Card>
       </ScrollView>
+
       <View style={styles.buttonContainer}>
         {isOwner && (
           <Button
@@ -107,7 +135,7 @@ export default function HouseholdTasksScreen({ navigation }: any) {
               <AntDesign name="pluscircleo" size={20} color="black" />
             )}
             mode="outlined"
-            onPress={() => navigation.navigate("HandleTask")}
+            onPress={() => navigation.navigate("HandleTask", { taskId: "0" })}
             style={styles.button}
           >
             Lägg Till
@@ -141,7 +169,7 @@ const styles = StyleSheet.create({
     flex: 1,
     maxHeight: "80%",
   },
-  
+
   beeHomeImage: {
     width: 20,
     height: 30,

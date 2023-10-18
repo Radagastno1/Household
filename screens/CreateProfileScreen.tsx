@@ -14,6 +14,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { useTheme } from "../contexts/themeContext";
+import { useAppSelector } from "../store/store";
 
 type Avatar = {
   id: string;
@@ -39,14 +40,16 @@ export default function CreateProfileScreen({ navigation, route }: any) {
   const household = households.find((h) => h.id === id);
   const {theme } = useTheme();
   const dispatch = useDispatch();
+  const todaysDate = new Date();
+  const activeUser = useAppSelector((state) => state.userAccount.user)
 
   const saveProfile = () => {
     const avatar = selectedAvatar || '';
     const avatarsColor = selectedAvatar ? AvatarColors[selectedAvatar as Avatars] : '';
     const newProfile = {
-      id: '1234',
+      id:  todaysDate.getUTCMilliseconds.toString().slice(-4),
       profileName: householdName, 
-      userId: '',
+      userId: activeUser.id,
       householdId: id,
       avatar: avatar,
       avatarsColors: avatarsColor,

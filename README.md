@@ -39,16 +39,16 @@ Konto (3)
 [] En användare ska kunna gå med i ett hushåll genom att ange hushållets kod.
 
 Profil (4)
-[] En användare ska kunna ange sitt namn.
-[] En användare ska kunna välja en avatar (emoji-djur + färg) från en fördefinierad lista.
+[x] En användare ska kunna ange sitt namn.
+[x] En användare ska kunna välja en avatar (emoji-djur + färg) från en fördefinierad lista.
 [] Valda avatarer ska inte kunna väljas av andra användare i hushållet.
 [] Avataren ska användas i appen för att visa vad användaren har gjort.
 
 Sysslor (3)
-[] En ägare ska kunna lägga till sysslor att göra i hemmet.
-[] En syssla ska ha ett namn, en beskrivning (text), hur ofta den ska göras (dagar), och en
+[x] En ägare ska kunna lägga till sysslor att göra i hemmet.
+[x] En syssla ska ha ett namn, en beskrivning (text), hur ofta den ska göras (dagar), och en
 vikt som beskriver hur energikrävande den är.
-[] En ägare ska kunna redigera en syssla.
+[x] En ägare ska kunna redigera en syssla.
 
 Dagsvyn (3)
 [] Alla sysslor ska listas i en dagsvy och ge en översikt kring vad som behöver göras.

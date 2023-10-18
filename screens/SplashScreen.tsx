@@ -1,10 +1,90 @@
-import { View, Text } from 'react-native'
-import React from 'react'
+import { useNavigation } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { ResizeMode, Video } from "expo-av";
+import React, { useEffect, useState } from "react";
+import {
+  Animated,
+  Dimensions,
+  Easing,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+import { RootStackParamList } from "../navigators/RootNavigator";
 
 export default function SplashScreen() {
+  const [isLoading, setIsLoading] = useState(true);
+  const beeAnimation = new Animated.Value(0);
+  const windowHeight = Dimensions.get("window").height;
+  const navigation =
+    useNavigation<StackNavigationProp<RootStackParamList, "Auth">>();
+
+  useEffect(() => {
+    if (isLoading) {
+      // Simulate a loading process
+      setTimeout(() => setIsLoading(false), 3000);
+    } else {
+      Animated.timing(beeAnimation, {
+        toValue: 1,
+        duration: 1000,
+        easing: Easing.linear,
+        useNativeDriver: true,
+      }).start(() => {
+        // Once the animation is complete, navigate to the "Login" screen
+        navigation.navigate("Login");
+      });
+    }
+  }, [isLoading]);
+
   return (
-    <View>
-      <Text>Heres the SplashScreen</Text>
+    <View style={styles.container}>
+      <Animated.View
+        style={[
+          styles.flyingBee,
+          {
+            transform: [
+              {
+                translateY: beeAnimation.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [0, -windowHeight / 2],
+                }),
+              },
+            ],
+          },
+        ]}
+      >
+        <Video
+          source={require("../assets/bee-animation-yellow.mp4")}
+          rate={1.0}
+          volume={1.0}
+          isMuted={false}
+          shouldPlay
+          isLooping={true}
+          style={styles.video}
+          resizeMode={ResizeMode.CONTAIN}
+        />
+      </Animated.View>
+      {isLoading ? <Text style={styles.loadingText}>Loading</Text> : null}
     </View>
-  )
+  );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "yellow",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  video: {
+    width: 200,
+    height: 100,
+  },
+  loadingText: {
+    fontSize: 24,
+  },
+  flyingBee: {
+    position: "absolute",
+    opacity: 1,
+  },
+});
