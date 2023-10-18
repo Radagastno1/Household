@@ -64,7 +64,12 @@ const taskSlice = createSlice({
   },
 });
 
-export const { addTask, editTask, filterTaskListByHouseId, findTaskById } =
-  taskSlice.actions;
+export const {
+  addTask,
+  editTask,
+  deleteTask,
+  filterTaskListByHouseId,
+  findTaskById,
+} = taskSlice.actions;
 
 export const taskReducer = taskSlice.reducer;

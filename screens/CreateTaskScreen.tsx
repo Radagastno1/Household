@@ -12,10 +12,10 @@ import {
 } from "react-native";
 import { Card, Paragraph, Title } from "react-native-paper";
 import CircleComponent from "../components/CircleComponent";
-import { tasks } from "../data";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import {
   addTask,
+  deleteTask,
   editTask,
   filterTaskListByHouseId,
 } from "../store/tasks/taskSlice";
@@ -80,6 +80,13 @@ export default function CreateTaskScreen({ navigation, route }: any) {
   //     dispatch(editTask(updatedTask));
   //   }
   // };
+
+  const handleDeleteTask = () => {
+    if (taskToEdit) {
+      dispatch(deleteTask(taskToEdit.id));
+    }
+    navigation.navigate("Tab");
+  };
 
   const handleTask = () => {
     const todaysDate = new Date();
@@ -264,6 +271,11 @@ export default function CreateTaskScreen({ navigation, route }: any) {
               </View>
             </Card.Content>
           </Card>
+          {isCreateMode ? null : (
+            <TouchableOpacity onPress={() => handleDeleteTask()}>
+              <Text style={styles.removeText}>Ta bort</Text>
+            </TouchableOpacity>
+          )}
         </View>
 
         {/* <View style={styles.fillOutContainer}></View> */}
@@ -372,5 +384,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     paddingHorizontal: 10,
     fontWeight: "bold",
+  },
+  removeText: {
+    padding: 10,
+    fontSize: 20,
   },
 });
