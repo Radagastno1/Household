@@ -1,47 +1,46 @@
 import React from "react";
-import { Text, View, StyleSheet } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import {
-  getStartAndEndDateOfCurrentMonth,
-  getStartAndEndDateOfCurrentWeek,
-  getStartAndEndDateOfLastMonth,
-  getStartAndEndDateOfLastWeek,
+  getCurrentMonthDates,
+  getCurrentWeekDates,
+  getLastMonthDates,
+  getLastWeekDates,
 } from "../utils/DateHandler";
 
 export default function TESTDATUMSCREEN() {
   // --------------- DENNA VECKAN ----------------
-  const { startOfWeek, endOfWeek } = getStartAndEndDateOfCurrentWeek();
+  const { startOfCurrentWeek, endOfCurrentWeek } = getCurrentWeekDates();
 
   // --------------- FÖRRA VECKAN ----------------
-  const { lastWeekMonday, lastWeekSunday } = getStartAndEndDateOfLastWeek();
+  const { startOfLastWeek, endOfLastWeek } = getLastWeekDates();
 
   // --------------- DENNA MÅNADEN ----------------
-  const { startOfCurrentMonth, endOfCurrentMonth } =
-    getStartAndEndDateOfCurrentMonth();
+  const { startOfCurrentMonth, endOfCurrentMonth } = getCurrentMonthDates();
 
   // --------------- FÖRRA MÅNADEN ----------------
-  const { startOfLastMonth, endOfLastMonth } = getStartAndEndDateOfLastMonth();
+  const { startOfLastMonth, endOfLastMonth } = getLastMonthDates();
 
   return (
     <View style={styles.container}>
       <View style={styles.dates}>
         <Text style={styles.title}>DENNA VECKAN</Text>
-        <Text>{startOfWeek.toString()}</Text>
-        <Text>{endOfWeek.toString()}</Text>
+        <Text>{startOfCurrentWeek}</Text>
+        <Text>{endOfCurrentWeek}</Text>
       </View>
       <View style={styles.dates}>
         <Text style={styles.title}>FÖRRA VECKAN</Text>
-        <Text>{lastWeekMonday.toString()}</Text>
-        <Text>{lastWeekSunday.toString()}</Text>
+        <Text>{startOfLastWeek}</Text>
+        <Text>{endOfLastWeek}</Text>
       </View>
       <View style={styles.dates}>
         <Text style={styles.title}>DENNA MÅNADEN</Text>
-        <Text>{startOfCurrentMonth.toString()}</Text>
-        <Text>{endOfCurrentMonth.toString()}</Text>
+        <Text>{startOfCurrentMonth}</Text>
+        <Text>{endOfCurrentMonth}</Text>
       </View>
       <View style={styles.dates}>
         <Text style={styles.title}>FÖRRA MÅNADEN</Text>
-        <Text>{startOfLastMonth.toString()}</Text>
-        <Text>{endOfLastMonth.toString()}</Text>
+        <Text>{startOfLastMonth}</Text>
+        <Text>{endOfLastMonth}</Text>
       </View>
     </View>
   );
