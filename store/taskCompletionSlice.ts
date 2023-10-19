@@ -37,7 +37,7 @@ const taskCompletionSlice = createSlice({
       console.log("new task", newTaskCompletion);
       state.completions.push(newTaskCompletion);
     },
-
+//taskt detail screen still using this function
     findAllAvatarFortodayCompletionByTaskId: (
       state,
       action: PayloadAction<{ taskId: string }>,

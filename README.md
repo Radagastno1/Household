@@ -51,10 +51,10 @@ vikt som beskriver hur energikrävande den är.
 [x] En ägare ska kunna redigera en syssla.
 
 Dagsvyn (3)
-[] Alla sysslor ska listas i en dagsvy och ge en översikt kring vad som behöver göras.
-[] Utöver sysslans namn ska även vem/vilka som har gjort sysslan visas, hur många dagar
+[x] Alla sysslor ska listas i en dagsvy och ge en översikt kring vad som behöver göras.
+[x] Utöver sysslans namn ska även vem/vilka som har gjort sysslan visas, hur många dagar
 sedan sysslan gjordes senast samt om den är försenad.
-[] När en användare väljer en syssla ska beskrivningen av sysslan visas och det ska även
+[x] När en användare väljer en syssla ska beskrivningen av sysslan visas och det ska även
 med ett enkelt tryck gå att markera sysslan som gjord.
 
 Statistik (3)
