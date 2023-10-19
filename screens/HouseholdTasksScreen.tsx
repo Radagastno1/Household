@@ -19,8 +19,7 @@ export default function HouseholdTasksScreen({ navigation }: any) {
 
   const activeHousehold = useAppSelector(
     (state) => state.household.activehousehold,
-  ); // Antag att du hämtar activeHouseholdId från din householdSlice
-
+  );
   // Use useSelector to access the profiles
   const activeProfile = useAppSelector((state) => state.profile.activeProfile);
 
@@ -40,13 +39,11 @@ export default function HouseholdTasksScreen({ navigation }: any) {
             household_Id: household?.id,
           }),
         );
+        //TINA HERE: THIS DISPATCH MUST HAPPEND EVERY TIME WE GO TO THIS SCREEN
+        if (activeHousehold) {
+          dispatch(fetchTasks(activeHousehold?.id));
+        }
       }
-    }
-  }, [dispatch, isFocused]);
-
-  useEffect(() => {
-    if (activeHousehold) {
-      dispatch(fetchTasks(activeHousehold?.id));
     }
   }, [dispatch, isFocused]);
 

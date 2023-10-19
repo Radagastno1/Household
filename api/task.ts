@@ -72,11 +72,10 @@ export const editTaskToDB = async (task: Task) => {
 
     await updateDoc(taskRef, updatedTaskData);
 
-    // Returnera den redigerade uppgiften
     return task;
   } catch (error) {
     console.error("Fel vid redigering av uppgift:", error);
-    return null; // Om något går fel, returnera null eller hantera felet på lämpligt sätt
+    return null;
   }
 };
 
