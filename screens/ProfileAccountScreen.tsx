@@ -17,6 +17,8 @@ export default function ProfileAccountScreen({ navigation }: any) {
   //dessa får komma in när det finns att hämta i reducerns state
   const userId = "user1";
   const householdId = "household1";
+  // const householdId = households.find((h) => h.id == householdId);
+
   const dispatch = useAppDispatch();
   dispatch(setProfileByHouseholdAndUser({userId:userId, householdId:householdId}))
   const activeProfile = useAppSelector((state) => state.profile.activeProfile);
@@ -52,7 +54,8 @@ export default function ProfileAccountScreen({ navigation }: any) {
           { backgroundColor: activeProfile?.avatar},
         ]}
       >
-        <Text style={styles.profileTitle}>{}</Text>
+        {/* <Text style={styles.profileTitle}>{}</Text> */}
+        <Text>Profilnamn: {activeProfile?.profileName}</Text>
       </View>
       <Text>Avatar: {activeProfile?.avatar}</Text>
       <View style={{ marginTop: 50 }}>
