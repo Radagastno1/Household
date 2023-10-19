@@ -24,10 +24,9 @@ export default function HouseholdAccountScreen({ navigation }: any) {
       {allHouseholds.map((household: Household) => (
         <Button
           key={household.id}
-          // title={household.name}
-          title={ "household9"} // änra tillbaka denna sen
+          title={household.name}
           onPress={() => {
-            dispatch(setHouseholdByHouseholdId({ householdId: household.id })); // ÄNDRA TILLBAKA TILL SÅHÄR
+            dispatch(setHouseholdByHouseholdId({ householdId: household.id })); 
             navigation.navigate("ProfileAccount");
           }}
         />
@@ -35,7 +34,7 @@ export default function HouseholdAccountScreen({ navigation }: any) {
       ))}
        <Button
         title="Skapa nytt hushåll"
-        onPress={() => navigation.navigate("CreateProfile" , { id: "household9" })}      
+        onPress={() => navigation.navigate("CreateProfile" , { id: "household9" })}  // denna e hårdkodad sålänge    
       />
 
       <Button title="Logga ut" onPress={() => navigation.navigate("Login")} />

@@ -19,11 +19,10 @@ export default function ProfileAccountScreen({ navigation }: any) {
   //dessa får komma in när det finns att hämta i reducerns state
   const userId = "user1";
 
+  const householdId = "household9"; 
+  const [selectedAvatar] = useState<string>("");
 
-  const householdId = "household9";
-  const [selectedAvatar, setSelectedAvatar] = useState<string>('');
-
-  // const householdId = "fYHVLNiQvWEG9KNUGqBT";
+  // const householdId = "fYHVLNiQvWEG9KNUGqBT"; // kommenterade ut denna, bara denna som jag inte satt tillbaka 
 
   const dispatch = useAppDispatch();
   dispatch(
@@ -31,9 +30,10 @@ export default function ProfileAccountScreen({ navigation }: any) {
   );
 
   const activeProfiles = useAppSelector((state) =>
-  state.profile.profiles.filter((profile) => profile.householdId === householdId)
-);
-
+    state.profile.profiles.filter(
+      (profile) => profile.householdId === householdId,
+    ),
+  );
 
   const activeProfile = useAppSelector((state) => state.profile.activeProfile);
 
@@ -56,8 +56,6 @@ export default function ProfileAccountScreen({ navigation }: any) {
       }
     }
   }, [activeProfile]);
-
-  
 
   const handleSaveClick = () => {
     if (activeProfile) {
@@ -165,9 +163,8 @@ export default function ProfileAccountScreen({ navigation }: any) {
           visible={isModalVisible}
           onDismiss={() => setModalVisible(false)}
           householdName={householdId}
-        
           profiles={activeProfiles}
-          selectedAvatar={selectedAvatar} 
+          selectedAvatar={selectedAvatar}
         />
       </View>
     </View>
