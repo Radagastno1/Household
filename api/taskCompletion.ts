@@ -3,17 +3,19 @@ import {
   addDoc,
   collection,
   getDoc,
+  getDocs,
   getFirestore,
+  query,
   updateDoc,
+  where,
 } from "firebase/firestore";
-import { Task, TaskCompletion } from "../types";
+import { TaskCompletion } from "../types";
 import { app } from "./config";
 
 const db = getFirestore(app);
+const taskCompletionCollectionRef = collection(db, "taskCompletions");
 
 export const addTaskCompletionToDB = async (taskCompletion: TaskCompletion) => {
-  const taskCompletionCollectionRef = collection(db, "taskCompletions");
-
   try {
     const docRef = await addDoc(taskCompletionCollectionRef, {});
 
@@ -42,52 +44,31 @@ export const addTaskCompletionToDB = async (taskCompletion: TaskCompletion) => {
   }
 };
 
-// export const editTaskToDB = async (task: Task) => {
-//   task.householdId = "fYHVLNiQvWEG9KNUGqBT";
-//   const taskCollectionRef = collection(db, "tasks");
+export const getTaskCompletionsFromDB = async (
+  taskId: string,
+  profileId: string,
+) => {
+  try {
+    const q = query(
+      taskCompletionCollectionRef,
+      where("taskId", "==", taskId),
+      where("profileId", "==", profileId),
+    );
 
-//   try {
-//     const taskRef = doc(taskCollectionRef, task.id);
+    const querySnapshot = await getDocs(q);
 
-//     const updatedTaskData = {
-//       id: task.id,
-//       title: task.title,
-//       description: task.description,
-//       energiWeight: task.energiWeight,
-//       creatingDate: task.creatingDate,
-//       interval: task.interval,
-//       householdId: task.householdId,
-//     };
+    const taskCompletions: TaskCompletion[] = [];
 
-//     await updateDoc(taskRef, updatedTaskData);
+    querySnapshot.forEach((doc) => {
+      taskCompletions.push(doc.data() as TaskCompletion);
+    });
 
-//     return task;
-//   } catch (error) {
-//     console.error("Fel vid redigering av uppgift:", error);
-//     return null;
-//   }
-// };
-
-// export const getTasksFromDB = async (householdId: string) => {
-//   try {
-//     const taskCollectionRef = collection(db, "tasks");
-
-//     const q = query(taskCollectionRef, where("householdId", "==", householdId));
-
-//     const querySnapshot = await getDocs(q);
-
-//     const tasks: Task[] = [];
-
-//     querySnapshot.forEach((doc) => {
-//       tasks.push(doc.data() as Task);
-//     });
-
-//     console.log("Uppgifter hämtade:", tasks);
-//     return tasks;
-//   } catch (error) {
-//     console.error("Fel vid hämtning av uppgifter:", error);
-//   }
-// };
+    console.log("Task completions hämtade:", taskCompletions);
+    return taskCompletions;
+  } catch (error) {
+    console.error("Fel vid hämtning av task completions:", error);
+  }
+};
 
 // export const deleteTaskFromDB = async (taskId: string) => {
 //   //sen ska jag ta bort taskcompletions med??
