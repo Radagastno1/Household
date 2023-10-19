@@ -2,6 +2,7 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { tasks } from "../../data";
 import { Task } from "../../types";
 import { useAppSelector } from "../store";
+import { addTaskToDB } from "../../api/task";
 
 interface TaskState {
   tasks: Task[];
@@ -20,6 +21,7 @@ const taskSlice = createSlice({
   initialState,
   reducers: {
     addTask: (state, action: PayloadAction<Task>) => {
+      addTaskToDB(action.payload);
       state.tasks = [...state.tasks, action.payload];
       console.log("task som las till: ", action.payload);
       console.log("nu är state tasks listan;", state.tasks);
