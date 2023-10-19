@@ -17,7 +17,8 @@ import { findTaskById } from "../store/tasks/taskSlice";
 export default function TaskDetailScreen({ navigation, route }: any) {
   const { theme } = useTheme();
   const { taskId } = route.params;
-
+  const activeProfile = useAppSelector((state) => state.profile.activeProfile);
+  const isOwner = activeProfile?.isOwner;
   const taskSlice = useAppSelector((state) => state.task);
   const dispatch = useAppDispatch();
   const taskCompletionSlice = useAppSelector((state) => state.taskCompletion);
@@ -53,7 +54,7 @@ export default function TaskDetailScreen({ navigation, route }: any) {
               <Text variant="titleLarge">{taskSlice.selectedTask?.title}</Text>
             </View>
             <View>
-              {/* {isOwner && ( */}
+              {isOwner && (
               <Button
                 icon={({ size, color }) => (
                   <MaterialIcons name="edit" size={24} color="black" />
@@ -66,7 +67,7 @@ export default function TaskDetailScreen({ navigation, route }: any) {
               >
                 Ändra
               </Button>
-              {/* )} */}
+              )}
             </View>
           </View>
         </Card>
