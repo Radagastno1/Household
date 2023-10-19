@@ -3,7 +3,7 @@ import { AvatarColors, Avatars, AvatarUrls } from "../data/avatars";
 import { Button } from "react-native-paper";
 import { households } from "../data";
 import { useDispatch } from 'react-redux';
-import { setProfile, editAvatarSelection } from "../store/profile/profileSlice";
+import { setProfile } from "../store/profile/profileSlice";
 import { Image } from "react-native";
 
 import { Text, View, TextInput, StyleSheet, TouchableOpacity } from "react-native";
