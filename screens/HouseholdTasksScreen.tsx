@@ -16,6 +16,35 @@ import { AvatarUrls, Avatars } from "../data/avatars";
 //samt om den är försenad visa siffran med röd färg
 
 export default function HouseholdTasksScreen({ navigation }: any) {
+
+    // function resetAvatars(dispatch: Dispatch) {
+    //     // Clear the avatars data, set it to an empty array or an initial value
+    //     // For example:
+    //     dispatch(setAvatars([]));
+    //   }
+      
+    //   function scheduleMidnightReset(dispatch: Dispatch) {
+    //     const now = new Date();
+    //     const midnight = new Date(
+    //       now.getFullYear(),
+    //       now.getMonth(),
+    //       now.getDate() + 1, // Tomorrow at midnight
+    //       0, // Hours
+    //       0, // Minutes
+    //       0 // Seconds
+    //     );
+    //     const timeUntilMidnight = midnight.getTime() - now.getTime();
+      
+    //     setTimeout(() => {
+    //       resetAvatars(dispatch);
+    //       scheduleMidnightReset(dispatch); // Reschedule for the next day
+    //     }, timeUntilMidnight);
+    //   }
+      
+    //   // Call this function to start the schedule
+    //   scheduleMidnightReset(dispatch); //
+
+
   // Use useSelector to access the profiles
   const activeProfile = useAppSelector((state) => state.profile.activeProfile);
   const household = households.find((h) => h.id === activeProfile?.householdId);
