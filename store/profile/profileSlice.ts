@@ -60,5 +60,6 @@ const profileSlice = createSlice({
 export const { setProfile } = profileSlice.actions;
 export const { editProfileName } = profileSlice.actions;
 export const { setProfileByHouseholdAndUser } = profileSlice.actions;
+export const { editAvatarSelection } = profileSlice.actions;
 
 export const profileReducer = profileSlice.reducer;
