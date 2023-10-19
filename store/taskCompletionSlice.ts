@@ -1,6 +1,9 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { addTaskCompletionToDB } from "../api/taskCompletion";
-import { profiles, taskCompletions } from "../data";
+import {
+  addTaskCompletionToDB,
+  getTaskCompletionsFromDB,
+} from "../api/taskCompletion";
+import { profiles } from "../data";
 import { TaskCompletion } from "../types";
 
 interface TaskCompletionState {
@@ -9,7 +12,8 @@ interface TaskCompletionState {
 }
 
 const initialState: TaskCompletionState = {
-  completions: taskCompletions,
+  //ändrat här så vi inte går efter mockade datan nu när den ska kolla mot db
+  completions: [],
   avatars: [],
 };
 
@@ -17,6 +21,9 @@ const taskCompletionSlice = createSlice({
   name: "taskCompletion",
   initialState,
   reducers: {
+    setCompletions: (state, action) => {
+      state.completions = action.payload;
+    },
     setTaskAsCompleted: (
       state,
       action: PayloadAction<{ taskId: string; profileId: string }>,
@@ -155,5 +162,12 @@ export const {
   findAllAvatarInCompletionByTaskId,
   findAllAvatarFortodayCompletionByTaskId,
 } = taskCompletionSlice.actions;
+
+//FRÅGA DAVID ÄR DETTA OK VERKLIGEN?
+export const fetchCompletions =
+  (taskId: string, profileId: string) => async (dispatch: any) => {
+    const taskCompletions = await getTaskCompletionsFromDB(taskId, profileId);
+    dispatch(taskCompletionSlice.actions.setCompletions(taskCompletions));
+  };
 
 export const taskCompletionReducer = taskCompletionSlice.reducer;
