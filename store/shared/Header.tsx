@@ -1,8 +1,8 @@
 import { View, Text } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { StyleSheet } from 'react-native'
-import { Household, Profile } from '../types';
-import { households, profiles } from '../data';
+import {  Household, Profile} from '../../types'
+import { households, profiles } from '../../data';
 
 interface HeaderProps {
     title: string;
