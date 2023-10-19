@@ -1,18 +1,15 @@
-
-
-
 import { MaterialIcons } from "@expo/vector-icons";
 import React, { useEffect } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, Image } from "react-native";
 import { Button, Card, Text } from "react-native-paper";
 import { useTheme } from "../contexts/themeContext";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import {
   findAllAvatarFortodayCompletionByTaskId,
-  setTaskAsCompleted, 
+  setTaskAsCompleted,
 } from "../store/taskCompletionSlice";
 import { findTaskById } from "../store/tasks/taskSlice";
-
+import { AvatarUrls, Avatars } from "../data/avatars";
 
 export default function TaskDetailScreen({ navigation, route }: any) {
   const { theme } = useTheme();
@@ -31,7 +28,7 @@ export default function TaskDetailScreen({ navigation, route }: any) {
 
   useEffect(() => {
     if (taskId) {
-        dispatch(findTaskById({taskId}));
+      dispatch(findTaskById({ taskId }));
       fetchAvatars();
     }
   }, [dispatch, taskId]);
@@ -55,53 +52,65 @@ export default function TaskDetailScreen({ navigation, route }: any) {
             </View>
             <View>
               {isOwner && (
-              <Button
-                icon={({ size, color }) => (
-                  <MaterialIcons name="edit" size={24} color="black" />
-                )}
-                mode="elevated"
-                onPress={() =>
-                  navigation.navigate("HandleTask", { taskId: taskId })
-                }
-                style={styles.changeButton}
-              >
-                Ändra
-              </Button>
+                <Button
+                  icon={({ size, color }) => (
+                    <MaterialIcons name="edit" size={24} color="black" />
+                  )}
+                  mode="elevated"
+                  onPress={() =>
+                    navigation.navigate("HandleTask", { taskId: taskId })
+                  }
+                  style={styles.changeButton}
+                >
+                  Ändra
+                </Button>
               )}
             </View>
           </View>
         </Card>
       </View>
+
       <View style={styles.descriptionContainer}>
         <Text variant="bodyMedium">{taskSlice.selectedTask?.description}</Text>
       </View>
+
       <View style={styles.intervalValueContainer}>
         <View style={styles.intervalContainer}>
           <View>
             <Text style={styles.intervalText}>Återcommande</Text>
           </View>
           <View style={styles.circle}>
-            <Text style={styles.intervalNumber}>{taskSlice.selectedTask?.interval}</Text>
+            <Text style={styles.intervalNumber}>
+              {taskSlice.selectedTask?.interval}
+            </Text>
           </View>
         </View>
+
         <View style={styles.valueContainer}>
           <View>
             <Text style={styles.valueText}>Värde</Text>
           </View>
           <View style={styles.circle}>
-            <Text style={styles.valueNumber}>{taskSlice.selectedTask?.energiWeight}</Text>
+            <Text style={styles.valueNumber}>
+              {taskSlice.selectedTask?.energiWeight}
+            </Text>
           </View>
         </View>
       </View>
+
       <View>
         <View style={styles.avatarContainer}>
           {taskCompletionSlice.avatars.map((avatar, index) => (
             <View key={index} style={styles.avatarText}>
-              <Text>{avatar}</Text>
+              <Image
+                source={{ uri: AvatarUrls[avatar as Avatars] }}
+                style={{ height: 20, width: 20 }}
+              />
             </View>
           ))}
         </View>
       </View>
+
       <View style={styles.klarButtonContainer}>
         <Button
           mode="text"
@@ -116,6 +125,7 @@ export default function TaskDetailScreen({ navigation, route }: any) {
           <Text style={[styles.klarButton, theme.buttonText]}>Till Tasks</Text>
         </Button>
       </View>
+      
     </View>
   );
 }

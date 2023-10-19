@@ -1,13 +1,13 @@
 import { AntDesign } from "@expo/vector-icons";
-import { useFocusEffect, useIsFocused } from "@react-navigation/native";
-import React, { useCallback, useEffect, useState } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { useFocusEffect } from "@react-navigation/native";
+import React, { useCallback } from "react";
+import { ScrollView, StyleSheet, View, Image } from "react-native";
 import { Button, Card, Text } from "react-native-paper";
 import { households, profiles, taskCompletions } from "../data";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { fetchTasks, filterTaskListByHouseId } from "../store/tasks/taskSlice";
 import { Task } from "../types";
-import { findAllAvatarFortodayCompletionByTaskId } from "../store/taskCompletionSlice";
+import { AvatarUrls, Avatars } from "../data/avatars";
 
 // ska knna gå till lägg till ny task OM du är ägare för hushålllet
 //här listas alla sysslor i hushållet. nullas från avatarer varje midnatt.
@@ -16,6 +16,34 @@ import { findAllAvatarFortodayCompletionByTaskId } from "../store/taskCompletion
 //samt om den är försenad visa siffran med röd färg
 
 export default function HouseholdTasksScreen({ navigation }: any) {
+
+    // function resetAvatars(dispatch: Dispatch) {
+    //     // Clear the avatars data, set it to an empty array or an initial value
+    //     // For example:
+    //     dispatch(setAvatars([]));
+    //   }
+      
+    //   function scheduleMidnightReset(dispatch: Dispatch) {
+    //     const now = new Date();
+    //     const midnight = new Date(
+    //       now.getFullYear(),
+    //       now.getMonth(),
+    //       now.getDate() + 1, // Tomorrow at midnight
+    //       0, // Hours
+    //       0, // Minutes
+    //       0 // Seconds
+    //     );
+    //     const timeUntilMidnight = midnight.getTime() - now.getTime();
+      
+    //     setTimeout(() => {
+    //       resetAvatars(dispatch);
+    //       scheduleMidnightReset(dispatch); // Reschedule for the next day
+    //     }, timeUntilMidnight);
+    //   }
+      
+    //   // Call this function to start the schedule
+    //   scheduleMidnightReset(dispatch); //
+
 
   const activeHousehold = useAppSelector(
     (state) => state.household.activehousehold,
@@ -32,7 +60,6 @@ export default function HouseholdTasksScreen({ navigation }: any) {
 
   useFocusEffect(
     useCallback(() => {
-      console.log("fokuserad");
       if (activeProfile && household) {
         dispatch(
           filterTaskListByHouseId({
@@ -54,7 +81,7 @@ export default function HouseholdTasksScreen({ navigation }: any) {
   function findAllAvatarFortodayCompletionByTaskId(taskId: string) {
     const today = new Date().toISOString();
     //filter the completions with the same taskId---------can be moved out and share with getdays function
-    const filteredTodaysCompletionsFotTask = taskCompletions.filter(
+    const filteredTodaysCompletionsForTask = taskCompletions.filter(
       (completion) =>
         completion.completionDate.split("T")[0] === today.split("T")[0] &&
         completion.taskId === taskId,
@@ -62,7 +89,9 @@ export default function HouseholdTasksScreen({ navigation }: any) {
     // get the unique profileIds
     const uniqueProfileIds = [
       ...new Set(
-        filteredTodaysCompletionsFotTask?.map((completion) => completion.profileId),
+        filteredTodaysCompletionsForTask?.map(
+          (completion) => completion.profileId,
+        ),
       ),
     ];
     console.log(uniqueProfileIds);
@@ -79,19 +108,20 @@ export default function HouseholdTasksScreen({ navigation }: any) {
     let lastCompletionDate: Date;
     const today = new Date().toISOString();
     //all todays taskcompletions for task ---------can be moved out and share with getAvatar function
-    const filteredTodaysCompletionsFotTask = taskCompletionSlice.completions.filter(
-      (completion) =>
-        completion.taskId === task.id &&
-        completion.completionDate.split("T")[0] === today.split("T")[0],
-    );
+    const filteredTodaysCompletionsForTask =
+      taskCompletionSlice.completions.filter(
+        (completion) =>
+          completion.taskId === task.id &&
+          completion.completionDate.split("T")[0] === today.split("T")[0],
+      );
 
-    if (filteredTodaysCompletionsFotTask.length === 0) {
+    if (filteredTodaysCompletionsForTask.length === 0) {
       //if it is empty, no one did it today
       lastCompletionDate = new Date(task.creatingDate);
     } else {
       //get the latest date it was done
       lastCompletionDate = new Date(
-        filteredTodaysCompletionsFotTask.slice().sort((a, b) => {
+        filteredTodaysCompletionsForTask.slice().sort((a, b) => {
           return (
             new Date(b.completionDate).getTime() -
             new Date(a.completionDate).getTime()
@@ -103,7 +133,8 @@ export default function HouseholdTasksScreen({ navigation }: any) {
     const currentDate = new Date();
     const timeDifference = currentDate.getTime() - lastCompletionDate.getTime();
     //convert it to days minus the interval days
-    const daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24))-task.interval;
+    const daysDifference =
+      Math.floor(timeDifference / (1000 * 60 * 60 * 24)) - task.interval;
     return daysDifference;
   }
 
@@ -127,13 +158,16 @@ export default function HouseholdTasksScreen({ navigation }: any) {
 
               {findAllAvatarFortodayCompletionByTaskId(task.id).map(
                 (avatar, index) => (
-                  <View>
-                    <Text key={index} variant="bodyMedium">
-                      {avatar}
-                    </Text>
+                  <View key={index}>
+                    <Image
+                      source={{ uri: AvatarUrls[avatar as Avatars] }}
+                      style={{ height: 20, width: 20 }}
+                    />
+                    {/* <Text variant="bodyMedium">{avatar}</Text> */}
                   </View>
                 ),
               )}
+
               {getDaysSinceLastCompletion(task) > 0 && (
                 <View style={styles.intervalNumberCircle}>
                   <Text style={styles.circleText} variant="bodyMedium">
