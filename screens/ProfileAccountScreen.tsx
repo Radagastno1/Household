@@ -19,12 +19,22 @@ export default function ProfileAccountScreen({ navigation }: any) {
   //dessa får komma in när det finns att hämta i reducerns state
   const userId = "5NCx5MKcUu6UYKjFqRkg";
 
-  const householdId = "fYHVLNiQvWEG9KNUGqBT";
+  const householdId = "household1"; 
+  const [selectedAvatar] = useState<string>("");
+
+  // const householdId = "fYHVLNiQvWEG9KNUGqBT"; // kommenterade ut denna, bara denna som jag inte satt tillbaka 
 
   const dispatch = useAppDispatch();
   dispatch(
     setProfileByHouseholdAndUser({ userId: userId, householdId: householdId }),
   );
+
+  const activeProfiles = useAppSelector((state) =>
+    state.profile.profiles.filter(
+      (profile) => profile.householdId === householdId,
+    ),
+  );
+
   const activeProfile = useAppSelector((state) => state.profile.activeProfile);
 
   const [isEditing, setIsEditing] = useState(false);
@@ -35,7 +45,7 @@ export default function ProfileAccountScreen({ navigation }: any) {
   const { theme } = useTheme();
   const [isModalVisible, setModalVisible] = useState(false);
   const [headerTitle, setHeaderTitle] = useState<string>("TinaHome");
-  
+
   useEffect(() => {
     if (activeProfile) {
       const household = households.find(
@@ -153,8 +163,9 @@ export default function ProfileAccountScreen({ navigation }: any) {
         <HouseholdProfileModal
           visible={isModalVisible}
           onDismiss={() => setModalVisible(false)}
-          householdName="Hushållets namn"
-          avatars={["avatar1.jpg", "avatar2.jpg", "avatar3.jpg"]}
+          householdName={householdId}
+          profiles={activeProfiles}
+          selectedAvatar={selectedAvatar}
         />
       </View>
     </View>

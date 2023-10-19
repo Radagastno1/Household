@@ -1,12 +1,12 @@
 export enum Avatars {
-  Bee = "Bee",
-  Frog = "Frog",
-  Monkey = "Monkey",
-  Cat = "Cat",
-  Koala = "Koala",
-  Beetle = "Beetle",
-  Fox = "Fox",
-  Pig = "Pig",
+    Bee = "Bee",
+    Frog = "Frog",
+    Monkey = "Monkey",
+    Cat = "Cat",
+    Koala = "Koala",
+    Beetle = "Beetle",
+    Fox = "Fox",
+    Pig = "Pig",
 }
 
 export const AvatarColors: Record<Avatars, string> = {
