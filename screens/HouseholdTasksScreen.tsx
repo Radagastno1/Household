@@ -33,7 +33,7 @@ export default function HouseholdTasksScreen({ navigation }: any) {
   const isFocused = useIsFocused();
   useEffect(() => {
     if (isFocused) {
-      console.log("fokuserad");
+      console.log("fokuserad, vi har hushållsid: ", household?.id);
       if (activeProfile && household) {
         dispatch(
           filterTaskListByHouseId({

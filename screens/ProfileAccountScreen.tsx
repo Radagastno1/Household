@@ -1,14 +1,16 @@
 import { View, StyleSheet, StatusBar } from "react-native";
 import React, { useEffect } from "react";
-import {  useAppDispatch, useAppSelector } from "../store/store";
-import {  Card, Text, Button, IconButton, TextInput } from "react-native-paper";
+import { useAppDispatch, useAppSelector } from "../store/store";
+import { Card, Text, Button, IconButton, TextInput } from "react-native-paper";
 import { useTheme } from "../contexts/themeContext";
 import HouseholdProfileModal from "../modules/HouseholdMemberModal";
 import { useState } from "react";
-import { setProfileByHouseholdAndUser, editProfileName } from "../store/profile/profileSlice";
+import {
+  setProfileByHouseholdAndUser,
+  editProfileName,
+} from "../store/profile/profileSlice";
 import { households } from "../data";
 // import { getProfileByHouseholdAndUser } from "../store/profile/profileSlice";
-
 
 export default function ProfileAccountScreen({ navigation }: any) {
   //du måste kolla getActiveHousehold från householdreducern
@@ -16,21 +18,26 @@ export default function ProfileAccountScreen({ navigation }: any) {
   //då hämtar du getProfileForHousehold(userId, householdId);
   //dessa får komma in när det finns att hämta i reducerns state
   const userId = "user1";
-  const householdId = "household1";
+  const householdId = "fYHVLNiQvWEG9KNUGqBT";
   const dispatch = useAppDispatch();
-  dispatch(setProfileByHouseholdAndUser({userId:userId, householdId:householdId}))
+  dispatch(
+    setProfileByHouseholdAndUser({ userId: userId, householdId: householdId }),
+  );
   const activeProfile = useAppSelector((state) => state.profile.activeProfile);
 
   const [isEditing, setIsEditing] = useState(false);
-  const [updatedProfileName, setUpdatedProfilename] = useState(activeProfile?.profileName);
+  const [updatedProfileName, setUpdatedProfilename] = useState(
+    activeProfile?.profileName,
+  );
 
-  
   const { theme } = useTheme();
   const [isModalVisible, setModalVisible] = useState(false);
   const [headerTitle, setHeaderTitle] = useState<string>("TinaHome");
   useEffect(() => {
     if (activeProfile) {
-      const household = households.find((h) => h.id === activeProfile.householdId);
+      const household = households.find(
+        (h) => h.id === activeProfile.householdId,
+      );
       if (household) {
         setHeaderTitle(household.name);
       }
@@ -38,8 +45,13 @@ export default function ProfileAccountScreen({ navigation }: any) {
   }, [activeProfile]);
 
   const handleSaveClick = () => {
-    if(activeProfile){
-      dispatch(editProfileName({ profileId: activeProfile?.id, newProfileName: updatedProfileName ?? activeProfile.profileName }));
+    if (activeProfile) {
+      dispatch(
+        editProfileName({
+          profileId: activeProfile?.id,
+          newProfileName: updatedProfileName ?? activeProfile.profileName,
+        }),
+      );
       setIsEditing(false);
     }
   };
@@ -49,7 +61,7 @@ export default function ProfileAccountScreen({ navigation }: any) {
       <View
         style={[
           styles.profileTitleContainer,
-          { backgroundColor: activeProfile?.avatar},
+          { backgroundColor: activeProfile?.avatar },
         ]}
       >
         <Text style={styles.profileTitle}>{}</Text>
@@ -68,19 +80,29 @@ export default function ProfileAccountScreen({ navigation }: any) {
           <View style={styles.taskItem}>
             <View style={styles.nameContainer}>
               {isEditing ? (
-                <TextInput placeholder={activeProfile?.profileName}
-                onChangeText={ (text) => {setUpdatedProfilename(text)}}/>
+                <TextInput
+                  placeholder={activeProfile?.profileName}
+                  onChangeText={(text) => {
+                    setUpdatedProfilename(text);
+                  }}
+                />
               ) : (
-                    <Text  style={styles.profileTitle}>{activeProfile?.profileName}</Text>
+                <Text style={styles.profileTitle}>
+                  {activeProfile?.profileName}
+                </Text>
               )}
             </View>
-            <IconButton icon="pencil" size={20} onPress={() => {setIsEditing(true)}} />
+            <IconButton
+              icon="pencil"
+              size={20}
+              onPress={() => {
+                setIsEditing(true);
+              }}
+            />
           </View>
         </Card>
-        
-        {isEditing ? (
-        <Button onPress={handleSaveClick}>Spara</Button>
-        ) : (null)}
+
+        {isEditing ? <Button onPress={handleSaveClick}>Spara</Button> : null}
 
         <Card style={styles.card}>
           <View style={styles.taskItem}>
