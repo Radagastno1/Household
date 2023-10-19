@@ -1,8 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Task, TaskCompletion } from "../types";
-import { useAppSelector } from "./store";
+import { addTaskCompletionToDB } from "../api/taskCompletion";
 import { profiles, taskCompletions } from "../data";
-import { Avatars } from "../data/avatars";
+import { TaskCompletion } from "../types";
 
 interface TaskCompletionState {
   completions: TaskCompletion[];
@@ -22,22 +21,27 @@ const taskCompletionSlice = createSlice({
       state,
       action: PayloadAction<{ taskId: string; profileId: string }>,
     ) => {
-      //en task id och en profile id  måste komma in här
-      //en taskCompletion - objekt skapas (id, taskId, profileId, completionDate)
-      //man kan ju också skapa objektet utifrån om man vill det hellre?
       console.log("profile id som kommer in:", action.payload.profileId);
-      const todaysDate = new Date();
 
       const newTaskCompletion: TaskCompletion = {
-        id: todaysDate.getUTCMilliseconds.toString().slice(-4),
+        id: "",
         taskId: action.payload.taskId,
         profileId: action.payload.profileId,
         completionDate: new Date().toISOString(),
       };
       console.log("new task", newTaskCompletion);
-      state.completions.push(newTaskCompletion);
+
+      addTaskCompletionToDB(newTaskCompletion)
+        .then((createdTaskCompletion) => {
+          if (createdTaskCompletion) {
+            state.completions.push(newTaskCompletion);
+          }
+        })
+        .catch((error) => {
+          console.error("Fel vid tillägg av task completion:", error);
+        });
     },
-//taskt detail screen still using this function
+    //taskt detail screen still using this function
     findAllAvatarFortodayCompletionByTaskId: (
       state,
       action: PayloadAction<{ taskId: string }>,
@@ -47,7 +51,8 @@ const taskCompletionSlice = createSlice({
       //filter the completions with the same taskId
       const filteredCompletions = state.completions.filter(
         (completion) =>
-          completion.completionDate.split("T")[0] === today.split("T")[0] && completion.taskId === taskId,
+          completion.completionDate.split("T")[0] === today.split("T")[0] &&
+          completion.taskId === taskId,
       );
       // get the unique profileIds
       const uniqueProfileIds = [
@@ -79,7 +84,7 @@ const taskCompletionSlice = createSlice({
       } else {
       }
     },
-    
+
     findCompletionsByTaskIdAndCompletionDate: (
       state,
       action: PayloadAction<{ taskId: string; completionDate: string }>,
