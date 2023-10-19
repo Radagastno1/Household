@@ -3,7 +3,7 @@ import { Avatars } from "./avatars";
 
 export const users: User[] = [
   {
-    id: "user1",
+    id: "5NCx5MKcUu6UYKjFqRkg",
     name: "User One",
     username: "userone",
     password: "password1",
@@ -50,10 +50,10 @@ export const households: Household[] = [
 // Added avatarcolor to profile so long
 export const profiles: Profile[] = [
   {
-    id: "profile1",
+    id: "moNj4qvcbKNQdEsnhEjL",
     profileName: "Silly User 1",
-    userId: "user1",
-    householdId: "household1",
+    userId: "5NCx5MKcUu6UYKjFqRkg",
+    householdId: "fYHVLNiQvWEG9KNUGqBT",
     avatar: Avatars.Bee,
     isOwner: true,
     isActive: true,

@@ -1,19 +1,16 @@
 import { AntDesign } from "@expo/vector-icons";
 import { useFocusEffect } from "@react-navigation/native";
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import { ScrollView, StyleSheet, View, Image } from "react-native";
 import { Button, Card, Text } from "react-native-paper";
 import { households, profiles, taskCompletions } from "../data";
 import { useAppDispatch, useAppSelector } from "../store/store";
+import { fetchCompletions } from "../store/taskCompletionSlice";
 import { fetchTasks, filterTaskListByHouseId } from "../store/tasks/taskSlice";
 import { Task } from "../types";
+
 import { AvatarUrls, Avatars } from "../data/avatars";
 
-// ska knna gå till lägg till ny task OM du är ägare för hushålllet
-//här listas alla sysslor i hushållet. nullas från avatarer varje midnatt.
-//vilka som gjort sysslan ska visas bredvid sysslan
-//hur många dagar sedan den gjordes
-//samt om den är försenad visa siffran med röd färg
 
 export default function HouseholdTasksScreen({ navigation }: any) {
 
@@ -48,6 +45,7 @@ export default function HouseholdTasksScreen({ navigation }: any) {
   const activeHousehold = useAppSelector(
     (state) => state.household.activehousehold,
   );
+
   // Use useSelector to access the profiles
   const activeProfile = useAppSelector((state) => state.profile.activeProfile);
   const household = households.find((h) => h.id === activeProfile?.householdId);
@@ -56,7 +54,6 @@ export default function HouseholdTasksScreen({ navigation }: any) {
   const dispatch = useAppDispatch();
 
   const isOwner = activeProfile?.isOwner;
-
 
   useFocusEffect(
     useCallback(() => {
@@ -67,12 +64,22 @@ export default function HouseholdTasksScreen({ navigation }: any) {
           }),
         );
         //TINA HERE: THIS DISPATCH MUST HAPPEND EVERY TIME WE GO TO THIS SCREEN
-        if (activeHousehold) {
-          dispatch(fetchTasks(activeHousehold?.id));
-        }
+        //this one fetches the tasks from the database and put it in the state "tasks"
+        dispatch(fetchTasks(activeProfile.householdId));
       }
     }, [dispatch]),
   );
+
+  useEffect(() => {
+    if (taskSlice.tasks.length > 0 && activeProfile) {
+      let taskIds: string[] = [];
+      //problemet är att varje gång den körs så sätts dom completions på ETT TASK ID till completions statet?!
+      taskSlice.tasks.forEach((task: Task) => {
+        taskIds.push(task.id);
+      });
+      dispatch(fetchCompletions(taskIds));
+    }
+  }, []);
 
   const handleTaskPress = (taskId: string) => {
     navigation.navigate("ShowTask", { taskId });
@@ -89,6 +96,7 @@ export default function HouseholdTasksScreen({ navigation }: any) {
     // get the unique profileIds
     const uniqueProfileIds = [
       ...new Set(
+
         filteredTodaysCompletionsForTask?.map(
           (completion) => completion.profileId,
         ),
@@ -108,6 +116,7 @@ export default function HouseholdTasksScreen({ navigation }: any) {
     let lastCompletionDate: Date;
     const today = new Date().toISOString();
     //all todays taskcompletions for task ---------can be moved out and share with getAvatar function
+
     const filteredTodaysCompletionsForTask =
       taskCompletionSlice.completions.filter(
         (completion) =>
@@ -145,6 +154,17 @@ export default function HouseholdTasksScreen({ navigation }: any) {
           isOwner ? styles.scrollContainerOwner : styles.scrollContainerNonOwner
         }
       >
+        {/* <View>
+          {taskCompletionSlice.completions.map((c) => (
+            <Text
+              key={c.id}
+              style={{ backgroundColor: "blue", color: "white" }}
+            >
+              PROFILID: {c.profileId} TASKID: {c.taskId}
+            </Text>
+          ))}
+        </View> */}
+
         {taskSlice.filteredTasks.map((task) => (
           <Card
             key={task.id}
