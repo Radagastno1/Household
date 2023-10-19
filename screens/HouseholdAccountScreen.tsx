@@ -14,29 +14,23 @@ const styles = StyleSheet.create({
 
 export default function HouseholdAccountScreen({ navigation }: any) {
   const activeUser = useAppSelector((state) => state.userAccount.user);
-  const dispatch = useAppDispatch() 
-  const connectedHouseholds = activeUser.households || []; 
-
-  const enterHousehold = (householdId: string) => {
-    dispatch(setHouseholdByHouseholdId({householdId: householdId}))
-    navigation.navigate("ProfileAccount")
-  };
+  const dispatch = useAppDispatch();
+  const householdSlice = useAppSelector((state) => state.household);
+  const allHouseholds = householdSlice.households;
 
   return (
     <View style={styles.container}>
       <Text>Här listas alla households:</Text>
-      {connectedHouseholds.map((household: Household, index: number) => (
-        <Text key={index}>{household.name}</Text>
+      {allHouseholds.map((household: Household) => (
+        <Button
+          key={household.id}
+          title={household.name}
+          onPress={() => {
+            dispatch(setHouseholdByHouseholdId({ householdId: household.id }));
+            navigation.navigate("ProfileAccount");
+          }}
+        />
       ))}
-      <Button
-        title="Skapa nytt hushåll"
-        onPress={() => navigation.navigate("CreateProfile")}
-      />
-      <Button
-        title="Hushåll 1"
-        onPress={() => enterHousehold("household2")
-      }
-      />
       <Button title="Logga ut" onPress={() => navigation.navigate("Auth")} />
     </View>
   );
