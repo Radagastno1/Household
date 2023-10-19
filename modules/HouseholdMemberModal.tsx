@@ -9,16 +9,13 @@ interface HouseholdProfileModalProps {
   onDismiss: () => void;
   householdName: string;
   selectedAvatar: string;
-
-  profiles: Profile[]; // Tillägg av denna parameter beroende på din datamodell
+  profiles: Profile[]; 
 }
 
 const HouseholdProfileModal: React.FC<HouseholdProfileModalProps> = ({
   visible,
   onDismiss,
   householdName,
-
-  
   profiles,
 }) => {
   return (
