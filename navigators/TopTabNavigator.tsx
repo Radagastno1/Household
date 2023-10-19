@@ -3,6 +3,7 @@ import { createMaterialTopTabNavigator } from "@react-navigation/material-top-ta
 import HouseholdTasksScreen from "../screens/HouseholdTasksScreen";
 import StatisticScreen from "../screens/StatisticScreen";
 import CustomTabBar from "../shared/CustomTabBar";
+import TESTDATUMSCREEN from "../screens/TESTDATUMSCREEN";
 
 const TopTab = createMaterialTopTabNavigator();
 const currentDate = new Date();
@@ -22,6 +23,7 @@ export default function TopTabNavigator() {
       <TopTab.Screen name="Denna veckan" component={StatisticScreen} />
       <TopTab.Screen name="Förra veckan" component={StatisticScreen} />
       <TopTab.Screen name={currentMonth} component={StatisticScreen} />
+      <TopTab.Screen name={"TESTA DATUM"} component={TESTDATUMSCREEN} />
     </TopTab.Navigator>
   );
 }
