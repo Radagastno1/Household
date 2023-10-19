@@ -5,7 +5,7 @@ import { ScrollView, StyleSheet, View } from "react-native";
 import { Button, Card, Text } from "react-native-paper";
 import { households } from "../data";
 import { useAppDispatch, useAppSelector } from "../store/store";
-import { filterTaskListByHouseId } from "../store/tasks/taskSlice";
+import { fetchTasks, filterTaskListByHouseId } from "../store/tasks/taskSlice";
 import { Task } from "../types";
 
 // ska knna gå till lägg till ny task OM du är ägare för hushålllet
@@ -16,6 +16,10 @@ import { Task } from "../types";
 
 export default function HouseholdTasksScreen({ navigation }: any) {
   const [avatar, setAvatar] = useState<string>("");
+
+  const activeHousehold = useAppSelector(
+    (state) => state.household.activehousehold,
+  ); // Antag att du hämtar activeHouseholdId från din householdSlice
 
   // Use useSelector to access the profiles
   const activeProfile = useAppSelector((state) => state.profile.activeProfile);
@@ -39,6 +43,12 @@ export default function HouseholdTasksScreen({ navigation }: any) {
       }
     }
   }, [dispatch, isFocused]);
+
+  useEffect(() => {
+    if (activeHousehold) {
+      dispatch(fetchTasks(activeHousehold?.id));
+    }
+  }, [dispatch, activeHousehold]);
 
   const handleTaskPress = (taskId: string) => {
     navigation.navigate("ShowTask", { taskId });
