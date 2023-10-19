@@ -16,10 +16,10 @@ import { findAllAvatarFortodayCompletionByTaskId } from "../store/taskCompletion
 //samt om den är försenad visa siffran med röd färg
 
 export default function HouseholdTasksScreen({ navigation }: any) {
+  // const activeHousehold = useAppSelector(
+  //   (state) => state.household.activehousehold,
+  // );
 
-  const activeHousehold = useAppSelector(
-    (state) => state.household.activehousehold,
-  );
   // Use useSelector to access the profiles
   const activeProfile = useAppSelector((state) => state.profile.activeProfile);
   const household = households.find((h) => h.id === activeProfile?.householdId);
@@ -28,7 +28,6 @@ export default function HouseholdTasksScreen({ navigation }: any) {
   const dispatch = useAppDispatch();
 
   const isOwner = activeProfile?.isOwner;
-
 
   useFocusEffect(
     useCallback(() => {
@@ -40,9 +39,8 @@ export default function HouseholdTasksScreen({ navigation }: any) {
           }),
         );
         //TINA HERE: THIS DISPATCH MUST HAPPEND EVERY TIME WE GO TO THIS SCREEN
-        if (activeHousehold) {
-          dispatch(fetchTasks(activeHousehold?.id));
-        }
+        //this one fetches the tasks from the database and put it in the state "tasks"
+        dispatch(fetchTasks(activeProfile.householdId));
       }
     }, [dispatch]),
   );
@@ -62,7 +60,9 @@ export default function HouseholdTasksScreen({ navigation }: any) {
     // get the unique profileIds
     const uniqueProfileIds = [
       ...new Set(
-        filteredTodaysCompletionsFotTask?.map((completion) => completion.profileId),
+        filteredTodaysCompletionsFotTask?.map(
+          (completion) => completion.profileId,
+        ),
       ),
     ];
     console.log(uniqueProfileIds);
@@ -79,11 +79,12 @@ export default function HouseholdTasksScreen({ navigation }: any) {
     let lastCompletionDate: Date;
     const today = new Date().toISOString();
     //all todays taskcompletions for task ---------can be moved out and share with getAvatar function
-    const filteredTodaysCompletionsFotTask = taskCompletionSlice.completions.filter(
-      (completion) =>
-        completion.taskId === task.id &&
-        completion.completionDate.split("T")[0] === today.split("T")[0],
-    );
+    const filteredTodaysCompletionsFotTask =
+      taskCompletionSlice.completions.filter(
+        (completion) =>
+          completion.taskId === task.id &&
+          completion.completionDate.split("T")[0] === today.split("T")[0],
+      );
 
     if (filteredTodaysCompletionsFotTask.length === 0) {
       //if it is empty, no one did it today
@@ -103,7 +104,8 @@ export default function HouseholdTasksScreen({ navigation }: any) {
     const currentDate = new Date();
     const timeDifference = currentDate.getTime() - lastCompletionDate.getTime();
     //convert it to days minus the interval days
-    const daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24))-task.interval;
+    const daysDifference =
+      Math.floor(timeDifference / (1000 * 60 * 60 * 24)) - task.interval;
     return daysDifference;
   }
 
