@@ -165,8 +165,18 @@ export const {
 
 //FRÅGA DAVID ÄR DETTA OK VERKLIGEN?
 export const fetchCompletions =
-  (taskId: string, profileId: string) => async (dispatch: any) => {
-    const taskCompletions = await getTaskCompletionsFromDB(taskId, profileId);
+  (taskIds: string[]) => async (dispatch: any) => {
+    let taskCompletions: TaskCompletion[] = [];
+
+    const fetchCompletionsPromises = taskIds.map(async (id) => {
+      const completion = await getTaskCompletionsFromDB(id);
+      if (completion) {
+        taskCompletions = taskCompletions.concat(completion);
+      }
+    });
+
+    await Promise.all(fetchCompletionsPromises);
+
     dispatch(taskCompletionSlice.actions.setCompletions(taskCompletions));
   };
 

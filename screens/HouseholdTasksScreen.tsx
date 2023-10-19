@@ -1,19 +1,13 @@
 import { AntDesign } from "@expo/vector-icons";
-import { useFocusEffect, useIsFocused } from "@react-navigation/native";
-import React, { useCallback, useEffect, useState } from "react";
+import { useFocusEffect } from "@react-navigation/native";
+import React, { useCallback, useEffect } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 import { Button, Card, Text } from "react-native-paper";
 import { households, profiles, taskCompletions } from "../data";
 import { useAppDispatch, useAppSelector } from "../store/store";
+import { fetchCompletions } from "../store/taskCompletionSlice";
 import { fetchTasks, filterTaskListByHouseId } from "../store/tasks/taskSlice";
 import { Task } from "../types";
-import { findAllAvatarFortodayCompletionByTaskId } from "../store/taskCompletionSlice";
-
-// ska knna gå till lägg till ny task OM du är ägare för hushålllet
-//här listas alla sysslor i hushållet. nullas från avatarer varje midnatt.
-//vilka som gjort sysslan ska visas bredvid sysslan
-//hur många dagar sedan den gjordes
-//samt om den är försenad visa siffran med röd färg
 
 export default function HouseholdTasksScreen({ navigation }: any) {
   // const activeHousehold = useAppSelector(
@@ -44,6 +38,17 @@ export default function HouseholdTasksScreen({ navigation }: any) {
       }
     }, [dispatch]),
   );
+
+  useEffect(() => {
+    if (taskSlice.tasks.length > 0 && activeProfile) {
+      let taskIds: string[] = [];
+      //problemet är att varje gång den körs så sätts dom completions på ETT TASK ID till completions statet?!
+      taskSlice.tasks.forEach((task: Task) => {
+        taskIds.push(task.id);
+      });
+      dispatch(fetchCompletions(taskIds));
+    }
+  }, []);
 
   const handleTaskPress = (taskId: string) => {
     navigation.navigate("ShowTask", { taskId });
@@ -116,6 +121,17 @@ export default function HouseholdTasksScreen({ navigation }: any) {
           isOwner ? styles.scrollContainerOwner : styles.scrollContainerNonOwner
         }
       >
+        {/* <View>
+          {taskCompletionSlice.completions.map((c) => (
+            <Text
+              key={c.id}
+              style={{ backgroundColor: "blue", color: "white" }}
+            >
+              PROFILID: {c.profileId} TASKID: {c.taskId}
+            </Text>
+          ))}
+        </View> */}
+
         {taskSlice.filteredTasks.map((task) => (
           <Card
             key={task.id}

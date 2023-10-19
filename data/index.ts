@@ -51,7 +51,7 @@ export const profiles: Profile[] = [
   {
     id: "moNj4qvcbKNQdEsnhEjL",
     profileName: "Silly User 1",
-    userId: "user1",
+    userId: "5NCx5MKcUu6UYKjFqRkg",
     householdId: "fYHVLNiQvWEG9KNUGqBT",
     avatar: "bee",
     isOwner: true,

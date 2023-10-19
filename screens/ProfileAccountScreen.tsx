@@ -1,15 +1,15 @@
-import { View, StyleSheet, StatusBar } from "react-native";
-import React, { useEffect } from "react";
-import { useAppDispatch, useAppSelector } from "../store/store";
-import { Card, Text, Button, IconButton, TextInput } from "react-native-paper";
+import React, { useEffect, useState } from "react";
+import { StyleSheet, View } from "react-native";
+import { Button, Card, IconButton, Text, TextInput } from "react-native-paper";
 import { useTheme } from "../contexts/themeContext";
-import HouseholdProfileModal from "../modules/HouseholdMemberModal";
-import { useState } from "react";
-import {
-  setProfileByHouseholdAndUser,
-  editProfileName,
-} from "../store/profile/profileSlice";
 import { households } from "../data";
+import HouseholdProfileModal from "../modules/HouseholdMemberModal";
+import {
+  editProfileName,
+  setProfileByHouseholdAndUser,
+} from "../store/profile/profileSlice";
+import { useAppDispatch, useAppSelector } from "../store/store";
+import { fetchTasks } from "../store/tasks/taskSlice";
 // import { getProfileByHouseholdAndUser } from "../store/profile/profileSlice";
 
 export default function ProfileAccountScreen({ navigation }: any) {
@@ -35,6 +35,7 @@ export default function ProfileAccountScreen({ navigation }: any) {
   const { theme } = useTheme();
   const [isModalVisible, setModalVisible] = useState(false);
   const [headerTitle, setHeaderTitle] = useState<string>("TinaHome");
+  
   useEffect(() => {
     if (activeProfile) {
       const household = households.find(
@@ -43,6 +44,7 @@ export default function ProfileAccountScreen({ navigation }: any) {
       if (household) {
         setHeaderTitle(household.name);
       }
+      dispatch(fetchTasks(activeProfile.householdId));
     }
   }, [activeProfile]);
 

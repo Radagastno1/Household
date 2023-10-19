@@ -45,14 +45,12 @@ export const addTaskCompletionToDB = async (taskCompletion: TaskCompletion) => {
 };
 
 export const getTaskCompletionsFromDB = async (
-  taskId: string,
-  profileId: string,
+  taskId: string
 ) => {
   try {
     const q = query(
       taskCompletionCollectionRef,
       where("taskId", "==", taskId),
-      where("profileId", "==", profileId),
     );
 
     const querySnapshot = await getDocs(q);
