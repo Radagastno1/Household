@@ -48,7 +48,7 @@ export default function HouseholdTasksScreen({ navigation }: any) {
     if (activeHousehold) {
       dispatch(fetchTasks(activeHousehold?.id));
     }
-  }, [dispatch, activeHousehold]);
+  }, [dispatch, isFocused]);
 
   const handleTaskPress = (taskId: string) => {
     navigation.navigate("ShowTask", { taskId });

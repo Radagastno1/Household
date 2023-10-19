@@ -4,6 +4,7 @@ import {
   collection,
   deleteDoc,
   doc,
+  getDoc,
   getDocs,
   getFirestore,
   query,
@@ -20,39 +21,62 @@ const db = getFirestore(app);
 //sen add - det dokument id blir id i fältet
 
 export const addTaskToDB = async (task: Task) => {
-  task.householdId = "fYHVLNiQvWEG9KNUGqBT";
+  // task.householdId = "fYHVLNiQvWEG9KNUGqBT";
 
   const taskCollectionRef = collection(db, "tasks");
 
   try {
-    const docRef = await doc(taskCollectionRef);
-    //sätt docRef.id till task id
+    const docRef = await addDoc(taskCollectionRef, {});
+
     task.id = docRef.id;
 
-    const taskRef = await addDoc(taskCollectionRef, task);
+    console.log(
+      "Dokumentreferens id:",
+      docRef.id,
+      " och uppgiftens id:",
+      task.id,
+    );
 
-    console.log("Task tillagd med Id:", taskRef.id);
+    await updateDoc(docRef, task as Partial<Task>);
+
+    const taskDoc = await getDoc(docRef);
+    if (taskDoc.exists()) {
+      const taskData = taskDoc.data();
+      return taskData as Task;
+    } else {
+      console.error("Uppgiftsdokumentet finns inte i databasen.");
+      return null;
+    }
   } catch (error) {
-    console.error("Fel vid tillägg av task:", error);
+    console.error("Fel vid tillägg av uppgift:", error);
+    return null;
   }
 };
 
 export const editTaskToDB = async (task: Task) => {
-  try {
-    const taskDocRef = doc(db, "tasks", task.id);
+  task.householdId = "fYHVLNiQvWEG9KNUGqBT";
+  const taskCollectionRef = collection(db, "tasks");
 
-    await updateDoc(taskDocRef, {
+  try {
+    const taskRef = doc(taskCollectionRef, task.id);
+
+    const updatedTaskData = {
+      id: task.id,
       title: task.title,
       description: task.description,
       energiWeight: task.energiWeight,
       creatingDate: task.creatingDate,
       interval: task.interval,
       householdId: task.householdId,
-    });
+    };
 
-    console.log("Task redigerad med Id:", task.id);
+    await updateDoc(taskRef, updatedTaskData);
+
+    // Returnera den redigerade uppgiften
+    return task;
   } catch (error) {
-    console.error("Fel vid redigering av tasks:", error);
+    console.error("Fel vid redigering av uppgift:", error);
+    return null; // Om något går fel, returnera null eller hantera felet på lämpligt sätt
   }
 };
 
