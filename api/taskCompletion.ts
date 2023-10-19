@@ -11,10 +11,6 @@ import { app } from "./config";
 
 const db = getFirestore(app);
 
-//doc först  - skapa dokumentet för idt först
-//sen i docRef.id får man idt
-//sen add - det dokument id blir id i fältet
-
 export const addTaskCompletionToDB = async (taskCompletion: TaskCompletion) => {
   const taskCompletionCollectionRef = collection(db, "taskCompletions");
 

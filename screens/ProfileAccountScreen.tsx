@@ -17,7 +17,7 @@ export default function ProfileAccountScreen({ navigation }: any) {
   //då har du ett household som du är inne på
   //då hämtar du getProfileForHousehold(userId, householdId);
   //dessa får komma in när det finns att hämta i reducerns state
-  const userId = "user1";
+  const userId = "5NCx5MKcUu6UYKjFqRkg";
 
   const householdId = "fYHVLNiQvWEG9KNUGqBT";
 
