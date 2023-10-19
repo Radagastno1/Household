@@ -14,7 +14,7 @@ import TopTabNavigator from "./TopTabNavigator";
 import CreateUserAccountScreen from "../screens/CreateUserAccountScreen";
 import SignInScreen from "../screens/SignInScreen";
 import AuthNavigator from "./AuthNavigator";
-import CustomHeader from "../shared/CustomHeader";
+import CustomHeader from "../store/shared/CustomHeader";
 
 export type RootStackParamList = {
   SplashScreen: undefined;
