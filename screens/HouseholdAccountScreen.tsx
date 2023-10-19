@@ -34,7 +34,7 @@ export default function HouseholdAccountScreen({ navigation }: any) {
       ))}
        <Button
         title="Skapa nytt hushåll"
-        onPress={() => navigation.navigate("CreateProfile" , { id: "household9" })}  // denna e hårdkodad sålänge    
+        onPress={() => navigation.navigate("CreateProfile" , { id: "household1" })}  // denna e hårdkodad sålänge    
       />
 
       <Button title="Logga ut" onPress={() => navigation.navigate("Login")} />

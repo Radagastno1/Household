@@ -60,7 +60,7 @@ export default function RootNavigator() {
         <Stack.Screen
           name="CreateProfile"
           component={CreateProfileScreen}
-          initialParams={{ householdId: "fYHVLNiQvWEG9KNUGqBT" }}
+          // initialParams={{ householdId: "fYHVLNiQvWEG9KNUGqBT" }}
         />
         <Stack.Screen name="HandleTask" component={CreateTaskScreen} />
         <Stack.Screen

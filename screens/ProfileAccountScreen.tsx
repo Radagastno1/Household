@@ -19,7 +19,7 @@ export default function ProfileAccountScreen({ navigation }: any) {
   //dessa får komma in när det finns att hämta i reducerns state
   const userId = "user1";
 
-  const householdId = "household9"; 
+  const householdId = "household1"; 
   const [selectedAvatar] = useState<string>("");
 
   // const householdId = "fYHVLNiQvWEG9KNUGqBT"; // kommenterade ut denna, bara denna som jag inte satt tillbaka 
