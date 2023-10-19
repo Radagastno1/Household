@@ -120,7 +120,7 @@ export default function HouseholdTasksScreen({ navigation }: any) {
               {findAllAvatarFortodayCompletionByTaskId(task.id).map(
                 (avatar, index) => (
                   <View key={index}>
-                    <Image source = {{uri:AvatarUrls[avatar as Avatars ]}}style={{ height: 20, width: 20 }} 
+                    <Image source = {{uri:AvatarUrls[avatar as keyof typeof Avatars ]}}style={{ height: 20, width: 20 }} 
                     />
                     <Text  variant="bodyMedium">
                       {avatar}
