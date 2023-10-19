@@ -60,16 +60,18 @@ export default function RootNavigator() {
         <Stack.Screen
           name="CreateProfile"
           component={CreateProfileScreen}
-          initialParams={{ householdId: "household1" }}
+          initialParams={{ householdId: "fYHVLNiQvWEG9KNUGqBT" }}
         />
         <Stack.Screen name="HandleTask" component={CreateTaskScreen} />
-        <Stack.Screen name="ShowTask" 
-         options={{ headerShown: false }}
-        component={TaskDetailScreen} />
-        <Stack.Screen 
-        name="Tab" 
-        component={TopTabNavigator}
-        options={({ route, navigation}) => ({
+        <Stack.Screen
+          name="ShowTask"
+          options={{ headerShown: false }}
+          component={TaskDetailScreen}
+        />
+        <Stack.Screen
+          name="Tab"
+          component={TopTabNavigator}
+          options={({ route, navigation }) => ({
             header: () => (
               <CustomHeader
                 title={
@@ -78,7 +80,7 @@ export default function RootNavigator() {
                 navigation={navigation}
               />
             ),
-          })} 
+          })}
         />
       </Stack.Navigator>
     </NavigationContainer>

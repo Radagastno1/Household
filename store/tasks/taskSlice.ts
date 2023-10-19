@@ -1,10 +1,12 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { tasks } from "../../data";
 import { Task } from "../../types";
 
-import { useAppSelector } from "../store";
-import { addTaskToDB } from "../../api/task";
-
+import {
+  addTaskToDB,
+  deleteTaskFromDB,
+  editTaskToDB,
+  getTasksFromDB,
+} from "../../api/task";
 
 interface TaskState {
   tasks: Task[];
@@ -13,7 +15,7 @@ interface TaskState {
 }
 
 export const initialState: TaskState = {
-  tasks: tasks,
+  tasks: [],
   filteredTasks: [],
   selectedTask: null,
 };
@@ -22,26 +24,48 @@ const taskSlice = createSlice({
   name: "task",
   initialState,
   reducers: {
+    setTasks: (state, action) => {
+      state.tasks = action.payload; // Uppdatera tasks state med de hämtade uppgifterna
+    },
     addTask: (state, action: PayloadAction<Task>) => {
-      addTaskToDB(action.payload);
-      state.tasks = [...state.tasks, action.payload];
-      console.log("task som las till: ", action.payload);
-      console.log("nu är state tasks listan;", state.tasks);
-      console.log("nu är state filtered tasks listan;", state.filteredTasks);
+      addTaskToDB(action.payload)
+        .then((createdTask) => {
+          if (createdTask) {
+            state.tasks = [...state.tasks, createdTask];
+            console.log("task som las till: ", action.payload);
+            console.log("nu är state tasks listan;", state.tasks);
+            console.log(
+              "nu är state filtered tasks listan;",
+              state.filteredTasks,
+            );
+          }
+        })
+        .catch((error) => {
+          console.error("Fel vid tillägg av uppgift:", error);
+        });
     },
     editTask: (state, action: PayloadAction<Task>) => {
-      const editedTaskIndex = state.tasks.findIndex(
-        (task) => task.id === action.payload.id,
-      );
-      if (editedTaskIndex !== -1) {
-        state.tasks[editedTaskIndex] = action.payload;
-        console.log("task som redigerades: ", action.payload);
-        console.log("nu är state tasks listan;", state.tasks);
-        console.log("nu är state filtered tasks listan;", state.filteredTasks);
-      }
+      editTaskToDB(action.payload).then((editedTask) => {
+        if (editedTask) {
+          const editedTaskIndex = state.tasks.findIndex(
+            (task) => task.id === action.payload.id,
+          );
+
+          if (editedTaskIndex !== -1) {
+            state.tasks[editedTaskIndex] = editedTask;
+            console.log("Task som redigerades: ", editedTask);
+            console.log("Nu är state tasks listan:", state.tasks);
+            console.log(
+              "Nu är state filtered tasks listan:",
+              state.filteredTasks,
+            );
+          }
+        }
+      });
     },
     deleteTask: (state, action: PayloadAction<string>) => {
       const taskIdToDelete = action.payload;
+      deleteTaskFromDB(taskIdToDelete);
       state.tasks = state.tasks.filter((task) => task.id !== taskIdToDelete);
     },
     filterTaskListByHouseId: (
@@ -76,5 +100,12 @@ export const {
   filterTaskListByHouseId,
   findTaskById,
 } = taskSlice.actions;
+
+//denna ska anropas där vi behöver få in tasken från databasen och sättas som state = tasks
+export const fetchTasks =
+  (activeHouseholdId: string) => async (dispatch: any) => {
+    const tasks = await getTasksFromDB(activeHouseholdId);
+    dispatch(taskSlice.actions.setTasks(tasks));
+  };
 
 export const taskReducer = taskSlice.reducer;

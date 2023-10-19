@@ -5,7 +5,7 @@ import { ScrollView, StyleSheet, View, Image } from "react-native";
 import { Button, Card, Text } from "react-native-paper";
 import { households, profiles, taskCompletions } from "../data";
 import { useAppDispatch, useAppSelector } from "../store/store";
-import { filterTaskListByHouseId } from "../store/tasks/taskSlice";
+import { fetchTasks, filterTaskListByHouseId } from "../store/tasks/taskSlice";
 import { Task } from "../types";
 import { AvatarUrls, Avatars } from "../data/avatars";
 
@@ -45,6 +45,9 @@ export default function HouseholdTasksScreen({ navigation }: any) {
     //   scheduleMidnightReset(dispatch); //
 
 
+  const activeHousehold = useAppSelector(
+    (state) => state.household.activehousehold,
+  );
   // Use useSelector to access the profiles
   const activeProfile = useAppSelector((state) => state.profile.activeProfile);
   const household = households.find((h) => h.id === activeProfile?.householdId);
@@ -54,6 +57,7 @@ export default function HouseholdTasksScreen({ navigation }: any) {
 
   const isOwner = activeProfile?.isOwner;
 
+
   useFocusEffect(
     useCallback(() => {
       if (activeProfile && household) {
@@ -62,6 +66,10 @@ export default function HouseholdTasksScreen({ navigation }: any) {
             household_Id: household?.id,
           }),
         );
+        //TINA HERE: THIS DISPATCH MUST HAPPEND EVERY TIME WE GO TO THIS SCREEN
+        if (activeHousehold) {
+          dispatch(fetchTasks(activeHousehold?.id));
+        }
       }
     }, [dispatch]),
   );

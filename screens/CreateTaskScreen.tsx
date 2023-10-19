@@ -94,7 +94,7 @@ export default function CreateTaskScreen({ navigation, route }: any) {
     if (isCreateMode) {
       if (title && description && householdId) {
         const newTask: Task = {
-          id: todaysDate.getUTCMilliseconds().toString().slice(-4),
+          id: "",
           title: title,
           description: description,
           energiWeight: selectedEnergy,
