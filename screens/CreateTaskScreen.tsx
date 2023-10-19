@@ -12,10 +12,10 @@ import {
 } from "react-native";
 import { Card, Paragraph, Title } from "react-native-paper";
 import CircleComponent from "../components/CircleComponent";
-import { tasks } from "../data";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import {
   addTask,
+  deleteTask,
   editTask,
   filterTaskListByHouseId,
 } from "../store/tasks/taskSlice";
@@ -26,8 +26,9 @@ export default function CreateTaskScreen({ navigation, route }: any) {
   //LÅTSAS ATT JAG KOLLAR MOT HUSHÅLLSSTATET VILKET HUSHÅLL ANVÄNDAREN ÄR PÅ HÄR
   const [isCreateMode, setIsCreateMode] = useState(true);
   const [taskToEdit, setTaskToEdit] = useState<Task>();
+  const householdSlice = useAppSelector((state) => state.household);
 
-  const householdId = "household1";
+  const householdId = householdSlice.activehousehold?.id;
   // const household = households.find((h) => h.id == householdId);
 
   const [intervalDataPressed, setIntervalDataPressed] = useState(false);
@@ -47,9 +48,6 @@ export default function CreateTaskScreen({ navigation, route }: any) {
 
   //FÖR ATT TESTA HÄMTA TASKEN FÖR ETT HUSHÅLL SÅ JAG SER ATT DOM SKAPADES KORREKT
   const taskSlice = useAppSelector((state) => state.task);
-  // const allTasksForHousehold = taskSlice.tasks.filter(
-  //   (t) => t.householdId === householdId,
-  // );
 
   useEffect(() => {
     const { taskId } = route.params;
@@ -83,11 +81,18 @@ export default function CreateTaskScreen({ navigation, route }: any) {
   //   }
   // };
 
+  const handleDeleteTask = () => {
+    if (taskToEdit) {
+      dispatch(deleteTask(taskToEdit.id));
+    }
+    navigation.navigate("Tab");
+  };
+
   const handleTask = () => {
     const todaysDate = new Date();
 
     if (isCreateMode) {
-      if (title && description) {
+      if (title && description && householdId) {
         const newTask: Task = {
           id: todaysDate.getUTCMilliseconds().toString().slice(-4),
           title: title,
@@ -103,7 +108,7 @@ export default function CreateTaskScreen({ navigation, route }: any) {
       }
     } else {
       console.log("I ELSE");
-      if (taskToEdit) {
+      if (taskToEdit && householdId) {
         const editedTask: Task = {
           id: taskToEdit.id,
           title: title,
@@ -266,6 +271,11 @@ export default function CreateTaskScreen({ navigation, route }: any) {
               </View>
             </Card.Content>
           </Card>
+          {isCreateMode ? null : (
+            <TouchableOpacity onPress={() => handleDeleteTask()}>
+              <Text style={styles.removeText}>Ta bort</Text>
+            </TouchableOpacity>
+          )}
         </View>
 
         {/* <View style={styles.fillOutContainer}></View> */}
@@ -374,5 +384,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     paddingHorizontal: 10,
     fontWeight: "bold",
+  },
+  removeText: {
+    padding: 10,
+    fontSize: 20,
   },
 });

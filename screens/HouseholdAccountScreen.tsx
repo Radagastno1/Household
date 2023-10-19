@@ -31,7 +31,7 @@ export default function HouseholdAccountScreen({ navigation }: any) {
           }}
         />
       ))}
-      <Button title="Logga ut" onPress={() => navigation.navigate("Auth")} />
+      <Button title="Logga ut" onPress={() => navigation.navigate("Login")} />
     </View>
   );
 }

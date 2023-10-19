@@ -1,10 +1,10 @@
-import React, { useState } from "react";
-import { AvatarColors, Avatars } from "../data/avatars";
+import React, { useState, useEffect } from "react";
+import { AvatarColors, Avatars, AvatarUrls } from "../data/avatars";
 import { Button } from "react-native-paper";
 import { households } from "../data";
-import { useDispatch } from 'react-redux';
+import { useDispatch } from "react-redux";
 import { setProfile } from "../store/profile/profileSlice";
-
+import { Image } from "react-native";
 
 import {
   Text,
@@ -18,54 +18,65 @@ import { useAppSelector } from "../store/store";
 
 type Avatar = {
   id: string;
-  name: string;
 };
 
 const avatars: Avatar[] = [
-  { id: Avatars.Bee, name: "Bee" },
-  { id: Avatars.Frog, name: "Frog" },
-  { id: Avatars.Monkey, name: "Monkey" },
-  { id: Avatars.Cat, name: "Cat" },
-  { id: Avatars.Koala, name: "Koala" },
-  { id: Avatars.Beetle, name: "Beetle" },
-  { id: Avatars.Fox, name: "Fox" },
-  { id: Avatars.Pig, name: "Pig" },
+  { id: Avatars.Bee },
+  { id: Avatars.Frog },
+  { id: Avatars.Monkey },
+  { id: Avatars.Cat },
+  { id: Avatars.Koala },
+  { id: Avatars.Beetle },
+  { id: Avatars.Fox },
+  { id: Avatars.Pig },
 ];
 
 export default function CreateProfileScreen({ navigation, route }: any) {
-  
   const [householdName, setHouseholdName] = useState("");
   const [selectedAvatar, setSelectedAvatar] = useState<string | null>(null);
   const { id } = route.params;
   const household = households.find((h) => h.id === id);
-  const {theme } = useTheme();
+  const { theme } = useTheme();
   const dispatch = useDispatch();
   const todaysDate = new Date();
-  const activeUser = useAppSelector((state) => state.userAccount.user)
+
+  const activeUser = useAppSelector((state) => state.userAccount.user);
+
+  const activeProfiles = useAppSelector((state) =>
+    state.profile.profiles.filter((profile) => profile.householdId === id),
+  );
+
+  useEffect(() => {}, [id, dispatch]);
+
+  const isAvatarOccupied = (avatarId: string) => {
+    return activeProfiles.some((profile) => profile.avatar === avatarId);
+  };
 
   const saveProfile = () => {
-    const avatar = selectedAvatar || '';
-    const avatarsColor = selectedAvatar ? AvatarColors[selectedAvatar as Avatars] : '';
-    const newProfile = {
-      id:  todaysDate.getUTCMilliseconds.toString().slice(-4),
-      profileName: householdName, 
-      userId: activeUser.id,
-      householdId: id,
-      avatar: avatar,
-      avatarsColors: avatarsColor,
-      isOwner: false,
-      isActive: false,
-    };
-     
-    dispatch(setProfile(newProfile));
-    navigation.navigate("HouseholdAccount");
+    console.log("hushållsid är", id);
+    if (selectedAvatar) {
+      const avatarsColor = AvatarColors[selectedAvatar as Avatars];
+      const newProfile = {
+        id: todaysDate.getUTCMilliseconds.toString().slice(-4),
+        profileName: householdName,
+        userId: activeUser.id,
+        householdId: id,
+        avatar: selectedAvatar,
+        avatarsColors: avatarsColor,
+        isOwner: false,
+        isActive: false,
+      };
+
+      dispatch(setProfile(newProfile));
+      navigation.navigate("HouseholdAccount");
+    }
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.sectionContainer}>
         <View style={styles.rectContainer}>
-          <Text style={styles.rectText}>{household?.name}</Text>
+          <Text style={styles.rectText}>{id}</Text>
         </View>
       </View>
       <View style={styles.sectionContainer}>
@@ -78,28 +89,34 @@ export default function CreateProfileScreen({ navigation, route }: any) {
         style={styles.input}
         onChangeText={(text) => setHouseholdName(text)}
       />
-      <View style={styles.sectionContainer}>
-        <View style={styles.rectContainer}>
-          <Text style={styles.rectText}>Välj din avatar</Text>
-        </View>
-      </View>
       <View style={styles.avatarsContainer}>
         {avatars.map((avatar) => (
           <TouchableOpacity
             key={avatar.id}
             style={[
               styles.avatar,
-              selectedAvatar === avatar.id ? styles.selectedAvatar : null,
+              selectedAvatar === avatar.id ? styles.selectedAvatar : undefined,
+              isAvatarOccupied(avatar.id) ? styles.occupiedAvatar : undefined,
               { backgroundColor: AvatarColors[avatar.id as Avatars] },
             ]}
-            onPress={() => setSelectedAvatar(avatar.id as Avatars)}
+            onPress={() => {
+              if (!isAvatarOccupied(avatar.id)) {
+                setSelectedAvatar(avatar.id as Avatars);
+              }
+            }}
           >
-            <Text style={styles.avatarText}>{avatar.name}</Text>
+            <Image
+              source={{ uri: AvatarUrls[avatar.id as Avatars] }}
+              style={styles.avatarImage}
+            />
           </TouchableOpacity>
         ))}
       </View>
-
-      <Button style={theme.button as any} onPress={saveProfile}>
+      <Button
+        style={theme.button as any}
+        onPress={saveProfile}
+        disabled={!selectedAvatar}
+      >
         <Text style={theme.buttonText}>Skapa</Text>
       </Button>
     </View>
@@ -140,7 +157,6 @@ const styles = StyleSheet.create({
     marginBottom: 150,
     padding: 10,
   },
-
   avatarsContainer: {
     flexDirection: "row",
     flexWrap: "wrap",
@@ -162,5 +178,14 @@ const styles = StyleSheet.create({
   },
   avatarText: {
     fontSize: 18,
+  },
+  avatarImage: {
+    width: 40,
+    height: 40,
+    opacity: 10,
+  },
+  occupiedAvatar: {
+    backgroundColor: "gray",
+    opacity: 0.1,
   },
 });
