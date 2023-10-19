@@ -26,11 +26,17 @@ export default function HouseholdAccountScreen({ navigation }: any) {
           key={household.id}
           title={household.name}
           onPress={() => {
-            dispatch(setHouseholdByHouseholdId({ householdId: household.id }));
+            dispatch(setHouseholdByHouseholdId({ householdId: household.id })); 
             navigation.navigate("ProfileAccount");
           }}
         />
+        
       ))}
+       <Button
+        title="Skapa nytt hushåll"
+        onPress={() => navigation.navigate("CreateProfile" , { id: "household1" })}  // denna e hårdkodad sålänge    
+      />
+
       <Button title="Logga ut" onPress={() => navigation.navigate("Login")} />
     </View>
   );

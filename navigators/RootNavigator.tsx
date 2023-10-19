@@ -24,7 +24,7 @@ export type RootStackParamList = {
   HandleTask: { taskId: string };
   ShowTask: { taskId: string };
   HouseholdAccount: undefined;
-  ProfileAccount: undefined;
+  ProfileAccount: {householdId: string};
   HandleHousehold: undefined;
   CreateProfile: { householdId: string };
   Tab: typeof TopTabNavigator;
