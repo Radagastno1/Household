@@ -1,5 +1,5 @@
-import React from "react";
-import { Text, View, StyleSheet } from "react-native";
+import React, { useState } from "react";
+import { Text, View, StyleSheet, Button } from "react-native";
 import {
   getStartAndEndDateOfCurrentMonth,
   getStartAndEndDateOfCurrentWeek,
@@ -8,8 +8,9 @@ import {
 } from "../utils/DateHandler";
 
 export default function TESTDATUMSCREEN() {
+  const [monday, setMonday] = useState("");
   // --------------- DENNA VECKAN ----------------
-  const { startOfWeek, endOfWeek } = getStartAndEndDateOfCurrentWeek();
+  let { startOfWeek, endOfWeek } = getStartAndEndDateOfCurrentWeek();
   console.log(startOfWeek);
   console.log(endOfWeek);
 
@@ -23,12 +24,17 @@ export default function TESTDATUMSCREEN() {
   // --------------- FÖRRA MÅNADEN ----------------
   const { startOfLastMonth, endOfLastMonth } = getStartAndEndDateOfLastMonth();
 
+  function PressMe() {
+    const firstDay = getStartAndEndDateOfCurrentWeek().startOfWeek;
+    setMonday(firstDay);
+  }
   return (
     <View style={styles.container}>
       <View style={styles.dates}>
         <Text style={styles.title}>DENNA VECKAN</Text>
         <Text>{startOfWeek.toString()}</Text>
         <Text>{endOfWeek.toString()}</Text>
+        <Button title="Tryck mig!" onPress={PressMe} />
       </View>
       <View style={styles.dates}>
         <Text style={styles.title}>FÖRRA VECKAN</Text>

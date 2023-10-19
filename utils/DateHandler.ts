@@ -1,8 +1,14 @@
+import { format } from "date-fns";
+
 export function getStartAndEndDateOfCurrentWeek() {
   const today = new Date();
   const currentDay = today.getDay();
-  const startOfWeek = new Date(today);
-  startOfWeek.setDate(today.getDate() - currentDay + 1); // Sätt datum till måndag i den aktuella veckan
+
+  const startOfWeek = format(
+    new Date(today.getDate() - currentDay + 1),
+    "yyyy-MM-dd",
+  );
+  // startOfWeek.setDate(today.getDate() - currentDay + 1); // Sätt datum till måndag i den aktuella veckan
 
   const endOfWeek = new Date(today);
   endOfWeek.setDate(today.getDate() + (7 - currentDay)); // Sätt datum till söndag i den aktuella veckan
