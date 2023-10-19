@@ -21,6 +21,8 @@ export default function ProfileAccountScreen({ navigation }: any) {
 
 
   const householdId = "household9";
+  const [selectedAvatar, setSelectedAvatar] = useState<string>('');
+
   // const householdId = "fYHVLNiQvWEG9KNUGqBT";
 
   const dispatch = useAppDispatch();
@@ -162,9 +164,10 @@ export default function ProfileAccountScreen({ navigation }: any) {
         <HouseholdProfileModal
           visible={isModalVisible}
           onDismiss={() => setModalVisible(false)}
-          householdName="Hushållets namn"
-          avatars={["avatar1.jpg", "avatar2.jpg", "avatar3.jpg"]}
+          householdName={householdId}
+        
           profiles={activeProfiles}
+          selectedAvatar={selectedAvatar} 
         />
       </View>
     </View>

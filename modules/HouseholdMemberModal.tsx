@@ -1,13 +1,15 @@
 import React from "react";
 import { Profile } from "../types";
 import { Modal, Portal, Card, Avatar, Text } from "react-native-paper";
-import { View, StyleSheet } from "react-native"; // Importera View och StyleSheet
+import { View, StyleSheet } from "react-native";
+import { AvatarColors, Avatars, AvatarUrls } from "../data/avatars";
 
 interface HouseholdProfileModalProps {
   visible: boolean;
   onDismiss: () => void;
   householdName: string;
-  avatars: string[];
+  selectedAvatar: string;
+
   profiles: Profile[]; // Tillägg av denna parameter beroende på din datamodell
 }
 
@@ -15,7 +17,8 @@ const HouseholdProfileModal: React.FC<HouseholdProfileModalProps> = ({
   visible,
   onDismiss,
   householdName,
-  avatars,
+
+  
   profiles,
 }) => {
   return (
@@ -26,10 +29,14 @@ const HouseholdProfileModal: React.FC<HouseholdProfileModalProps> = ({
           <Card.Content>
             <Text>Medlemmar:</Text>
             {profiles.map((profile, index) => (
-              <View key={index} style={styles.profileContainer}>
-                <Avatar.Image source={{ uri: profile.avatar }} size={50} />
-                <Text style={styles.profileName}>{profile.profileName}</Text>
-              </View>
+             <View key={index} style={styles.profileContainer}>
+             <Avatar.Image
+               source={{ uri: AvatarUrls[profile.avatar as Avatars] }}
+               size={50}
+               style={{ backgroundColor: AvatarColors[profile.avatar as Avatars] }}
+             />
+             <Text style={styles.profileName}>{profile.profileName}</Text>
+           </View>
             ))}
           </Card.Content>
         </Card>
@@ -46,11 +53,14 @@ const styles = StyleSheet.create({
   },
   profileName: {
     marginLeft: 10,
+    fontSize: 20,
   },
-  // ... (andra stilar)
+  placeholderAvatar: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: "white",
+  },
 });
 
 export default HouseholdProfileModal;
-
-
-
