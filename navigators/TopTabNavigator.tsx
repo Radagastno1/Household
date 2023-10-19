@@ -2,7 +2,7 @@ import React from "react";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import HouseholdTasksScreen from "../screens/HouseholdTasksScreen";
 import StatisticScreen from "../screens/StatisticScreen";
-import CustomTabBar from "../shared/CustomTabBar";
+import CustomTabBar from "../store/shared/CustomTabBar";
 import TESTDATUMSCREEN from "../screens/TESTDATUMSCREEN";
 
 const TopTab = createMaterialTopTabNavigator();
