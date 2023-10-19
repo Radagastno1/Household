@@ -10,6 +10,8 @@ import {
 export default function TESTDATUMSCREEN() {
   // --------------- DENNA VECKAN ----------------
   const { startOfWeek, endOfWeek } = getStartAndEndDateOfCurrentWeek();
+  console.log(startOfWeek);
+  console.log(endOfWeek);
 
   // --------------- FÖRRA VECKAN ----------------
   const { lastWeekMonday, lastWeekSunday } = getStartAndEndDateOfLastWeek();
