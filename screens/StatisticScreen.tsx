@@ -1,4 +1,4 @@
-import { View, Text, FlatList, StyleSheet } from "react-native";
+import { View, Text, FlatList, StyleSheet, ScrollView } from "react-native";
 import React from "react";
 import PiechartComponent from "../components/PiechartComponent";
 
@@ -78,19 +78,20 @@ export default function StatisticScreen() {
   const slices = [20, 15, 20];
   const colors = ["red", "yellow", "blue"];
   return (
-    <View style={styles.container}>
-      <PiechartComponent
-        widthAndHeight={250}
-        series={slices}
-        sliceColor={colors}
-      />
-      <FlatList
-        alwaysBounceVertical={false}
-        data={chunkedCharts}
-        renderItem={({ item }) => (
-          <View style={styles.row}>
-            {item.map((chart) => (
-              <View style={styles.piechartContainer}>
+    <ScrollView style={styles.container}>
+      <View style={styles.topChart}>
+        <PiechartComponent
+          widthAndHeight={250}
+          series={slices}
+          sliceColor={colors}
+        />
+      </View>
+
+      <View style={styles.chartContainer}>
+        {chunkedCharts.map((row, rowIndex) => (
+          <View style={styles.row} key={rowIndex}>
+            {row.map((chart, columnIndex) => (
+              <View style={styles.piechartContainer} key={columnIndex}>
                 <Text style={styles.taskTitle}>{chart.name}</Text>
                 <PiechartComponent
                   widthAndHeight={100}
@@ -100,9 +101,9 @@ export default function StatisticScreen() {
               </View>
             ))}
           </View>
-        )}
-      ></FlatList>
-    </View>
+        ))}
+      </View>
+    </ScrollView>
   );
 }
 
@@ -110,15 +111,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 12,
-    alignItems: "center",
   },
   row: {
     flexDirection: "row",
     justifyContent: "center",
-  },
-  piechart: {
-    justifyContent: "center",
-    backgroundColor: "gray",
   },
   piechartContainer: {
     flexDirection: "column",
@@ -128,5 +124,11 @@ const styles = StyleSheet.create({
   taskTitle: {
     textAlign: "center",
     padding: 2,
+  },
+  topChart: {
+    alignItems: "center",
+  },
+  chartContainer: {
+    flexDirection: "column",
   },
 });
