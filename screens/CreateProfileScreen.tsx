@@ -2,14 +2,19 @@ import React, { useState, useEffect } from "react";
 import { AvatarColors, Avatars, AvatarUrls } from "../data/avatars";
 import { Button } from "react-native-paper";
 import { households } from "../data";
-import { useDispatch } from 'react-redux';
+import { useDispatch } from "react-redux";
 import { setProfile } from "../store/profile/profileSlice";
 import { Image } from "react-native";
 
-import { Text, View, TextInput, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  Text,
+  View,
+  TextInput,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
 import { useTheme } from "../contexts/themeContext";
 import { useAppSelector } from "../store/store";
-
 
 type Avatar = {
   id: string;
@@ -17,7 +22,7 @@ type Avatar = {
 
 const avatars: Avatar[] = [
   { id: Avatars.Bee },
-  { id: Avatars.Frog},
+  { id: Avatars.Frog },
   { id: Avatars.Monkey },
   { id: Avatars.Cat },
   { id: Avatars.Koala },
@@ -37,18 +42,18 @@ export default function CreateProfileScreen({ navigation, route }: any) {
 
   const activeUser = useAppSelector((state) => state.userAccount.user);
 
-  const activeProfiles = useAppSelector((state) => state.profile.profiles.filter((profile) => profile.householdId === id));
+  const activeProfiles = useAppSelector((state) =>
+    state.profile.profiles.filter((profile) => profile.householdId === id),
+  );
 
-  useEffect(() => {
-  }, [id, dispatch]);
+  useEffect(() => {}, [id, dispatch]);
 
   const isAvatarOccupied = (avatarId: string) => {
     return activeProfiles.some((profile) => profile.avatar === avatarId);
   };
-  
 
   const saveProfile = () => {
-    console.log("hushållsid är", id)
+    console.log("hushållsid är", id);
     if (selectedAvatar) {
       const avatarsColor = AvatarColors[selectedAvatar as Avatars];
       const newProfile = {
@@ -87,27 +92,31 @@ export default function CreateProfileScreen({ navigation, route }: any) {
       <View style={styles.avatarsContainer}>
         {avatars.map((avatar) => (
           <TouchableOpacity
-          key={avatar.id}
-          style={[
-            styles.avatar,
-            selectedAvatar === avatar.id ? styles.selectedAvatar : undefined,
-            isAvatarOccupied(avatar.id) ? styles.occupiedAvatar : undefined,
-            { backgroundColor: AvatarColors[avatar.id as Avatars] },
-          ]}
-          onPress={() => {
-            if (!isAvatarOccupied(avatar.id)) {
-              setSelectedAvatar(avatar.id as Avatars);
-            }
-          }}
-        >
-          <Image
-            source={{ uri: AvatarUrls[avatar.id as Avatars] }}
-            style={{ width: 40, height: 40 }}
-          />
-        </TouchableOpacity>
+            key={avatar.id}
+            style={[
+              styles.avatar,
+              selectedAvatar === avatar.id ? styles.selectedAvatar : undefined,
+              isAvatarOccupied(avatar.id) ? styles.occupiedAvatar : undefined,
+              { backgroundColor: AvatarColors[avatar.id as Avatars] },
+            ]}
+            onPress={() => {
+              if (!isAvatarOccupied(avatar.id)) {
+                setSelectedAvatar(avatar.id as Avatars);
+              }
+            }}
+          >
+            <Image
+              source={{ uri: AvatarUrls[avatar.id as Avatars] }}
+              style={styles.avatarImage}
+            />
+          </TouchableOpacity>
         ))}
       </View>
-      <Button style={theme.button as any} onPress={saveProfile} disabled={!selectedAvatar}>
+      <Button
+        style={theme.button as any}
+        onPress={saveProfile}
+        disabled={!selectedAvatar}
+      >
         <Text style={theme.buttonText}>Skapa</Text>
       </Button>
     </View>
@@ -170,9 +179,13 @@ const styles = StyleSheet.create({
   avatarText: {
     fontSize: 18,
   },
+  avatarImage: {
+    width: 40,
+    height: 40,
+    opacity: 10,
+  },
   occupiedAvatar: {
-    backgroundColor: "darkgray", // Byt ut med den färg du önskar
-  }
-  
+    backgroundColor: "gray",
+    opacity: 0.1,
+  },
 });
-
