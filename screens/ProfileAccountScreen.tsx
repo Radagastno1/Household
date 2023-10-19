@@ -19,19 +19,30 @@ export default function ProfileAccountScreen({ navigation }: any) {
   //dessa får komma in när det finns att hämta i reducerns state
   const userId = "5NCx5MKcUu6UYKjFqRkg";
 
-  const householdId = "household1"; 
+  // const householdId = "household1";
+
   const [selectedAvatar] = useState<string>("");
 
-  // const householdId = "fYHVLNiQvWEG9KNUGqBT"; // kommenterade ut denna, bara denna som jag inte satt tillbaka 
-
-  const dispatch = useAppDispatch();
-  dispatch(
-    setProfileByHouseholdAndUser({ userId: userId, householdId: householdId }),
+  // const householdId = "fYHVLNiQvWEG9KNUGqBT"; // kommenterade ut denna, bara denna som jag inte satt tillbaka
+  const activeHousehold = useAppSelector(
+    (state) => state.household.activehousehold,
   );
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    if (activeHousehold) {
+      dispatch(
+        setProfileByHouseholdAndUser({
+          userId: userId,
+          householdId: activeHousehold?.id,
+        }),
+      );
+    }
+  }, [activeHousehold]);
 
   const activeProfiles = useAppSelector((state) =>
     state.profile.profiles.filter(
-      (profile) => profile.householdId === householdId,
+      (profile) => profile.householdId === activeHousehold?.id,
     ),
   );
 
@@ -44,7 +55,9 @@ export default function ProfileAccountScreen({ navigation }: any) {
 
   const { theme } = useTheme();
   const [isModalVisible, setModalVisible] = useState(false);
-  const [headerTitle, setHeaderTitle] = useState<string>("TinaHome");
+  const [headerTitle, setHeaderTitle] = useState<string>(
+    activeHousehold?.name ?? "",
+  );
 
   useEffect(() => {
     if (activeProfile) {
@@ -163,7 +176,7 @@ export default function ProfileAccountScreen({ navigation }: any) {
         <HouseholdProfileModal
           visible={isModalVisible}
           onDismiss={() => setModalVisible(false)}
-          householdName={householdId}
+          householdName={activeHousehold?.name || "Laddar..."}
           profiles={activeProfiles}
           selectedAvatar={selectedAvatar}
         />

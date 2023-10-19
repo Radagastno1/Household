@@ -7,7 +7,9 @@ export default function HandleHouseholdScreen({ navigation }: any) {
       <Text>Här skapas ett hushåll</Text>
       <Button
         title="Skapa hushåll"
-        onPress={() => navigation.navigate("CreateProfile", {id: "household1"} )}
+        onPress={() =>
+          navigation.navigate("CreateProfile", { id: "fYHVLNiQvWEG9KNUGqBT" })
+        }
       />
       <Button
         title="Stäng"

@@ -1,7 +1,11 @@
 import { View, Text, StyleSheet, Button } from "react-native";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { Household } from "../types";
-import { householdReducer, setHouseholdByHouseholdId, sethousehold } from "../store/household/householdSlice";
+import {
+  householdReducer,
+  setHouseholdByHouseholdId,
+  sethousehold,
+} from "../store/household/householdSlice";
 
 const styles = StyleSheet.create({
   container: {
@@ -26,15 +30,17 @@ export default function HouseholdAccountScreen({ navigation }: any) {
           key={household.id}
           title={household.name}
           onPress={() => {
-            dispatch(setHouseholdByHouseholdId({ householdId: household.id })); 
+            console.log("HUS HÅLLSID: ", household.id);
+            dispatch(setHouseholdByHouseholdId({ householdId: household.id }));
             navigation.navigate("ProfileAccount");
           }}
         />
-        
       ))}
-       <Button
+      <Button
         title="Skapa nytt hushåll"
-        onPress={() => navigation.navigate("CreateProfile" , { id: "household1" })}  // denna e hårdkodad sålänge    
+        onPress={() =>
+          navigation.navigate("CreateProfile", { id: "household1" })
+        } // denna e hårdkodad sålänge
       />
 
       <Button title="Logga ut" onPress={() => navigation.navigate("Login")} />

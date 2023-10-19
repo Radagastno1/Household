@@ -11,36 +11,33 @@ import { Task } from "../types";
 
 import { AvatarUrls, Avatars } from "../data/avatars";
 
-
 export default function HouseholdTasksScreen({ navigation }: any) {
+  // function resetAvatars(dispatch: Dispatch) {
+  //     // Clear the avatars data, set it to an empty array or an initial value
+  //     // For example:
+  //     dispatch(setAvatars([]));
+  //   }
 
-    // function resetAvatars(dispatch: Dispatch) {
-    //     // Clear the avatars data, set it to an empty array or an initial value
-    //     // For example:
-    //     dispatch(setAvatars([]));
-    //   }
-      
-    //   function scheduleMidnightReset(dispatch: Dispatch) {
-    //     const now = new Date();
-    //     const midnight = new Date(
-    //       now.getFullYear(),
-    //       now.getMonth(),
-    //       now.getDate() + 1, // Tomorrow at midnight
-    //       0, // Hours
-    //       0, // Minutes
-    //       0 // Seconds
-    //     );
-    //     const timeUntilMidnight = midnight.getTime() - now.getTime();
-      
-    //     setTimeout(() => {
-    //       resetAvatars(dispatch);
-    //       scheduleMidnightReset(dispatch); // Reschedule for the next day
-    //     }, timeUntilMidnight);
-    //   }
-      
-    //   // Call this function to start the schedule
-    //   scheduleMidnightReset(dispatch); //
+  //   function scheduleMidnightReset(dispatch: Dispatch) {
+  //     const now = new Date();
+  //     const midnight = new Date(
+  //       now.getFullYear(),
+  //       now.getMonth(),
+  //       now.getDate() + 1, // Tomorrow at midnight
+  //       0, // Hours
+  //       0, // Minutes
+  //       0 // Seconds
+  //     );
+  //     const timeUntilMidnight = midnight.getTime() - now.getTime();
 
+  //     setTimeout(() => {
+  //       resetAvatars(dispatch);
+  //       scheduleMidnightReset(dispatch); // Reschedule for the next day
+  //     }, timeUntilMidnight);
+  //   }
+
+  //   // Call this function to start the schedule
+  //   scheduleMidnightReset(dispatch); //
 
   const activeHousehold = useAppSelector(
     (state) => state.household.activehousehold,
@@ -48,7 +45,7 @@ export default function HouseholdTasksScreen({ navigation }: any) {
 
   // Use useSelector to access the profiles
   const activeProfile = useAppSelector((state) => state.profile.activeProfile);
-  const household = households.find((h) => h.id === activeProfile?.householdId);
+  // const household = households.find((h) => h.id === activeProfile?.householdId);
   const taskSlice = useAppSelector((state) => state.task);
   const taskCompletionSlice = useAppSelector((state) => state.taskCompletion);
   const dispatch = useAppDispatch();
@@ -57,10 +54,10 @@ export default function HouseholdTasksScreen({ navigation }: any) {
 
   useFocusEffect(
     useCallback(() => {
-      if (activeProfile && household) {
+      if (activeProfile && activeHousehold) {
         dispatch(
           filterTaskListByHouseId({
-            household_Id: household?.id,
+            household_Id: activeHousehold?.id,
           }),
         );
         //TINA HERE: THIS DISPATCH MUST HAPPEND EVERY TIME WE GO TO THIS SCREEN
@@ -96,7 +93,6 @@ export default function HouseholdTasksScreen({ navigation }: any) {
     // get the unique profileIds
     const uniqueProfileIds = [
       ...new Set(
-
         filteredTodaysCompletionsForTask?.map(
           (completion) => completion.profileId,
         ),
