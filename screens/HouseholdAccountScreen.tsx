@@ -1,13 +1,7 @@
-import React, { useEffect } from "react";
 import { View, Text, StyleSheet, Button } from "react-native";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { Household } from "../types";
-import { Id } from "@reduxjs/toolkit/dist/tsHelpers";
-import {
-  householdReducer,
-  setHouseholdByHouseholdId,
-  sethousehold,
-} from "../store/household/householdSlice";
+import { householdReducer, setHouseholdByHouseholdId, sethousehold } from "../store/household/householdSlice";
 
 const styles = StyleSheet.create({
   container: {
@@ -21,31 +15,23 @@ const styles = StyleSheet.create({
 export default function HouseholdAccountScreen({ navigation }: any) {
   const activeUser = useAppSelector((state) => state.userAccount.user);
   const dispatch = useAppDispatch();
-  const connectedHouseholds = activeUser.households || []; // Default to an empty array if it's undefined
-
-  useEffect(() => {
-    // Hämta användarens hushåll när komponenten laddas
-    // Implementera hämtning av hushåll här och uppdatera connectedHouseholds
-  }, []);
-
-  const enterHousehold = (householdId: string) => {
-    dispatch(setHouseholdByHouseholdId({ householdId: householdId }));
-    navigation.navigate("ProfileAccount");
-  };
+  const householdSlice = useAppSelector((state) => state.household);
+  const allHouseholds = householdSlice.households;
 
   return (
     <View style={styles.container}>
       <Text>Här listas alla households:</Text>
-      {connectedHouseholds.map((household: Household, index: number) => (
-        <Text key={index}>{household.name}</Text>
+      {allHouseholds.map((household: Household) => (
+        <Button
+          key={household.id}
+          title={household.name}
+          onPress={() => {
+            dispatch(setHouseholdByHouseholdId({ householdId: household.id }));
+            navigation.navigate("ProfileAccount");
+          }}
+        />
       ))}
-      <Button
-        title="Skapa nytt hushåll"
-        onPress={() => navigation.navigate("CreateProfile" , { id: "household9" })}
-        
-      />
-      <Button title="Hushåll 1" onPress={() => enterHousehold("household1")} />
-      <Button title="Logga ut" onPress={() => navigation.navigate("Auth")} />
+      <Button title="Logga ut" onPress={() => navigation.navigate("Login")} />
     </View>
   );
 }
