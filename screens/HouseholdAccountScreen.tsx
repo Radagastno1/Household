@@ -24,13 +24,20 @@ export default function HouseholdAccountScreen({ navigation }: any) {
       {allHouseholds.map((household: Household) => (
         <Button
           key={household.id}
-          title={household.name}
+          // title={household.name}
+          title={ "household9"} // änra tillbaka denna sen
           onPress={() => {
-            dispatch(setHouseholdByHouseholdId({ householdId: household.id }));
+            dispatch(setHouseholdByHouseholdId({ householdId: household.id })); // ÄNDRA TILLBAKA TILL SÅHÄR
             navigation.navigate("ProfileAccount");
           }}
         />
+        
       ))}
+       <Button
+        title="Skapa nytt hushåll"
+        onPress={() => navigation.navigate("CreateProfile" , { id: "household9" })}      
+      />
+
       <Button title="Logga ut" onPress={() => navigation.navigate("Login")} />
     </View>
   );

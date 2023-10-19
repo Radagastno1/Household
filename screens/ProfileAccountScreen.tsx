@@ -19,12 +19,20 @@ export default function ProfileAccountScreen({ navigation }: any) {
   //dessa får komma in när det finns att hämta i reducerns state
   const userId = "user1";
 
-  const householdId = "fYHVLNiQvWEG9KNUGqBT";
+
+  const householdId = "household9";
+  // const householdId = "fYHVLNiQvWEG9KNUGqBT";
 
   const dispatch = useAppDispatch();
   dispatch(
     setProfileByHouseholdAndUser({ userId: userId, householdId: householdId }),
   );
+
+  const activeProfiles = useAppSelector((state) =>
+  state.profile.profiles.filter((profile) => profile.householdId === householdId)
+);
+
+
   const activeProfile = useAppSelector((state) => state.profile.activeProfile);
 
   const [isEditing, setIsEditing] = useState(false);
@@ -35,6 +43,7 @@ export default function ProfileAccountScreen({ navigation }: any) {
   const { theme } = useTheme();
   const [isModalVisible, setModalVisible] = useState(false);
   const [headerTitle, setHeaderTitle] = useState<string>("TinaHome");
+
   useEffect(() => {
     if (activeProfile) {
       const household = households.find(
@@ -45,6 +54,8 @@ export default function ProfileAccountScreen({ navigation }: any) {
       }
     }
   }, [activeProfile]);
+
+  
 
   const handleSaveClick = () => {
     if (activeProfile) {
@@ -153,6 +164,7 @@ export default function ProfileAccountScreen({ navigation }: any) {
           onDismiss={() => setModalVisible(false)}
           householdName="Hushållets namn"
           avatars={["avatar1.jpg", "avatar2.jpg", "avatar3.jpg"]}
+          profiles={activeProfiles}
         />
       </View>
     </View>
