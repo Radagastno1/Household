@@ -31,6 +31,59 @@ export const ThemeProvider: React.FC<{ children: ReactNode }> = ({ children }) =
 };
 
 
+// import { NavigationContainer } from "@react-navigation/native";
+// import {
+//   PropsWithChildren,
+//   createContext,
+//   useContext,
+//   useState,
+// } from "react";
+// import { useColorScheme } from "react-native";
+// import { AppDarkTheme, AppLightTheme } from "./theme";
+
+// type ColorScheme = "light" | "dark" | "auto";
+
+// type ThemeContextValue = (colorScheme: ColorScheme) => void;
+
+// const ThemeContext = createContext<ThemeContextValue>(
+//   () => {}
+// );
+
+// export default function ThemeProvider({
+//   children,
+// }: PropsWithChildren) {
+//   const [colorScheme, setColorScheme] =
+//     useState<ColorScheme>("auto");
+
+//   // Vad OS'et föreslår
+//   const autoScheme = useColorScheme();
+
+//   const selectedScheme =
+//     colorScheme === "auto" ? autoScheme : colorScheme;
+
+//   const theme =
+//     selectedScheme === "dark"
+//       ? AppDarkTheme
+//       : AppLightTheme;
+
+//   return (
+//     <ThemeContext.Provider value={setColorScheme}>
+//       <NavigationContainer theme={theme}>
+//         {children}
+//       </NavigationContainer>
+//     </ThemeContext.Provider>
+//   );
+// }
+
+// // Custom Hook to Consume the setColorTheme function
+// export const useSetColorTheme = () =>
+//   useContext(ThemeContext);
+
+// // usage:
+// // const setColorTheme = useSetColorTheme();
+// // setColorTheme("dark");
+
+
 
 
 
