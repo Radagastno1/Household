@@ -4,30 +4,26 @@ import CreateProfileScreen from "../screens/CreateProfileScreen";
 import CreateTaskScreen from "../screens/CreateTaskScreen";
 import HandleHouseholdScreen from "../screens/HandleHouseholdScreen";
 import HouseholdAccountScreen from "../screens/HouseholdAccountScreen";
-
 import ProfileAccountScreen from "../screens/ProfileAccountScreen";
 import SplashScreen from "../screens/SplashScreen";
 import TaskDetailScreen from "../screens/TaskDetailScreen";
 import { useAppSelector } from "../store/store";
 import TopTabNavigator from "./TopTabNavigator";
-
 import CreateUserAccountScreen from "../screens/CreateUserAccountScreen";
 import SignInScreen from "../screens/SignInScreen";
-import AuthNavigator from "./AuthNavigator";
 import CustomHeader from "../store/shared/CustomHeader";
 
 export type RootStackParamList = {
   SplashScreen: undefined;
-  Auth: typeof AuthNavigator;
   Login: undefined;
   Signup: undefined;
   HandleTask: { taskId: string };
-  ShowTask: { taskId: string };
+  TaskDetail: { taskId: string };
   HouseholdAccount: undefined;
   ProfileAccount: { householdId: string };
   HandleHousehold: undefined;
   CreateProfile: { householdId: string };
-  Tab: typeof TopTabNavigator;
+  Tab: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -41,11 +37,10 @@ export default function RootNavigator() {
     <NavigationContainer>
       <Stack.Navigator
         initialRouteName={
-          isLoading ? "SplashScreen" : userSlice ? "Auth" : "Login"
+          isLoading ? "SplashScreen" : userSlice ? "Login" : "Login"
         }
       >
         <Stack.Screen name="SplashScreen" component={SplashScreen} />
-        <Stack.Screen name="Auth" component={AuthNavigator} />
         <Stack.Screen
           name="Login"
           component={SignInScreen}
@@ -68,7 +63,7 @@ export default function RootNavigator() {
         />
         <Stack.Screen name="HandleTask" component={CreateTaskScreen} />
         <Stack.Screen
-          name="ShowTask"
+          name="TaskDetail"
           options={{ headerShown: false }}
           component={TaskDetailScreen}
         />
@@ -79,7 +74,8 @@ export default function RootNavigator() {
             header: () => (
               <CustomHeader
                 title={
-                  (route.params as { name?: string })?.name || "Custom Header"
+                  (route.params as unknown as { name?: string })?.name ||
+                  "Custom Header"
                 }
                 navigation={navigation}
               />
