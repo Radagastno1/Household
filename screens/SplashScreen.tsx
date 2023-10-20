@@ -2,19 +2,13 @@ import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { ResizeMode, Video } from "expo-av";
 import React, { useEffect, useState } from "react";
-import {
-  Animated,
-  Dimensions,
-  Easing,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { Animated, Dimensions, Easing, StyleSheet, View } from "react-native";
 import { RootStackParamList } from "../navigators/RootNavigator";
 
 export default function SplashScreen() {
   const [isLoading, setIsLoading] = useState(true);
   const beeAnimation = new Animated.Value(0);
+  const loginScreenHeight = new Animated.Value(0);
   const windowHeight = Dimensions.get("window").height;
   const navigation =
     useNavigation<StackNavigationProp<RootStackParamList, "Auth">>();
@@ -30,8 +24,16 @@ export default function SplashScreen() {
         easing: Easing.linear,
         useNativeDriver: true,
       }).start(() => {
-        // Once the animation is complete, navigate to the "Login" screen
-        navigation.navigate("Login");
+        Animated.timing(loginScreenHeight, {
+          toValue: windowHeight, // Expand to the full height of the screen
+          duration: 1000,
+          easing: Easing.out(Easing.ease),
+          useNativeDriver: false,
+        }).start(() => {
+          setTimeout(() => {
+            navigation.replace("Login");
+          }, 1000); // start 1 seconds earlier
+        });
       });
     }
   }, [isLoading]);
@@ -64,7 +66,6 @@ export default function SplashScreen() {
           resizeMode={ResizeMode.CONTAIN}
         />
       </Animated.View>
-      {isLoading ? <Text style={styles.loadingText}>Loading</Text> : null}
     </View>
   );
 }
@@ -77,8 +78,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   video: {
-    width: 200,
-    height: 100,
+    width: 300,
+    height: 200,
   },
   loadingText: {
     fontSize: 24,
