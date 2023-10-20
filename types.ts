@@ -35,6 +35,7 @@ export interface Task {
 
 export interface TaskCompletion {
   id: string;
+  householdId: string;
   taskId: string;
   profileId: string;
   completionDate: string;

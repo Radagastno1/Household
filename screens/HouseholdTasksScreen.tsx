@@ -3,7 +3,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import React, { useCallback, useEffect } from "react";
 import { ScrollView, StyleSheet, View, Image } from "react-native";
 import { Button, Card, Text } from "react-native-paper";
-import { households, profiles, taskCompletions } from "../data";
+import { households, profiles } from "../data";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { fetchCompletions } from "../store/taskCompletionSlice";
 import { fetchTasks, filterTaskListByHouseId } from "../store/tasks/taskSlice";
@@ -67,17 +67,6 @@ export default function HouseholdTasksScreen({ navigation }: any) {
     }, [dispatch]),
   );
 
-  useEffect(() => {
-    if (taskSlice.tasks.length > 0 && activeProfile) {
-      let taskIds: string[] = [];
-      //problemet är att varje gång den körs så sätts dom completions på ETT TASK ID till completions statet?!
-      taskSlice.tasks.forEach((task: Task) => {
-        taskIds.push(task.id);
-      });
-      dispatch(fetchCompletions(taskIds));
-    }
-  }, []);
-
   const handleTaskPress = (taskId: string) => {
     navigation.navigate("ShowTask", { taskId });
   };
@@ -85,16 +74,17 @@ export default function HouseholdTasksScreen({ navigation }: any) {
   function findAllAvatarFortodayCompletionByTaskId(taskId: string) {
     const today = new Date().toISOString();
     //filter the completions with the same taskId---------can be moved out and share with getdays function
-    const filteredTodaysCompletionsForTask = taskCompletions.filter(
-      (completion) =>
-        completion.completionDate.split("T")[0] === today.split("T")[0] &&
-        completion.taskId === taskId,
-    );
+    const filteredTodaysCompletionsForTask =
+      taskCompletionSlice.completions.filter(
+        (completion: any) =>
+          completion.completionDate.split("T")[0] === today.split("T")[0] &&
+          completion.taskId === taskId,
+      );
     // get the unique profileIds
     const uniqueProfileIds = [
       ...new Set(
         filteredTodaysCompletionsForTask?.map(
-          (completion) => completion.profileId,
+          (completion: any) => completion.profileId,
         ),
       ),
     ];
