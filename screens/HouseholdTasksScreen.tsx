@@ -10,8 +10,13 @@ import { fetchTasks, filterTaskListByHouseId } from "../store/tasks/taskSlice";
 import { Task } from "../types";
 
 import { AvatarUrls, Avatars } from "../data/avatars";
+import { TopTabScreenProps } from "../navigators/navigationTypes";
 
-export default function HouseholdTasksScreen({ navigation }: any) {
+type HouseholdTasksProps = TopTabScreenProps<"HouseholdTasks">;
+
+export default function HouseholdTasksScreen({
+  navigation,
+}: HouseholdTasksProps) {
   // function resetAvatars(dispatch: Dispatch) {
   //     // Clear the avatars data, set it to an empty array or an initial value
   //     // For example:
@@ -68,7 +73,7 @@ export default function HouseholdTasksScreen({ navigation }: any) {
   );
 
   const handleTaskPress = (taskId: string) => {
-    navigation.navigate("ShowTask", { taskId });
+    navigation.navigate("TaskDetail", { taskId });
   };
 
   function findAllAvatarFortodayCompletionByTaskId(taskId: string) {

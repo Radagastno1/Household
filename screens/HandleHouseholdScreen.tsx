@@ -1,14 +1,21 @@
 import { View, Text, StyleSheet, Button } from "react-native";
 import React from "react";
+import { RootNavigationScreenProps } from "../navigators/navigationTypes";
 
-export default function HandleHouseholdScreen({ navigation }: any) {
+type HandleHousholdProps = RootNavigationScreenProps<"HandleHousehold">;
+
+export default function HandleHouseholdScreen({
+  navigation,
+}: HandleHousholdProps) {
   return (
     <View style={styles.container}>
       <Text>Här skapas ett hushåll</Text>
       <Button
         title="Skapa hushåll"
         onPress={() =>
-          navigation.navigate("CreateProfile", { id: "fYHVLNiQvWEG9KNUGqBT" })
+          navigation.navigate("CreateProfile", {
+            householdId: "fYHVLNiQvWEG9KNUGqBT",
+          })
         }
       />
       <Button

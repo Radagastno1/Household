@@ -10,8 +10,13 @@ import {
 } from "../store/taskCompletionSlice";
 import { findTaskById } from "../store/tasks/taskSlice";
 import { AvatarUrls, Avatars } from "../data/avatars";
+import { RootNavigationScreenProps } from "../navigators/navigationTypes";
 
-export default function TaskDetailScreen({ navigation, route }: any) {
+type TaskDetailProps = RootNavigationScreenProps<"TaskDetail">;
+export default function TaskDetailScreen({
+  navigation,
+  route,
+}: TaskDetailProps) {
   const { theme } = useTheme();
   const { taskId } = route.params;
   const activeProfile = useAppSelector((state) => state.profile.activeProfile);
