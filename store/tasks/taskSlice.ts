@@ -7,6 +7,7 @@ import {
   editTaskToDB,
   getTasksFromDB,
 } from "../../api/task";
+import { fetchCompletions } from "../taskCompletionSlice";
 
 interface TaskState {
   tasks: Task[];
@@ -102,10 +103,14 @@ export const {
 } = taskSlice.actions;
 
 //denna ska anropas där vi behöver få in tasken från databasen och sättas som state = tasks
+// Asynct Thunk Actiion (Redux Core)
 export const fetchTasks =
-  (activeHouseholdId: string) => async (dispatch: any) => {
+  (activeHouseholdId: string) => async (dispatch: any, getState: any) => {
+    // console.log("AAAAAAAAAAAAAAAAAAAa", dispatch, getState());
     const tasks = await getTasksFromDB(activeHouseholdId);
     dispatch(taskSlice.actions.setTasks(tasks));
+
+    await dispatch(fetchCompletions(activeHouseholdId));
   };
 
 export const taskReducer = taskSlice.reducer;

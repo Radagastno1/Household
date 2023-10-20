@@ -17,6 +17,8 @@ const initialState: TaskCompletionState = {
   avatars: [],
 };
 
+//createEntityAdapter - setAll   (householdId och inte varje task - id ELLER alla taskidn)
+
 const taskCompletionSlice = createSlice({
   name: "taskCompletion",
   initialState,
@@ -26,13 +28,18 @@ const taskCompletionSlice = createSlice({
     },
     setTaskAsCompleted: (
       state,
-      action: PayloadAction<{ taskId: string; profileId: string }>,
+      action: PayloadAction<{
+        taskId: string;
+        profileId: string;
+        householdId: string;
+      }>,
     ) => {
       console.log("profile id som kommer in:", action.payload.profileId);
 
       const newTaskCompletion: TaskCompletion = {
         id: "",
         taskId: action.payload.taskId,
+        householdId: action.payload.householdId,
         profileId: action.payload.profileId,
         completionDate: new Date().toISOString(),
       };
@@ -165,19 +172,10 @@ export const {
 
 //FRÅGA DAVID ÄR DETTA OK VERKLIGEN?
 export const fetchCompletions =
-  (taskIds: string[]) => async (dispatch: any) => {
-    let taskCompletions: TaskCompletion[] = [];
+  (householdId: string) => async (dispatch: any) => {
+    const completions = await getTaskCompletionsFromDB(householdId);
 
-    const fetchCompletionsPromises = taskIds.map(async (id) => {
-      const completion = await getTaskCompletionsFromDB(id);
-      if (completion) {
-        taskCompletions = taskCompletions.concat(completion);
-      }
-    });
-
-    await Promise.all(fetchCompletionsPromises);
-
-    dispatch(taskCompletionSlice.actions.setCompletions(taskCompletions));
+    dispatch(taskCompletionSlice.actions.setCompletions(completions));
   };
 
 export const taskCompletionReducer = taskCompletionSlice.reducer;

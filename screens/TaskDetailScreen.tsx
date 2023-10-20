@@ -15,6 +15,9 @@ export default function TaskDetailScreen({ navigation, route }: any) {
   const { theme } = useTheme();
   const { taskId } = route.params;
   const activeProfile = useAppSelector((state) => state.profile.activeProfile);
+  const activeHousehold = useAppSelector(
+    (state) => state.household.activehousehold,
+  );
   const isOwner = activeProfile?.isOwner;
   const taskSlice = useAppSelector((state) => state.task);
   const dispatch = useAppDispatch();
@@ -33,9 +36,13 @@ export default function TaskDetailScreen({ navigation, route }: any) {
     }
   }, [dispatch, taskId]);
 
-  const handleTaskCompletion = async (taskId: string, profileId: string) => {
+  const handleTaskCompletion = async (
+    taskId: string,
+    profileId: string,
+    householdId: string,
+  ) => {
     if (taskId && profileId) {
-      dispatch(setTaskAsCompleted({ taskId, profileId }));
+      dispatch(setTaskAsCompleted({ taskId, profileId, householdId }));
       fetchAvatars();
     } else {
       console.error("Task ID or profile ID is undefined.");
@@ -115,7 +122,11 @@ export default function TaskDetailScreen({ navigation, route }: any) {
         <Button
           mode="text"
           onPress={() => {
-            handleTaskCompletion(taskId, profileId ?? "");
+            handleTaskCompletion(
+              taskId,
+              activeProfile?.id ?? "",
+              activeHousehold?.id ?? "",
+            );
           }}
           style={[styles.klarButton, theme.button]}
         >
@@ -125,7 +136,6 @@ export default function TaskDetailScreen({ navigation, route }: any) {
           <Text style={[styles.klarButton, theme.buttonText]}>Till Tasks</Text>
         </Button>
       </View>
-      
     </View>
   );
 }
