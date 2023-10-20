@@ -24,7 +24,7 @@ export type RootStackParamList = {
   HandleTask: { taskId: string };
   ShowTask: { taskId: string };
   HouseholdAccount: undefined;
-  ProfileAccount: {householdId: string};
+  ProfileAccount: { householdId: string };
   HandleHousehold: undefined;
   CreateProfile: { householdId: string };
   Tab: typeof TopTabNavigator;
@@ -44,7 +44,7 @@ export default function RootNavigator() {
           isLoading ? "SplashScreen" : userSlice ? "Auth" : "Login"
         }
       >
-        {/* <Stack.Screen name="SplashScreen" component={SplashScreen} />
+        <Stack.Screen name="SplashScreen" component={SplashScreen} />
         <Stack.Screen name="Auth" component={AuthNavigator} />
         <Stack.Screen
           name="Login"
