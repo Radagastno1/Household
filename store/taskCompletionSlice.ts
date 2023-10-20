@@ -24,7 +24,7 @@ const taskCompletionSlice = createSlice({
   initialState,
   reducers: {
     setCompletions: (state, action) => {
-      state.completions = state.completions.concat(action.payload);
+      state.completions = action.payload;
     },
     setTaskAsCompleted: (
       state,
