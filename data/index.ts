@@ -1,8 +1,9 @@
 import { Household, Profile, Task, TaskCompletion, User } from "../types";
+import { Avatars } from "./avatars";
 
 export const users: User[] = [
   {
-    id: "user1",
+    id: "5NCx5MKcUu6UYKjFqRkg",
     name: "User One",
     username: "userone",
     password: "password1",
@@ -35,7 +36,7 @@ export const users: User[] = [
 
 export const households: Household[] = [
   {
-    id: "household1",
+    id: "fYHVLNiQvWEG9KNUGqBT",
     name: "Household One",
     code: "code1",
   },
@@ -49,12 +50,11 @@ export const households: Household[] = [
 // Added avatarcolor to profile so long
 export const profiles: Profile[] = [
   {
-    id: "profile1",
+    id: "moNj4qvcbKNQdEsnhEjL",
     profileName: "Silly User 1",
-    userId: "user1",
-    householdId: "household1",
-    avatar: "bee",
-    avatarsColors: "yellow",
+    userId: "5NCx5MKcUu6UYKjFqRkg",
+    householdId: "fYHVLNiQvWEG9KNUGqBT",
+    avatar: Avatars.Bee,
     isOwner: true,
     isActive: true,
   },
@@ -62,9 +62,8 @@ export const profiles: Profile[] = [
     id: "profile2",
     profileName: "Funny User 2",
     userId: "user2",
-    householdId: "household1",
-    avatar: "frog",
-    avatarsColors: "green",
+    householdId: "fYHVLNiQvWEG9KNUGqBT",
+    avatar: Avatars.Monkey,
     isOwner: false,
     isActive: true,
   },
@@ -72,9 +71,8 @@ export const profiles: Profile[] = [
     id: "profile3",
     profileName: "Horny User 3",
     userId: "user3",
-    householdId: "household1",
-    avatar: "cat",
-    avatarsColors: "purple",
+    householdId: "fYHVLNiQvWEG9KNUGqBT",
+    avatar: Avatars.Cat,
     isOwner: false,
     isActive: true,
   },
@@ -82,9 +80,8 @@ export const profiles: Profile[] = [
     id: "profile4",
     profileName: "Clever User 4",
     userId: "user4",
-    householdId: "household1",
-    avatar: "pig",
-    avatarsColors: "pink",
+    householdId: "fYHVLNiQvWEG9KNUGqBT",
+    avatar: Avatars.Frog,
     isOwner: false,
     isActive: false,
   },
@@ -92,9 +89,8 @@ export const profiles: Profile[] = [
     id: "profile5",
     profileName: "Lazy User 5",
     userId: "user5",
-    householdId: "household1",
-    avatar: "fox",
-    avatarsColors: "orange",
+    householdId: "fYHVLNiQvWEG9KNUGqBT",
+    avatar: Avatars.Fox,
     isOwner: false,
     isActive: true,
   },
@@ -103,8 +99,7 @@ export const profiles: Profile[] = [
     profileName: "Hungry User 6",
     userId: "user2",
     householdId: "household2",
-    avatar: "bee",
-    avatarsColors: "yellow",
+    avatar: Avatars.Bee,
     isOwner: true,
     isActive: true,
   },
@@ -113,8 +108,7 @@ export const profiles: Profile[] = [
     profileName: "Fast User 7",
     userId: "user3",
     householdId: "household2",
-    avatar: "pig",
-    avatarsColors: "pink",
+    avatar: Avatars.Pig,
     isOwner: false,
     isActive: true,
   },
@@ -123,8 +117,7 @@ export const profiles: Profile[] = [
     profileName: "Jumpy User 8",
     userId: "user4",
     householdId: "household2",
-    avatar: "frog",
-    avatarsColors: "green",
+    avatar: Avatars.Frog,
     isOwner: false,
     isActive: true,
   },
@@ -133,8 +126,7 @@ export const profiles: Profile[] = [
     profileName: "Slow User 9",
     userId: "user5",
     householdId: "household2",
-    avatar: "frog",
-    avatarsColors: "green",
+    avatar: Avatars.Frog,
     isOwner: false,
     isActive: false,
   },
@@ -143,8 +135,7 @@ export const profiles: Profile[] = [
     profileName: "Dreamy User 10",
     userId: "user1",
     householdId: "household2",
-    avatar: "ladybug",
-    avatarsColors: "red",
+    avatar: Avatars.Koala,
     isOwner: false,
     isActive: true,
   },
@@ -158,7 +149,7 @@ export const tasks: Task[] = [
     energiWeight: 4,
     creatingDate: new Date("2023-10-01").toISOString(), //default blir dagens datum
     interval: 5, //dagar emellan?
-    householdId: "household1",
+    householdId: "fYHVLNiQvWEG9KNUGqBT",
   },
   {
     id: "task2",
@@ -167,7 +158,7 @@ export const tasks: Task[] = [
     energiWeight: 6,
     creatingDate: new Date("2023-10-03").toISOString(),
     interval: 1,
-    householdId: "household1",
+    householdId: "fYHVLNiQvWEG9KNUGqBT",
   },
   {
     id: "task3",
@@ -177,7 +168,7 @@ export const tasks: Task[] = [
     energiWeight: 2,
     creatingDate: new Date("2023-10-04").toISOString(),
     interval: 4,
-    householdId: "household1",
+    householdId: "fYHVLNiQvWEG9KNUGqBT",
   },
   {
     id: "task4",
@@ -186,7 +177,7 @@ export const tasks: Task[] = [
     energiWeight: 2,
     creatingDate: new Date("2023-10-02").toISOString(), //default blir dagens datum
     interval: 1, //dagar emellan?
-    householdId: "household1",
+    householdId: "fYHVLNiQvWEG9KNUGqBT",
   },
   {
     id: "task5",
@@ -195,7 +186,7 @@ export const tasks: Task[] = [
     energiWeight: 6,
     creatingDate: new Date("2023-10-06").toISOString(), //default blir dagens datum
     interval: 6, //dagar emellan?
-    householdId: "household1",
+    householdId: "fYHVLNiQvWEG9KNUGqBT",
   },
   {
     id: "task6",
@@ -306,9 +297,27 @@ export const taskCompletions: TaskCompletion[] = [
     completionDate: new Date("2023-10-09").toISOString(),
   },
   {
-    id: "completion10",
+    id: "completion11",
     taskId: "task6",
     profileId: "profile2",
     completionDate: new Date("2023-10-15").toISOString(),
+  },
+  {
+    id: "completion12",
+    taskId: "task1",
+    profileId: "profile3",
+    completionDate: new Date().toISOString(),
+  },
+  {
+    id: "completion13",
+    taskId: "task5",
+    profileId: "profile5",
+    completionDate: new Date().toISOString(),
+  },
+  {
+    id: "completion14",
+    taskId: "task4",
+    profileId: "profile4",
+    completionDate: new Date().toISOString(),
   },
 ];

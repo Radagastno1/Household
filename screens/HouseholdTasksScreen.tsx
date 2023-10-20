@@ -1,64 +1,132 @@
 import { AntDesign } from "@expo/vector-icons";
-import { useIsFocused } from "@react-navigation/native";
-import React, { useEffect, useState } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { useFocusEffect } from "@react-navigation/native";
+import React, { useCallback, useEffect } from "react";
+import { ScrollView, StyleSheet, View, Image } from "react-native";
 import { Button, Card, Text } from "react-native-paper";
-import { households } from "../data";
+import { households, profiles, taskCompletions } from "../data";
 import { useAppDispatch, useAppSelector } from "../store/store";
-import { filterTaskListByHouseId } from "../store/tasks/taskSlice";
+import { fetchCompletions } from "../store/taskCompletionSlice";
+import { fetchTasks, filterTaskListByHouseId } from "../store/tasks/taskSlice";
 import { Task } from "../types";
 
-// ska knna gå till lägg till ny task OM du är ägare för hushålllet
-//här listas alla sysslor i hushållet. nullas från avatarer varje midnatt.
-//vilka som gjort sysslan ska visas bredvid sysslan
-//hur många dagar sedan den gjordes
-//samt om den är försenad visa siffran med röd färg
+import { AvatarUrls, Avatars } from "../data/avatars";
 
 export default function HouseholdTasksScreen({ navigation }: any) {
-  const [avatar, setAvatar] = useState<string>("");
+  // function resetAvatars(dispatch: Dispatch) {
+  //     // Clear the avatars data, set it to an empty array or an initial value
+  //     // For example:
+  //     dispatch(setAvatars([]));
+  //   }
+
+  //   function scheduleMidnightReset(dispatch: Dispatch) {
+  //     const now = new Date();
+  //     const midnight = new Date(
+  //       now.getFullYear(),
+  //       now.getMonth(),
+  //       now.getDate() + 1, // Tomorrow at midnight
+  //       0, // Hours
+  //       0, // Minutes
+  //       0 // Seconds
+  //     );
+  //     const timeUntilMidnight = midnight.getTime() - now.getTime();
+
+  //     setTimeout(() => {
+  //       resetAvatars(dispatch);
+  //       scheduleMidnightReset(dispatch); // Reschedule for the next day
+  //     }, timeUntilMidnight);
+  //   }
+
+  //   // Call this function to start the schedule
+  //   scheduleMidnightReset(dispatch); //
+
+  const activeHousehold = useAppSelector(
+    (state) => state.household.activehousehold,
+  );
 
   // Use useSelector to access the profiles
   const activeProfile = useAppSelector((state) => state.profile.activeProfile);
-
-  const household = households.find((h) => h.id === activeProfile?.householdId);
+  // const household = households.find((h) => h.id === activeProfile?.householdId);
   const taskSlice = useAppSelector((state) => state.task);
-  const taskCompletions = useAppSelector((state) => state.taskCompletion);
+  const taskCompletionSlice = useAppSelector((state) => state.taskCompletion);
   const dispatch = useAppDispatch();
 
   const isOwner = activeProfile?.isOwner;
-  const isFocused = useIsFocused();
-  useEffect(() => {
-    if (isFocused) {
-      console.log("fokuserad");
-      if (activeProfile && household) {
+
+  useFocusEffect(
+    useCallback(() => {
+      if (activeProfile && activeHousehold) {
         dispatch(
           filterTaskListByHouseId({
-            household_Id: household?.id,
+            household_Id: activeHousehold?.id,
           }),
         );
+        //TINA HERE: THIS DISPATCH MUST HAPPEND EVERY TIME WE GO TO THIS SCREEN
+        //this one fetches the tasks from the database and put it in the state "tasks"
+        dispatch(fetchTasks(activeProfile.householdId));
       }
+    }, [dispatch]),
+  );
+
+  useEffect(() => {
+    if (taskSlice.tasks.length > 0 && activeProfile) {
+      let taskIds: string[] = [];
+      //problemet är att varje gång den körs så sätts dom completions på ETT TASK ID till completions statet?!
+      taskSlice.tasks.forEach((task: Task) => {
+        taskIds.push(task.id);
+      });
+      dispatch(fetchCompletions(taskIds));
     }
-  }, [dispatch, isFocused]);
+  }, []);
 
   const handleTaskPress = (taskId: string) => {
     navigation.navigate("ShowTask", { taskId });
   };
 
-  function getDaysSinceLastCompletion(task: Task) {
-    let lastCompletionDate: Date;
-
-    //alla taskcompletions som hänt för tasken
-    const taskCompletionsForTask = taskCompletions.taskCompletions.filter(
-      (completion) => completion.taskId === task.id,
+  function findAllAvatarFortodayCompletionByTaskId(taskId: string) {
+    const today = new Date().toISOString();
+    //filter the completions with the same taskId---------can be moved out and share with getdays function
+    const filteredTodaysCompletionsForTask = taskCompletions.filter(
+      (completion) =>
+        completion.completionDate.split("T")[0] === today.split("T")[0] &&
+        completion.taskId === taskId,
+    );
+    // get the unique profileIds
+    const uniqueProfileIds = [
+      ...new Set(
+        filteredTodaysCompletionsForTask?.map(
+          (completion) => completion.profileId,
+        ),
+      ),
+    ];
+    console.log(uniqueProfileIds);
+    // profiles corresponding to the unique profileIds
+    const profilesForTask = profiles.filter((profile) =>
+      uniqueProfileIds.includes(profile.id),
     );
 
-    if (taskCompletionsForTask.length === 0) {
-      //om ingen har gjort en första completion så är senast datumet när tasken skapades
+    const avatarList = profilesForTask.map((profile) => profile.avatar);
+    return avatarList;
+  }
+
+  function getDaysSinceLastCompletion(task: Task) {
+    let lastCompletionDate: Date;
+    const today = new Date().toISOString();
+    //all todays taskcompletions for task ---------can be moved out and share with getAvatar function
+
+    const filteredTodaysCompletionsForTask =
+      taskCompletionSlice.completions.filter(
+        (completion) =>
+          completion.taskId === task.id &&
+          completion.completionDate.split("T")[0] === today.split("T")[0],
+      );
+
+    if (filteredTodaysCompletionsForTask.length === 0) {
+      //if it is empty, no one did it today
       lastCompletionDate = new Date(task.creatingDate);
     } else {
-      //hämta senast gjorda taskCompletions datum
+      //get the latest date it was done
       lastCompletionDate = new Date(
-        taskCompletionsForTask.slice().sort((a, b) => {
+        filteredTodaysCompletionsForTask.slice().sort((a, b) => {
           return (
             new Date(b.completionDate).getTime() -
             new Date(a.completionDate).getTime()
@@ -66,15 +134,12 @@ export default function HouseholdTasksScreen({ navigation }: any) {
         })[0].completionDate,
       );
     }
-
-    // skillnad senaste completion datumet och dagens datum
+    // get the timeDifference since last done date
     const currentDate = new Date();
     const timeDifference = currentDate.getTime() - lastCompletionDate.getTime();
-
-    // tiden till dagar
-    const daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-
-    console.log("task:", task.id, " har day dufference:", daysDifference);
+    //convert it to days minus the interval days
+    const daysDifference =
+      Math.floor(timeDifference / (1000 * 60 * 60 * 24)) - task.interval;
     return daysDifference;
   }
 
@@ -85,6 +150,17 @@ export default function HouseholdTasksScreen({ navigation }: any) {
           isOwner ? styles.scrollContainerOwner : styles.scrollContainerNonOwner
         }
       >
+        {/* <View>
+          {taskCompletionSlice.completions.map((c) => (
+            <Text
+              key={c.id}
+              style={{ backgroundColor: "blue", color: "white" }}
+            >
+              PROFILID: {c.profileId} TASKID: {c.taskId}
+            </Text>
+          ))}
+        </View> */}
+
         {taskSlice.filteredTasks.map((task) => (
           <Card
             key={task.id}
@@ -95,12 +171,26 @@ export default function HouseholdTasksScreen({ navigation }: any) {
               <View>
                 <Text variant="titleLarge">{task.title}</Text>
               </View>
-              <View>
-                <Text variant="bodyMedium">{avatar}</Text>
-              </View>
-              <View>
-                <Text variant="bodyMedium">interval</Text>
-              </View>
+
+              {findAllAvatarFortodayCompletionByTaskId(task.id).map(
+                (avatar, index) => (
+                  <View key={index}>
+                    <Image
+                      source={{ uri: AvatarUrls[avatar as Avatars] }}
+                      style={{ height: 20, width: 20 }}
+                    />
+                    {/* <Text variant="bodyMedium">{avatar}</Text> */}
+                  </View>
+                ),
+              )}
+
+              {getDaysSinceLastCompletion(task) > 0 && (
+                <View style={styles.intervalNumberCircle}>
+                  <Text style={styles.circleText} variant="bodyMedium">
+                    {getDaysSinceLastCompletion(task)}
+                  </Text>
+                </View>
+              )}
             </View>
           </Card>
         ))}
@@ -189,6 +279,18 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+  },
+  intervalNumberCircle: {
+    width: 30,
+    height: 30,
+    backgroundColor: "red",
+    borderRadius: 30,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  circleText: {
+    color: "white",
+    fontSize: 16,
   },
   buttonContainer: {
     position: "absolute",

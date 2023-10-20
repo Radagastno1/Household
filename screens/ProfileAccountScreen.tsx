@@ -1,46 +1,98 @@
-import { View, StyleSheet, StatusBar } from "react-native";
-import React, { useEffect } from "react";
-import {  useAppDispatch, useAppSelector } from "../store/store";
-import {  Card, Text, Button, IconButton } from "react-native-paper";
+import React, { useEffect, useState } from "react";
+import { StyleSheet, View } from "react-native";
+import { Button, Card, IconButton, Text, TextInput } from "react-native-paper";
 import { useTheme } from "../contexts/themeContext";
-import HouseholdProfileModal from "../modules/HouseholdMemberModal";
-import { useState } from "react";
-import { setProfileByHouseholdAndUser } from "../store/profile/profileSlice";
 import { households } from "../data";
+import HouseholdProfileModal from "../modules/HouseholdMemberModal";
+import {
+  editProfileName,
+  setProfileByHouseholdAndUser,
+} from "../store/profile/profileSlice";
+import { useAppDispatch, useAppSelector } from "../store/store";
+import { fetchTasks } from "../store/tasks/taskSlice";
 // import { getProfileByHouseholdAndUser } from "../store/profile/profileSlice";
-
 
 export default function ProfileAccountScreen({ navigation }: any) {
   //du måste kolla getActiveHousehold från householdreducern
   //då har du ett household som du är inne på
   //då hämtar du getProfileForHousehold(userId, householdId);
   //dessa får komma in när det finns att hämta i reducerns state
-  const userId = "user1";
-  const householdId = "household1";
+  const userId = "5NCx5MKcUu6UYKjFqRkg";
+
+  // const householdId = "household1";
+
+  const [selectedAvatar] = useState<string>("");
+
+  // const householdId = "fYHVLNiQvWEG9KNUGqBT"; // kommenterade ut denna, bara denna som jag inte satt tillbaka
+  const activeHousehold = useAppSelector(
+    (state) => state.household.activehousehold,
+  );
   const dispatch = useAppDispatch();
-  dispatch(setProfileByHouseholdAndUser({userId:userId, householdId:householdId}))
+
+  useEffect(() => {
+    if (activeHousehold) {
+      dispatch(
+        setProfileByHouseholdAndUser({
+          userId: userId,
+          householdId: activeHousehold?.id,
+        }),
+      );
+    }
+  }, [activeHousehold]);
+
+  const activeProfiles = useAppSelector((state) =>
+    state.profile.profiles.filter(
+      (profile) => profile.householdId === activeHousehold?.id,
+    ),
+  );
+
   const activeProfile = useAppSelector((state) => state.profile.activeProfile);
-  
+
+  const [isEditing, setIsEditing] = useState(false);
+  const [updatedProfileName, setUpdatedProfilename] = useState(
+    activeProfile?.profileName,
+  );
+
   const { theme } = useTheme();
   const [isModalVisible, setModalVisible] = useState(false);
-  const [headerTitle, setHeaderTitle] = useState<string>("TinaHome");
+  const [headerTitle, setHeaderTitle] = useState<string>(
+    activeHousehold?.name ?? "",
+  );
+
   useEffect(() => {
     if (activeProfile) {
-      const household = households.find((h) => h.id === activeProfile.householdId);
+      const household = households.find(
+        (h) => h.id === activeProfile.householdId,
+      );
       if (household) {
         setHeaderTitle(household.name);
       }
+      dispatch(fetchTasks(activeProfile.householdId));
     }
   }, [activeProfile]);
+
+  const handleSaveClick = () => {
+    if (activeProfile) {
+      dispatch(
+        editProfileName({
+          profileId: activeProfile?.id,
+          newProfileName: updatedProfileName ?? activeProfile.profileName,
+        }),
+      );
+      setIsEditing(false);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View
         style={[
           styles.profileTitleContainer,
-          { backgroundColor: activeProfile?.avatarsColors},
+          { backgroundColor: activeProfile?.avatar },
         ]}
       >
-        <Text style={styles.profileTitle}>{}</Text>
+        {/* <Text style={styles.profileTitle}>{}</Text> */}
+        <Text>Profilnamn: {activeProfile?.profileName}</Text>
       </View>
       <Text>Avatar: {activeProfile?.avatar}</Text>
       <View style={{ marginTop: 50 }}>
@@ -55,11 +107,30 @@ export default function ProfileAccountScreen({ navigation }: any) {
         <Card style={styles.card}>
           <View style={styles.taskItem}>
             <View style={styles.nameContainer}>
-              <Text style={styles.profileTitle}>{activeProfile?.profileName}</Text>
+              {isEditing ? (
+                <TextInput
+                  placeholder={activeProfile?.profileName}
+                  onChangeText={(text) => {
+                    setUpdatedProfilename(text);
+                  }}
+                />
+              ) : (
+                <Text style={styles.profileTitle}>
+                  {activeProfile?.profileName}
+                </Text>
+              )}
             </View>
-            <IconButton icon="pencil" size={20} onPress={() => {}} />
+            <IconButton
+              icon="pencil"
+              size={20}
+              onPress={() => {
+                setIsEditing(true);
+              }}
+            />
           </View>
         </Card>
+
+        {isEditing ? <Button onPress={handleSaveClick}>Spara</Button> : null}
 
         <Card style={styles.card}>
           <View style={styles.taskItem}>
@@ -105,8 +176,9 @@ export default function ProfileAccountScreen({ navigation }: any) {
         <HouseholdProfileModal
           visible={isModalVisible}
           onDismiss={() => setModalVisible(false)}
-          householdName="Hushållets namn"
-          avatars={["avatar1.jpg", "avatar2.jpg", "avatar3.jpg"]}
+          householdName={activeHousehold?.name || "Laddar..."}
+          profiles={activeProfiles}
+          selectedAvatar={selectedAvatar}
         />
       </View>
     </View>

@@ -39,22 +39,22 @@ Konto (3)
 [] En användare ska kunna gå med i ett hushåll genom att ange hushållets kod.
 
 Profil (4)
-[] En användare ska kunna ange sitt namn.
-[] En användare ska kunna välja en avatar (emoji-djur + färg) från en fördefinierad lista.
-[] Valda avatarer ska inte kunna väljas av andra användare i hushållet.
+[x] En användare ska kunna ange sitt namn.
+[x] En användare ska kunna välja en avatar (emoji-djur + färg) från en fördefinierad lista.
+[x] Valda avatarer ska inte kunna väljas av andra användare i hushållet.
 [] Avataren ska användas i appen för att visa vad användaren har gjort.
 
 Sysslor (3)
-[] En ägare ska kunna lägga till sysslor att göra i hemmet.
-[] En syssla ska ha ett namn, en beskrivning (text), hur ofta den ska göras (dagar), och en
+[x] En ägare ska kunna lägga till sysslor att göra i hemmet.
+[x] En syssla ska ha ett namn, en beskrivning (text), hur ofta den ska göras (dagar), och en
 vikt som beskriver hur energikrävande den är.
-[] En ägare ska kunna redigera en syssla.
+[x] En ägare ska kunna redigera en syssla.
 
 Dagsvyn (3)
-[] Alla sysslor ska listas i en dagsvy och ge en översikt kring vad som behöver göras.
-[] Utöver sysslans namn ska även vem/vilka som har gjort sysslan visas, hur många dagar
+[x] Alla sysslor ska listas i en dagsvy och ge en översikt kring vad som behöver göras.
+[x] Utöver sysslans namn ska även vem/vilka som har gjort sysslan visas, hur många dagar
 sedan sysslan gjordes senast samt om den är försenad.
-[] När en användare väljer en syssla ska beskrivningen av sysslan visas och det ska även
+[x] När en användare väljer en syssla ska beskrivningen av sysslan visas och det ska även
 med ett enkelt tryck gå att markera sysslan som gjord.
 
 Statistik (3)
@@ -92,7 +92,7 @@ olika hushållen.
 Sysslor (3)
 [] En användare ska kunna lägga till en ljudinspelning och en bild för att beskriva sysslan
 ytterligare.
-[] En ägare ska kunna ta bort en syssla.
+[X] En ägare ska kunna ta bort en syssla.
 [] När en syssla tas bort ska användaren få en varning om att all statistik gällande sysslan
 också kommer att tas bort och få valet att arkivera sysslan istället.
 

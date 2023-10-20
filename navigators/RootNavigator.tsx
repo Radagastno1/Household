@@ -14,6 +14,7 @@ import TopTabNavigator from "./TopTabNavigator";
 import CreateUserAccountScreen from "../screens/CreateUserAccountScreen";
 import SignInScreen from "../screens/SignInScreen";
 import AuthNavigator from "./AuthNavigator";
+import CustomHeader from "../store/shared/CustomHeader";
 
 export type RootStackParamList = {
   SplashScreen: undefined;
@@ -23,10 +24,9 @@ export type RootStackParamList = {
   HandleTask: { taskId: string };
   ShowTask: { taskId: string };
   HouseholdAccount: undefined;
-  ProfileAccount: undefined;
+  ProfileAccount: {householdId: string};
   HandleHousehold: undefined;
   CreateProfile: { householdId: string };
-  CreateProfileScreen: undefined;
   Tab: typeof TopTabNavigator;
 };
 
@@ -44,7 +44,7 @@ export default function RootNavigator() {
           isLoading ? "SplashScreen" : userSlice ? "Auth" : "Login"
         }
       >
-        <Stack.Screen name="SplashScreen" component={SplashScreen} />
+        {/* <Stack.Screen name="SplashScreen" component={SplashScreen} />
         <Stack.Screen name="Auth" component={AuthNavigator} />
         <Stack.Screen
           name="Login"
@@ -64,11 +64,28 @@ export default function RootNavigator() {
         <Stack.Screen
           name="CreateProfile"
           component={CreateProfileScreen}
-          initialParams={{ householdId: "household1" }}
+          initialParams={{ householdId: "fYHVLNiQvWEG9KNUGqBT" }}
         />
         <Stack.Screen name="HandleTask" component={CreateTaskScreen} />
-        <Stack.Screen name="ShowTask" component={TaskDetailScreen} />
-        <Stack.Screen name="Tab" component={TopTabNavigator} />
+        <Stack.Screen
+          name="ShowTask"
+          options={{ headerShown: false }}
+          component={TaskDetailScreen}
+        />
+        <Stack.Screen
+          name="Tab"
+          component={TopTabNavigator}
+          options={({ route, navigation }) => ({
+            header: () => (
+              <CustomHeader
+                title={
+                  (route.params as { name?: string })?.name || "Custom Header"
+                }
+                navigation={navigation}
+              />
+            ),
+          })}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

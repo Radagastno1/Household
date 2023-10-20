@@ -1,4 +1,5 @@
 export interface User {
+  [x: string]: any;
   id: string;
   name: string;
   username: string;
@@ -11,7 +12,6 @@ export interface Profile {
   userId: string;
   householdId: string;
   avatar: string;
-  avatarsColors: string; // la till denna färgen sålänge
   isOwner: boolean;
   isActive: boolean;
 }

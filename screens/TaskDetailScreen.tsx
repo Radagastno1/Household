@@ -1,15 +1,46 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import React, { useEffect } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, Image } from "react-native";
 import { Button, Card, Text } from "react-native-paper";
 import { useTheme } from "../contexts/themeContext";
 import { useAppDispatch, useAppSelector } from "../store/store";
+import {
+  findAllAvatarFortodayCompletionByTaskId,
+  setTaskAsCompleted,
+} from "../store/taskCompletionSlice";
+import { findTaskById } from "../store/tasks/taskSlice";
+import { AvatarUrls, Avatars } from "../data/avatars";
 
 export default function TaskDetailScreen({ navigation, route }: any) {
   const { theme } = useTheme();
   const { taskId } = route.params;
+  const activeProfile = useAppSelector((state) => state.profile.activeProfile);
+  const isOwner = activeProfile?.isOwner;
   const taskSlice = useAppSelector((state) => state.task);
   const dispatch = useAppDispatch();
+  const taskCompletionSlice = useAppSelector((state) => state.taskCompletion);
+  const fetchAvatars = () => {
+    dispatch(findAllAvatarFortodayCompletionByTaskId({ taskId }));
+  };
+
+  const profileSlice = useAppSelector((state) => state.profile);
+  const profileId = profileSlice.activeProfile?.id;
+
+  useEffect(() => {
+    if (taskId) {
+      dispatch(findTaskById({ taskId }));
+      fetchAvatars();
+    }
+  }, [dispatch, taskId]);
+
+  const handleTaskCompletion = async (taskId: string, profileId: string) => {
+    if (taskId && profileId) {
+      dispatch(setTaskAsCompleted({ taskId, profileId }));
+      fetchAvatars();
+    } else {
+      console.error("Task ID or profile ID is undefined.");
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -17,57 +48,75 @@ export default function TaskDetailScreen({ navigation, route }: any) {
         <Card style={styles.card}>
           <View style={styles.taskItem}>
             <View style={styles.titleContainer}>
-              <Text variant="titleLarge">{taskSlice.tasks[0].title}</Text>
+              <Text variant="titleLarge">{taskSlice.selectedTask?.title}</Text>
             </View>
             <View>
-              {/* {isOwner && ( */}
-              <Button
-                icon={({ size, color }) => (
-                  <MaterialIcons name="edit" size={24} color="black" />
-                )}
-                mode="elevated"
-                onPress={() =>
-                  navigation.navigate("HandleTask", { taskId: taskId })
-                }
-                style={styles.changeButton}
-              >
-                Ändra
-              </Button>
-              {/* )} */}
+              {isOwner && (
+                <Button
+                  icon={({ size, color }) => (
+                    <MaterialIcons name="edit" size={24} color="black" />
+                  )}
+                  mode="elevated"
+                  onPress={() =>
+                    navigation.navigate("HandleTask", { taskId: taskId })
+                  }
+                  style={styles.changeButton}
+                >
+                  Ändra
+                </Button>
+              )}
             </View>
           </View>
         </Card>
       </View>
+
       <View style={styles.descriptionContainer}>
-        <Text variant="bodyMedium">{taskSlice.tasks[0].description}</Text>
+        <Text variant="bodyMedium">{taskSlice.selectedTask?.description}</Text>
       </View>
+
       <View style={styles.intervalValueContainer}>
         <View style={styles.intervalContainer}>
           <View>
-            <Text style={styles.intervalValueText}>Återcommande</Text>
+            <Text style={styles.intervalText}>Återcommande</Text>
           </View>
           <View style={styles.circle}>
-            <Text style={styles.intervalValueText}>1</Text>
+            <Text style={styles.intervalNumber}>
+              {taskSlice.selectedTask?.interval}
+            </Text>
           </View>
         </View>
-        <View style={styles.intervalContainer}>
+
+        <View style={styles.valueContainer}>
           <View>
-            <Text style={styles.intervalValueText}>Värde</Text>
+            <Text style={styles.valueText}>Värde</Text>
           </View>
           <View style={styles.circle}>
-            <Text style={styles.intervalValueText}>1</Text>
+            <Text style={styles.valueNumber}>
+              {taskSlice.selectedTask?.energiWeight}
+            </Text>
           </View>
         </View>
       </View>
+
       <View>
         <View style={styles.avatarContainer}>
-          <Text>Avatar</Text>
+          {taskCompletionSlice.avatars.map((avatar, index) => (
+            <View key={index} style={styles.avatarText}>
+              <Image
+                source={{ uri: AvatarUrls[avatar as Avatars] }}
+                style={{ height: 20, width: 20 }}
+              />
+            </View>
+          ))}
         </View>
       </View>
+
       <View style={styles.klarButtonContainer}>
         <Button
           mode="text"
-          onPress={() => console.log("klar")}
+          onPress={() => {
+            handleTaskCompletion(taskId, profileId ?? "");
+          }}
           style={[styles.klarButton, theme.button]}
         >
           <Text style={[styles.klarButton, theme.buttonText]}>Klar</Text>
@@ -76,6 +125,7 @@ export default function TaskDetailScreen({ navigation, route }: any) {
           <Text style={[styles.klarButton, theme.buttonText]}>Till Tasks</Text>
         </Button>
       </View>
+      
     </View>
   );
 }
@@ -121,9 +171,11 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   intervalContainer: {
-    marginRight: 10,
+    marginRight: 20,
     alignItems: "center",
   },
+  intervalText: {},
+  intervalNumber: {},
   circle: {
     width: 60,
     height: 60,
@@ -133,12 +185,20 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     margin: 10,
   },
-  intervalValueText: {},
+  valueContainer: {
+    marginLeft: 20,
+    alignItems: "center",
+  },
+  valueText: {},
+  valueNumber: {},
   avatarContainer: {
-    marginBottom: 40,
+    marginBottom: 50,
+    flexDirection: "row",
+  },
+  avatarText: {
+    marginRight: 10,
     textAlign: "left",
   },
-  avatarText: {},
   changeButton: {
     height: 40,
     width: 100,
