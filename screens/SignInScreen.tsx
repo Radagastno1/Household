@@ -106,7 +106,7 @@ export const SignInScreen = ({ navigation }: any) => {
           placeholder="Användarnamn"
           onChangeText={(text) => setUsername(text)}
           value={username}
-          style={styles.input}
+          style={theme.buttonText}
         />
 
         <TextInput
@@ -114,11 +114,11 @@ export const SignInScreen = ({ navigation }: any) => {
           secureTextEntry={!showPassword}
           value={password}
           onChangeText={(text) => setPassword(text)}
-          style={styles.input}
+          style={theme.buttonText}
         />
 
-        <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-          <Text style={styles.loginButtonText}>Logga in</Text>
+        <TouchableOpacity style={theme.button as any} onPress={handleLogin}>
+          <Text style={theme.buttonText}>Logga in</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -160,42 +160,42 @@ const styles = StyleSheet.create({
     margin: 5,
     padding: 10,
     fontSize: 18,
-    color: theme.buttonText.color,
-    backgroundColor: theme.colors.background,
+    // color: theme.buttonText.color,
+    // backgroundColor: theme.colors.background,
   },
   loginButton: {
-    backgroundColor: theme.colors.primary,
+    // backgroundColor: theme.colors.primary,
     padding: 10,
     alignItems: "center",
     margin: 20,
     borderRadius: 10,
   },
   loginButtonText: {
-    color: theme.buttonText.color,
-    fontSize: theme.buttonText.fontSize,
+    // color: theme.buttonText.color,
+    // fontSize: theme.buttonText.fontSize,
   },
   signupButton: {
-    backgroundColor: theme.colors.background,
+    // backgroundColor: theme.colors.background,
     padding: 5,
     alignItems: "center",
     margin: 10,
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: theme.buttonText.color,
+    // borderColor: theme.buttonText.color,
   },
   signupButtonText: {
-    color: theme.buttonText.color,
-    fontSize: theme.buttonText.fontSize,
+    // color: theme.buttonText.color,
+    // fontSize: theme.buttonText.fontSize,
   },
   forgotPasswordButton: {
-    backgroundColor: theme.colors.background,
+    // backgroundColor: theme.colors.background,
     padding: 5,
     alignItems: "center",
     margin: 10,
   },
   forgotPasswordButtonText: {
-    color: theme.buttonText.color,
-    fontSize: theme.buttonText.fontSize,
+    // color: theme.buttonText.color,
+    // fontSize: theme.buttonText.fontSize,
   },
   header: {
     backgroundColor: "yellow",
