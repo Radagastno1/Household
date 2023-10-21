@@ -26,7 +26,8 @@ const taskSlice = createSlice({
   initialState,
   reducers: {
     setTasks: (state, action) => {
-      state.tasks = action.payload; // Uppdatera tasks state med de hämtade uppgifterna
+      state.tasks = action.payload;
+      console.log("antal tasks:", state.tasks.length);
     },
     addTask: (state, action: PayloadAction<Task>) => {
       addTaskToDB(action.payload)
