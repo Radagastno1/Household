@@ -1,6 +1,18 @@
 
-import React, { createContext, useContext, ReactNode } from 'react';
+import React, { createContext, useContext, ReactNode, PropsWithChildren, useState } from 'react';
 import { Theme } from '../data/theme';
+import { NavigationContainer } from "@react-navigation/native";
+import { useColorScheme } from "react-native";
+import { PaperProvider } from "react-native-paper";
+import { AppDarkTheme, AppLightTheme } from "../data/theme";
+
+type ColorScheme = "light" | "dark" | "auto";
+
+type ThemeContextValue = (colorScheme: ColorScheme) => void;
+
+const ThemeContext = createContext<ThemeContextValue>(
+  () => {}
+);
 // import { AvatarColors, Avatars } from '../data/avatars';
 
 interface ThemeContextType {
@@ -12,7 +24,7 @@ interface ThemeContextType {
 const theme = require('../data/theme').default; 
 // const avatars = require('../data/avatars').Avatars; 
 
-const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
+// const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const useTheme = () => {
   const themeContext = useContext(ThemeContext);
@@ -22,66 +34,60 @@ export const useTheme = () => {
   return themeContext;
 };
 
-export const ThemeProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  return (
-    <ThemeContext.Provider value={{ theme: theme }}>
-      {children}
-    </ThemeContext.Provider>
-  );
-};
+export default function ThemeProvider({
+  children,
+}: PropsWithChildren) {
+  // Temat som användaren har valt i appen
+  const [colorScheme, setColorScheme] =
+    useState<ColorScheme>("auto");
 
+  // Temat som OS'et föreslår
+  const operatingSystemScheme = useColorScheme();
 
-// import { NavigationContainer } from "@react-navigation/native";
-// import {
-//   PropsWithChildren,
-//   createContext,
-//   useContext,
-//   useState,
-// } from "react";
-// import { useColorScheme } from "react-native";
-// import { AppDarkTheme, AppLightTheme } from "./theme";
+  // Temat som faktiskt ska användas
+  const selectedScheme =
+    colorScheme === "auto"
+      ? operatingSystemScheme
+      : colorScheme;
 
-// type ColorScheme = "light" | "dark" | "auto";
+  // Välj rätt temaobjekt utifrån valt tema
+  const theme =
+    selectedScheme === "dark"
+      ? AppDarkTheme
+      : AppLightTheme;
 
-// type ThemeContextValue = (colorScheme: ColorScheme) => void;
+return (
+  <ThemeContext.Provider value={setColorScheme}>
+    <PaperProvider theme={theme}>
+      <NavigationContainer theme={theme}>
+        {children}
+      </NavigationContainer>
+    </PaperProvider>
+  </ThemeContext.Provider>
+);
+}
 
-// const ThemeContext = createContext<ThemeContextValue>(
-//   () => {}
-// );
+export const useSetColorTheme = () =>
+  useContext(ThemeContext);
 
-// export default function ThemeProvider({
-//   children,
-// }: PropsWithChildren) {
-//   const [colorScheme, setColorScheme] =
-//     useState<ColorScheme>("auto");
-
-//   // Vad OS'et föreslår
-//   const autoScheme = useColorScheme();
-
-//   const selectedScheme =
-//     colorScheme === "auto" ? autoScheme : colorScheme;
-
-//   const theme =
-//     selectedScheme === "dark"
-//       ? AppDarkTheme
-//       : AppLightTheme;
-
+// export const ThemeProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 //   return (
-//     <ThemeContext.Provider value={setColorScheme}>
-//       <NavigationContainer theme={theme}>
-//         {children}
-//       </NavigationContainer>
+//     <ThemeContext.Provider value={{ theme: theme }}>
+//       {children}
 //     </ThemeContext.Provider>
 //   );
-// }
+// };
 
-// // Custom Hook to Consume the setColorTheme function
-// export const useSetColorTheme = () =>
-//   useContext(ThemeContext);
 
-// // usage:
-// // const setColorTheme = useSetColorTheme();
-// // setColorTheme("dark");
+
+
+
+
+// Custom Hook to Consume the setColorTheme function
+
+
+
+
 
 
 
