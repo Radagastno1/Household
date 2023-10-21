@@ -20,9 +20,8 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
   //då har du ett household som du är inne på
   //då hämtar du getProfileForHousehold(userId, householdId);
   //dessa får komma in när det finns att hämta i reducerns state
-  const userId = "5NCx5MKcUu6UYKjFqRkg";
-
-  // const householdId = "household1";
+  //UTKOMMENTERAR DENNA:
+  // const userId = "5NCx5MKcUu6UYKjFqRkg";
 
   const [selectedAvatar] = useState<string>("");
 
@@ -32,23 +31,26 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
   );
   const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    if (activeHousehold) {
-      dispatch(
-        setProfileByHouseholdAndUser({
-          userId: userId,
-          householdId: activeHousehold?.id,
-        }),
-      );
-    }
-  }, [activeHousehold]);
+  //UTKOMMENTERAR DENNA:
+  // useEffect(() => {
+  //   if (activeHousehold) {
+  //     dispatch(
+  //       setProfileByHouseholdAndUser({
+  //         userId: userId,
+  //         householdId: activeHousehold?.id,
+  //       }),
+  //     );
+  //   }
+  // }, [activeHousehold]);
 
-  const activeProfiles = useAppSelector((state) =>
-    state.profile.profiles.filter(
-      (profile) => profile.householdId === activeHousehold?.id,
-    ),
-  );
+  //UTKOMMENTERAR DENNA:
+  // const activeProfiles = useAppSelector((state) =>
+  //   state.profile.profiles.filter(
+  //     (profile) => profile.householdId === activeHousehold?.id,
+  //   ),
+  // );
 
+  const activeProfiles = useAppSelector((state) => state.profile.profiles);
   const activeProfile = useAppSelector((state) => state.profile.activeProfile);
 
   const [isEditing, setIsEditing] = useState(false);
@@ -139,7 +141,8 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
         <Card style={styles.card}>
           <View style={styles.taskItem}>
             <View style={styles.nameContainer}>
-              <Text variant="titleLarge">Hushållets namn</Text>
+              {/* tog headertitle som du satt till hushållsnamnet för att testa så det funkar */}
+              <Text variant="titleLarge">{headerTitle}</Text>
             </View>
             <IconButton icon="pencil" size={20} onPress={() => {}} />
           </View>

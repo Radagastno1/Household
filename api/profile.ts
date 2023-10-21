@@ -46,36 +46,39 @@ export const addProfileToDB = async (profile: Profile) => {
     return null;
   }
 };
-export const getProfileByHouseholdAndUser = async (
-  householdId: string,
-  userId: string,
-) => {
-  try {
-    const profileCollectionRef = collection(db, "profiles");
 
-    const q = query(
-      profileCollectionRef,
-      where("householdId", "==", householdId),
-      where("userId", "==", userId),
-    );
+//DENNA BEHÖVS NOG INTE DÅ VI HÄMTAR ALLA EN GÅNG
+// export const getProfileByHouseholdAndUser = async (
+//   householdId: string,
+//   userId: string,
+// ) => {
+//   try {
+//     const profileCollectionRef = collection(db, "profiles");
 
-    const querySnapshot = await getDocs(q);
+//     const q = query(
+//       profileCollectionRef,
+//       where("householdId", "==", householdId),
+//       where("userId", "==", userId),
+//     );
 
-    if (!querySnapshot.empty) {
-      const profileDoc = querySnapshot.docs[0];
-      const profile = profileDoc.data() as Profile;
+//     const querySnapshot = await getDocs(q);
 
-      console.log("aktiva profilen hämtad:", profile);
-      return profile;
-    } else {
-      console.error("Ingen profil hittades.");
-      return null;
-    }
-  } catch (error) {
-    console.error("Error vid hämtning av aktiva profilen:", error);
-    throw error;
-  }
-};
+//     if (!querySnapshot.empty) {
+//       const profileDoc = querySnapshot.docs[0];
+//       const profile = profileDoc.data() as Profile;
+
+//       console.log("aktiva profilen hämtad:", profile);
+//       return profile;
+//     } else {
+//       console.error("Ingen profil hittades.");
+//       return null;
+//     }
+//   } catch (error) {
+//     console.error("Error vid hämtning av aktiva profilen:", error);
+//     throw error;
+//   }
+// };
+
 export const getAllProfilesByHouseholdId = async (householdId: string) => {
   try {
     const profileCollectionRef = collection(db, "profiles");

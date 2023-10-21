@@ -1,21 +1,21 @@
-import React, { useState, useEffect } from "react";
-import { AvatarColors, Avatars, AvatarUrls } from "../data/avatars";
-import { Button } from "react-native-paper";
-import { households } from "../data";
-import { useDispatch } from "react-redux";
-import { setProfile } from "../store/profile/profileSlice";
+import React, { useEffect, useState } from "react";
 import { Image } from "react-native";
+import { Button } from "react-native-paper";
+import { useDispatch } from "react-redux";
+import { households } from "../data";
+import { AvatarColors, AvatarUrls, Avatars } from "../data/avatars";
 
 import {
-  Text,
-  View,
-  TextInput,
   StyleSheet,
+  Text,
+  TextInput,
   TouchableOpacity,
+  View,
 } from "react-native";
 import { useTheme } from "../contexts/themeContext";
-import { useAppSelector } from "../store/store";
 import { RootNavigationScreenProps } from "../navigators/navigationTypes";
+import { addProfile } from "../store/profile/profileSlice";
+import { useAppSelector } from "../store/store";
 
 type CreateProfileProps = RootNavigationScreenProps<"CreateProfile">;
 
@@ -75,7 +75,7 @@ export default function CreateProfileScreen({
         isActive: false,
       };
 
-      dispatch(setProfile(newProfile));
+      dispatch(addProfile(newProfile));
       navigation.navigate("HouseholdAccount");
     }
   };

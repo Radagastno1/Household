@@ -22,18 +22,8 @@ const profileSlice = createSlice({
       state.profiles = action.payload;
     },
     //denna ska sättas när mnan får in i ett hushåll, vilken profil DU ÄR
-    setActiveProfile: (state, action: PayloadAction<(householdId:string, userId:string)) => {
-      const activeProfile = getProfileByHouseholdAndUser(action.payload).
-      then((activeProfile) => {
-        if (activeProfile) {
-          state.activeProfile = activeProfile;
-          console.log("aktiva profilen är: ", activeProfile.name);
-        }
-      })
-      .catch((error) => {
-        console.error("Fel vid tillägg av profil:", error);
-      });
- 
+    setActiveProfile: (state, action: PayloadAction<Profile>) => {
+      state.activeProfile = action.payload;
     },
     // editProfileName: (state, action: PayloadAction<Profile>) => {
     //   state.profiles = [...state.profiles, action.payload];
@@ -78,10 +68,21 @@ const profileSlice = createSlice({
 });
 
 export const fetchAllProfilesByHousehold =
-  (activeHouseholdId: string) => async (dispatch: any, getState: any) => {
+  (activeHouseholdId: string, userId: string) =>
+  async (dispatch: any, getState: any) => {
+    console.log("FETCH ALL PROFILE KÖRS!!!!");
     const profiles = await getAllProfilesByHouseholdId(activeHouseholdId);
+    console.log("antal profiler för hushållet:", profiles?.length);
     if (profiles) {
       dispatch(profileSlice.actions.setProfiles(profiles));
+      console.log("USER ID SOM KOMMER IN: ", userId);
+      const activeProfile = profiles.find(
+        (p) => p.householdId === activeHouseholdId && p.userId === userId,
+      );
+      if (activeProfile) {
+        dispatch(profileSlice.actions.setActiveProfile(activeProfile));
+        console.log("aktiva profilen: ", activeProfile);
+      }
     }
   };
 
