@@ -211,7 +211,10 @@ const CreateUserAccountScreen: React.FC<{ navigation: any }> = ({
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 1, 
+    
+  
+    
     backgroundColor: "#fff",
   },
   header: {
