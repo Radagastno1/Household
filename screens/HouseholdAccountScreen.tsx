@@ -98,6 +98,7 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
       />
       <Button title="Logga ut" onPress={() => navigation.navigate("Login")} />
       <Button title="Toggle Theme" onPress={handleToggleTheme} />
+      <Button title="Auto Theme" onPress={handleToggleTheme} />
     </View>
   );
 }
