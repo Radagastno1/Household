@@ -2,8 +2,6 @@ import { DarkTheme, DefaultTheme } from "@react-navigation/native";
 import { MD2DarkTheme, MD2LightTheme } from "react-native-paper";
 
 export type Theme = typeof DarkTheme & {
-  
-  // Add your custom theme properties here
   button: {
     backgroundColor: string;
     padding: number;
@@ -29,7 +27,6 @@ export const AppLightTheme: Theme = {
     primary: "#FFD700",
     background: "white",
   },
-  // Add your custom theme properties here
   button: {
     backgroundColor: "#FFD700",
     padding: 10,
@@ -53,7 +50,6 @@ export const AppDarkTheme: Theme = {
     primary: "rgb(255, 45, 85)",
     background: "rgb(10, 10, 10)",
   },
-  // Add your custom theme properties here
   button: {
     backgroundColor: "#FFD700",
     padding: 10,
