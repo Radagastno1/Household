@@ -13,15 +13,15 @@ import {
 } from "react-native";
 import { Text, TextInput } from "react-native-paper";
 import { useDispatch } from "react-redux";
-import { users } from "../data";
 import { useTheme } from "../contexts/themeContext";
+import { users } from "../data";
 import { loginUser } from "../store/user/userActions";
 
 export const SignInScreen = ({ navigation }: any) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const {theme} = useTheme();
+  const { theme } = useTheme();
   const dispatch = useDispatch();
 
   function getPasswordForUsername(username: string) {
@@ -87,84 +87,85 @@ export const SignInScreen = ({ navigation }: any) => {
         },
       ]}
     >
-       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
-        <StatusBar backgroundColor="yellow" />
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
+          <StatusBar backgroundColor="yellow" />
 
-        <View style={{ backgroundColor: theme.colors.primary, padding: 20 }}>
-          <View style={theme.button as any}>
+          <View style={{ backgroundColor: theme.colors.primary, padding: 20 }}>
+            <View style={theme.button as any}>
+              <Text
+                style={{
+                  color: theme.buttonText.color,
+                  fontSize: theme.buttonText.fontSize,
+                  fontWeight: "bold",
+                }}
+              >
+                Logga in
+              </Text>
+            </View>
+
+            <View style={styles.container}>
+              <Video
+                source={require("../assets/bee-animation.mp4")}
+                rate={1.0}
+                volume={1.0}
+                isMuted={false}
+                shouldPlay
+                isLooping
+                style={styles.video}
+                resizeMode={ResizeMode.CONTAIN}
+              />
+            </View>
+
             <Text
               style={{
                 color: theme.buttonText.color,
-                fontSize: theme.buttonText.fontSize,
+                fontSize: 24,
                 fontWeight: "bold",
+                marginTop: 30,
+                textAlign: "center",
               }}
             >
-              Logga in
+              BUZZTER
             </Text>
-            </View>
 
-          <View style={styles.container}>
-            <Video
-              source={require("../assets/bee-animation.mp4")}
-              rate={1.0}
-              volume={1.0}
-              isMuted={false}
-              shouldPlay
-              isLooping
-              style={styles.video}
-              resizeMode={ResizeMode.CONTAIN}
+            <TextInput
+              placeholder="Användarnamn"
+              onChangeText={(text) => setUsername(text)}
+              value={username}
+              style={theme.buttonText}
             />
+
+            <TextInput
+              placeholder="Lösenord"
+              secureTextEntry={!showPassword}
+              value={password}
+              onChangeText={(text) => setPassword(text)}
+              style={theme.buttonText}
+            />
+
+            <TouchableOpacity style={theme.button as any} onPress={handleLogin}>
+              <Text style={theme.buttonText}>Logga in</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.signupButton}
+              onPress={() => {
+                navigation.navigate("Signup");
+              }}
+            >
+              <Text style={styles.signupButtonText}>Skapa konto</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.forgotPasswordButton}
+              onPress={clearFieldsAndTogglePassword}
+            >
+              <Text style={styles.forgotPasswordButtonText}>
+                {showPassword ? "Ta bort lösenord" : "Glömt lösenord?"}
+              </Text>
+            </TouchableOpacity>
           </View>
-
-        <Text
-          style={{
-            color: theme.buttonText.color,
-            fontSize: 24,
-            fontWeight: "bold",
-            marginTop: 30,
-            textAlign: "center",
-          }}
-        >
-          BUZZTER
-        </Text>
-
-        <TextInput
-          placeholder="Användarnamn"
-          onChangeText={(text) => setUsername(text)}
-          value={username}
-          style={theme.buttonText}
-        />
-
-        <TextInput
-          placeholder="Lösenord"
-          secureTextEntry={!showPassword}
-          value={password}
-          onChangeText={(text) => setPassword(text)}
-          style={theme.buttonText}
-        />
-
-        <TouchableOpacity style={theme.button as any} onPress={handleLogin}>
-          <Text style={theme.buttonText}>Logga in</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.signupButton}
-          onPress={() => {
-            navigation.navigate("Signup");
-          }}
-        >
-          <Text style={styles.signupButtonText}>Skapa konto</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.forgotPasswordButton}
-          onPress={clearFieldsAndTogglePassword}
-        >
-          <Text style={styles.forgotPasswordButtonText}>
-            {showPassword ? "Ta bort lösenord" : "Glömt lösenord?"}
-            </Text>
-          </TouchableOpacity>
         </View>
       </TouchableWithoutFeedback>
     </Animated.View>
