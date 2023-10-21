@@ -235,7 +235,85 @@ export const tasks: Task[] = [
   },
 ];
 
-// export const taskCompletions: TaskCompletion[] = [
+export const taskCompletions: TaskCompletion[] = [
+  {
+    completionDate: "2023-10-16",
+    householdId: "fYHVLNiQvWEG9KNUGqBT",
+    id: "hdsgfge",
+    profileId: "moNj4qvcbKNQdEsnhEjL",
+    taskId: "task1",
+  },
+  {
+    completionDate: "2023-10-20",
+    householdId: "fYHVLNiQvWEG9KNUGqBT",
+    id: "dsgfhjkjk",
+    profileId: "profile2",
+    taskId: "task1",
+  },
+  {
+    completionDate: "2023-10-21",
+    householdId: "fYHVLNiQvWEG9KNUGqBT",
+    id: "oijpkjkhgb",
+    profileId: "profile3",
+    taskId: "task1",
+  },
+  {
+    completionDate: "2023-10-16",
+    householdId: "fYHVLNiQvWEG9KNUGqBT",
+    id: "hdsgfge",
+    profileId: "moNj4qvcbKNQdEsnhEjL",
+    taskId: "task2",
+  },
+  {
+    completionDate: "2023-10-20",
+    householdId: "fYHVLNiQvWEG9KNUGqBT",
+    id: "098786t7fghj",
+    profileId: "profile2",
+    taskId: "task2",
+  },
+  {
+    completionDate: "2023-10-21",
+    householdId: "fYHVLNiQvWEG9KNUGqBT",
+    id: "09876tfyguijoklö",
+    profileId: "profile3",
+    taskId: "task2",
+  },
+  {
+    completionDate: "2023-10-22",
+    householdId: "fYHVLNiQvWEG9KNUGqBT",
+    id: "oijopohuftvj",
+    profileId: "moNj4qvcbKNQdEsnhEjL",
+    taskId: "task2",
+  },
+  {
+    completionDate: "2023-10-17",
+    householdId: "fYHVLNiQvWEG9KNUGqBT",
+    id: "87ftyuhioh",
+    profileId: "profile3",
+    taskId: "task3",
+  },
+  {
+    completionDate: "2023-10-18",
+    householdId: "fYHVLNiQvWEG9KNUGqBT",
+    id: "9tfdiut56r",
+    profileId: "profile2",
+    taskId: "task3",
+  },
+  {
+    completionDate: "2023-10-20",
+    householdId: "fYHVLNiQvWEG9KNUGqBT",
+    id: "987765fgvhijokl",
+    profileId: "profile3",
+    taskId: "task3",
+  },
+  {
+    completionDate: "2023-10-16",
+    householdId: "fYHVLNiQvWEG9KNUGqBT",
+    id: "7667tfghiojhhvfg",
+    profileId: "profile2",
+    taskId: "task3",
+  },
+];
 //   {
 //     id: "completion1",
 //     taskId: "task1",
