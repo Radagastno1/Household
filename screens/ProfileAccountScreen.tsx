@@ -98,7 +98,7 @@ export default function ProfileAccountScreen({ navigation }: any) {
       <View style={{ marginTop: 50 }}>
         <Button
           mode="contained"
-          onPress={() => navigation.navigate("Tab")}
+          onPress={() => navigation.navigate("Tab", )}
           style={theme.button as any}
           labelStyle={theme.buttonText}
         >

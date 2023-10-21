@@ -12,14 +12,14 @@ import {
 import { Text, TextInput } from "react-native-paper";
 import { useDispatch } from "react-redux";
 import { users } from "../data";
-import theme from "../data/theme";
+import { useTheme } from "../contexts/themeContext";
 import { loginUser } from "../store/user/userActions";
 
 export const SignInScreen = ({ navigation }: any) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-
+  const {theme} = useTheme();
   const dispatch = useDispatch();
 
   function getPasswordForUsername(username: string) {

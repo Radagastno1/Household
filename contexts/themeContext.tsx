@@ -1,30 +1,31 @@
 
 import React, { createContext, useContext, ReactNode, PropsWithChildren, useState } from 'react';
 import { Theme } from '../data/theme';
-import { NavigationContainer } from "@react-navigation/native";
 import { useColorScheme } from "react-native";
 import { PaperProvider } from "react-native-paper";
 import { AppDarkTheme, AppLightTheme } from "../data/theme";
 
 type ColorScheme = "light" | "dark" | "auto";
 
-type ThemeContextValue = (colorScheme: ColorScheme) => void;
-
-const ThemeContext = createContext<ThemeContextValue>(
-  () => {}
-);
-// import { AvatarColors, Avatars } from '../data/avatars';
-
-interface ThemeContextType {
+// type ThemeContextValue = (colorScheme: ColorScheme) => void;
+type ThemeContextValue = {
   theme: Theme;
-//   avatars: Avatars;
-//   avatarsColor: typeof AvatarColors;
-}
+  setColorScheme: (colorScheme: ColorScheme) => void;
+};
+
+
+
+// const ThemeContext = createContext<ThemeContextValue>(
+//   () => {
+    
+//   }
+// );
+const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
+
+
 
 const theme = require('../data/theme').default; 
-// const avatars = require('../data/avatars').Avatars; 
 
-// const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const useTheme = () => {
   const themeContext = useContext(ThemeContext);
@@ -33,6 +34,7 @@ export const useTheme = () => {
   }
   return themeContext;
 };
+
 
 export default function ThemeProvider({
   children,
@@ -51,39 +53,33 @@ export default function ThemeProvider({
       : colorScheme;
 
   // Välj rätt temaobjekt utifrån valt tema
-  const theme =
+  const theme: Theme =
     selectedScheme === "dark"
       ? AppDarkTheme
       : AppLightTheme;
 
-return (
-  <ThemeContext.Provider value={setColorScheme}>
-    <PaperProvider theme={theme}>
-      <NavigationContainer theme={theme}>
-        {children}
-      </NavigationContainer>
-    </PaperProvider>
-  </ThemeContext.Provider>
-);
+  return (
+    <ThemeContext.Provider value={{ theme, setColorScheme }}>
+      <PaperProvider theme={theme}>
+       
+          {children}
+        
+      </PaperProvider>
+    </ThemeContext.Provider>
+  );
 }
 
 export const useSetColorTheme = () =>
   useContext(ThemeContext);
 
-// export const ThemeProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-//   return (
-//     <ThemeContext.Provider value={{ theme: theme }}>
-//       {children}
-//     </ThemeContext.Provider>
-//   );
-// };
 
 
 
 
 
 
-// Custom Hook to Consume the setColorTheme function
+
+
 
 
 

@@ -1,12 +1,8 @@
 import { DarkTheme, DefaultTheme } from "@react-navigation/native";
 import { MD2DarkTheme, MD2LightTheme } from "react-native-paper";
 
-export type Theme = {
-  colors: {
-    primary: string;
-    background: string;
-  };
-  fonts: {};
+export type Theme = typeof DarkTheme & {
+  // Add your custom theme properties here
   button: {
     backgroundColor: string;
     padding: number;
@@ -21,14 +17,16 @@ export type Theme = {
   };
 };
 
-const theme: Theme = {
+export const AppLightTheme: Theme = {
+  ...MD2LightTheme,
   ...DefaultTheme,
   colors: {
+    ...MD2LightTheme.colors,
     ...DefaultTheme.colors,
-    primary: "yellow",
-    background: "white",
+    primary: "rgb(255, 45, 85)",
+    background: "rgb(242, 242, 242)",
   },
-  fonts: {},
+  // Add your custom theme properties here
   button: {
     backgroundColor: "#FFD700",
     padding: 10,
@@ -43,18 +41,7 @@ const theme: Theme = {
   },
 };
 
-export const AppLightTheme = {
-  ...MD2LightTheme,
-  ...DefaultTheme,
-  colors: {
-    ...MD2LightTheme.colors,
-    ...DefaultTheme.colors,
-    primary: "rgb(255, 45, 85)",
-    background: "rgb(242, 242, 242)",
-  },
-};
-
-export const AppDarkTheme = {
+export const AppDarkTheme: Theme = {
   ...MD2DarkTheme,
   ...DarkTheme,
   colors: {
@@ -63,6 +50,18 @@ export const AppDarkTheme = {
     primary: "rgb(255, 45, 85)",
     background: "rgb(10, 10, 10)",
   },
+  // Add your custom theme properties here
+  button: {
+    backgroundColor: "#FFD700",
+    padding: 10,
+    alignItems: "center",
+    margin: 10,
+    borderRadius: 10,
+    width: 360,
+  },
+  buttonText: {
+    color: "black",
+    fontSize: 16,
+  },
 };
 
-export default theme;
