@@ -2,7 +2,6 @@ import "firebase/firestore";
 import {
   addDoc,
   collection,
-  deleteDoc,
   doc,
   getDoc,
   getDocs,
@@ -11,7 +10,8 @@ import {
   updateDoc,
   where,
 } from "firebase/firestore";
-import { Profile, Task } from "../types";
+import { profiles } from "../data";
+import { Profile } from "../types";
 import { app } from "./config";
 
 const db = getFirestore(app);
@@ -46,7 +46,36 @@ export const addProfileToDB = async (profile: Profile) => {
     return null;
   }
 };
+export const getProfileByHouseholdAndUser = async (
+  householdId: string,
+  userId: string,
+) => {
+  try {
+    const profileCollectionRef = collection(db, "profiles");
 
+    const q = query(
+      profileCollectionRef,
+      where("householdId", "==", householdId),
+      where("userId", "==", userId),
+    );
+
+    const querySnapshot = await getDocs(q);
+
+    if (!querySnapshot.empty) {
+      const profileDoc = querySnapshot.docs[0];
+      const profile = profileDoc.data() as Profile;
+
+      console.log("aktiva profilen hämtad:", profile);
+      return profile;
+    } else {
+      console.error("Ingen profil hittades.");
+      return null;
+    }
+  } catch (error) {
+    console.error("Error vid hämtning av aktiva profilen:", error);
+    throw error;
+  }
+};
 export const getAllProfilesByHouseholdId = async (householdId: string) => {
   try {
     const profileCollectionRef = collection(db, "profiles");
