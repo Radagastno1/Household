@@ -44,13 +44,11 @@ export const addTaskCompletionToDB = async (taskCompletion: TaskCompletion) => {
   }
 };
 
-export const getTaskCompletionsFromDB = async (
-  taskId: string
-) => {
+export const getTaskCompletionsFromDB = async (householdId: string) => {
   try {
     const q = query(
       taskCompletionCollectionRef,
-      where("taskId", "==", taskId),
+      where("householdId", "==", householdId),
     );
 
     const querySnapshot = await getDocs(q);

@@ -1,7 +1,9 @@
 import { ResizeMode, Video } from "expo-av";
 import { StatusBar } from "expo-status-bar";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
+  Animated,
+  Easing,
   GestureResponderEvent,
   Keyboard,
   StyleSheet,
@@ -27,6 +29,17 @@ export const SignInScreen = ({ navigation }: any) => {
     return user ? user.password : "";
   }
 
+  const translateY = useRef(new Animated.Value(6)).current; //start from the bottom
+
+  useEffect(() => {
+    // Start the navigation animation early
+    Animated.timing(translateY, {
+      toValue: -0.5,
+      duration: 1000,
+      easing: Easing.inOut(Easing.ease),
+      useNativeDriver: false,
+    }).start();
+  }, []);
   function clearFieldsAndTogglePassword(event: GestureResponderEvent): void {
     //Do it like this for now since we don´t have a database
     if (!showPassword) {
@@ -49,7 +62,7 @@ export const SignInScreen = ({ navigation }: any) => {
     );
 
     if (user) {
-      dispatch(loginUser(user)); // Dispatch the loginUser action
+      dispatch(loginUser(user));
       console.log("Authentication successful");
       console.log("User data:", user);
       navigation.navigate("HouseholdAccount");
@@ -59,7 +72,22 @@ export const SignInScreen = ({ navigation }: any) => {
   }
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+    <Animated.View
+      style={[
+        styles.container,
+        {
+          transform: [
+            {
+              translateY: translateY.interpolate({
+                inputRange: [0, 1],
+                outputRange: [0, 100],
+              }),
+            },
+          ],
+        },
+      ]}
+    >
+       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
         <StatusBar backgroundColor="yellow" />
 
@@ -74,21 +102,20 @@ export const SignInScreen = ({ navigation }: any) => {
             >
               Logga in
             </Text>
-          </View>
-        </View>
+            </View>
 
-        <View style={styles.container}>
-          <Video
-            source={require("../assets/bee-animation.mp4")}
-            rate={1.0}
-            volume={1.0}
-            isMuted={false}
-            shouldPlay
-            isLooping
-            style={styles.video}
-            resizeMode={ResizeMode.CONTAIN}
-          />
-        </View>
+          <View style={styles.container}>
+            <Video
+              source={require("../assets/bee-animation.mp4")}
+              rate={1.0}
+              volume={1.0}
+              isMuted={false}
+              shouldPlay
+              isLooping
+              style={styles.video}
+              resizeMode={ResizeMode.CONTAIN}
+            />
+          </View>
 
         <Text
           style={{
@@ -136,10 +163,11 @@ export const SignInScreen = ({ navigation }: any) => {
         >
           <Text style={styles.forgotPasswordButtonText}>
             {showPassword ? "Ta bort lösenord" : "Glömt lösenord?"}
-          </Text>
-        </TouchableOpacity>
-      </View>
-    </TouchableWithoutFeedback>
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </TouchableWithoutFeedback>
+    </Animated.View>
   );
 };
 
@@ -152,7 +180,7 @@ const styles = StyleSheet.create({
   },
   video: {
     width: 400,
-    height: 150,
+    height: 103,
   },
   input: {
     borderBottomWidth: 1,

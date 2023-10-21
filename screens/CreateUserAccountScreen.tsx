@@ -216,22 +216,22 @@ const styles = StyleSheet.create({
   },
   header: {
     backgroundColor: "yellow",
-    padding: 40,
+    padding: 10,
     alignItems: "center",
     justifyContent: "center",
   },
   headerText: {
-    fontSize: 28,
+    fontSize: 20,
     fontWeight: "bold",
     color: "black",
     marginTop: 10,
   },
   input: {
-    margin: 20,
+    margin: 10,
     borderBottomWidth: 1,
     borderBottomColor: "gray",
-    padding: 10,
-    fontSize: 18,
+    padding: 5,
+    fontSize: 16,
     color: "black",
     backgroundColor: "white",
   },
@@ -245,17 +245,17 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     backgroundColor: "white",
-    padding: 20,
+    padding: 5,
   },
   warningContainer: {
     backgroundColor: "white",
-    padding: 20,
+    padding: 5,
   },
   okButton: {
     backgroundColor: "yellow",
-    padding: 10,
+    padding: 5,
     alignItems: "center",
-    margin: 20,
+    margin: 10,
     borderRadius: 10,
   },
   warning: {
@@ -264,9 +264,9 @@ const styles = StyleSheet.create({
   },
   loginButton: {
     backgroundColor: "white",
-    padding: 10,
+    padding: 5,
     alignItems: "center",
-    margin: 10,
+    margin: 5,
     borderRadius: 10,
   },
 });

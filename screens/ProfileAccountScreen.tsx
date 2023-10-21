@@ -60,14 +60,15 @@ export default function ProfileAccountScreen({ navigation }: any) {
   );
 
   useEffect(() => {
-    if (activeProfile) {
+    if (activeProfile && activeHousehold) {
       const household = households.find(
         (h) => h.id === activeProfile.householdId,
       );
       if (household) {
         setHeaderTitle(household.name);
       }
-      dispatch(fetchTasks(activeProfile.householdId));
+      console.log("aktiva hushållsid:", activeHousehold.id);
+      dispatch(fetchTasks(activeHousehold?.id));
     }
   }, [activeProfile]);
 
