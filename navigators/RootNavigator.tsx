@@ -46,11 +46,13 @@ export default function RootNavigator() {
       >
         <Stack.Screen name="SplashScreen" component={SplashScreen} />
         <Stack.Screen name="Auth" component={AuthNavigator} />
+
         <Stack.Screen
           name="Login"
           component={SignInScreen}
           options={{ presentation: "fullScreenModal" }}
         />
+
         <Stack.Screen name="Signup" component={CreateUserAccountScreen} />
         <Stack.Screen
           name="HouseholdAccount"
