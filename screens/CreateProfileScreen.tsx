@@ -16,6 +16,7 @@ import { useTheme } from "../contexts/themeContext";
 import { RootNavigationScreenProps } from "../navigators/navigationTypes";
 import { addProfile } from "../store/profile/profileSlice";
 import { useAppSelector } from "../store/store";
+import { getCurrentDate } from "../utils/dateHandler";
 
 type CreateProfileProps = RootNavigationScreenProps<"CreateProfile">;
 
@@ -44,7 +45,8 @@ export default function CreateProfileScreen({
   const household = households.find((h) => h.id === householdId);
   const { theme } = useTheme();
   const dispatch = useDispatch();
-  const todaysDate = new Date();
+  const { todaysDate: currentDate } = getCurrentDate();
+  const todaysDate = currentDate;
 
   //MOCKAR ETT ID SÅLÄNGE FÖR USERN
   const mockedUserId = "5NCx5MKcUu6UYKjFqRkg";
@@ -69,7 +71,7 @@ export default function CreateProfileScreen({
     if (selectedAvatar) {
       const avatarsColor = AvatarColors[selectedAvatar as Avatars];
       const newProfile = {
-        id: todaysDate.getUTCMilliseconds.toString().slice(-4),
+        id: todaysDate, //TODO: this needs to be ev changed
         profileName: householdName,
         userId: mockedUserId,
         householdId: householdId,

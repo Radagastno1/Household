@@ -21,6 +21,7 @@ import {
   filterTaskListByHouseId,
 } from "../store/tasks/taskSlice";
 import { Task } from "../types";
+import { getCurrentDate } from "../utils/dateHandler";
 
 type HandleTaskProps = RootNavigationScreenProps<"HandleTask">;
 
@@ -33,6 +34,7 @@ export default function CreateTaskScreen({
   const activeHousehold = useAppSelector(
     (state) => state.household.activehousehold,
   );
+  const { todaysDate } = getCurrentDate();
 
   const householdId = activeHousehold?.id;
 
@@ -97,7 +99,7 @@ export default function CreateTaskScreen({
           description: description,
           energiWeight: selectedEnergy,
           interval: selectedInterval,
-          creatingDate: new Date().toISOString(),
+          creatingDate: todaysDate,
           householdId: householdId,
         };
         console.log("den nya tasken innan dispatch:", newTask);
@@ -112,7 +114,7 @@ export default function CreateTaskScreen({
           description: description,
           energiWeight: selectedEnergy,
           interval: selectedInterval,
-          creatingDate: new Date().toISOString(),
+          creatingDate: todaysDate,
           householdId: householdId,
         };
         console.log("den redigerade tasken innan dispatch:", editedTask);

@@ -5,6 +5,9 @@ import {
 } from "../api/taskCompletion";
 import { profiles } from "../data";
 import { TaskCompletion } from "../types";
+import { getCurrentDate } from "../utils/dateHandler";
+
+const { todaysDate } = getCurrentDate();
 
 interface TaskCompletionState {
   completions: TaskCompletion[];
@@ -41,7 +44,7 @@ const taskCompletionSlice = createSlice({
         taskId: action.payload.taskId,
         householdId: action.payload.householdId,
         profileId: action.payload.profileId,
-        completionDate: new Date().toISOString(),
+        completionDate: todaysDate,
       };
       console.log("new task", newTaskCompletion);
 
@@ -61,12 +64,11 @@ const taskCompletionSlice = createSlice({
       action: PayloadAction<{ taskId: string }>,
     ) => {
       const { taskId } = action.payload;
-      const today = new Date().toISOString();
+      const today = todaysDate;
       //filter the completions with the same taskId
       const filteredCompletions = state.completions.filter(
         (completion) =>
-          completion.completionDate.split("T")[0] === today.split("T")[0] &&
-          completion.taskId === taskId,
+          completion.completionDate === today && completion.taskId === taskId,
       );
       // get the unique profileIds
       const uniqueProfileIds = [
@@ -105,11 +107,10 @@ const taskCompletionSlice = createSlice({
     ) => {
       const { taskId, completionDate } = action.payload;
 
-      const today = new Date().toISOString();
+      const today = todaysDate;
       // Filter task completions for the given Task ID and today's date
       const todaysCompletions = state.completions.filter(
-        (completion) =>
-          completion.completionDate.split("T")[0] === today.split("T")[0],
+        (completion) => completion.completionDate === today,
       );
 
       if (todaysCompletions) {
