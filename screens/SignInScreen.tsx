@@ -16,8 +16,11 @@ import { useDispatch } from "react-redux";
 import { useTheme } from "../contexts/themeContext";
 import { users } from "../data";
 import { loginUser } from "../store/user/userActions";
+import { RootNavigationScreenProps } from "../navigators/navigationTypes";
 
-export const SignInScreen = ({ navigation }: any) => {
+type SignInProps = RootNavigationScreenProps<"Login">
+
+export const SignInScreen = ({ navigation }: SignInProps) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);

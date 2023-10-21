@@ -13,10 +13,11 @@ import { useTheme } from "../contexts/themeContext";
 import { useAppSelector } from "../store/store";
 import { createAccount } from "../store/user/userAccountSlice";
 import { User } from "../types";
+import { RootNavigationScreenProps } from "../navigators/navigationTypes";
 
+type CreateUserProps = RootNavigationScreenProps<"Signup">;
 
-
-const CreateUserAccountScreen: React.FC<{ navigation: any }> = ({
+const CreateUserAccountScreen: React.FC<{ navigation: CreateUserProps }> = ({
   navigation,
 }) => {
   const [visible, setVisible] = useState(false);
@@ -62,7 +63,7 @@ const CreateUserAccountScreen: React.FC<{ navigation: any }> = ({
       dispatch(createAccount(newUser));
 
       // If all conditions are met, navigate to "Login"
-      navigation.navigate("Login");
+      navigation.navigation.navigate("Login");
     }
   };
 
@@ -199,7 +200,7 @@ const CreateUserAccountScreen: React.FC<{ navigation: any }> = ({
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.loginButton}
-        onPress={() => navigation.navigate("Login")}
+        onPress={() => navigation.navigation.navigate("Login")}
       >
         <Text style={{ color: "black", fontSize: theme.buttonText.fontSize }}>
           Tillbaka

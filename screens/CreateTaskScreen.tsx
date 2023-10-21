@@ -20,9 +20,11 @@ import {
   filterTaskListByHouseId,
 } from "../store/tasks/taskSlice";
 import { Task } from "../types";
+import { RootNavigationScreenProps } from "../navigators/navigationTypes";
 
+type HandleTaskProps = RootNavigationScreenProps<"HandleTask">;
 //här skapar man en task som ägare för hushållet
-export default function CreateTaskScreen({ navigation, route }: any) {
+export default function CreateTaskScreen({ navigation, route }: HandleTaskProps) {
   //LÅTSAS ATT JAG KOLLAR MOT HUSHÅLLSSTATET VILKET HUSHÅLL ANVÄNDAREN ÄR PÅ HÄR
   const [isCreateMode, setIsCreateMode] = useState(true);
   const [taskToEdit, setTaskToEdit] = useState<Task>();

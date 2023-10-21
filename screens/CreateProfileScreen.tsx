@@ -15,6 +15,9 @@ import {
 } from "react-native";
 import { useTheme } from "../contexts/themeContext";
 import { useAppSelector } from "../store/store";
+import { RootNavigationScreenProps } from "../navigators/navigationTypes";
+
+type CreateProfileProps = RootNavigationScreenProps<"CreateProfile">;
 
 type Avatar = {
   id: string;
@@ -31,11 +34,14 @@ const avatars: Avatar[] = [
   { id: Avatars.Pig },
 ];
 
-export default function CreateProfileScreen({ navigation, route }: any) {
+export default function CreateProfileScreen({
+  navigation,
+  route,
+}: CreateProfileProps) {
   const [householdName, setHouseholdName] = useState("");
   const [selectedAvatar, setSelectedAvatar] = useState<string | null>(null);
-  const { id } = route.params;
-  const household = households.find((h) => h.id === id);
+  const { householdId } = route.params;
+  const household = households.find((h) => h.id === householdId);
   const { theme } = useTheme();
   const dispatch = useDispatch();
   const todaysDate = new Date();
@@ -43,24 +49,26 @@ export default function CreateProfileScreen({ navigation, route }: any) {
   const activeUser = useAppSelector((state) => state.userAccount.user);
 
   const activeProfiles = useAppSelector((state) =>
-    state.profile.profiles.filter((profile) => profile.householdId === id),
+    state.profile.profiles.filter(
+      (profile) => profile.householdId === householdId,
+    ),
   );
 
-  useEffect(() => {}, [id, dispatch]);
+  useEffect(() => {}, [householdId, dispatch]);
 
   const isAvatarOccupied = (avatarId: string) => {
     return activeProfiles.some((profile) => profile.avatar === avatarId);
   };
 
   const saveProfile = () => {
-    console.log("hushållsid är", id);
+    console.log("hushållsid är", householdId);
     if (selectedAvatar) {
       const avatarsColor = AvatarColors[selectedAvatar as Avatars];
       const newProfile = {
         id: todaysDate.getUTCMilliseconds.toString().slice(-4),
         profileName: householdName,
         userId: activeUser.id,
-        householdId: id,
+        householdId: householdId,
         avatar: selectedAvatar,
         avatarsColors: avatarsColor,
         isOwner: false,
@@ -76,7 +84,7 @@ export default function CreateProfileScreen({ navigation, route }: any) {
     <View style={styles.container}>
       <View style={styles.sectionContainer}>
         <View style={styles.rectContainer}>
-          <Text style={styles.rectText}>{id}</Text>
+          <Text style={styles.rectText}>{householdId}</Text>
         </View>
       </View>
       <View style={styles.sectionContainer}>

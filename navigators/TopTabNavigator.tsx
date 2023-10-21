@@ -5,7 +5,13 @@ import StatisticScreen from "../screens/StatisticScreen";
 import CustomTabBar from "../store/shared/CustomTabBar";
 import TESTDATUMSCREEN from "../screens/TESTDATUMSCREEN";
 
-const TopTab = createMaterialTopTabNavigator();
+export type TopTabParamList = {
+  HouseholdTasks: undefined;
+  DennaVeckan: undefined;
+  TestaDatum: undefined;
+};
+
+const TopTab = createMaterialTopTabNavigator<TopTabParamList>();
 const currentDate = new Date();
 // denna och alla andra övriga uträkningar över veckor och månader behöver vara i sin egna fil!!!
 const currentMonth = (currentDate.getMonth() + 1).toString();
@@ -14,16 +20,14 @@ export default function TopTabNavigator() {
   return (
     <TopTab.Navigator tabBar={CustomTabBar}>
       <TopTab.Screen
-        name="TodaysTasks"
+        name="HouseholdTasks"
         component={HouseholdTasksScreen}
         options={({ route }) => ({
-          title: (route.params as { name?: string })?.name || "Idag",
+          title: (route.params as unknown as { name?: string })?.name || "Idag",
         })}
       />
-      <TopTab.Screen name="Denna veckan" component={StatisticScreen} />
-      <TopTab.Screen name="Förra veckan" component={StatisticScreen} />
-      <TopTab.Screen name={currentMonth} component={StatisticScreen} />
-      <TopTab.Screen name={"TESTA DATUM"} component={TESTDATUMSCREEN} />
+      <TopTab.Screen name="DennaVeckan" component={StatisticScreen} />
+      <TopTab.Screen name={"TestaDatum"} component={TESTDATUMSCREEN} />
     </TopTab.Navigator>
   );
 }

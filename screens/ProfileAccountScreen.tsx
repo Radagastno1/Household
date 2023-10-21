@@ -10,9 +10,12 @@ import {
 } from "../store/profile/profileSlice";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { fetchTasks } from "../store/tasks/taskSlice";
+import { RootNavigationScreenProps } from "../navigators/navigationTypes";
 // import { getProfileByHouseholdAndUser } from "../store/profile/profileSlice";
 
-export default function ProfileAccountScreen({ navigation }: any) {
+type ProfileProps = RootNavigationScreenProps<"ProfileAccount">;
+
+export default function ProfileAccountScreen({ navigation }: ProfileProps) {
   //du måste kolla getActiveHousehold från householdreducern
   //då har du ett household som du är inne på
   //då hämtar du getProfileForHousehold(userId, householdId);
@@ -99,7 +102,7 @@ export default function ProfileAccountScreen({ navigation }: any) {
       <View style={{ marginTop: 50 }}>
         <Button
           mode="contained"
-          onPress={() => navigation.navigate("Tab", )}
+          onPress={() => navigation.navigate("Tab")}
           style={theme.button as any}
           labelStyle={theme.buttonText}
         >

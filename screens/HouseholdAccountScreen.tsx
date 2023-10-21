@@ -6,6 +6,9 @@ import {
   setHouseholdByHouseholdId,
   sethousehold,
 } from "../store/household/householdSlice";
+
+import { RootNavigationScreenProps } from "../navigators/navigationTypes";
+
 import { useSetColorTheme } from "../contexts/themeContext";
 import { useTheme } from "../contexts/themeContext";
 import { useState } from "react";
@@ -20,7 +23,9 @@ const styles = StyleSheet.create({
   },
 });
 
-export default function HouseholdAccountScreen({ navigation }: any) {
+type HouseholdProps = RootNavigationScreenProps<"HouseholdAccount">;
+
+export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
   const activeUser = useAppSelector((state) => state.userAccount.user);
   const dispatch = useAppDispatch();
   const householdSlice = useAppSelector((state) => state.household);
@@ -73,14 +78,16 @@ export default function HouseholdAccountScreen({ navigation }: any) {
           onPress={() => {
             console.log("HUS HÅLLSID: ", household.id);
             dispatch(setHouseholdByHouseholdId({ householdId: household.id }));
-            navigation.navigate("ProfileAccount");
+            navigation.navigate("ProfileAccount", {
+              householdId: household.id,
+            });
           }}
         />
       ))}
       <Button
         title="Skapa nytt hushåll"
         onPress={() =>
-          navigation.navigate("CreateProfile", { id: "household1" })
+          navigation.navigate("CreateProfile", { householdId: "household1" })
         } // denna e hårdkodad sålänge
       />
       <Button title="Logga ut" onPress={() => navigation.navigate("Login")} />
