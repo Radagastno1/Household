@@ -100,9 +100,20 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
         ]}
       >
         {/* <Text style={styles.profileTitle}>{}</Text> */}
-        <Text>Profilnamn: {activeProfile?.profileName}</Text>
+        <Text
+          style={{
+            fontSize: 25,
+            textAlign: "center",
+            color: theme.colors.text,
+          }}
+        >
+          Profilnamn: {activeProfile?.profileName}
+        </Text>
       </View>
-      <Text>Avatar: {activeProfile?.avatar}</Text>
+      <Text style={{ color: theme.colors.text }}>
+  Avatar: {activeProfile?.avatar}
+</Text>
+
       <View style={{ marginTop: 50 }}>
         <Button
           mode="contained"
@@ -191,14 +202,14 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
         />
       </View>
     </View>
-    </View>
+     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    // backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
   },
@@ -219,7 +230,7 @@ const styles = StyleSheet.create({
     height: 65,
     padding: 15,
     borderRadius: 8,
-    backgroundColor: "white",
+    // backgroundColor: "white",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
