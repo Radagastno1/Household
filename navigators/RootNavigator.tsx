@@ -41,11 +41,13 @@ export default function RootNavigator() {
         }
       >
         <Stack.Screen name="SplashScreen" component={SplashScreen} />
-        <Stack.Screen
+
+        <Stack.Screenhttps://github.com/Radagastno1/Household/pull/153/conflict?name=screens%252FProfileAccountScreen.tsx&ancestor_oid=0e26616baa34680e9101884841cf7aa5ca8c28d1&base_oid=b8e04ea416844f457452885fe834ad1ff9bcb371&head_oid=9e51e3ceb22207299b216a2c9d0e8cc5eb4b4e63
           name="Login"
           component={SignInScreen}
           options={{ presentation: "fullScreenModal" }}
         />
+
         <Stack.Screen name="Signup" component={CreateUserAccountScreen} />
         <Stack.Screen
           name="HouseholdAccount"

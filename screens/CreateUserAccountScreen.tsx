@@ -8,7 +8,8 @@ import {
 } from "react-native";
 import { Checkbox, Modal, Portal, TextInput } from "react-native-paper";
 import { useDispatch } from "react-redux";
-import theme from "../data/theme";
+// import theme from "../data/theme";
+import { useTheme } from "../contexts/themeContext";
 import { useAppSelector } from "../store/store";
 import { createAccount } from "../store/user/userAccountSlice";
 import { User } from "../types";
@@ -32,6 +33,8 @@ const CreateUserAccountScreen: React.FC<{ navigation: CreateUserProps }> = ({
   const [confirmationPasswordInput, setConfirmationPasswordInput] =
     useState("");
   const [isChecked, setIsChecked] = useState(false);
+
+  const { theme } = useTheme(); // la till theme här
 
   const dispatch = useDispatch();
 
@@ -70,7 +73,7 @@ const CreateUserAccountScreen: React.FC<{ navigation: CreateUserProps }> = ({
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
+      <View style={theme.button as any}>
         <Text style={styles.headerText}>Skapa konto</Text>
       </View>
 
@@ -209,7 +212,10 @@ const CreateUserAccountScreen: React.FC<{ navigation: CreateUserProps }> = ({
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 1, 
+    
+  
+    
     backgroundColor: "#fff",
   },
   header: {

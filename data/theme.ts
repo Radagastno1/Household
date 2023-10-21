@@ -1,11 +1,7 @@
-import { DefaultTheme } from "react-native-paper";
+import { DarkTheme, DefaultTheme } from "@react-navigation/native";
+import { MD2DarkTheme, MD2LightTheme } from "react-native-paper";
 
-export type Theme = {
-  colors: {
-    primary: string;
-    background: string;
-  };
-  fonts: {};
+export type Theme = typeof DarkTheme & {
   button: {
     backgroundColor: string;
     padding: number;
@@ -20,14 +16,17 @@ export type Theme = {
   };
 };
 
-const theme: Theme = {
+export const AppLightTheme: Theme = {
+  ...MD2LightTheme,
   ...DefaultTheme,
   colors: {
+    ...MD2LightTheme.colors,
     ...DefaultTheme.colors,
-    primary: "yellow",
+    // primary: "rgb(255, 45, 85)",
+    // background: "rgb(242, 242, 242)",
+    primary: "#FFD700",
     background: "white",
   },
-  fonts: {},
   button: {
     backgroundColor: "#FFD700",
     padding: 10,
@@ -42,4 +41,26 @@ const theme: Theme = {
   },
 };
 
-export default theme;
+export const AppDarkTheme: Theme = {
+  ...MD2DarkTheme,
+  ...DarkTheme,
+  colors: {
+    ...MD2DarkTheme.colors,
+    ...DarkTheme.colors,
+    primary: "rgb(255, 45, 85)",
+    background: "rgb(10, 10, 10)",
+  },
+  button: {
+    backgroundColor: "#FFD700",
+    padding: 10,
+    alignItems: "center",
+    margin: 10,
+    borderRadius: 10,
+    width: 360,
+  },
+  buttonText: {
+    color: "black",
+    fontSize: 16,
+  },
+};
+
