@@ -64,7 +64,7 @@ export const SignInScreen = ({ navigation }: any) => {
         <StatusBar backgroundColor="yellow" />
 
         <View style={{ backgroundColor: theme.colors.primary, padding: 20 }}>
-          <View style={styles.header}>
+          <View style={theme.button as any}>
             <Text
               style={{
                 color: theme.buttonText.color,

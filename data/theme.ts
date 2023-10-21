@@ -23,8 +23,10 @@ export const AppLightTheme: Theme = {
   colors: {
     ...MD2LightTheme.colors,
     ...DefaultTheme.colors,
-    primary: "rgb(255, 45, 85)",
-    background: "rgb(242, 242, 242)",
+    // primary: "rgb(255, 45, 85)",
+    // background: "rgb(242, 242, 242)",
+    primary: "#FFD700",
+    background: "white",
   },
   // Add your custom theme properties here
   button: {
