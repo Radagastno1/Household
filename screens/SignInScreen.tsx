@@ -79,8 +79,8 @@ export const SignInScreen = ({ navigation }: any) => {
           transform: [
             {
               translateY: translateY.interpolate({
-                inputRange: [0, 1],
-                outputRange: [0, 100],
+                inputRange: [0, 0],
+                outputRange: [0, 0],
               }),
             },
           ],
@@ -91,17 +91,11 @@ export const SignInScreen = ({ navigation }: any) => {
         <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
           <StatusBar backgroundColor="yellow" />
 
-          <View style={{ backgroundColor: theme.colors.primary, padding: 20 }}>
-            <View style={theme.button as any}>
-              <Text
-                style={{
-                  color: theme.buttonText.color,
-                  fontSize: theme.buttonText.fontSize,
-                  fontWeight: "bold",
-                }}
-              >
-                Logga in
-              </Text>
+          <View style={{ backgroundColor: theme.colors.background }}>
+            <View style={styles.container}>
+              <View style={theme.button as any}>
+                <Text style={styles.headerText}>Logga in</Text>
+              </View>
             </View>
 
             <View style={styles.container}>
@@ -117,12 +111,13 @@ export const SignInScreen = ({ navigation }: any) => {
               />
             </View>
 
+            <View style={styles.textContainer}>
             <Text
               style={{
                 color: theme.buttonText.color,
                 fontSize: 24,
                 fontWeight: "bold",
-                marginTop: 30,
+                // marginTop: 30,
                 textAlign: "center",
               }}
             >
@@ -143,10 +138,14 @@ export const SignInScreen = ({ navigation }: any) => {
               onChangeText={(text) => setPassword(text)}
               style={theme.buttonText}
             />
-
-            <TouchableOpacity style={theme.button as any} onPress={handleLogin}>
-              <Text style={theme.buttonText}>Logga in</Text>
-            </TouchableOpacity>
+          
+              <TouchableOpacity
+                style={theme.button as any}
+                onPress={handleLogin}
+              >
+                <Text style={theme.buttonText}>Logga in</Text>
+              </TouchableOpacity>
+           
 
             <TouchableOpacity
               style={styles.signupButton}
@@ -154,18 +153,20 @@ export const SignInScreen = ({ navigation }: any) => {
                 navigation.navigate("Signup");
               }}
             >
-              <Text style={styles.signupButtonText}>Skapa konto</Text>
+              <Text style={theme.buttonText}>Skapa konto</Text>
             </TouchableOpacity>
+           
 
             <TouchableOpacity
               style={styles.forgotPasswordButton}
               onPress={clearFieldsAndTogglePassword}
             >
-              <Text style={styles.forgotPasswordButtonText}>
+              <Text style={theme.buttonText}>
                 {showPassword ? "Ta bort lösenord" : "Glömt lösenord?"}
               </Text>
             </TouchableOpacity>
-          </View>
+            </View>
+        </View>
         </View>
       </TouchableWithoutFeedback>
     </Animated.View>
@@ -175,9 +176,9 @@ export const SignInScreen = ({ navigation }: any) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
+    // justifyContent: "center",
     alignItems: "center",
-    marginBottom: -39,
+    marginBottom: 39,
   },
   video: {
     width: 400,
@@ -194,10 +195,10 @@ const styles = StyleSheet.create({
   },
   loginButton: {
     // backgroundColor: theme.colors.primary,
-    padding: 10,
-    alignItems: "center",
-    margin: 20,
-    borderRadius: 10,
+    // padding: 10,
+    // alignItems: "center",
+    // margin: 20,
+    // borderRadius: 10,
   },
   loginButtonText: {
     // color: theme.buttonText.color,
@@ -218,19 +219,30 @@ const styles = StyleSheet.create({
   },
   forgotPasswordButton: {
     // backgroundColor: theme.colors.background,
+    // flex: 1,
     padding: 5,
     alignItems: "center",
     margin: 10,
   },
-  forgotPasswordButtonText: {
-    // color: theme.buttonText.color,
-    // fontSize: theme.buttonText.fontSize,
+  // forgotPasswordButtonText: {
+   
+  //   // color: theme.buttonText.color,
+  //   // fontSize: theme.buttonText.fontSize,
+  // },
+  headerText: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "black",
+    marginTop: 10,
   },
   header: {
     backgroundColor: "yellow",
-    padding: 10,
+    // padding: 10,
     alignItems: "center",
-    marginTop: 30,
+    // marginTop: 30,
+  },
+  textContainer: {
+    padding: 20, 
   },
 });
 export default SignInScreen;
