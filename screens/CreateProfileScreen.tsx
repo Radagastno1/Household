@@ -46,7 +46,11 @@ export default function CreateProfileScreen({
   const dispatch = useDispatch();
   const todaysDate = new Date();
 
-  const activeUser = useAppSelector((state) => state.userAccount.user);
+  //MOCKAR ETT ID SÅLÄNGE FÖR USERN
+  const mockedUserId = "5NCx5MKcUu6UYKjFqRkg";
+
+  //UTKOMMENTERAR DENNA SÅLÄNGE FÖR FINNS INGET STATE FÖR EN AKTIV USER ÄN
+  // const activeUser = useAppSelector((state) => state.userAccount.user);
 
   const activeProfiles = useAppSelector((state) =>
     state.profile.profiles.filter(
@@ -67,7 +71,7 @@ export default function CreateProfileScreen({
       const newProfile = {
         id: todaysDate.getUTCMilliseconds.toString().slice(-4),
         profileName: householdName,
-        userId: activeUser.id,
+        userId: mockedUserId,
         householdId: householdId,
         avatar: selectedAvatar,
         avatarsColors: avatarsColor,
