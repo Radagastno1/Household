@@ -13,7 +13,7 @@ import {
 } from "react-native";
 import { Text, TextInput } from "react-native-paper";
 import { useDispatch } from "react-redux";
-import { useTheme } from "../contexts/themeContext";
+import ThemeProvider, { useTheme } from "../contexts/themeContext";
 import { users } from "../data";
 import { loginUser } from "../store/user/userActions";
 import { RootNavigationScreenProps } from "../navigators/navigationTypes";

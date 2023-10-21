@@ -49,6 +49,8 @@ export const AppDarkTheme: Theme = {
     ...DarkTheme.colors,
     primary: "rgb(255, 45, 85)",
     background: "rgb(10, 10, 10)",
+    // background: "rgb(50, 50, 50)",
+
   },
   button: {
     backgroundColor: "#FFD700",

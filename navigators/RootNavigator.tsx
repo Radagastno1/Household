@@ -34,7 +34,7 @@ export default function RootNavigator() {
   const userSlice = useAppSelector((state) => state.userAccount.user);
 
   return (
-    <NavigationContainer>
+    <NavigationContainer >
       <Stack.Navigator
         initialRouteName={
           isLoading ? "SplashScreen" : userSlice ? "Login" : "Login"

@@ -11,6 +11,7 @@ import {
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { fetchTasks } from "../store/tasks/taskSlice";
 import { RootNavigationScreenProps } from "../navigators/navigationTypes";
+import { setStatusBarBackgroundColor } from "expo-status-bar";
 // import { getProfileByHouseholdAndUser } from "../store/profile/profileSlice";
 
 type ProfileProps = RootNavigationScreenProps<"ProfileAccount">;
@@ -90,6 +91,7 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
   };
 
   return (
+    <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
     <View style={styles.container}>
       <View
         style={[
@@ -188,6 +190,7 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
           selectedAvatar={selectedAvatar}
         />
       </View>
+    </View>
     </View>
   );
 }
