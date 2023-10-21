@@ -151,7 +151,7 @@ export const SignInScreen = ({ navigation }: SignInProps) => {
            
 
             <TouchableOpacity
-              style={styles.signupButton}
+              style={theme.signupButton as any}
               onPress={() => {
                 navigation.navigate("Signup");
               }}
@@ -207,15 +207,15 @@ const styles = StyleSheet.create({
     // color: theme.buttonText.color,
     // fontSize: theme.buttonText.fontSize,
   },
-  signupButton: {
-    // backgroundColor: theme.colors.background,
-    padding: 5,
-    alignItems: "center",
-    margin: 10,
-    borderRadius: 10,
-    borderWidth: 1,
-    // borderColor: theme.buttonText.color,
-  },
+  // signupButton: {
+  //   // backgroundColor: theme.colors.background,
+  //   padding: 5,
+  //   alignItems: "center",
+  //   margin: 10,
+  //   borderRadius: 10,
+  //   borderWidth: 1,
+  //   // borderColor: theme.buttonText.color,
+  // },
   signupButtonText: {
     // color: theme.buttonText.color,
     // fontSize: theme.buttonText.fontSize,

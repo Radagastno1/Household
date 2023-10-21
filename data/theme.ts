@@ -14,6 +14,16 @@ export type Theme = typeof DarkTheme & {
     color: string;
     fontSize: number;
   };
+  signupButton: {
+    // backgroundColor: theme.colors.background,
+    padding: number,
+    alignItems: string,
+    margin: number,
+    borderRadius: number,
+    borderWidth: number,
+    backgroundColor: string,
+    // borderColor: theme.buttonText.color,
+  },
 };
 
 export const AppLightTheme: Theme = {
@@ -39,6 +49,16 @@ export const AppLightTheme: Theme = {
     color: "black",
     fontSize: 16,
   },
+  signupButton: {
+    // backgroundColor: theme.colors.background,
+    padding: 5,
+    alignItems: "center",
+    margin: 10,
+    borderRadius: 10,
+    borderWidth: 1,
+    backgroundColor: "white"
+    // borderColor: theme.buttonText.color,
+  },
 };
 
 export const AppDarkTheme: Theme = {
@@ -63,6 +83,16 @@ export const AppDarkTheme: Theme = {
   buttonText: {
     color: "black",
     fontSize: 16,
+  },
+  signupButton: {
+    // backgroundColor: theme.colors.background,
+    padding: 5,
+    alignItems: "center",
+    margin: 10,
+    borderRadius: 10,
+    borderWidth: 1,
+    backgroundColor: "white"
+    // borderColor: theme.buttonText.color,
   },
 };
 
