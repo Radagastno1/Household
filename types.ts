@@ -31,6 +31,7 @@ export interface Task {
   creatingDate: string; //default blir dagens datum
   interval: number; //dagar emellan?
   householdId: string;
+  isActive: boolean;
 }
 
 export interface TaskCompletion {

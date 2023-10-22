@@ -99,6 +99,7 @@ export default function CreateTaskScreen({
           interval: selectedInterval,
           creatingDate: new Date().toISOString(),
           householdId: householdId,
+          isActive: true,
         };
         console.log("den nya tasken innan dispatch:", newTask);
         dispatch(addTask(newTask));
@@ -114,6 +115,7 @@ export default function CreateTaskScreen({
           interval: selectedInterval,
           creatingDate: new Date().toISOString(),
           householdId: householdId,
+          isActive: taskToEdit.isActive,
         };
         console.log("den redigerade tasken innan dispatch:", editedTask);
         dispatch(editTask(editedTask));
