@@ -29,6 +29,7 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
   const householdSlice = useAppSelector((state) => state.household);
   const allHouseholds = householdSlice.households;
   // const {setColorScheme} = useSetColorTheme();
+  const { theme } = useTheme();
   const { setColorScheme } = useTheme();
   const [currentTheme, setCurrentTheme] = useState("auto");
 
@@ -56,7 +57,6 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
 
   const handleToggleTheme = () => {
     if (setColorScheme) {
-      // Toggle between "light," "dark," and "auto"
       switch (currentTheme) {
         case "light":
           setColorScheme("dark");
@@ -77,8 +77,10 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
       console.error("setColorScheme is not defined.");
     }
   };
+  
 
   return (
+    <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
     <View style={styles.container}>
       <Text>Här listas alla households:</Text>
       {allHouseholds.map((household: Household) => (
@@ -97,7 +99,9 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
         } // denna e hårdkodad sålänge
       />
       <Button title="Logga ut" onPress={() => navigation.navigate("Login")} />
-      <Button title="Toggle Theme" onPress={handleToggleTheme} />
+      <Button  title="Toggle Theme" onPress={handleToggleTheme} />
+      <Button title="Auto Theme" onPress={handleToggleTheme} />
+    </View>
     </View>
   );
 }

@@ -10,11 +10,11 @@ export default function App() {
   return (
     <Provider store={store}>
       <PaperProvider>
-      <ThemeProvider>
-      <SafeAreaProvider>
-        <RootNavigator />
-      </SafeAreaProvider>
-      </ThemeProvider>
+        <SafeAreaProvider>
+          <ThemeProvider>
+            <RootNavigator />
+          </ThemeProvider>
+        </SafeAreaProvider>
       </PaperProvider>
     </Provider>
   );
