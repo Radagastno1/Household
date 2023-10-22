@@ -12,11 +12,11 @@ import {
 } from "react-native";
 import { Card, Paragraph, Title } from "react-native-paper";
 import CircleComponent from "../components/CircleComponent";
+import DeleteTaskModule from "../modules/DeleteTaskModule";
 import { RootNavigationScreenProps } from "../navigators/navigationTypes";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import {
   addTask,
-  deleteTask,
   editTask,
   filterTaskListByHouseId,
 } from "../store/tasks/taskSlice";
@@ -53,6 +53,15 @@ export default function CreateTaskScreen({
     taskToEdit ? taskToEdit.description : "",
   );
 
+  const [isDeleteTaskModalVisible, setDeleteTaskModalVisible] = useState(false);
+
+  const showDeleteTaskModal = () => {
+    setDeleteTaskModalVisible(true);
+  };
+
+  const hideDeleteTaskModal = () => {
+    setDeleteTaskModalVisible(false);
+  };
   const dispatch = useAppDispatch();
 
   const taskSlice = useAppSelector((state) => state.task);
@@ -81,12 +90,13 @@ export default function CreateTaskScreen({
   const intervalData: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   const energyData: number[] = [1, 2, 4, 6, 8];
 
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
   const handleDeleteTask = () => {
+    //stänga modulen när man gjort något där inne? eller?
     if (taskToEdit) {
-      //här kan deleteTaskModule komma?
-      dispatch(deleteTask(taskToEdit.id));
     }
-    navigation.navigate("Tab");
+    // navigation.navigate("Tab");
   };
 
   const handleTask = () => {
@@ -137,6 +147,9 @@ export default function CreateTaskScreen({
         contentContainerStyle={styles.scrollViewContainer}
         keyboardShouldPersistTaps="always"
       >
+        {isDeleteTaskModalVisible && taskToEdit && (
+          <DeleteTaskModule task={taskToEdit} onClose={hideDeleteTaskModal} />
+        )}
         <View style={styles.container}>
           <TextInput
             placeholder="Titel"

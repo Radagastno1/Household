@@ -1,16 +1,24 @@
-import { Button, Text, View } from "react-native";
+import { useEffect, useState } from "react";
+import { Button, Text } from "react-native";
+import { Modal } from "react-native-paper";
 import { useAppDispatch } from "../store/store";
 import { deleteTask, editTask } from "../store/tasks/taskSlice";
 import { Task } from "../types";
 
 interface Props {
   task: Task;
+  onClose: () => void;
 }
 
 export default function DeleteTaskModule(props: Props) {
   const dispatch = useAppDispatch();
 
-  //redigera med isactive till false
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const toggleModal = () => {
+    setIsModalVisible(!isModalVisible);
+  };
+
   const handleArchiveTask = () => {
     const editedTask: Task = {
       id: props.task.id,
@@ -25,13 +33,21 @@ export default function DeleteTaskModule(props: Props) {
     dispatch(editTask(editedTask));
   };
 
-  //delete
   const handleDeleteTask = () => {
     dispatch(deleteTask(props.task.id));
   };
 
+  useEffect(() => {
+    setIsModalVisible(true);
+  }, []);
+
+  const closeModal = () => {
+    setIsModalVisible(false);
+    props.onClose();
+  };
+
   return (
-    <View>
+    <Modal visible={isModalVisible}>
       <Text>Vill du arkivera sysslan?</Text>
       <Text>
         Om du väljer att radera sysslan permanent, då kommer all statistik
@@ -42,6 +58,7 @@ export default function DeleteTaskModule(props: Props) {
         title="Nej, radera sysslan permanent"
         onPress={() => handleDeleteTask}
       />
-    </View>
+      <Button title="Avbryt" onPress={closeModal} />
+    </Modal>
   );
 }
