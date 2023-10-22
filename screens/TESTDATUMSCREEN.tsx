@@ -6,7 +6,7 @@ import {
   getCurrentWeekDates,
   getLastMonthDates,
   getLastWeekDates,
-} from "../utils/dateHandler";
+} from "../utils/DateHandler";
 
 export default function TESTDATUMSCREEN() {
   // --------------- DAGENS DATUM  ----------------
