@@ -2,11 +2,12 @@ import { useEffect, useState } from "react";
 import { Button, Text } from "react-native";
 import { Modal } from "react-native-paper";
 import { useAppDispatch } from "../store/store";
-import { deleteTask, editTask } from "../store/tasks/taskSlice";
 import { Task } from "../types";
 
 interface Props {
   task: Task;
+  onDeleteTask: (taskId: string) => void;
+  onEditTask: (editedTask: Task) => void;
   onClose: () => void;
 }
 
@@ -14,10 +15,6 @@ export default function DeleteTaskModule(props: Props) {
   const dispatch = useAppDispatch();
 
   const [isModalVisible, setIsModalVisible] = useState(false);
-
-  const toggleModal = () => {
-    setIsModalVisible(!isModalVisible);
-  };
 
   const handleArchiveTask = () => {
     const editedTask: Task = {
@@ -30,11 +27,12 @@ export default function DeleteTaskModule(props: Props) {
       householdId: props.task.householdId,
       isActive: false,
     };
-    dispatch(editTask(editedTask));
+    console.log("den redigerade tasken: ", editedTask.title);
+    props.onEditTask(editedTask);
   };
 
   const handleDeleteTask = () => {
-    dispatch(deleteTask(props.task.id));
+    props.onDeleteTask(props.task.id);
   };
 
   useEffect(() => {
@@ -53,12 +51,25 @@ export default function DeleteTaskModule(props: Props) {
         Om du väljer att radera sysslan permanent, då kommer all statistik
         gällande sysslan också att tas bort.
       </Text>
-      <Button title="Ja, arkivera sysslan" onPress={handleArchiveTask} />
+      <Button
+        title="Ja, arkivera sysslan"
+        onPress={() => handleArchiveTask()}
+      />
       <Button
         title="Nej, radera sysslan permanent"
-        onPress={() => handleDeleteTask}
+        onPress={() => handleDeleteTask()}
       />
       <Button title="Avbryt" onPress={closeModal} />
     </Modal>
   );
 }
+
+// const styles = StyleSheet.create({
+//   moduleContainer: {
+//     flexDirection: "row",
+//     alignItems: "center",
+//     marginVertical: 10,
+//     flex: 1,
+//     backgroundColor: "red",
+//   },
+// });
