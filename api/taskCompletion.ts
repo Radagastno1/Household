@@ -16,7 +16,7 @@ import {
   getCurrentDate,
   getCurrentWeekDates,
   getLastMonthDates,
-} from "../utils/dateHandler";
+} from "../utils/DateHandler";
 
 const db = getFirestore(app);
 const taskCompletionCollectionRef = collection(db, "taskCompletions");
