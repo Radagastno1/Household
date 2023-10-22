@@ -83,6 +83,7 @@ export default function CreateTaskScreen({
 
   const handleDeleteTask = () => {
     if (taskToEdit) {
+      //här kan deleteTaskModule komma?
       dispatch(deleteTask(taskToEdit.id));
     }
     navigation.navigate("Tab");
@@ -261,7 +262,6 @@ export default function CreateTaskScreen({
           )}
         </View>
 
-        {/* <View style={styles.fillOutContainer}></View> */}
         <View style={styles.buttonsContainer}>
           <TouchableOpacity
             style={[styles.button]}
@@ -295,7 +295,6 @@ const styles = StyleSheet.create({
   container: {
     marginTop: 80,
     flex: 1,
-    // justifyContent: "space-around",
     padding: 10,
   },
   scrollViewContainer: {
