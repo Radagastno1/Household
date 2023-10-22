@@ -4,10 +4,10 @@
     "slug": "Household",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/beeicon.png",
+    "icon": "./assets/beeicon1024.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/beeicon1024.png",
+      "image": "./assets/splash2.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },

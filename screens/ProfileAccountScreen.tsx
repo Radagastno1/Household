@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View,Image } from "react-native";
 import { Button, Card, IconButton, Text, TextInput } from "react-native-paper";
 import { useTheme } from "../contexts/themeContext";
 import { households } from "../data";
@@ -12,6 +12,7 @@ import { useAppDispatch, useAppSelector } from "../store/store";
 import { fetchTasks } from "../store/tasks/taskSlice";
 import { RootNavigationScreenProps } from "../navigators/navigationTypes";
 import { setStatusBarBackgroundColor } from "expo-status-bar";
+import { AvatarUrls, Avatars } from "../data/avatars";
 // import { getProfileByHouseholdAndUser } from "../store/profile/profileSlice";
 
 type ProfileProps = RootNavigationScreenProps<"ProfileAccount">;
@@ -113,7 +114,10 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
       <Text style={{ color: theme.colors.text }}>
   Avatar: {activeProfile?.avatar}
 </Text>
-
+<Image
+                      source={{ uri: AvatarUrls[activeProfile?.avatar as Avatars] }}
+                      style={{ height: 20, width: 20 }}
+                    />
       <View style={{ marginTop: 50 }}>
         <Button
           mode="contained"

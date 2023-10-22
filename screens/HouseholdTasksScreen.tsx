@@ -133,8 +133,7 @@ export default function HouseholdTasksScreen({
     const currentDate = new Date();
     const timeDifference = currentDate.getTime() - lastCompletionDate.getTime();
     //convert it to days minus the interval days
-    const daysDifference =
-      Math.floor(timeDifference / (1000 * 60 * 60 * 24)) - task.interval;
+    const daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
     return daysDifference;
   }
 
@@ -174,13 +173,30 @@ export default function HouseholdTasksScreen({
                       source={{ uri: AvatarUrls[avatar as Avatars] }}
                       style={{ height: 20, width: 20 }}
                     />
-                    {/* <Text variant="bodyMedium">{avatar}</Text> */}
                   </View>
                 ),
               )}
 
-              {getDaysSinceLastCompletion(task) > 0 && (
+              {/* {getDaysSinceLastCompletion(task) > 0 && (
                 <View style={styles.intervalNumberCircle}>
+                  <Text style={styles.circleText} variant="bodyMedium">
+                    {getDaysSinceLastCompletion(task)}
+                  </Text>
+                </View>
+              )} */}
+
+              {getDaysSinceLastCompletion(task) > 0 && (
+                <View
+                  style={[
+                    styles.intervalNumberCircle,
+                    {
+                      backgroundColor:
+                        getDaysSinceLastCompletion(task) < task.interval
+                          ? "lightgrey"
+                          : "red",
+                    },
+                  ]}
+                >
                   <Text style={styles.circleText} variant="bodyMedium">
                     {getDaysSinceLastCompletion(task)}
                   </Text>
@@ -189,17 +205,6 @@ export default function HouseholdTasksScreen({
             </View>
           </Card>
         ))}
-
-        <Card style={styles.card}>
-          <View style={styles.taskItem}>
-            <View>
-              <Text variant="titleLarge">test</Text>
-            </View>
-            <View>
-              <Text variant="bodyMedium">avatarer1</Text>
-            </View>
-          </View>
-        </Card>
 
         <Card style={styles.card}>
           <View style={styles.taskItem}>
