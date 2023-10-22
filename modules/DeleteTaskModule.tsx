@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Button, Text } from "react-native";
 import { Modal } from "react-native-paper";
-import { useAppDispatch } from "../store/store";
 import { Task } from "../types";
 
 interface Props {
@@ -12,8 +11,6 @@ interface Props {
 }
 
 export default function DeleteTaskModule(props: Props) {
-  const dispatch = useAppDispatch();
-
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const handleArchiveTask = () => {
