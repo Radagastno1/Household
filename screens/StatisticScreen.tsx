@@ -10,69 +10,6 @@ function arrayChunk<T>(array: T[], chunkSize: number): T[][] {
   return chunkedArray;
 }
 
-const exemples = [
-  {
-    name: "Laga maten",
-    series: [20, 20, 20],
-    colors: ["red", "yellow", "blue"],
-  },
-  {
-    name: "Diska",
-    series: [20, 10, 20],
-    colors: ["red", "yellow", "blue"],
-  },
-  {
-    name: "Dammsuga",
-    series: [10, 20, 5],
-    colors: ["red", "yellow", "blue"],
-  },
-  {
-    name: "Laga maten",
-    series: [20, 20, 20],
-    colors: ["red", "yellow", "blue"],
-  },
-  {
-    name: "Diska",
-    series: [20, 10, 20],
-    colors: ["red", "yellow", "blue"],
-  },
-  {
-    name: "Dammsuga",
-    series: [10, 20, 5],
-    colors: ["red", "yellow", "blue"],
-  },
-  {
-    name: "Laga maten",
-    series: [20, 20, 20],
-    colors: ["red", "yellow", "blue"],
-  },
-  {
-    name: "Diska",
-    series: [20, 10, 20],
-    colors: ["red", "yellow", "blue"],
-  },
-  {
-    name: "Dammsuga",
-    series: [10, 20, 5],
-    colors: ["red", "yellow", "blue"],
-  },
-  {
-    name: "Laga maten",
-    series: [20, 20, 20],
-    colors: ["red", "yellow", "blue"],
-  },
-  {
-    name: "Diska",
-    series: [20, 10, 20],
-    colors: ["red", "yellow", "blue"],
-  },
-  {
-    name: "Dammsuga",
-    series: [10, 20, 5],
-    colors: ["red", "yellow", "blue"],
-  },
-];
-
 export default function StatisticScreen() {
   const chunkedCharts = arrayChunk(exemples, 3);
   const slices = [20, 15, 20];

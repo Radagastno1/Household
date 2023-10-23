@@ -1,7 +1,8 @@
-import { Profile, Task, TaskCompletion } from "../types";
+import { Profile, Task, TaskCompletion, TaskData, ProfileData } from "../types";
 
 let sortedTasks: Task[] = [];
 let sortedProfiles: Profile[] = [];
+let summarizedByTasks: TaskData[] = [];
 
 export function sortTasksFromCompletions(
   completions: TaskCompletion[],
@@ -37,6 +38,40 @@ export function sortProfilesFromCompletions(
 
   console.log(sortedProfiles);
   console.log(sortedProfiles.length);
+}
+
+export function SummerizeEachTask(completions: TaskCompletion[]) {
+  sortedTasks.forEach((task) => {
+    const typedTaskData: TaskData = {
+      id: task.id,
+      taskTitle: task.title,
+      energyWeight: task.energiWeight,
+      values: [],
+    };
+    completions
+      .filter((completion) => completion.taskId === task.id)
+      .forEach((completion) => {
+        const profile = sortedProfiles.find((p) => completion.profileId);
+        if (profile) {
+          typedTaskData.values.forEach((value) => {
+            if (value.id === profile?.id) {
+              value.sum += task.energiWeight;
+            } else {
+              const typedProfileData: ProfileData = {
+                id: profile?.id,
+                avatar: profile?.avatar,
+                color: "",
+                sum: task.energiWeight,
+              };
+              typedTaskData.values.push(typedProfileData);
+            }
+          });
+        }
+      });
+    summarizedByTasks.push(typedTaskData);
+  });
+
+  console.log(summarizedByTasks);
 }
 // -- hämtar ut alla tasksCompletions
 

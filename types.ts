@@ -46,6 +46,20 @@ export interface AppState {
   isLoading: boolean;
 }
 
+export interface TaskData {
+  id: string;
+  taskTitle: string;
+  energyWeight: number;
+  values: ProfileData[];
+}
+
+export interface ProfileData {
+  id: string;
+  avatar: string;
+  color: string;
+  sum: number;
+}
+
 // Show how to make a day function work between task-data and taskCompletion-data
 // task created today 2023-10-12
 // interval : 3 days
