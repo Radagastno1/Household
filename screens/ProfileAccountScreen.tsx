@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, Image } from "react-native";
 import { Button, Card, IconButton, Text, TextInput } from "react-native-paper";
 import { useTheme } from "../contexts/themeContext";
 import { households } from "../data";
@@ -12,6 +12,7 @@ import { useAppDispatch, useAppSelector } from "../store/store";
 import { fetchTasks } from "../store/tasks/taskSlice";
 import { RootNavigationScreenProps } from "../navigators/navigationTypes";
 import { setStatusBarBackgroundColor } from "expo-status-bar";
+import { AvatarUrls, Avatars } from "../data/avatars";
 // import { getProfileByHouseholdAndUser } from "../store/profile/profileSlice";
 
 type ProfileProps = RootNavigationScreenProps<"ProfileAccount">;
@@ -92,117 +93,120 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
-    <View style={styles.container}>
-      <View
-        style={[
-          styles.profileTitleContainer,
-          { backgroundColor: activeProfile?.avatar },
-        ]}
-      >
-        {/* <Text style={styles.profileTitle}>{}</Text> */}
-        <Text
-          style={{
-            fontSize: 25,
-            textAlign: "center",
-            color: theme.colors.text,
-          }}
+      <View style={styles.container}>
+        <View
+          style={[
+            styles.profileTitleContainer,
+            { backgroundColor: activeProfile?.avatar },
+          ]}
         >
-          Profilnamn: {activeProfile?.profileName}
-        </Text>
-      </View>
-      <Text style={{ color: theme.colors.text }}>
-  Avatar: {activeProfile?.avatar}
-</Text>
-
-      <View style={{ marginTop: 50 }}>
-        <Button
-          mode="contained"
-          onPress={() => navigation.navigate("Tab")}
-          style={theme.button as any}
-          labelStyle={theme.buttonText}
-        >
-          Hushållsysslor
-        </Button>
-        <Card style={styles.card}>
-          <View style={styles.taskItem}>
-            <View style={styles.nameContainer}>
-              {isEditing ? (
-                <TextInput
-                  placeholder={activeProfile?.profileName}
-                  onChangeText={(text) => {
-                    setUpdatedProfilename(text);
-                  }}
-                />
-              ) : (
-                <Text style={styles.profileTitle}>
-                  {activeProfile?.profileName}
-                </Text>
-              )}
-            </View>
-            <IconButton
-              icon="pencil"
-              size={20}
-              onPress={() => {
-                setIsEditing(true);
-              }}
-            />
-          </View>
-        </Card>
-
-        {isEditing ? <Button onPress={handleSaveClick}>Spara</Button> : null}
-
-        <Card style={styles.card}>
-          <View style={styles.taskItem}>
-            <View style={styles.nameContainer}>
-              {/* tog headertitle som du satt till hushållsnamnet för att testa så det funkar */}
-              <Text variant="titleLarge">{headerTitle}</Text>
-            </View>
-            <IconButton icon="pencil" size={20} onPress={() => {}} />
-          </View>
-        </Card>
-
-        <Card style={styles.card} onPress={() => setModalVisible(true)}>
-          <View style={styles.taskItem}>
-            <View style={styles.nameContainer}>
-              <Text variant="titleLarge">Medlemmar</Text>
-            </View>
-          </View>
-        </Card>
-
-        <Card style={styles.card}>
-          <View style={styles.taskItem}>
-            <View style={styles.nameContainer}>
-              <Text variant="titleLarge">Hushållskod</Text>
-            </View>
-          </View>
-        </Card>
-
-        <Button
-          mode="contained"
-          onPress={() => navigation.navigate("HouseholdAccount")}
-          style={theme.button as any}
-          labelStyle={theme.buttonText}
-        >
-          Mina hushåll
-        </Button>
-        <Button
-          mode="contained"
-          onPress={() => navigation.navigate("HouseholdAccount")}
-          style={styles.buttonColor}
-          labelStyle={theme.buttonText}
-        >
-          Gå ur hushåll
-        </Button>
-        <HouseholdProfileModal
-          visible={isModalVisible}
-          onDismiss={() => setModalVisible(false)}
-          householdName={activeHousehold?.name || "Laddar..."}
-          profiles={activeProfiles}
-          selectedAvatar={selectedAvatar}
+          {/* <Text style={styles.profileTitle}>{}</Text> */}
+          <Text
+            style={{
+              fontSize: 25,
+              textAlign: "center",
+              color: theme.colors.text,
+            }}
+          >
+            Profilnamn: {activeProfile?.profileName}
+          </Text>
+        </View>
+        {/* <Text style={{ color: theme.colors.text }}>
+          Avatar: {activeProfile?.avatar}
+        </Text> */}
+        <Image
+          source={{ uri: AvatarUrls[activeProfile?.avatar as Avatars] }}
+          style={{ height: 20, width: 20 }}
         />
+        <View style={{ marginTop: 50 }}>
+          <Button
+            mode="contained"
+            onPress={() => navigation.navigate("Tab")}
+            style={theme.button as any}
+            labelStyle={theme.buttonText}
+          >
+            Hushållsysslor
+          </Button>
+          <Card style={styles.card}>
+            <View style={styles.taskItem}>
+              <View style={styles.nameContainer}>
+                {isEditing ? (
+                  <TextInput
+                    placeholder={activeProfile?.profileName}
+                    onChangeText={(text) => {
+                      setUpdatedProfilename(text);
+                    }}
+                  />
+                ) : (
+                  <Text style={styles.profileTitle}>
+                    {activeProfile?.profileName}
+                  </Text>
+                )}
+              </View>
+              <IconButton
+                icon="pencil"
+                size={20}
+                onPress={() => {
+                  setIsEditing(true);
+                }}
+              />
+            </View>
+          </Card>
+
+          {isEditing ? <Button onPress={handleSaveClick}>Spara</Button> : null}
+
+          <Card style={styles.card}>
+            <View style={styles.taskItem}>
+              <View style={styles.nameContainer}>
+                {/* tog headertitle som du satt till hushållsnamnet för att testa så det funkar */}
+                <Text variant="titleLarge">{headerTitle}</Text>
+              </View>
+              <IconButton icon="pencil" size={20} onPress={() => {}} />
+            </View>
+          </Card>
+
+          <Card style={styles.card} onPress={() => setModalVisible(true)}>
+            <View style={styles.taskItem}>
+              <View style={styles.nameContainer}>
+                <Text variant="titleLarge">Medlemmar</Text>
+              </View>
+            </View>
+          </Card>
+
+          <Card style={styles.card}>
+            <View style={styles.taskItem}>
+              <View style={styles.nameContainer}>
+                <Text variant="titleLarge">Hushållskod</Text>
+              </View>
+            </View>
+          </Card>
+
+          <Button
+            mode="contained"
+            onPress={() => navigation.navigate("HouseholdAccount")}
+            style={theme.button as any}
+            labelStyle={theme.buttonText}
+          >
+            Mina hushåll
+          </Button>
+          <Button
+            mode="contained"
+            onPress={() => navigation.navigate("HouseholdAccount")}
+            style={styles.buttonColor}
+            labelStyle={theme.buttonText}
+          >
+            Gå ur hushåll
+          </Button>
+          <HouseholdProfileModal
+            visible={isModalVisible}
+            onDismiss={() => setModalVisible(false)}
+            householdName={activeHousehold?.name || "Laddar..."}
+            profiles={activeProfiles}
+            selectedAvatar={selectedAvatar}
+          />
+        </View>
       </View>
     </View>
-     </View>
   );
 }
 
