@@ -1,4 +1,10 @@
-import { Animated, StyleSheet, TouchableOpacity, View } from "react-native";
+import {
+  Animated,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { setHouseholdByHouseholdId } from "../store/household/householdSlice";
 import { useAppDispatch, useAppSelector } from "../store/store";
@@ -11,8 +17,15 @@ import { useTheme } from "../contexts/themeContext";
 import { fetchAllProfilesByHousehold } from "../store/profile/profileSlice";
 import { Appbar, Card, Text, Button } from "react-native-paper";
 import { AntDesign } from "@expo/vector-icons";
-import { GestureDetector, Gesture } from 'react-native-gesture-handler';
-import { Directions } from 'react-native-gesture-handler';
+import {
+  GestureDetector,
+  Gesture,
+  PanGestureHandler,
+  GestureHandlerRootView,
+} from "react-native-gesture-handler";
+import { Directions } from "react-native-gesture-handler";
+import {} from "react-native-gesture-handler";
+import { Easing } from "react-native-reanimated";
 
 type HouseholdProps = RootNavigationScreenProps<"HouseholdAccount">;
 
@@ -27,7 +40,7 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
   // const {setColorScheme} = useSetColorTheme();
   const { theme } = useTheme();
   const { setColorScheme } = useTheme();
-  const [currentTheme, setCurrentTheme] = useState("auto");
+  //   const [currentTheme, setCurrentTheme] = useState("auto");
   const fling = Gesture.Fling();
   fling.direction(Directions.RIGHT | Directions.LEFT);
 
@@ -53,6 +66,65 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
   //   setColorScheme('dark');
   // };
 
+  const [currentTheme, setCurrentTheme] = useState("auto");
+
+  const handleSlide = (event: {
+    nativeEvent: {
+      contentOffset: { x: any };
+      layoutMeasurement: { width: number };
+    };
+  }) => {
+    const offsetX = event.nativeEvent.contentOffset.x;
+    const partWidth = event.nativeEvent.layoutMeasurement.width / 3;
+    const snappedIndex = Math.round(offsetX / partWidth);
+
+    switch (snappedIndex) {
+      case 0:
+        setCurrentTheme("auto");
+        break;
+      case 1:
+        setCurrentTheme("light");
+        break;
+      case 2:
+        setCurrentTheme("dark");
+        break;
+      default:
+        break;
+    }
+  };
+
+  const [selectedTheme, setSelectedTheme] = useState("auto");
+  const translateX = new Animated.Value(0);
+
+  const handleFling = (event: { nativeEvent: { translationX: number } }) => {
+    if (event.nativeEvent.translationX > 0) {
+      // Swiped to the right
+      setSelectedTheme("light");
+      Animated.timing(translateX, {
+        toValue: 0,
+        duration: 300,
+        useNativeDriver: false, // Add this line
+      }).start();
+    } else {
+      // Swiped to the left
+      setSelectedTheme("dark");
+      Animated.timing(translateX, {
+        toValue: -200,
+        duration: 300,
+        useNativeDriver: false, // Add this line
+      }).start();
+    }
+    handleToggleTheme();
+  };
+
+  const handleOuterButtonPress = () => {
+    console.log("Outer Button Pressed");
+  };
+
+  const handleInnerButtonPress = () => {
+    console.log("Inner Button Pressed");
+  };
+
   const handleToggleTheme = () => {
     if (setColorScheme) {
       switch (currentTheme) {
@@ -76,48 +148,66 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
     }
   };
 
-  const _handleMore = () => console.log("Shown more");
+  //   const _handleMore = () => console.log("Shown more");
 
   return (
-    <View >
-      <View style={{marginBottom:40}}>
-        <Appbar.Header style={{ height: 70, backgroundColor: "white"}}>
+    <View>   
+      <View style={{ marginBottom: 40 }}>
+        <Appbar.Header style={{ height: 70, backgroundColor: "white" }}>
           <Appbar.Content
             style={{
-              alignItems: "center", 
-              justifyContent: "center", 
+              alignItems: "center",
+              justifyContent: "center",
             }}
-            title="wellcome username"
+            title="welcome username"
           />
           {/* <Appbar.Action icon="dots-vertical" onPress={_handleMore} /> */}
         </Appbar.Header>
       </View>
-      {allHouseholds.map((household: Household) => (
-       
-        <Card
-          style={styles.card}
-          onPress={() => {
-            handleEnterHousehold(household.id);
-          }}
-        >
+      <ScrollView style ={{ 
+    maxHeight: "55%"}}>
+      <View style={{ justifyContent: "center", alignItems: "center" }}>
+        {allHouseholds.map((household: Household) => (
+          <Card
+            key={household.id}
+            style={styles.card}
+            onPress={() => {
+              handleEnterHousehold(household.id);
+            }}
+          >
+            <View style={styles.taskItem}>
+              <View>
+                <Text variant="bodyMedium">avatar</Text>
+              </View>
+              <View>
+                <Text variant="titleLarge">{household.name}</Text>
+              </View>
+              <View>
+                {/* if it is owner */}
+                <MaterialIcons name="edit" size={24} color="black" />
+              </View>
+            </View>
+          </Card>
+        ))}
+
+        <Card style={styles.card}>
           <View style={styles.taskItem}>
             <View>
               <Text variant="bodyMedium">avatar</Text>
             </View>
             <View>
-              <Text variant="titleLarge">{household.name}</Text>
+              <Text variant="titleLarge">test</Text>
             </View>
             <View>
-           {/* if it is owner */}
-                <MaterialIcons name="edit" size={24} color="black" />
-                  
+              {/* if it is owner */}
+              <MaterialIcons name="edit" size={24} color="black" />
             </View>
           </View>
         </Card>
-        
-      ))}
+      </View>
+      </ScrollView>
 
-      <View style={{ justifyContent: "center",alignItems:"center" }}>
+      <View style={styles.bottomContent}>
         <TouchableOpacity
           style={styles.logOutButton}
           onPress={() => navigation.navigate("Login")}
@@ -137,20 +227,25 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
 
         <TouchableOpacity
           style={styles.themeButtonContainer}
-          onPress={() => console.log("log out")}
+          onPress={() => console.log("outer theme")}
         >
           <View style={styles.themeButton}>
-            
-            <Text style={styles.themeButtonText}>themebutton</Text>
+            <View>
+              <Text style={styles.themeButtonText}>light</Text>
+            </View>
+            <TouchableOpacity
+              style={styles.innerButton}
+              onPress={handleInnerButtonPress}
+            >
+              <Text style={styles.innerButtonText}>auto</Text>
+            </TouchableOpacity>
+            <View>
+              <Text style={styles.themeButtonText}>dark</Text>
+            </View>
           </View>
         </TouchableOpacity>
       </View>
-      {/* <GestureDetector gesture={fling}>
-      <Animated.View />
-    </GestureDetector> */}
-     </View>
-     
-    
+    </View>
   );
 }
 
@@ -160,9 +255,10 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
-    position:"absolute" 
- },
+    position: "relative",
+  },
   card: {
+   
     margin: 16,
     padding: 16,
     borderRadius: 8,
@@ -172,6 +268,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
+    width: "80%",
   },
   taskItem: {
     flexDirection: "row",
@@ -181,72 +278,73 @@ const styles = StyleSheet.create({
   logOutButton: {
     padding: 10,
     alignItems: "center",
-    width: "80%",
-    marginTop: 60,
+    width: "60%",
+    marginTop: 20,
     borderRadius: 10,
     elevation: 2,
     borderWidth: 0,
     backgroundColor: "lightgrey",
-  },
-
-  skapaButton: {
-    padding: 10,
-    alignItems: "center",
-    width: "80%",
-    borderRadius: 10,
-    elevation: 2,
-    borderWidth: 0,
-    backgroundColor: "#FFD700",
-    marginTop:30,
   },
   createHouseholdButtonContent: {
     flexDirection: "row", // Align icon and text in the same row
     alignItems: "center",
     justifyContent: "center",
   },
-  buttonText: {
-    color: "black",
-    fontSize: 16,
-    marginLeft:10,
-  }, 
-  themeButtonContainer: {
-    padding: 20,
+  skapaButton: {
+    padding: 10,
     alignItems: "center",
-    width: "80%",
-    borderRadius: 20,
+    width: "60%",
+    borderRadius: 10,
     elevation: 2,
     borderWidth: 0,
     backgroundColor: "#FFD700",
-    marginTop:40,
-    position:"relative"
-
+    marginTop: 30,
+  },
+ 
+  buttonText: {
+    color: "black",
+    fontSize: 16,
+    marginLeft: 10,
+  },
+  themeButtonContainer: {
+    padding: 20,
+    alignItems: "center",
+    width: "60%",
+    borderRadius: 20,
+    elevation: 2,
+    borderWidth: 0,
+    backgroundColor: "lightgrey",
+    marginTop: 20,
+    position: "relative",
   },
   themeButtonText: {
     color: "black",
     fontSize: 16,
-    margin:10,
+    margin: 10,
   },
-    themeButton: {
-      justifyContent: 'center',
-      alignItems: 'center',
-      position: 'absolute',
-      paddingHorizontal: 20,
-    },
-  //   themeButton: {
-  //     position: 'absolute',
-  //     width: 150, // Adjust as needed
-  //     height: 50, // Adjust as needed
-  //     justifyContent: 'center',
-  //     alignItems: 'center',
-  //     borderWidth: 1,
-  //     borderColor: 'black',
-  //   },
-  //   button1: {
-  //     backgroundColor: 'red',
-  //     top: 50, // Adjust to overlap halfway
-  //   },
-  //   button2: {
-  //     backgroundColor: 'blue',
-  //     top: 25, // Adjust to overlap halfway
-  //   },
+  themeButton: {
+    justifyContent: "space-between",
+    alignItems: "center",
+    position: "absolute",
+    flexDirection: "row",
+  },
+
+  innerButton: {
+    backgroundColor: "grey",
+    borderRadius: 20,
+    elevation: 2,
+    zIndex: 20,
+    width: 70,
+    alignItems: "center",
+  },
+  innerButtonText: {
+    color: "black",
+    padding: 10,
+  },
+  bottomContent: {
+    
+   marginBottom:0,
+    alignItems: "center",
+  },
+  
 });
