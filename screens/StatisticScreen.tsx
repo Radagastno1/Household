@@ -1,6 +1,9 @@
-import { View, Text, FlatList, StyleSheet, ScrollView } from "react-native";
 import React from "react";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 import PiechartComponent from "../components/PiechartComponent";
+import { useAppSelector } from "../store/store";
+import { ProfileData, StatData } from "../types";
+import { SummerizeEachTask } from "../utils/statisticHandler";
 
 function arrayChunk<T>(array: T[], chunkSize: number): T[][] {
   const chunkedArray: T[][] = [];
@@ -10,8 +13,29 @@ function arrayChunk<T>(array: T[], chunkSize: number): T[][] {
   return chunkedArray;
 }
 
+function makeArrayOfSum(value: ProfileData[]) {
+  const sumSeries: number[] = [];
+  value.forEach((value) => {
+    sumSeries.push(value.sum);
+  });
+  console.log(sumSeries);
+  return sumSeries;
+}
+
 export default function StatisticScreen() {
-  const chunkedCharts = arrayChunk(exemples, 3);
+  const tasks = useAppSelector((state) => state.task.tasks);
+  const profiles = useAppSelector((state) => state.profile.profiles);
+  const completions = useAppSelector(
+    (state) => state.taskCompletion.completions,
+  );
+
+  const statsForTasks: StatData[] = SummerizeEachTask(
+    completions,
+    tasks,
+    profiles,
+  );
+
+  const chunkedCharts = arrayChunk(statsForTasks, 3);
   const slices = [20, 15, 20];
   const colors = ["red", "yellow", "blue"];
   return (
@@ -29,7 +53,7 @@ export default function StatisticScreen() {
           <View style={styles.row} key={rowIndex}>
             {row.map((chart, columnIndex) => (
               <View style={styles.piechartContainer} key={columnIndex}>
-                <Text style={styles.taskTitle}>{chart.name}</Text>
+                <Text style={styles.taskTitle}>{chart.title}</Text>
                 <PiechartComponent
                   widthAndHeight={100}
                   series={chart.series}

@@ -1,4 +1,11 @@
-import { Profile, Task, TaskCompletion, TaskData, ProfileData } from "../types";
+import {
+  Profile,
+  ProfileData,
+  StatData,
+  Task,
+  TaskCompletion,
+  TaskData,
+} from "../types";
 
 let sortedTasks: Task[] = [];
 let sortedProfiles: Profile[] = [];
@@ -40,7 +47,14 @@ export function sortProfilesFromCompletions(
   console.log(sortedProfiles.length);
 }
 
-export function SummerizeEachTask(completions: TaskCompletion[]) {
+export function SummerizeEachTask(
+  completions: TaskCompletion[],
+  tasks: Task[],
+  profiles: Profile[],
+) {
+  sortTasksFromCompletions(completions, tasks);
+  sortProfilesFromCompletions(completions, profiles);
+
   sortedTasks.forEach((task) => {
     const typedTaskData: TaskData = {
       id: task.id,
@@ -51,7 +65,9 @@ export function SummerizeEachTask(completions: TaskCompletion[]) {
     completions
       .filter((completion) => completion.taskId === task.id)
       .forEach((completion) => {
-        const profile = sortedProfiles.find((p) => completion.profileId);
+        const profile = sortedProfiles.find(
+          (profile) => completion.profileId === profile.id,
+        );
         if (profile) {
           typedTaskData.values.forEach((value) => {
             if (value.id === profile?.id) {
@@ -60,7 +76,7 @@ export function SummerizeEachTask(completions: TaskCompletion[]) {
               const typedProfileData: ProfileData = {
                 id: profile?.id,
                 avatar: profile?.avatar,
-                color: "",
+                color: "red",
                 sum: task.energiWeight,
               };
               typedTaskData.values.push(typedProfileData);
@@ -72,6 +88,25 @@ export function SummerizeEachTask(completions: TaskCompletion[]) {
   });
 
   console.log(summarizedByTasks);
+
+  return mapToPieChart(summarizedByTasks);
+}
+
+function mapToPieChart(summarizedByTasks: TaskData[]) {
+  const statDataArray: StatData[] = [];
+
+  summarizedByTasks.forEach((sum) => {
+    const series = sum.values.map((value) => value.sum);
+    const colors = sum.values.map((value) => value.color);
+    const stat: StatData = {
+      title: sum.taskTitle,
+      series: series,
+      colors: colors,
+    };
+    statDataArray.push(stat);
+  });
+
+  return statDataArray;
 }
 // -- hämtar ut alla tasksCompletions
 
