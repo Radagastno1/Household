@@ -1,5 +1,6 @@
 import React from "react";
-import { Button, StyleSheet, Text, View } from "react-native";
+import { Button, ScrollView, StyleSheet, Text, View } from "react-native";
+import { useAppSelector } from "../store/store";
 import {
   getCurrentDate,
   getCurrentMonthDates,
@@ -10,6 +11,10 @@ import {
 import { sortTasksFromCompletions } from "../utils/statisticHandler";
 
 export default function TESTDATUMSCREEN() {
+  const tasks = useAppSelector((state) => state.task.tasks);
+  const completions = useAppSelector(
+    (state) => state.taskCompletion.completions,
+  );
   // --------------- DAGENS DATUM  ----------------
   const { todaysDate } = getCurrentDate();
   // --------------- DENNA VECKAN ----------------
@@ -25,7 +30,7 @@ export default function TESTDATUMSCREEN() {
   const { startOfLastMonth, endOfLastMonth } = getLastMonthDates();
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <View style={styles.dates}>
         <Text style={styles.title}>DENNA VECKAN</Text>
         <Text>{startOfCurrentWeek}</Text>
@@ -57,9 +62,12 @@ export default function TESTDATUMSCREEN() {
         <Text style={styles.title}>
           Lista ut alla sorterade tasks från completions
         </Text>
-        <Button title="Tryck" onPress={sortTasksFromCompletions} />
+        <Button
+          title="Tryck"
+          onPress={() => sortTasksFromCompletions(completions, tasks)}
+        />
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
@@ -67,7 +75,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 12,
-    alignItems: "center",
   },
   dates: {
     flexDirection: "column",

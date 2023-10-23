@@ -1,14 +1,13 @@
-import { useAppSelector } from "../store/store";
-import { Task } from "../types";
+import { Task, TaskCompletion } from "../types";
 
-const tasks = useAppSelector((state) => state.task);
-const taskCompletion = useAppSelector((state) => state.taskCompletion);
-tasks.tasks;
 let sortedTasks: Task[] = [];
 
-export function sortTasksFromCompletions() {
-  taskCompletion.completions.forEach((completion) => {
-    tasks.tasks.forEach((task) => {
+export function sortTasksFromCompletions(
+  completions: TaskCompletion[],
+  tasks: Task[],
+) {
+  completions.forEach((completion) => {
+    tasks.forEach((task) => {
       if (completion.taskId === task.id) {
         if (!sortedTasks.includes(task)) {
           sortedTasks.push(task);
@@ -18,6 +17,7 @@ export function sortTasksFromCompletions() {
   });
 
   console.log(sortedTasks);
+  console.log(sortedTasks.length);
 }
 // -- hämtar ut alla tasksCompletions
 
