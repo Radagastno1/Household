@@ -7,8 +7,11 @@ import {
   getLastMonthDates,
   getLastWeekDates,
 } from "../utils/DateHandler";
+import { useTheme } from "../contexts/themeContext";
 
 export default function TESTDATUMSCREEN() {
+  const {theme} = useTheme();
+
   // --------------- DAGENS DATUM  ----------------
   const { todaysDate } = getCurrentDate();
   // --------------- DENNA VECKAN ----------------
@@ -24,6 +27,7 @@ export default function TESTDATUMSCREEN() {
   const { startOfLastMonth, endOfLastMonth } = getLastMonthDates();
 
   return (
+    <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
     <View style={styles.container}>
       <View style={styles.dates}>
         <Text style={styles.title}>DENNA VECKAN</Text>
@@ -52,6 +56,7 @@ export default function TESTDATUMSCREEN() {
         <Text>{todaysDate}</Text>
         <Text>{startOfLastMonth}</Text>
       </View>
+    </View>
     </View>
   );
 }
