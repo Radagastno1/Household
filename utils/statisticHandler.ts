@@ -1,6 +1,7 @@
-import { Task, TaskCompletion } from "../types";
+import { Profile, Task, TaskCompletion } from "../types";
 
 let sortedTasks: Task[] = [];
+let sortedProfiles: Profile[] = [];
 
 export function sortTasksFromCompletions(
   completions: TaskCompletion[],
@@ -18,6 +19,24 @@ export function sortTasksFromCompletions(
 
   console.log(sortedTasks);
   console.log(sortedTasks.length);
+}
+
+export function sortProfilesFromCompletions(
+  completions: TaskCompletion[],
+  profiles: Profile[],
+) {
+  completions.forEach((completion) => {
+    profiles.forEach((profile) => {
+      if (completion.profileId === profile.id) {
+        if (!sortedProfiles.includes(profile)) {
+          sortedProfiles.push(profile);
+        }
+      }
+    });
+  });
+
+  console.log(sortedProfiles);
+  console.log(sortedProfiles.length);
 }
 // -- hämtar ut alla tasksCompletions
 
