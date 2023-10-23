@@ -16,7 +16,6 @@ import {
 import { Checkbox, Modal, Portal, TextInput } from "react-native-paper";
 
 import { app } from "../api/config";
-import theme from "../data/theme";
 
 const db = getFirestore(app);
 
@@ -27,7 +26,6 @@ import { useAppSelector } from "../store/store";
 import { createAccount } from "../store/user/userAccountSlice";
 import { User } from "../types";
 import { RootNavigationScreenProps } from "../navigators/navigationTypes";
-
 
 type CreateUserProps = RootNavigationScreenProps<"Signup">;
 
@@ -48,14 +46,11 @@ const CreateUserAccountScreen: React.FC<{ navigation: CreateUserProps }> = ({
   const [confirmationPasswordInput, setConfirmationPasswordInput] =
     useState("");
 
-  const [isChecked, setIsChecked] = useState(false);
-
   const { theme } = useTheme(); // la till theme här
 
   const dispatch = useDispatch();
 
   const userAccountState = useAppSelector((state) => state.userAccount);
-
 
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
@@ -90,12 +85,10 @@ const CreateUserAccountScreen: React.FC<{ navigation: CreateUserProps }> = ({
         console.log("Account created with ID:", userId);
 
         // If all conditions are met, navigate to "Login"
-        navigation.navigate("Login");
+        navigation.navigation.navigate("Login");
       } catch (error) {
         console.error("Error creating user account:", error);
       }
-
-
     }
   };
 
@@ -244,10 +237,8 @@ const CreateUserAccountScreen: React.FC<{ navigation: CreateUserProps }> = ({
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1, 
-    
-  
-    
+    flex: 1,
+
     backgroundColor: "#fff",
   },
   header: {
