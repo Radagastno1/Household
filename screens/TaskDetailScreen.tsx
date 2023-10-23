@@ -164,7 +164,7 @@ export default function TaskDetailScreen({
                     color:
                       colorScheme === "dark"
                         ? "black"
-                        : "your-light-mode-color",
+                        : "black",
                   },
                 ]}
               >
@@ -191,7 +191,7 @@ export default function TaskDetailScreen({
                     color:
                       colorScheme === "dark"
                         ? "black"
-                        : "your-light-mode-color",
+                        : "black",
                   },
                 ]}
               >
