@@ -40,7 +40,7 @@ export default function RootNavigator() {
           isLoading ? "SplashScreen" : userSlice ? "Login" : "Login"
         }
       >
-        <Stack.Screen name="SplashScreen" component={SplashScreen} />
+        {/* <Stack.Screen name="SplashScreen" component={SplashScreen} /> */}
 
         <Stack.Screen
           name="Login"
@@ -52,6 +52,7 @@ export default function RootNavigator() {
         <Stack.Screen
           name="HouseholdAccount"
           component={HouseholdAccountScreen}
+          options={{ headerShown: false }}
         />
         <Stack.Screen name="ProfileAccount" component={ProfileAccountScreen} />
         <Stack.Screen
