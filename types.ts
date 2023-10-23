@@ -27,7 +27,7 @@ export interface Task {
   id: string;
   title: string;
   description: string;
-  energiWeight: number;
+  energyWeight: number;
   creatingDate: string; //default blir dagens datum
   interval: number; //dagar emellan?
   householdId: string;

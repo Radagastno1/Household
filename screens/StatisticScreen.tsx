@@ -13,15 +13,6 @@ function arrayChunk<T>(array: T[], chunkSize: number): T[][] {
   return chunkedArray;
 }
 
-function makeArrayOfSum(value: ProfileData[]) {
-  const sumSeries: number[] = [];
-  value.forEach((value) => {
-    sumSeries.push(value.sum);
-  });
-  console.log(sumSeries);
-  return sumSeries;
-}
-
 export default function StatisticScreen() {
   const tasks = useAppSelector((state) => state.task.tasks);
   const profiles = useAppSelector((state) => state.profile.profiles);
@@ -34,6 +25,8 @@ export default function StatisticScreen() {
     tasks,
     profiles,
   );
+
+  console.log(statsForTasks);
 
   const chunkedCharts = arrayChunk(statsForTasks, 3);
   const slices = [20, 15, 20];

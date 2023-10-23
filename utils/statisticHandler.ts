@@ -25,7 +25,7 @@ export function sortTasksFromCompletions(
     });
   });
 
-  console.log(sortedTasks);
+  console.log("SortedtTasks: ", sortedTasks);
   console.log(sortedTasks.length);
 }
 
@@ -59,31 +59,38 @@ export function SummerizeEachTask(
     const typedTaskData: TaskData = {
       id: task.id,
       taskTitle: task.title,
-      energyWeight: task.energiWeight,
+      energyWeight: task.energyWeight,
       values: [],
     };
+
     completions
       .filter((completion) => completion.taskId === task.id)
       .forEach((completion) => {
         const profile = sortedProfiles.find(
           (profile) => completion.profileId === profile.id,
         );
+
         if (profile) {
-          typedTaskData.values.forEach((value) => {
-            if (value.id === profile?.id) {
-              value.sum += task.energiWeight;
-            } else {
-              const typedProfileData: ProfileData = {
-                id: profile?.id,
-                avatar: profile?.avatar,
-                color: "red",
-                sum: task.energiWeight,
-              };
-              typedTaskData.values.push(typedProfileData);
-            }
-          });
+          let existingProfileData = typedTaskData.values.find(
+            (value) => value.id === profile.id,
+          );
+
+          if (existingProfileData) {
+            // Profile already exists in values, update sum
+            existingProfileData.sum += task.energyWeight;
+          } else {
+            // Profile doesn't exist, create a new ProfileData
+            const typedProfileData: ProfileData = {
+              id: profile.id,
+              avatar: profile.avatar,
+              color: "red", // You can set the color as needed
+              sum: task.energyWeight,
+            };
+            typedTaskData.values.push(typedProfileData);
+          }
         }
       });
+
     summarizedByTasks.push(typedTaskData);
   });
 
