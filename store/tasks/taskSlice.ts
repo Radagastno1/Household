@@ -78,7 +78,8 @@ const taskSlice = createSlice({
 
       // Filtrera uppgifter baserat på householdId
       state.filteredTasks = state.tasks.filter(
-        (task) => task.householdId === household_Id,
+        //added isactive check also, so all archived tasks wont show here :)
+        (task) => task.householdId === household_Id && task.isActive,
       );
     },
 
