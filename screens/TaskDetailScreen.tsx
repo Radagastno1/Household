@@ -86,7 +86,9 @@ export default function TaskDetailScreen({
   };
 
   return (
+    <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
     <View style={styles.container}>
+      
       <View style={styles.cardContainer}>
         <Card style={styles.card}>
           <View style={styles.taskItem}>
@@ -172,6 +174,7 @@ export default function TaskDetailScreen({
           <Text style={[styles.klarButton, theme.buttonText]}>Till Tasks</Text>
         </Button>
       </View>
+    </View>
     </View>
   );
 }
