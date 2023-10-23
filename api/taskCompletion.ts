@@ -5,20 +5,14 @@ import {
   collection,
   getDoc,
   getDocs,
-  getFirestore,
   query,
   updateDoc,
   where,
 } from "firebase/firestore";
 import { TaskCompletion } from "../types";
-import { app } from "./config";
-import {
-  getCurrentDate,
-  getCurrentWeekDates,
-  getLastMonthDates,
-} from "../utils/DateHandler";
+import { getCurrentDate, getLastMonthDates } from "../utils/DateHandler";
+import { db } from "./config";
 
-const db = getFirestore(app);
 const taskCompletionCollectionRef = collection(db, "taskCompletions");
 
 export const addTaskCompletionToDB = async (taskCompletion: TaskCompletion) => {

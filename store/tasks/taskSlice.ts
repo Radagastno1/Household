@@ -1,4 +1,4 @@
-import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { Task } from "../../types";
 
 import {
@@ -13,13 +13,32 @@ interface TaskState {
   tasks: Task[];
   filteredTasks: Task[];
   selectedTask: Task | null;
+  error: Error | undefined;
 }
 
 export const initialState: TaskState = {
   tasks: [],
   filteredTasks: [],
   selectedTask: null,
+  error: undefined,
 };
+
+export const addTaskAsync = createAsyncThunk<
+  Task,
+  Task,
+  { rejectValue: Error }
+>("tasks/addTask", async (task, thunkAPI) => {
+  try {
+    const createdTask = await addTaskToDB(task);
+    if (createdTask) {
+      return createdTask;
+    } else {
+      return thunkAPI.rejectWithValue(new Error("Failed to create task"));
+    }
+  } catch (error: any) {
+    return thunkAPI.rejectWithValue(error);
+  }
+});
 
 const taskSlice = createSlice({
   name: "task",
@@ -28,23 +47,6 @@ const taskSlice = createSlice({
     setTasks: (state, action) => {
       state.tasks = action.payload;
       console.log("antal tasks:", state.tasks.length);
-    },
-    addTask: (state, action: PayloadAction<Task>) => {
-      addTaskToDB(action.payload)
-        .then((createdTask) => {
-          if (createdTask) {
-            state.tasks = [...state.tasks, createdTask];
-            console.log("task som las till: ", action.payload);
-            console.log("nu är state tasks listan;", state.tasks);
-            console.log(
-              "nu är state filtered tasks listan;",
-              state.filteredTasks,
-            );
-          }
-        })
-        .catch((error) => {
-          console.error("Fel vid tillägg av uppgift:", error);
-        });
     },
     editTask: (state, action: PayloadAction<Task>) => {
       editTaskToDB(action.payload).then((editedTask) => {
@@ -94,15 +96,22 @@ const taskSlice = createSlice({
       }
     },
   },
+  extraReducers: (builder) => {
+    builder
+      .addCase(addTaskAsync.fulfilled, (state, action) => {
+        if (action.payload) {
+          state.tasks = [...state.tasks, action.payload];
+        }
+      })
+      .addCase(addTaskAsync.rejected, (state, action) => {
+        state.error = action.payload;
+        console.log("error vid add task: ", state.error?.message);
+      });
+  },
 });
 
-export const {
-  addTask,
-  editTask,
-  deleteTask,
-  filterTaskListByHouseId,
-  findTaskById,
-} = taskSlice.actions;
+export const { editTask, deleteTask, filterTaskListByHouseId, findTaskById } =
+  taskSlice.actions;
 
 //denna ska anropas där vi behöver få in tasken från databasen och sättas som state = tasks
 // Asynct Thunk Actiion (Redux Core)

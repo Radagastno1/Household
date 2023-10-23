@@ -16,7 +16,7 @@ import DeleteTaskModule from "../modules/DeleteTaskModule";
 import { RootNavigationScreenProps } from "../navigators/navigationTypes";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import {
-  addTask,
+  addTaskAsync,
   deleteTask,
   editTask,
   filterTaskListByHouseId,
@@ -117,7 +117,7 @@ export default function CreateTaskScreen({
           isActive: true,
         };
         console.log("den nya tasken innan dispatch:", newTask);
-        dispatch(addTask(newTask));
+        dispatch(addTaskAsync(newTask));
         dispatch(filterTaskListByHouseId({ household_Id: householdId }));
       }
     } else {
