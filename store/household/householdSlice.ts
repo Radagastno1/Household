@@ -16,8 +16,9 @@ const householdSlice = createSlice({
   name: "household",
   initialState,
   reducers: {
-    sethousehold: (state, action: PayloadAction<Household>) => {
+    setHousehold: (state, action: PayloadAction<Household>) => {
       state.households = [...state.households, action.payload];
+      state.activehousehold = action.payload;
     },
     // edithouseholdName: (state, action: PayloadAction<household>) => {
     //   state.households = [...state.households, action.payload];
@@ -32,7 +33,7 @@ const householdSlice = createSlice({
   }, 
 });
 
-export const { sethousehold } = householdSlice.actions;
+export const { setHousehold } = householdSlice.actions;
 
 export const { setHouseholdByHouseholdId } = householdSlice.actions;
 

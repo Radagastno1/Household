@@ -93,11 +93,16 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
         />
       ))}
       <Button
-        title="Skapa nytt hushåll"
+        title="Create profile knapp"
         onPress={() =>
           navigation.navigate("CreateProfile", { householdId: "household1" })
         } // denna e hårdkodad sålänge
       />
+      <Button
+  title="Skapa nytt hushåll"
+  onPress={() => navigation.navigate("HandleHousehold")}
+/>
+
       <Button title="Logga ut" onPress={() => navigation.navigate("Login")} />
       <Button  title="Toggle Theme" onPress={handleToggleTheme} />
       <Button title="Auto Theme" onPress={handleToggleTheme} />
