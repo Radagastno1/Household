@@ -11,7 +11,7 @@ export default function SplashScreen() {
   const loginScreenHeight = new Animated.Value(0);
   const windowHeight = Dimensions.get("window").height;
   const navigation =
-    useNavigation<StackNavigationProp<RootStackParamList, "Auth">>();
+    useNavigation<StackNavigationProp<RootStackParamList, "Login">>();
 
   useEffect(() => {
     if (isLoading) {

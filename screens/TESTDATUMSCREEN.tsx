@@ -1,6 +1,7 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Button, StyleSheet, Text, View } from "react-native";
 import {
+  getCurrentDate,
   getCurrentMonthDates,
   getCurrentWeekDates,
   getLastMonthDates,
@@ -8,6 +9,8 @@ import {
 } from "../utils/DateHandler";
 
 export default function TESTDATUMSCREEN() {
+  // --------------- DAGENS DATUM  ----------------
+  const { todaysDate } = getCurrentDate();
   // --------------- DENNA VECKAN ----------------
   const { startOfCurrentWeek, endOfCurrentWeek } = getCurrentWeekDates();
 
@@ -41,6 +44,13 @@ export default function TESTDATUMSCREEN() {
         <Text style={styles.title}>FÖRRA MÅNADEN</Text>
         <Text>{startOfLastMonth}</Text>
         <Text>{endOfLastMonth}</Text>
+      </View>
+      <View style={styles.dates}>
+        <Text style={styles.title}>
+          DAGENS DATUM OCH FÖRRA MÅNADENS STARTDATUM
+        </Text>
+        <Text>{todaysDate}</Text>
+        <Text>{startOfLastMonth}</Text>
       </View>
     </View>
   );

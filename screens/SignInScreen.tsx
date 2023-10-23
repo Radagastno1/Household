@@ -13,16 +13,20 @@ import {
 } from "react-native";
 import { Text, TextInput } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
-import { users } from "../data";
-import theme from "../data/theme";
 import { RootState } from "../store/store";
-import { loginUser } from "../store/user/userAuthSlice";
+import ThemeProvider, { useTheme } from "../contexts/themeContext";
+import { users } from "../data";
+import { loginUser } from "../store/user/userActions";
+import { RootNavigationScreenProps } from "../navigators/navigationTypes";
 
-export const SignInScreen = ({ navigation }: any) => {
+
+type SignInProps = RootNavigationScreenProps<"Login">
+
+export const SignInScreen = ({ navigation }: SignInProps) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-
+  const { theme } = useTheme();
   const dispatch = useDispatch();
 
   function getPasswordForUsername(username: string) {
@@ -84,8 +88,8 @@ export const SignInScreen = ({ navigation }: any) => {
           transform: [
             {
               translateY: translateY.interpolate({
-                inputRange: [0, 1],
-                outputRange: [0, 100],
+                inputRange: [0, 0],
+                outputRange: [0, 0],
               }),
             },
           ],
@@ -96,81 +100,82 @@ export const SignInScreen = ({ navigation }: any) => {
         <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
           <StatusBar backgroundColor="yellow" />
 
-          <View style={{ backgroundColor: theme.colors.primary, padding: 20 }}>
-            <View style={styles.header}>
-              <Text
-                style={{
-                  color: theme.buttonText.color,
-                  fontSize: theme.buttonText.fontSize,
-                  fontWeight: "bold",
-                }}
-              >
-                Logga in
-              </Text>
+          <View style={{ backgroundColor: theme.colors.background }}>
+            <View style={styles.container}>
+              <View style={theme.button as any}>
+                <Text style={styles.headerText}>Logga in</Text>
+              </View>
             </View>
-          </View>
 
-          <View style={styles.container}>
-            <Video
-              source={require("../assets/bee-animation.mp4")}
-              rate={1.0}
-              volume={1.0}
-              isMuted={false}
-              shouldPlay
-              isLooping
-              style={styles.video}
-              resizeMode={ResizeMode.CONTAIN}
-            />
-          </View>
+            <View style={styles.container}>
+              <Video
+                source={require("../assets/bee-animation.mp4")}
+                rate={1.0}
+                volume={1.0}
+                isMuted={false}
+                shouldPlay
+                isLooping
+                style={styles.video}
+                resizeMode={ResizeMode.CONTAIN}
+              />
+            </View>
 
-          <Text
-            style={{
-              color: theme.buttonText.color,
-              fontSize: 24,
-              fontWeight: "bold",
-              marginTop: 30,
-              textAlign: "center",
-            }}
-          >
-            BUZZTER
-          </Text>
-
-          <TextInput
-            placeholder="Användarnamn"
-            onChangeText={(text) => setUsername(text)}
-            value={username}
-            style={styles.input}
-          />
-
-          <TextInput
-            placeholder="Lösenord"
-            secureTextEntry={!showPassword}
-            value={password}
-            onChangeText={(text) => setPassword(text)}
-            style={styles.input}
-          />
-
-          <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-            <Text style={styles.loginButtonText}>Logga in</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.signupButton}
-            onPress={() => {
-              navigation.navigate("Signup");
-            }}
-          >
-            <Text style={styles.signupButtonText}>Skapa konto</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.forgotPasswordButton}
-            onPress={clearFieldsAndTogglePassword}
-          >
-            <Text style={styles.forgotPasswordButtonText}>
-              {showPassword ? "Ta bort lösenord" : "Glömt lösenord?"}
+            <View style={styles.textContainer}>
+            <Text
+              style={{
+                color: theme.buttonText.color,
+                fontSize: 24,
+                fontWeight: "bold",
+                // marginTop: 30,
+                textAlign: "center",
+              }}
+            >
+              BUZZTER
             </Text>
-          </TouchableOpacity>
+
+            <TextInput
+              placeholder="Användarnamn"
+              onChangeText={(text) => setUsername(text)}
+              value={username}
+              style={theme.buttonText}
+            />
+
+            <TextInput
+              placeholder="Lösenord"
+              secureTextEntry={!showPassword}
+              value={password}
+              onChangeText={(text) => setPassword(text)}
+              style={theme.buttonText}
+            />
+          
+              <TouchableOpacity
+                style={theme.button as any}
+                onPress={handleLogin}
+              >
+                <Text style={theme.buttonText}>Logga in</Text>
+              </TouchableOpacity>
+           
+
+            <TouchableOpacity
+              style={theme.signupButton as any}
+              onPress={() => {
+                navigation.navigate("Signup");
+              }}
+            >
+              <Text style={theme.buttonText}>Skapa konto</Text>
+            </TouchableOpacity>
+           
+
+            <TouchableOpacity
+              style={styles.forgotPasswordButton}
+              onPress={clearFieldsAndTogglePassword}
+            >
+              <Text style={theme.buttonText}>
+                {showPassword ? "Ta bort lösenord" : "Glömt lösenord?"}
+              </Text>
+            </TouchableOpacity>
+            </View>
+        </View>
         </View>
       </TouchableWithoutFeedback>
     </Animated.View>
@@ -180,9 +185,9 @@ export const SignInScreen = ({ navigation }: any) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
+    // justifyContent: "center",
     alignItems: "center",
-    marginBottom: -39,
+    marginBottom: 39,
   },
   video: {
     width: 400,
@@ -194,48 +199,59 @@ const styles = StyleSheet.create({
     margin: 5,
     padding: 10,
     fontSize: 18,
-    color: theme.buttonText.color,
-    backgroundColor: theme.colors.background,
+    // color: theme.buttonText.color,
+    // backgroundColor: theme.colors.background,
   },
   loginButton: {
-    backgroundColor: theme.colors.primary,
-    padding: 10,
-    alignItems: "center",
-    margin: 20,
-    borderRadius: 10,
+    // backgroundColor: theme.colors.primary,
+    // padding: 10,
+    // alignItems: "center",
+    // margin: 20,
+    // borderRadius: 10,
   },
   loginButtonText: {
-    color: theme.buttonText.color,
-    fontSize: theme.buttonText.fontSize,
+    // color: theme.buttonText.color,
+    // fontSize: theme.buttonText.fontSize,
   },
-  signupButton: {
-    backgroundColor: theme.colors.background,
-    padding: 5,
-    alignItems: "center",
-    margin: 10,
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: theme.buttonText.color,
-  },
+  // signupButton: {
+  //   // backgroundColor: theme.colors.background,
+  //   padding: 5,
+  //   alignItems: "center",
+  //   margin: 10,
+  //   borderRadius: 10,
+  //   borderWidth: 1,
+  //   // borderColor: theme.buttonText.color,
+  // },
   signupButtonText: {
-    color: theme.buttonText.color,
-    fontSize: theme.buttonText.fontSize,
+    // color: theme.buttonText.color,
+    // fontSize: theme.buttonText.fontSize,
   },
   forgotPasswordButton: {
-    backgroundColor: theme.colors.background,
+    // backgroundColor: theme.colors.background,
+    // flex: 1,
     padding: 5,
     alignItems: "center",
     margin: 10,
   },
-  forgotPasswordButtonText: {
-    color: theme.buttonText.color,
-    fontSize: theme.buttonText.fontSize,
+  // forgotPasswordButtonText: {
+   
+  //   // color: theme.buttonText.color,
+  //   // fontSize: theme.buttonText.fontSize,
+  // },
+  headerText: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "black",
+    marginTop: 10,
   },
   header: {
     backgroundColor: "yellow",
-    padding: 10,
+    // padding: 10,
     alignItems: "center",
-    marginTop: 30,
+    // marginTop: 30,
+  },
+  textContainer: {
+    padding: 20, 
   },
 });
 export default SignInScreen;

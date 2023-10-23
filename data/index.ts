@@ -141,101 +141,179 @@ export const profiles: Profile[] = [
   },
 ];
 
-export const tasks: Task[] = [
-  {
-    id: "task1",
-    title: "Damma vardagsrummet",
-    description: "Damma vardagsrummets ytor",
-    energiWeight: 4,
-    creatingDate: new Date("2023-10-01").toISOString(), //default blir dagens datum
-    interval: 5, //dagar emellan?
-    householdId: "fYHVLNiQvWEG9KNUGqBT",
-  },
-  {
-    id: "task2",
-    title: "Laga middag",
-    description: "Laga dagens middag",
-    energiWeight: 6,
-    creatingDate: new Date("2023-10-03").toISOString(),
-    interval: 1,
-    householdId: "fYHVLNiQvWEG9KNUGqBT",
-  },
-  {
-    id: "task3",
-    title: "Vattna blommorna",
-    description:
-      "Vattna alla blommor i hushållet. Tänk på att vattna orkideerna underifrån!",
-    energiWeight: 2,
-    creatingDate: new Date("2023-10-04").toISOString(),
-    interval: 4,
-    householdId: "fYHVLNiQvWEG9KNUGqBT",
-  },
-  {
-    id: "task4",
-    title: "Mata katten",
-    description: "Både torr och blötmat!",
-    energiWeight: 2,
-    creatingDate: new Date("2023-10-02").toISOString(), //default blir dagens datum
-    interval: 1, //dagar emellan?
-    householdId: "fYHVLNiQvWEG9KNUGqBT",
-  },
-  {
-    id: "task5",
-    title: "Dammsuga",
-    description: "Alla ytor, glöm inte under mattorna med!",
-    energiWeight: 6,
-    creatingDate: new Date("2023-10-06").toISOString(), //default blir dagens datum
-    interval: 6, //dagar emellan?
-    householdId: "fYHVLNiQvWEG9KNUGqBT",
-  },
-  {
-    id: "task6",
-    title: "Dammsuga",
-    description: "Alla ytor, glöm inte under mattorna med!",
-    energiWeight: 4,
-    creatingDate: new Date("2023-10-01").toISOString(), //default blir dagens datum
-    interval: 3, //dagar emellan?
-    householdId: "household2",
-  },
-  {
-    id: "task7",
-    title: "Gå ut med hunden",
-    description: "Glöm inte bajspåsen!",
-    energiWeight: 4,
-    creatingDate: new Date("2023-10-04").toISOString(), //default blir dagens datum
-    interval: 1, //dagar emellan?
-    householdId: "household2",
-  },
-  {
-    id: "task8",
-    title: "Tvätta",
-    description: "Läs noga på tvättråden!",
-    energiWeight: 2,
-    creatingDate: new Date("2023-10-04").toISOString(), //default blir dagens datum
-    interval: 5, //dagar emellan?
-    householdId: "household2",
-  },
-  {
-    id: "task9",
-    title: "Moppa golvet",
-    description: "Moppa alla golvytor",
-    energiWeight: 6,
-    creatingDate: new Date("2023-10-02").toISOString(), //default blir dagens datum
-    interval: 14, //dagar emellan?
-    householdId: "household2",
-  },
-  {
-    id: "task10",
-    title: "Handla",
-    description: "Betala med mastercardet",
-    energiWeight: 8,
-    creatingDate: new Date("2023-10-04").toISOString(), //default blir dagens datum
-    interval: 7, //dagar emellan?
-    householdId: "household2",
-  },
-];
+// export const tasks: Task[] = [
+//   {
+//     id: "task1",
+//     title: "Damma vardagsrummet",
+//     description: "Damma vardagsrummets ytor",
+//     energiWeight: 4,
+//     creatingDate: new Date("2023-10-01").toISOString(), //default blir dagens datum
+//     interval: 5, //dagar emellan?
+//     householdId: "fYHVLNiQvWEG9KNUGqBT",
+//   },
+//   {
+//     id: "task2",
+//     title: "Laga middag",
+//     description: "Laga dagens middag",
+//     energiWeight: 6,
+//     creatingDate: new Date("2023-10-03").toISOString(),
+//     interval: 1,
+//     householdId: "fYHVLNiQvWEG9KNUGqBT",
+//   },
+//   {
+//     id: "task3",
+//     title: "Vattna blommorna",
+//     description:
+//       "Vattna alla blommor i hushållet. Tänk på att vattna orkideerna underifrån!",
+//     energiWeight: 2,
+//     creatingDate: new Date("2023-10-04").toISOString(),
+//     interval: 4,
+//     householdId: "fYHVLNiQvWEG9KNUGqBT",
+//   },
+//   {
+//     id: "task4",
+//     title: "Mata katten",
+//     description: "Både torr och blötmat!",
+//     energiWeight: 2,
+//     creatingDate: new Date("2023-10-02").toISOString(), //default blir dagens datum
+//     interval: 1, //dagar emellan?
+//     householdId: "fYHVLNiQvWEG9KNUGqBT",
+//   },
+//   {
+//     id: "task5",
+//     title: "Dammsuga",
+//     description: "Alla ytor, glöm inte under mattorna med!",
+//     energiWeight: 6,
+//     creatingDate: new Date("2023-10-06").toISOString(), //default blir dagens datum
+//     interval: 6, //dagar emellan?
+//     householdId: "fYHVLNiQvWEG9KNUGqBT",
+//   },
+//   {
+//     id: "task6",
+//     title: "Dammsuga",
+//     description: "Alla ytor, glöm inte under mattorna med!",
+//     energiWeight: 4,
+//     creatingDate: new Date("2023-10-01").toISOString(), //default blir dagens datum
+//     interval: 3, //dagar emellan?
+//     householdId: "household2",
+//   },
+//   {
+//     id: "task7",
+//     title: "Gå ut med hunden",
+//     description: "Glöm inte bajspåsen!",
+//     energiWeight: 4,
+//     creatingDate: new Date("2023-10-04").toISOString(), //default blir dagens datum
+//     interval: 1, //dagar emellan?
+//     householdId: "household2",
+//   },
+//   {
+//     id: "task8",
+//     title: "Tvätta",
+//     description: "Läs noga på tvättråden!",
+//     energiWeight: 2,
+//     creatingDate: new Date("2023-10-04").toISOString(), //default blir dagens datum
+//     interval: 5, //dagar emellan?
+//     householdId: "household2",
+//   },
+//   {
+//     id: "task9",
+//     title: "Moppa golvet",
+//     description: "Moppa alla golvytor",
+//     energiWeight: 6,
+//     creatingDate: new Date("2023-10-02").toISOString(), //default blir dagens datum
+//     interval: 14, //dagar emellan?
+//     householdId: "household2",
+//   },
+//   {
+//     id: "task10",
+//     title: "Handla",
+//     description: "Betala med mastercardet",
+//     energiWeight: 8,
+//     creatingDate: new Date("2023-10-04").toISOString(), //default blir dagens datum
+//     interval: 7, //dagar emellan?
+//     householdId: "household2",
+//   },
+// ];
 
 // export const taskCompletions: TaskCompletion[] = [
+//   {
+//     completionDate: "2023-10-16",
+//     householdId: "fYHVLNiQvWEG9KNUGqBT",
+//     id: "hdsgfge",
+//     profileId: "moNj4qvcbKNQdEsnhEjL",
+//     taskId: "task1",
+//   },
+//   {
+//     completionDate: "2023-10-20",
+//     householdId: "fYHVLNiQvWEG9KNUGqBT",
+//     id: "dsgfhjkjk",
+//     profileId: "profile2",
+//     taskId: "task1",
+//   },
+//   {
+//     completionDate: "2023-10-21",
+//     householdId: "fYHVLNiQvWEG9KNUGqBT",
+//     id: "oijpkjkhgb",
+//     profileId: "profile3",
+//     taskId: "task1",
+//   },
+//   {
+//     completionDate: "2023-10-16",
+//     householdId: "fYHVLNiQvWEG9KNUGqBT",
+//     id: "hdsgfge",
+//     profileId: "moNj4qvcbKNQdEsnhEjL",
+//     taskId: "task2",
+//   },
+//   {
+//     completionDate: "2023-10-20",
+//     householdId: "fYHVLNiQvWEG9KNUGqBT",
+//     id: "098786t7fghj",
+//     profileId: "profile2",
+//     taskId: "task2",
+//   },
+//   {
+//     completionDate: "2023-10-21",
+//     householdId: "fYHVLNiQvWEG9KNUGqBT",
+//     id: "09876tfyguijoklö",
+//     profileId: "profile3",
+//     taskId: "task2",
+//   },
+//   {
+//     completionDate: "2023-10-22",
+//     householdId: "fYHVLNiQvWEG9KNUGqBT",
+//     id: "oijopohuftvj",
+//     profileId: "moNj4qvcbKNQdEsnhEjL",
+//     taskId: "task2",
+//   },
+//   {
+//     completionDate: "2023-10-17",
+//     householdId: "fYHVLNiQvWEG9KNUGqBT",
+//     id: "87ftyuhioh",
+//     profileId: "profile3",
+//     taskId: "task3",
+//   },
+//   {
+//     completionDate: "2023-10-18",
+//     householdId: "fYHVLNiQvWEG9KNUGqBT",
+//     id: "9tfdiut56r",
+//     profileId: "profile2",
+//     taskId: "task3",
+//   },
+//   {
+//     completionDate: "2023-10-20",
+//     householdId: "fYHVLNiQvWEG9KNUGqBT",
+//     id: "987765fgvhijokl",
+//     profileId: "profile3",
+//     taskId: "task3",
+//   },
+//   {
+//     completionDate: "2023-10-16",
+//     householdId: "fYHVLNiQvWEG9KNUGqBT",
+//     id: "7667tfghiojhhvfg",
+//     profileId: "profile2",
+//     taskId: "task3",
+//   },
+// ];
 //   {
 //     id: "completion1",
 //     taskId: "task1",

@@ -1,20 +1,23 @@
-import React, { useState, useEffect } from "react";
-import { AvatarColors, Avatars, AvatarUrls } from "../data/avatars";
-import { Button } from "react-native-paper";
-import { households } from "../data";
-import { useDispatch } from "react-redux";
-import { setProfile } from "../store/profile/profileSlice";
+import React, { useEffect, useState } from "react";
 import { Image } from "react-native";
+import { Button } from "react-native-paper";
+import { useDispatch } from "react-redux";
+import { households } from "../data";
+import { AvatarColors, AvatarUrls, Avatars } from "../data/avatars";
 
 import {
-  Text,
-  View,
-  TextInput,
   StyleSheet,
+  Text,
+  TextInput,
   TouchableOpacity,
+  View,
 } from "react-native";
 import { useTheme } from "../contexts/themeContext";
+import { RootNavigationScreenProps } from "../navigators/navigationTypes";
+import { addProfile } from "../store/profile/profileSlice";
 import { useAppSelector } from "../store/store";
+
+type CreateProfileProps = RootNavigationScreenProps<"CreateProfile">;
 
 type Avatar = {
   id: string;
@@ -31,43 +34,52 @@ const avatars: Avatar[] = [
   { id: Avatars.Pig },
 ];
 
-export default function CreateProfileScreen({ navigation, route }: any) {
+export default function CreateProfileScreen({
+  navigation,
+  route,
+}: CreateProfileProps) {
   const [householdName, setHouseholdName] = useState("");
   const [selectedAvatar, setSelectedAvatar] = useState<string | null>(null);
-  const { id } = route.params;
-  const household = households.find((h) => h.id === id);
+  const { householdId } = route.params;
+  const household = households.find((h) => h.id === householdId);
   const { theme } = useTheme();
   const dispatch = useDispatch();
   const todaysDate = new Date();
 
-  const activeUser = useAppSelector((state) => state.userAccount.user);
+  //MOCKAR ETT ID SÅLÄNGE FÖR USERN
+  const mockedUserId = "5NCx5MKcUu6UYKjFqRkg";
+
+  //UTKOMMENTERAR DENNA SÅLÄNGE FÖR FINNS INGET STATE FÖR EN AKTIV USER ÄN
+  // const activeUser = useAppSelector((state) => state.userAccount.user);
 
   const activeProfiles = useAppSelector((state) =>
-    state.profile.profiles.filter((profile) => profile.householdId === id),
+    state.profile.profiles.filter(
+      (profile) => profile.householdId === householdId,
+    ),
   );
 
-  useEffect(() => {}, [id, dispatch]);
+  useEffect(() => {}, [householdId, dispatch]);
 
   const isAvatarOccupied = (avatarId: string) => {
     return activeProfiles.some((profile) => profile.avatar === avatarId);
   };
 
   const saveProfile = () => {
-    console.log("hushållsid är", id);
+    console.log("hushållsid är", householdId);
     if (selectedAvatar) {
       const avatarsColor = AvatarColors[selectedAvatar as Avatars];
       const newProfile = {
         id: todaysDate.getUTCMilliseconds.toString().slice(-4),
         profileName: householdName,
-        userId: activeUser.id,
-        householdId: id,
+        userId: mockedUserId,
+        householdId: householdId,
         avatar: selectedAvatar,
         avatarsColors: avatarsColor,
         isOwner: false,
         isActive: false,
       };
 
-      dispatch(setProfile(newProfile));
+      dispatch(addProfile(newProfile));
       navigation.navigate("HouseholdAccount");
     }
   };
@@ -76,7 +88,7 @@ export default function CreateProfileScreen({ navigation, route }: any) {
     <View style={styles.container}>
       <View style={styles.sectionContainer}>
         <View style={styles.rectContainer}>
-          <Text style={styles.rectText}>{id}</Text>
+          <Text style={styles.rectText}>{householdId}</Text>
         </View>
       </View>
       <View style={styles.sectionContainer}>

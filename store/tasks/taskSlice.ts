@@ -26,7 +26,8 @@ const taskSlice = createSlice({
   initialState,
   reducers: {
     setTasks: (state, action) => {
-      state.tasks = action.payload; // Uppdatera tasks state med de hämtade uppgifterna
+      state.tasks = action.payload;
+      console.log("antal tasks:", state.tasks.length);
     },
     addTask: (state, action: PayloadAction<Task>) => {
       addTaskToDB(action.payload)
@@ -77,7 +78,8 @@ const taskSlice = createSlice({
 
       // Filtrera uppgifter baserat på householdId
       state.filteredTasks = state.tasks.filter(
-        (task) => task.householdId === household_Id,
+        //added isactive check also, so all archived tasks wont show here :)
+        (task) => task.householdId === household_Id && task.isActive,
       );
     },
 

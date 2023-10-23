@@ -1,8 +1,14 @@
 import { format } from "date-fns";
 
-// Söndag = 0, Måndag = 1, Tisdag = 2, osv... Lördag = 6
+export function getCurrentDate() {
+  const today = new Date();
+  const todaysDate = format(today, "yyyy-MM-dd");
 
-// Gets the current weeks start- and end-date
+  return {
+    todaysDate,
+  };
+}
+
 export function getCurrentWeekDates() {
   const today = new Date();
   const currentDay = today.getDay();

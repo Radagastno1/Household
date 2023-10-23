@@ -14,12 +14,24 @@ import {
   View,
 } from "react-native";
 import { Checkbox, Modal, Portal, TextInput } from "react-native-paper";
+
 import { app } from "../api/config";
 import theme from "../data/theme";
 
 const db = getFirestore(app);
 
-const CreateUserAccountScreen: React.FC<{ navigation: any }> = ({
+import { useDispatch } from "react-redux";
+// import theme from "../data/theme";
+import { useTheme } from "../contexts/themeContext";
+import { useAppSelector } from "../store/store";
+import { createAccount } from "../store/user/userAccountSlice";
+import { User } from "../types";
+import { RootNavigationScreenProps } from "../navigators/navigationTypes";
+
+
+type CreateUserProps = RootNavigationScreenProps<"Signup">;
+
+const CreateUserAccountScreen: React.FC<{ navigation: CreateUserProps }> = ({
   navigation,
 }) => {
   const [visible, setVisible] = useState(false);
@@ -35,6 +47,15 @@ const CreateUserAccountScreen: React.FC<{ navigation: any }> = ({
     useState(false);
   const [confirmationPasswordInput, setConfirmationPasswordInput] =
     useState("");
+
+  const [isChecked, setIsChecked] = useState(false);
+
+  const { theme } = useTheme(); // la till theme här
+
+  const dispatch = useDispatch();
+
+  const userAccountState = useAppSelector((state) => state.userAccount);
+
 
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
@@ -73,6 +94,8 @@ const CreateUserAccountScreen: React.FC<{ navigation: any }> = ({
       } catch (error) {
         console.error("Error creating user account:", error);
       }
+
+
     }
   };
 
@@ -82,7 +105,7 @@ const CreateUserAccountScreen: React.FC<{ navigation: any }> = ({
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
+      <View style={theme.button as any}>
         <Text style={styles.headerText}>Skapa konto</Text>
       </View>
 
@@ -209,7 +232,7 @@ const CreateUserAccountScreen: React.FC<{ navigation: any }> = ({
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.loginButton}
-        onPress={() => navigation.navigate("Login")}
+        onPress={() => navigation.navigation.navigate("Login")}
       >
         <Text style={{ color: "black", fontSize: theme.buttonText.fontSize }}>
           Tillbaka
@@ -221,7 +244,10 @@ const CreateUserAccountScreen: React.FC<{ navigation: any }> = ({
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 1, 
+    
+  
+    
     backgroundColor: "#fff",
   },
   header: {

@@ -10,16 +10,19 @@ import {
 } from "../store/profile/profileSlice";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { fetchTasks } from "../store/tasks/taskSlice";
+import { RootNavigationScreenProps } from "../navigators/navigationTypes";
+import { setStatusBarBackgroundColor } from "expo-status-bar";
 // import { getProfileByHouseholdAndUser } from "../store/profile/profileSlice";
 
-export default function ProfileAccountScreen({ navigation }: any) {
+type ProfileProps = RootNavigationScreenProps<"ProfileAccount">;
+
+export default function ProfileAccountScreen({ navigation }: ProfileProps) {
   //du måste kolla getActiveHousehold från householdreducern
   //då har du ett household som du är inne på
   //då hämtar du getProfileForHousehold(userId, householdId);
   //dessa får komma in när det finns att hämta i reducerns state
-  const userId = "5NCx5MKcUu6UYKjFqRkg";
-
-  // const householdId = "household1";
+  //UTKOMMENTERAR DENNA:
+  // const userId = "5NCx5MKcUu6UYKjFqRkg";
 
   const [selectedAvatar] = useState<string>("");
 
@@ -29,23 +32,26 @@ export default function ProfileAccountScreen({ navigation }: any) {
   );
   const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    if (activeHousehold) {
-      dispatch(
-        setProfileByHouseholdAndUser({
-          userId: userId,
-          householdId: activeHousehold?.id,
-        }),
-      );
-    }
-  }, [activeHousehold]);
+  //UTKOMMENTERAR DENNA:
+  // useEffect(() => {
+  //   if (activeHousehold) {
+  //     dispatch(
+  //       setProfileByHouseholdAndUser({
+  //         userId: userId,
+  //         householdId: activeHousehold?.id,
+  //       }),
+  //     );
+  //   }
+  // }, [activeHousehold]);
 
-  const activeProfiles = useAppSelector((state) =>
-    state.profile.profiles.filter(
-      (profile) => profile.householdId === activeHousehold?.id,
-    ),
-  );
+  //UTKOMMENTERAR DENNA:
+  // const activeProfiles = useAppSelector((state) =>
+  //   state.profile.profiles.filter(
+  //     (profile) => profile.householdId === activeHousehold?.id,
+  //   ),
+  // );
 
+  const activeProfiles = useAppSelector((state) => state.profile.profiles);
   const activeProfile = useAppSelector((state) => state.profile.activeProfile);
 
   const [isEditing, setIsEditing] = useState(false);
@@ -85,6 +91,7 @@ export default function ProfileAccountScreen({ navigation }: any) {
   };
 
   return (
+    <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
     <View style={styles.container}>
       <View
         style={[
@@ -93,13 +100,24 @@ export default function ProfileAccountScreen({ navigation }: any) {
         ]}
       >
         {/* <Text style={styles.profileTitle}>{}</Text> */}
-        <Text>Profilnamn: {activeProfile?.profileName}</Text>
+        <Text
+          style={{
+            fontSize: 25,
+            textAlign: "center",
+            color: theme.colors.text,
+          }}
+        >
+          Profilnamn: {activeProfile?.profileName}
+        </Text>
       </View>
-      <Text>Avatar: {activeProfile?.avatar}</Text>
+      <Text style={{ color: theme.colors.text }}>
+  Avatar: {activeProfile?.avatar}
+</Text>
+
       <View style={{ marginTop: 50 }}>
         <Button
           mode="contained"
-          onPress={() => navigation.navigate("Tab", { name: headerTitle })}
+          onPress={() => navigation.navigate("Tab")}
           style={theme.button as any}
           labelStyle={theme.buttonText}
         >
@@ -136,7 +154,8 @@ export default function ProfileAccountScreen({ navigation }: any) {
         <Card style={styles.card}>
           <View style={styles.taskItem}>
             <View style={styles.nameContainer}>
-              <Text variant="titleLarge">Hushållets namn</Text>
+              {/* tog headertitle som du satt till hushållsnamnet för att testa så det funkar */}
+              <Text variant="titleLarge">{headerTitle}</Text>
             </View>
             <IconButton icon="pencil" size={20} onPress={() => {}} />
           </View>
@@ -183,13 +202,14 @@ export default function ProfileAccountScreen({ navigation }: any) {
         />
       </View>
     </View>
+     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    // backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
   },
@@ -210,7 +230,7 @@ const styles = StyleSheet.create({
     height: 65,
     padding: 15,
     borderRadius: 8,
-    backgroundColor: "white",
+    // backgroundColor: "white",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,

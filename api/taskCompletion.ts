@@ -1,5 +1,6 @@
 import "firebase/firestore";
 import {
+  Timestamp,
   addDoc,
   collection,
   getDoc,
@@ -11,15 +12,22 @@ import {
 } from "firebase/firestore";
 import { TaskCompletion } from "../types";
 import { app } from "./config";
+import {
+  getCurrentDate,
+  getCurrentWeekDates,
+  getLastMonthDates,
+} from "../utils/DateHandler";
 
 const db = getFirestore(app);
 const taskCompletionCollectionRef = collection(db, "taskCompletions");
 
 export const addTaskCompletionToDB = async (taskCompletion: TaskCompletion) => {
   try {
+    const taskCompletionWithTimestamp =
+      addTimestampToTaskCompletion(taskCompletion);
     const docRef = await addDoc(taskCompletionCollectionRef, {});
 
-    taskCompletion.id = docRef.id;
+    taskCompletionWithTimestamp.id = docRef.id;
 
     console.log(
       "Dokumentreferens id:",
@@ -28,7 +36,10 @@ export const addTaskCompletionToDB = async (taskCompletion: TaskCompletion) => {
       taskCompletion.id,
     );
 
-    await updateDoc(docRef, taskCompletion as Partial<TaskCompletion>);
+    await updateDoc(
+      docRef,
+      taskCompletionWithTimestamp as Partial<TaskCompletion>,
+    );
 
     const taskDoc = await getDoc(docRef);
     if (taskDoc.exists()) {
@@ -46,19 +57,42 @@ export const addTaskCompletionToDB = async (taskCompletion: TaskCompletion) => {
 
 export const getTaskCompletionsFromDB = async (householdId: string) => {
   try {
+    const { todaysDate } = getCurrentDate();
+    const { startOfLastMonth } = getLastMonthDates();
+    console.log(todaysDate);
+    console.log(startOfLastMonth);
+    const startTimestamp = Timestamp.fromDate(new Date(startOfLastMonth));
+    const endTimestamp = Timestamp.fromDate(new Date(todaysDate));
+
     const q = query(
       taskCompletionCollectionRef,
       where("householdId", "==", householdId),
+      where("completedTimestamp", ">=", startTimestamp), // hämtar ut data mellan två datum
+      where("completedTimestamp", "<=", endTimestamp),
     );
+    console.log(startTimestamp);
 
     const querySnapshot = await getDocs(q);
 
     const taskCompletions: TaskCompletion[] = [];
 
     querySnapshot.forEach((doc) => {
-      taskCompletions.push(doc.data() as TaskCompletion);
+      const docData = doc.data();
+      const taskCompletionWithoutTimestamp: Omit<
+        TaskCompletion,
+        "completedTimestamp"
+      > = {
+        // för att inte redux ska gnälla pga det nya fältet skapas en TaskCompletion utan timestamp-fältet innan det pushas till statet
+        id: docData.id,
+        householdId: docData.householdId,
+        taskId: docData.taskId,
+        profileId: docData.profileId,
+        completionDate: docData.completionDate,
+      };
+      taskCompletions.push(taskCompletionWithoutTimestamp);
     });
 
+    console.log("Antal Task completions hämtade:", taskCompletions.length);
     console.log("Task completions hämtade:", taskCompletions);
     return taskCompletions;
   } catch (error) {
@@ -77,3 +111,19 @@ export const getTaskCompletionsFromDB = async (householdId: string) => {
 //     console.error("Fel vid borttagning av tasken:", error);
 //   }
 // };
+
+function addTimestampToTaskCompletion(taskCompletion: TaskCompletion) {
+  const completionDateStr = taskCompletion.completionDate;
+  const completionDate = new Date(completionDateStr);
+  completionDate.setHours(0, 0, 0, 0); // Ställ in tiden på midnatt
+
+  const timestamp = Timestamp.fromDate(completionDate);
+
+  // Skapar en kopia av taskCompletion med completedTimestamp
+  const taskCompletionWithTimestamp = {
+    ...taskCompletion,
+    completedTimestamp: timestamp,
+  };
+
+  return taskCompletionWithTimestamp;
+}

@@ -7,6 +7,7 @@ import { taskReducer } from "./tasks/taskSlice";
 import { userAccountReducer } from "./user/userAccountSlice";
 import userAuthReducer from "./user/userAuthSlice";
 import { householdReducer } from "./household/householdSlice";
+import { userReducer } from "./user/userSlice";
 
 const store = configureStore({
   reducer: {
@@ -17,6 +18,8 @@ const store = configureStore({
     userAccount: userAccountReducer,
     app: appReducer,
     household: householdReducer,
+    //LA TILL DENNA
+    user: userReducer,
   },
 });
 
