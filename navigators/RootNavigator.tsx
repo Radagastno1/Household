@@ -2,16 +2,16 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import CreateProfileScreen from "../screens/CreateProfileScreen";
 import CreateTaskScreen from "../screens/CreateTaskScreen";
+import CreateUserAccountScreen from "../screens/CreateUserAccountScreen";
 import HandleHouseholdScreen from "../screens/HandleHouseholdScreen";
 import HouseholdAccountScreen from "../screens/HouseholdAccountScreen";
 import ProfileAccountScreen from "../screens/ProfileAccountScreen";
+import SignInScreen from "../screens/SignInScreen";
 import SplashScreen from "../screens/SplashScreen";
 import TaskDetailScreen from "../screens/TaskDetailScreen";
+import CustomHeader from "../store/shared/CustomHeader";
 import { useAppSelector } from "../store/store";
 import TopTabNavigator from "./TopTabNavigator";
-import CreateUserAccountScreen from "../screens/CreateUserAccountScreen";
-import SignInScreen from "../screens/SignInScreen";
-import CustomHeader from "../store/shared/CustomHeader";
 
 export type RootStackParamList = {
   SplashScreen: undefined;
@@ -34,7 +34,7 @@ export default function RootNavigator() {
   const userSlice = useAppSelector((state) => state.userAccount.user);
 
   return (
-    <NavigationContainer >
+    <NavigationContainer>
       <Stack.Navigator
         initialRouteName={
           isLoading ? "SplashScreen" : userSlice ? "Login" : "Login"
@@ -57,6 +57,7 @@ export default function RootNavigator() {
         <Stack.Screen
           name="HandleHousehold"
           component={HandleHouseholdScreen}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="CreateProfile"

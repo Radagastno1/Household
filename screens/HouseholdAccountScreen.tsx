@@ -78,6 +78,7 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
     }
   };
 
+
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
       <View style={styles.container}>
