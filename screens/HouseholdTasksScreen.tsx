@@ -8,6 +8,7 @@ import { useAppDispatch, useAppSelector } from "../store/store";
 import { fetchCompletions } from "../store/taskCompletionSlice";
 import { fetchTasks, filterTaskListByHouseId } from "../store/tasks/taskSlice";
 import { Task } from "../types";
+import { useTheme } from "../contexts/themeContext";
 
 import { AvatarUrls, Avatars } from "../data/avatars";
 import { TopTabScreenProps } from "../navigators/navigationTypes";
@@ -43,6 +44,7 @@ export default function HouseholdTasksScreen({
 
   //   // Call this function to start the schedule
   //   scheduleMidnightReset(dispatch); //
+  const {theme} = useTheme();
 
   const activeHousehold = useAppSelector(
     (state) => state.household.activehousehold,
@@ -138,6 +140,7 @@ export default function HouseholdTasksScreen({
   }
 
   return (
+    <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
     <View style={styles.container}>
       <ScrollView
         style={
@@ -220,8 +223,10 @@ export default function HouseholdTasksScreen({
         )}
       </View>
     </View>
+    </View>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {
