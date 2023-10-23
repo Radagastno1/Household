@@ -18,7 +18,7 @@ import { useAppDispatch, useAppSelector } from "../store/store";
 import {
   addTaskAsync,
   deleteTask,
-  editTask,
+  editTaskAsync,
   filterTaskListByHouseId,
 } from "../store/tasks/taskSlice";
 import { Task } from "../types";
@@ -100,7 +100,7 @@ export default function CreateTaskScreen({
   };
 
   const editFunctionToModule = (editedTask: Task) => {
-    dispatch(editTask(editedTask));
+    dispatch(editTaskAsync(editedTask));
   };
 
   const handleTask = () => {
@@ -133,7 +133,7 @@ export default function CreateTaskScreen({
           isActive: taskToEdit.isActive,
         };
         console.log("den redigerade tasken innan dispatch:", editedTask);
-        dispatch(editTask(editedTask));
+        dispatch(editTaskAsync(editedTask));
         dispatch(filterTaskListByHouseId({ household_Id: householdId }));
       }
     }
