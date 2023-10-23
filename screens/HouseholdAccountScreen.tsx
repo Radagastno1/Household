@@ -78,52 +78,60 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
     }
   };
 
-
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
       <View style={styles.container}>
         <Text style={theme.buttonText}>Här listas alla households:</Text>
 
         {allHouseholds.map((household: Household) => (
+          <TouchableOpacity
+            key={household.id}
+            style={theme.button as any}
+            onPress={() => {
+              handleEnterHousehold(household.id);
+            }}
+          >
+            {/* <Button title="" /> */}
+            <Text style={theme.buttonText}>{household.name}</Text>
+          </TouchableOpacity>
+        ))}
+
         <TouchableOpacity
-          key={household.id}
           style={theme.button as any}
-          onPress={() => {
-            handleEnterHousehold(household.id);
-          }}
+          onPress={() => navigation.navigate("HandleHousehold")}
+          // onPress={() =>
+          //   navigation.navigate("CreateProfile", {
+          //     householdId: "household1",
+          //   })
+          // }
         >
-          <Button
-            title=""
-          />
-          <Text style={theme.buttonText}>{household.name}</Text>
-        </TouchableOpacity>
-      ))}
-
-        <View style={theme.button as any}>
-          <Button
-            title=""
-            onPress={() =>
-              navigation.navigate("CreateProfile", {
-                householdId: "household1",
-              })
-            }
-          />
+          {/* <Button title="" /> */}
           <Text style={theme.buttonText}>Skapa nytt hushåll</Text>
-        </View>
+        </TouchableOpacity>
 
-        <View style={theme.button as any}>
-          <Button title="" onPress={() => navigation.navigate("Login")} />
+        <TouchableOpacity
+          style={theme.button as any}
+          onPress={() => navigation.navigate("Login")}
+        >
+          {/* <Button title="" /> */}
           <Text style={theme.buttonText}>Logga ut</Text>
-        </View>
+        </TouchableOpacity>
 
-        <View style={theme.button as any}>
-          <Button title="" onPress={handleToggleTheme} />
+        <TouchableOpacity
+          style={theme.button as any}
+          onPress={handleToggleTheme}
+        >
+          {/* <Button title="" /> */}
           <Text style={theme.buttonText}>Toggle Theme</Text>
-        </View>
-        <View style={theme.button as any}>
-          <Button title="" onPress={handleToggleTheme} />
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={theme.button as any}
+          onPress={handleToggleTheme}
+        >
+          {/* <Button title="" /> */}
           <Text style={theme.buttonText}>Auto Theme</Text>
-        </View>
+        </TouchableOpacity>
       </View>
     </View>
   );
