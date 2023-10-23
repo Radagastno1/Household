@@ -77,31 +77,28 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
       console.error("setColorScheme is not defined.");
     }
   };
-  
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
-    <View style={styles.container}>
-      <Text>Här listas alla households:</Text>
-      {allHouseholds.map((household: Household) => (
+      <View style={styles.container}>
+        <Text>Här listas alla households:</Text>
+        {allHouseholds.map((household: Household) => (
+          <Button
+            key={household.id}
+            title={household.name}
+            onPress={() => {
+              handleEnterHousehold(household.id);
+            }}
+          />
+        ))}
         <Button
-          key={household.id}
-          title={household.name}
-          onPress={() => {
-            handleEnterHousehold(household.id);
-          }}
+          title="Skapa nytt hushåll"
+          onPress={() => navigation.navigate("HandleHousehold")} // denna e hårdkodad sålänge
         />
-      ))}
-      <Button
-        title="Skapa nytt hushåll"
-        onPress={() =>
-          navigation.navigate("CreateProfile", { householdId: "household1" })
-        } // denna e hårdkodad sålänge
-      />
-      <Button title="Logga ut" onPress={() => navigation.navigate("Login")} />
-      <Button  title="Toggle Theme" onPress={handleToggleTheme} />
-      <Button title="Auto Theme" onPress={handleToggleTheme} />
-    </View>
+        <Button title="Logga ut" onPress={() => navigation.navigate("Login")} />
+        <Button title="Toggle Theme" onPress={handleToggleTheme} />
+        <Button title="Auto Theme" onPress={handleToggleTheme} />
+      </View>
     </View>
   );
 }
