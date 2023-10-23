@@ -6,12 +6,16 @@ import { getFirestore } from "firebase/firestore";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyBJWEmORR1VNn8w-aNcF0HCp30kwJLPsqI",
-  authDomain: "buzzter-6f2a2.firebaseapp.com",
-  projectId: "buzzter-6f2a2",
-  storageBucket: "buzzter-6f2a2.appspot.com",
-  messagingSenderId: "179592687787",
-  appId: "1:179592687787:web:9269a9a710f50af5aa47ee",
+  authDomain: "inget-authentication-krävs",
+  projectId: "testbuzzter",
+  storageBucket: "Ditt-storage-bucket.appspot.com",
+  messagingSenderId: "83218627575",
+  // apiKey: "AIzaSyBJWEmORR1VNn8w-aNcF0HCp30kwJLPsqI",
+  // authDomain: "buzzter-6f2a2.firebaseapp.com",
+  // projectId: "buzzter-6f2a2",
+  // storageBucket: "buzzter-6f2a2.appspot.com",
+  // messagingSenderId: "179592687787",
+  // appId: "1:179592687787:web:9269a9a710f50af5aa47ee",
 };
 
 // Initialize Firebase

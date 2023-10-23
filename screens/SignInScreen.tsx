@@ -12,13 +12,14 @@ import {
   View,
 } from "react-native";
 import { Text, TextInput } from "react-native-paper";
-import { useDispatch } from "react-redux";
-import ThemeProvider, { useTheme } from "../contexts/themeContext";
+import { useDispatch, useSelector } from "react-redux";
+import { useTheme } from "../contexts/themeContext";
 import { users } from "../data";
-import { loginUser } from "../store/user/userActions";
 import { RootNavigationScreenProps } from "../navigators/navigationTypes";
+import { RootState } from "../store/store";
+import { loginUser } from "../store/user/userAuthSlice";
 
-type SignInProps = RootNavigationScreenProps<"Login">
+type SignInProps = RootNavigationScreenProps<"Login">;
 
 export const SignInScreen = ({ navigation }: SignInProps) => {
   const [username, setUsername] = useState("");
@@ -32,7 +33,7 @@ export const SignInScreen = ({ navigation }: SignInProps) => {
     return user ? user.password : "";
   }
 
-  const translateY = useRef(new Animated.Value(6)).current; //start from the bottom
+  const translateY = useRef(new Animated.Value(6)).current;
 
   useEffect(() => {
     // Start the navigation animation early
@@ -43,8 +44,9 @@ export const SignInScreen = ({ navigation }: SignInProps) => {
       useNativeDriver: false,
     }).start();
   }, []);
+
+  // So we don´t have to write the password when logging in (remove this later)
   function clearFieldsAndTogglePassword(event: GestureResponderEvent): void {
-    //Do it like this for now since we don´t have a database
     if (!showPassword) {
       const passwordForUsername = getPasswordForUsername(username);
       if (passwordForUsername) {
@@ -73,6 +75,9 @@ export const SignInScreen = ({ navigation }: SignInProps) => {
       console.error("Authentication failed");
     }
   }
+
+  // UserProfileComponent code directly within SignInScreen, can move to its own file
+  const currentUser = useSelector((state: RootState) => state.userAccount.user);
 
   return (
     <Animated.View
@@ -115,61 +120,59 @@ export const SignInScreen = ({ navigation }: SignInProps) => {
             </View>
 
             <View style={styles.textContainer}>
-            <Text
-              style={{
-                color: theme.buttonText.color,
-                fontSize: 24,
-                fontWeight: "bold",
-                // marginTop: 30,
-                textAlign: "center",
-              }}
-            >
-              BUZZTER
-            </Text>
+              <Text
+                style={{
+                  color: theme.buttonText.color,
+                  fontSize: 24,
+                  fontWeight: "bold",
+                  // marginTop: 30,
+                  textAlign: "center",
+                }}
+              >
+                BUZZTER
+              </Text>
 
-            <TextInput
-              placeholder="Användarnamn"
-              onChangeText={(text) => setUsername(text)}
-              value={username}
-              style={theme.buttonText}
-            />
+              <TextInput
+                placeholder="Användarnamn"
+                onChangeText={(text) => setUsername(text)}
+                value={username}
+                style={theme.buttonText}
+              />
 
-            <TextInput
-              placeholder="Lösenord"
-              secureTextEntry={!showPassword}
-              value={password}
-              onChangeText={(text) => setPassword(text)}
-              style={theme.buttonText}
-            />
-          
+              <TextInput
+                placeholder="Lösenord"
+                secureTextEntry={!showPassword}
+                value={password}
+                onChangeText={(text) => setPassword(text)}
+                style={theme.buttonText}
+              />
+
               <TouchableOpacity
                 style={theme.button as any}
                 onPress={handleLogin}
               >
                 <Text style={theme.buttonText}>Logga in</Text>
               </TouchableOpacity>
-           
 
-            <TouchableOpacity
-              style={theme.signupButton as any}
-              onPress={() => {
-                navigation.navigate("Signup");
-              }}
-            >
-              <Text style={theme.buttonText}>Skapa konto</Text>
-            </TouchableOpacity>
-           
+              <TouchableOpacity
+                style={theme.signupButton as any}
+                onPress={() => {
+                  navigation.navigate("Signup");
+                }}
+              >
+                <Text style={theme.buttonText}>Skapa konto</Text>
+              </TouchableOpacity>
 
-            <TouchableOpacity
-              style={styles.forgotPasswordButton}
-              onPress={clearFieldsAndTogglePassword}
-            >
-              <Text style={theme.buttonText}>
-                {showPassword ? "Ta bort lösenord" : "Glömt lösenord?"}
-              </Text>
-            </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.forgotPasswordButton}
+                onPress={clearFieldsAndTogglePassword}
+              >
+                <Text style={theme.buttonText}>
+                  {showPassword ? "Ta bort lösenord" : "Glömt lösenord?"}
+                </Text>
+              </TouchableOpacity>
             </View>
-        </View>
+          </View>
         </View>
       </TouchableWithoutFeedback>
     </Animated.View>
@@ -228,7 +231,7 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   // forgotPasswordButtonText: {
-   
+
   //   // color: theme.buttonText.color,
   //   // fontSize: theme.buttonText.fontSize,
   // },
@@ -245,7 +248,7 @@ const styles = StyleSheet.create({
     // marginTop: 30,
   },
   textContainer: {
-    padding: 20, 
+    padding: 20,
   },
 });
 export default SignInScreen;
