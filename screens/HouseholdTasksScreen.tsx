@@ -177,14 +177,6 @@ export default function HouseholdTasksScreen({
                 ),
               )}
 
-              {/* {getDaysSinceLastCompletion(task) > 0 && (
-                <View style={styles.intervalNumberCircle}>
-                  <Text style={styles.circleText} variant="bodyMedium">
-                    {getDaysSinceLastCompletion(task)}
-                  </Text>
-                </View>
-              )} */}
-
               {getDaysSinceLastCompletion(task) > 0 && (
                 <View
                   style={[
@@ -197,9 +189,15 @@ export default function HouseholdTasksScreen({
                     },
                   ]}
                 >
-                  <Text style={styles.circleText} variant="bodyMedium">
-                    {getDaysSinceLastCompletion(task)}
-                  </Text>
+                  {getDaysSinceLastCompletion(task) > 30 ? (
+                    <Text style={styles.circleText} variant="bodyMedium">
+                      30+
+                    </Text>
+                  ) : (
+                    <Text style={styles.circleText} variant="bodyMedium">
+                      {getDaysSinceLastCompletion(task)}
+                    </Text>
+                  )}
                 </View>
               )}
             </View>
