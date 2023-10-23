@@ -68,6 +68,7 @@ export const editTaskToDB = async (task: Task) => {
       creatingDate: task.creatingDate,
       interval: task.interval,
       householdId: task.householdId,
+      isActive: task.isActive,
     };
 
     await updateDoc(taskRef, updatedTaskData);

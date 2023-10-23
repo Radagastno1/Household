@@ -144,17 +144,6 @@ export default function HouseholdTasksScreen({
           isOwner ? styles.scrollContainerOwner : styles.scrollContainerNonOwner
         }
       >
-        {/* <View>
-          {taskCompletionSlice.completions.map((c) => (
-            <Text
-              key={c.id}
-              style={{ backgroundColor: "blue", color: "white" }}
-            >
-              PROFILID: {c.profileId} TASKID: {c.taskId}
-            </Text>
-          ))}
-        </View> */}
-
         {taskSlice.filteredTasks.map((task) => (
           <Card
             key={task.id}

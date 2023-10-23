@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import { Card, Paragraph, Title } from "react-native-paper";
 import CircleComponent from "../components/CircleComponent";
+import DeleteTaskModule from "../modules/DeleteTaskModule";
 import { RootNavigationScreenProps } from "../navigators/navigationTypes";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import {
@@ -53,6 +54,11 @@ export default function CreateTaskScreen({
     taskToEdit ? taskToEdit.description : "",
   );
 
+  const [isDeleteTaskModalVisible, setDeleteTaskModalVisible] = useState(false);
+
+  const hideDeleteTaskModal = () => {
+    setDeleteTaskModalVisible(false);
+  };
   const dispatch = useAppDispatch();
 
   const taskSlice = useAppSelector((state) => state.task);
@@ -82,10 +88,19 @@ export default function CreateTaskScreen({
   const energyData: number[] = [1, 2, 4, 6, 8];
 
   const handleDeleteTask = () => {
+    //stänga modulen när man gjort något där inne? eller?
     if (taskToEdit) {
-      dispatch(deleteTask(taskToEdit.id));
+      setDeleteTaskModalVisible(true);
     }
-    navigation.navigate("Tab");
+    // navigation.navigate("Tab");
+  };
+
+  const deleteFunctionToModule = (taskId: string) => {
+    dispatch(deleteTask(taskId));
+  };
+
+  const editFunctionToModule = (editedTask: Task) => {
+    dispatch(editTask(editedTask));
   };
 
   const handleTask = () => {
@@ -99,6 +114,7 @@ export default function CreateTaskScreen({
           interval: selectedInterval,
           creatingDate: new Date().toISOString(),
           householdId: householdId,
+          isActive: true,
         };
         console.log("den nya tasken innan dispatch:", newTask);
         dispatch(addTask(newTask));
@@ -114,6 +130,7 @@ export default function CreateTaskScreen({
           interval: selectedInterval,
           creatingDate: new Date().toISOString(),
           householdId: householdId,
+          isActive: taskToEdit.isActive,
         };
         console.log("den redigerade tasken innan dispatch:", editedTask);
         dispatch(editTask(editedTask));
@@ -130,158 +147,175 @@ export default function CreateTaskScreen({
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       enabled
     >
-      <ScrollView
-        contentContainerStyle={styles.scrollViewContainer}
-        keyboardShouldPersistTaps="always"
-      >
-        <View style={styles.container}>
-          <TextInput
-            placeholder="Titel"
-            style={styles.input}
-            textAlignVertical="center"
-            returnKeyType="done"
-            onChangeText={(text) => setTitle(text)}
-            value={title}
-          ></TextInput>
-          <TextInput
-            placeholder="Beskrivning"
-            style={styles.input}
-            multiline
-            numberOfLines={4}
-            blurOnSubmit={true}
-            textAlignVertical="top"
-            returnKeyType="done"
-            onChangeText={(text) => setDescription(text)}
-            value={description}
-          ></TextInput>
-          <Card style={styles.card}>
-            <Card.Content style={styles.cardContent}>
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                }}
-              >
-                <View>
-                  <Title style={{ fontWeight: "bold" }}>Återkommer:</Title>
+      {isDeleteTaskModalVisible && taskToEdit ? (
+        <ScrollView
+          contentContainerStyle={styles.scrollViewContainer}
+          keyboardShouldPersistTaps="always"
+        >
+          <View style={styles.container}>
+            <DeleteTaskModule
+              task={taskToEdit}
+              onDeleteTask={deleteFunctionToModule}
+              onEditTask={editFunctionToModule}
+              onClose={hideDeleteTaskModal}
+            />
+          </View>
+        </ScrollView>
+      ) : (
+        <ScrollView
+          contentContainerStyle={styles.scrollViewContainer}
+          keyboardShouldPersistTaps="always"
+        >
+          <View style={styles.container}>
+            <TextInput
+              placeholder="Titel"
+              style={styles.input}
+              textAlignVertical="center"
+              returnKeyType="done"
+              onChangeText={(text) => setTitle(text)}
+              value={title}
+            ></TextInput>
+            <TextInput
+              placeholder="Beskrivning"
+              style={styles.input}
+              multiline
+              numberOfLines={4}
+              blurOnSubmit={true}
+              textAlignVertical="top"
+              returnKeyType="done"
+              onChangeText={(text) => setDescription(text)}
+              value={description}
+            ></TextInput>
+            <Card style={styles.card}>
+              <Card.Content style={styles.cardContent}>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <View>
+                    <Title style={{ fontWeight: "bold" }}>Återkommer:</Title>
+                  </View>
+
+                  <View style={{ flexDirection: "row" }}>
+                    <Title>Var </Title>
+                    <TouchableOpacity
+                      onPress={() => setIntervalDataPressed(true)}
+                    >
+                      <CircleComponent
+                        number={selectedInterval}
+                        backgroundColor="red"
+                        color="white"
+                      />
+                    </TouchableOpacity>
+                    <Title> dag</Title>
+                  </View>
+                </View>
+
+                <View
+                  style={{ flexDirection: "row", justifyContent: "center" }}
+                >
+                  {intervalDataPressed
+                    ? intervalData.map((number) => (
+                        <TouchableOpacity
+                          key={number.toString()}
+                          onPress={() => {
+                            setSelectedInterval(number),
+                              setIntervalDataPressed(false);
+                          }}
+                        >
+                          <CircleComponent
+                            number={number}
+                            backgroundColor="lightgrey"
+                            color="black"
+                          />
+                        </TouchableOpacity>
+                      ))
+                    : null}
+                </View>
+              </Card.Content>
+            </Card>
+
+            <Card style={styles.card}>
+              <Card.Content style={styles.cardContent}>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <View>
+                    <Title style={{ fontWeight: "bold" }}>Värde:</Title>
+                    <Paragraph>Hur energikrävande är sysslan?</Paragraph>
+                  </View>
+
+                  <View style={{ justifyContent: "center" }}>
+                    <TouchableOpacity
+                      onPress={() => {
+                        setEnergyDataPressed(true);
+                      }}
+                    >
+                      <CircleComponent
+                        number={selectedEnergy}
+                        backgroundColor="lightgrey"
+                        color="black"
+                      />
+                    </TouchableOpacity>
+                  </View>
                 </View>
 
                 <View style={{ flexDirection: "row" }}>
-                  <Title>Var </Title>
-                  <TouchableOpacity
-                    onPress={() => setIntervalDataPressed(true)}
-                  >
-                    <CircleComponent
-                      number={selectedInterval}
-                      backgroundColor="red"
-                      color="white"
-                    />
-                  </TouchableOpacity>
-                  <Title> dag</Title>
+                  {energyDataPressed
+                    ? energyData.map((number) => (
+                        <TouchableOpacity
+                          key={number.toString()}
+                          onPress={() => {
+                            setSelectedEnergy(number),
+                              setEnergyDataPressed(false);
+                          }}
+                        >
+                          <CircleComponent
+                            number={number}
+                            backgroundColor="lightgrey"
+                            color="black"
+                          />
+                        </TouchableOpacity>
+                      ))
+                    : null}
                 </View>
-              </View>
+              </Card.Content>
+            </Card>
+            {isCreateMode ? null : (
+              <TouchableOpacity onPress={() => handleDeleteTask()}>
+                <Text style={styles.removeText}>Ta bort</Text>
+              </TouchableOpacity>
+            )}
+          </View>
 
-              <View style={{ flexDirection: "row", justifyContent: "center" }}>
-                {intervalDataPressed
-                  ? intervalData.map((number) => (
-                      <TouchableOpacity
-                        key={number.toString()}
-                        onPress={() => {
-                          setSelectedInterval(number),
-                            setIntervalDataPressed(false);
-                        }}
-                      >
-                        <CircleComponent
-                          number={number}
-                          backgroundColor="lightgrey"
-                          color="black"
-                        />
-                      </TouchableOpacity>
-                    ))
-                  : null}
-              </View>
-            </Card.Content>
-          </Card>
-
-          <Card style={styles.card}>
-            <Card.Content style={styles.cardContent}>
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                }}
-              >
-                <View>
-                  <Title style={{ fontWeight: "bold" }}>Värde:</Title>
-                  <Paragraph>Hur energikrävande är sysslan?</Paragraph>
-                </View>
-
-                <View style={{ justifyContent: "center" }}>
-                  <TouchableOpacity
-                    onPress={() => {
-                      setEnergyDataPressed(true);
-                    }}
-                  >
-                    <CircleComponent
-                      number={selectedEnergy}
-                      backgroundColor="lightgrey"
-                      color="black"
-                    />
-                  </TouchableOpacity>
-                </View>
-              </View>
-
-              <View style={{ flexDirection: "row" }}>
-                {energyDataPressed
-                  ? energyData.map((number) => (
-                      <TouchableOpacity
-                        key={number.toString()}
-                        onPress={() => {
-                          setSelectedEnergy(number),
-                            setEnergyDataPressed(false);
-                        }}
-                      >
-                        <CircleComponent
-                          number={number}
-                          backgroundColor="lightgrey"
-                          color="black"
-                        />
-                      </TouchableOpacity>
-                    ))
-                  : null}
-              </View>
-            </Card.Content>
-          </Card>
-          {isCreateMode ? null : (
-            <TouchableOpacity onPress={() => handleDeleteTask()}>
-              <Text style={styles.removeText}>Ta bort</Text>
+          <View style={styles.buttonsContainer}>
+            <TouchableOpacity
+              style={[styles.button]}
+              onPress={() => {
+                handleTask();
+              }}
+            >
+              <Feather name="plus-circle" size={24} color="black" />
+              <Text style={styles.buttonText}>Spara</Text>
             </TouchableOpacity>
-          )}
-        </View>
 
-        {/* <View style={styles.fillOutContainer}></View> */}
-        <View style={styles.buttonsContainer}>
-          <TouchableOpacity
-            style={[styles.button]}
-            onPress={() => {
-              handleTask();
-            }}
-          >
-            <Feather name="plus-circle" size={24} color="black" />
-            <Text style={styles.buttonText}>Spara</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[styles.button]}
-            onPress={() => {
-              navigation.navigate("Tab");
-            }}
-          >
-            <AntDesign name="closecircleo" size={24} color="black" />
-            <Text style={styles.buttonText}>Stäng</Text>
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
+            <TouchableOpacity
+              style={[styles.button]}
+              onPress={() => {
+                navigation.navigate("Tab");
+              }}
+            >
+              <AntDesign name="closecircleo" size={24} color="black" />
+              <Text style={styles.buttonText}>Stäng</Text>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
+      )}
     </KeyboardAvoidingView>
   );
 }
@@ -293,7 +327,6 @@ const styles = StyleSheet.create({
   container: {
     marginTop: 80,
     flex: 1,
-    // justifyContent: "space-around",
     padding: 10,
   },
   scrollViewContainer: {
