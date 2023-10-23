@@ -7,6 +7,7 @@ import {
   getLastMonthDates,
   getLastWeekDates,
 } from "../utils/DateHandler";
+import { sortTasksFromCompletions } from "../utils/statisticHandler";
 
 export default function TESTDATUMSCREEN() {
   // --------------- DAGENS DATUM  ----------------
@@ -51,6 +52,12 @@ export default function TESTDATUMSCREEN() {
         </Text>
         <Text>{todaysDate}</Text>
         <Text>{startOfLastMonth}</Text>
+      </View>
+      <View style={styles.dates}>
+        <Text style={styles.title}>
+          Lista ut alla sorterade tasks från completions
+        </Text>
+        <Button title="Tryck" onPress={sortTasksFromCompletions} />
       </View>
     </View>
   );
