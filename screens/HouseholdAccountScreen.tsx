@@ -81,12 +81,12 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
       <View style={styles.container}>
-        <Text style={theme.buttonText}>Här listas alla households:</Text>
+        <Text style={theme.buttonText}>MINA HUSHÅLL</Text>
 
         {allHouseholds.map((household: Household) => (
           <TouchableOpacity
             key={household.id}
-            style={theme.button as any}
+            style={theme.cardButton as any}
             onPress={() => {
               handleEnterHousehold(household.id);
             }}
@@ -97,7 +97,7 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
         ))}
 
         <TouchableOpacity
-          style={theme.button as any}
+          style={theme.cardButton as any}
           onPress={() => navigation.navigate("HandleHousehold")}
           // onPress={() =>
           //   navigation.navigate("CreateProfile", {
@@ -110,7 +110,7 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={theme.button as any}
+          style={theme.cardButton as any}
           onPress={() => navigation.navigate("Login")}
         >
           {/* <Button title="" /> */}
