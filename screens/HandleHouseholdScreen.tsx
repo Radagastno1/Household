@@ -27,6 +27,7 @@ export default function HandleHouseholdScreen({
   };
 
   return (
+    <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
     <View>
       <View>
         <Appbar.Header style={{ height: 70, backgroundColor: "white" }}>
@@ -100,6 +101,7 @@ export default function HandleHouseholdScreen({
           Tillbaka
         </Button>
       </View>
+    </View>
     </View>
   );
 }
