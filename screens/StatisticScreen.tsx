@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import PiechartComponent from "../components/PiechartComponent";
 import { useAppSelector } from "../store/store";
-import { ProfileData, StatData } from "../types";
-import { SummerizeEachTask } from "../utils/statisticHandler";
+import { StatData } from "../types";
+import {
+  SummerizeEachTask,
+  getUniqueSummarizedData,
+} from "../utils/statisticHandler";
 
 function arrayChunk<T>(array: T[], chunkSize: number): T[][] {
   const chunkedArray: T[][] = [];
@@ -19,14 +22,19 @@ export default function StatisticScreen() {
   const completions = useAppSelector(
     (state) => state.taskCompletion.completions,
   );
+  const [statsForTasks, setStatsForTasks] = useState<StatData[]>([]);
 
-  const statsForTasks: StatData[] = SummerizeEachTask(
-    completions,
-    tasks,
-    profiles,
+  const summarizedData = useMemo(
+    () => SummerizeEachTask(completions, tasks, profiles),
+    [completions, tasks, profiles],
   );
 
-  console.log(statsForTasks);
+  const uniqueData = getUniqueSummarizedData(summarizedData);
+
+  useEffect(() => {
+    setStatsForTasks(uniqueData);
+    console.log("Nu renderas datan från statisticScreen: ", statsForTasks);
+  }, [completions, tasks, profiles]);
 
   const chunkedCharts = arrayChunk(statsForTasks, 3);
   const slices = [20, 15, 20];

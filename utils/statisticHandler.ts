@@ -1,3 +1,4 @@
+import { getAvatarColorString } from "../data/avatars";
 import {
   Profile,
   ProfileData,
@@ -43,7 +44,7 @@ export function sortProfilesFromCompletions(
     });
   });
 
-  console.log(sortedProfiles);
+  console.log("Sorted profiles: ", sortedProfiles);
   console.log(sortedProfiles.length);
 }
 
@@ -80,10 +81,11 @@ export function SummerizeEachTask(
             existingProfileData.sum += task.energyWeight;
           } else {
             // Profile doesn't exist, create a new ProfileData
+            const avatarColor = getAvatarColorString(profile.avatar);
             const typedProfileData: ProfileData = {
               id: profile.id,
               avatar: profile.avatar,
-              color: "red", // You can set the color as needed
+              color: avatarColor, // You can set the color as needed
               sum: task.energyWeight,
             };
             typedTaskData.values.push(typedProfileData);
@@ -94,7 +96,8 @@ export function SummerizeEachTask(
     summarizedByTasks.push(typedTaskData);
   });
 
-  console.log(summarizedByTasks);
+  console.log("summarizedbytasks: ", summarizedByTasks);
+  console.log(summarizedByTasks.length);
 
   return mapToPieChart(summarizedByTasks);
 }
@@ -113,7 +116,22 @@ function mapToPieChart(summarizedByTasks: TaskData[]) {
     statDataArray.push(stat);
   });
 
+  console.log("MaptoPieChart: ", statDataArray);
   return statDataArray;
+}
+
+export function getUniqueSummarizedData(summarizedData: StatData[]) {
+  const uniqueData: StatData[] = [];
+  const titles = new Set(); // Använd en uppsättning för att hålla reda på unika titlar
+
+  summarizedData.forEach((data) => {
+    if (!titles.has(data.title)) {
+      titles.add(data.title);
+      uniqueData.push(data);
+    }
+  });
+
+  return uniqueData;
 }
 // -- hämtar ut alla tasksCompletions
 
