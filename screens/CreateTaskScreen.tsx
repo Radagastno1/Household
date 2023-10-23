@@ -16,9 +16,9 @@ import DeleteTaskModule from "../modules/DeleteTaskModule";
 import { RootNavigationScreenProps } from "../navigators/navigationTypes";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import {
-  addTask,
+  addTaskAsync,
   deleteTask,
-  editTask,
+  editTaskAsync,
   filterTaskListByHouseId,
 } from "../store/tasks/taskSlice";
 import { Task } from "../types";
@@ -100,7 +100,7 @@ export default function CreateTaskScreen({
   };
 
   const editFunctionToModule = (editedTask: Task) => {
-    dispatch(editTask(editedTask));
+    dispatch(editTaskAsync(editedTask));
   };
 
   const handleTask = () => {
@@ -117,7 +117,7 @@ export default function CreateTaskScreen({
           isActive: true,
         };
         console.log("den nya tasken innan dispatch:", newTask);
-        dispatch(addTask(newTask));
+        dispatch(addTaskAsync(newTask));
         dispatch(filterTaskListByHouseId({ household_Id: householdId }));
       }
     } else {
@@ -133,7 +133,7 @@ export default function CreateTaskScreen({
           isActive: taskToEdit.isActive,
         };
         console.log("den redigerade tasken innan dispatch:", editedTask);
-        dispatch(editTask(editedTask));
+        dispatch(editTaskAsync(editedTask));
         dispatch(filterTaskListByHouseId({ household_Id: householdId }));
       }
     }
