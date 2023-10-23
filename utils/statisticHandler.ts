@@ -5,6 +5,7 @@ import {
   StatData,
   Task,
   TaskCompletion,
+  TaskCompletionStat,
   TaskData,
 } from "../types";
 
@@ -12,8 +13,38 @@ let sortedTasks: Task[] = [];
 let sortedProfiles: Profile[] = [];
 let summarizedByTasks: TaskData[] = [];
 
-export function sortTasksFromCompletions(
+export function sortTaskCompletionsByDate(
+  startDate: string,
+  endDate: string,
   completions: TaskCompletion[],
+) {
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+
+  const factorCompletions: TaskCompletionStat[] = completions.map(
+    (completion) => {
+      return {
+        id: completion.id,
+        householdId: completion.householdId,
+        taskId: completion.taskId,
+        profileId: completion.profileId,
+        completionDate: new Date(completion.completionDate),
+      };
+    },
+  );
+
+  const sortedCompletions = factorCompletions.filter((completion) => {
+    const completionDate = completion.completionDate;
+    return completionDate >= start && completionDate <= end;
+  });
+
+  console.log("Sorted completions: ", sortedCompletions);
+  console.log("Sorted completions: ", sortedCompletions.length);
+  return sortedCompletions;
+}
+
+export function sortTasksFromCompletions(
+  completions: TaskCompletionStat[],
   tasks: Task[],
 ) {
   completions.forEach((completion) => {
@@ -31,7 +62,7 @@ export function sortTasksFromCompletions(
 }
 
 export function sortProfilesFromCompletions(
-  completions: TaskCompletion[],
+  completions: TaskCompletionStat[],
   profiles: Profile[],
 ) {
   completions.forEach((completion) => {
@@ -52,9 +83,16 @@ export function SummerizeEachTask(
   completions: TaskCompletion[],
   tasks: Task[],
   profiles: Profile[],
+  startDate: string,
+  endDate: string,
 ) {
-  sortTasksFromCompletions(completions, tasks);
-  sortProfilesFromCompletions(completions, profiles);
+  const sortedCompletions = sortTaskCompletionsByDate(
+    startDate,
+    endDate,
+    completions,
+  );
+  sortTasksFromCompletions(sortedCompletions, tasks);
+  sortProfilesFromCompletions(sortedCompletions, profiles);
 
   sortedTasks.forEach((task) => {
     const typedTaskData: TaskData = {
@@ -64,7 +102,7 @@ export function SummerizeEachTask(
       values: [],
     };
 
-    completions
+    sortedCompletions
       .filter((completion) => completion.taskId === task.id)
       .forEach((completion) => {
         const profile = sortedProfiles.find(

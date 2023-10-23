@@ -42,6 +42,14 @@ export interface TaskCompletion {
   completionDate: string;
 }
 
+export interface TaskCompletionStat {
+  id: string;
+  householdId: string;
+  taskId: string;
+  profileId: string;
+  completionDate: Date;
+}
+
 export interface AppState {
   isLoading: boolean;
 }

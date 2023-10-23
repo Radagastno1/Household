@@ -1,12 +1,18 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import PiechartComponent from "../components/PiechartComponent";
 import { useAppSelector } from "../store/store";
 import { StatData } from "../types";
+import { getCurrentWeekDates } from "../utils/DateHandler";
 import {
   SummerizeEachTask,
   getUniqueSummarizedData,
 } from "../utils/statisticHandler";
+
+interface StatDatesProps {
+  startDate: string;
+  endDate: string;
+}
 
 function arrayChunk<T>(array: T[], chunkSize: number): T[][] {
   const chunkedArray: T[][] = [];
@@ -17,6 +23,7 @@ function arrayChunk<T>(array: T[], chunkSize: number): T[][] {
 }
 
 export default function StatisticScreen() {
+  const { startOfCurrentWeek, endOfCurrentWeek } = getCurrentWeekDates();
   const tasks = useAppSelector((state) => state.task.tasks);
   const profiles = useAppSelector((state) => state.profile.profiles);
   const completions = useAppSelector(
@@ -24,17 +31,18 @@ export default function StatisticScreen() {
   );
   const [statsForTasks, setStatsForTasks] = useState<StatData[]>([]);
 
-  const summarizedData = useMemo(
-    () => SummerizeEachTask(completions, tasks, profiles),
-    [completions, tasks, profiles],
-  );
-
-  const uniqueData = getUniqueSummarizedData(summarizedData);
-
   useEffect(() => {
+    const summarizedData = SummerizeEachTask(
+      completions,
+      tasks,
+      profiles,
+      startOfCurrentWeek,
+      endOfCurrentWeek,
+    );
+    const uniqueData = getUniqueSummarizedData(summarizedData);
     setStatsForTasks(uniqueData);
     console.log("Nu renderas datan från statisticScreen: ", statsForTasks);
-  }, [completions, tasks, profiles]);
+  }, [completions, tasks, profiles, startOfCurrentWeek, endOfCurrentWeek]);
 
   const chunkedCharts = arrayChunk(statsForTasks, 3);
   const slices = [20, 15, 20];
