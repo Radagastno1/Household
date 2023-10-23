@@ -12,10 +12,11 @@ import {
   View,
 } from "react-native";
 import { Text, TextInput } from "react-native-paper";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { users } from "../data";
 import theme from "../data/theme";
-import { loginUser } from "../store/user/userActions";
+import { RootState } from "../store/store";
+import { loginUser } from "../store/user/userAuthSlice";
 
 export const SignInScreen = ({ navigation }: any) => {
   const [username, setUsername] = useState("");
@@ -29,7 +30,7 @@ export const SignInScreen = ({ navigation }: any) => {
     return user ? user.password : "";
   }
 
-  const translateY = useRef(new Animated.Value(6)).current; //start from the bottom
+  const translateY = useRef(new Animated.Value(6)).current;
 
   useEffect(() => {
     // Start the navigation animation early
@@ -40,8 +41,9 @@ export const SignInScreen = ({ navigation }: any) => {
       useNativeDriver: false,
     }).start();
   }, []);
+
+  // So we don´t have to write the password when logging in (remove this later)
   function clearFieldsAndTogglePassword(event: GestureResponderEvent): void {
-    //Do it like this for now since we don´t have a database
     if (!showPassword) {
       const passwordForUsername = getPasswordForUsername(username);
       if (passwordForUsername) {
@@ -70,6 +72,9 @@ export const SignInScreen = ({ navigation }: any) => {
       console.error("Authentication failed");
     }
   }
+
+  // UserProfileComponent code directly within SignInScreen, can move to its own file
+  const currentUser = useSelector((state: RootState) => state.userAccount.user);
 
   return (
     <Animated.View

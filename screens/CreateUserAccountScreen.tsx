@@ -1,3 +1,10 @@
+import {
+  addDoc,
+  collection,
+  doc,
+  getFirestore,
+  setDoc,
+} from "firebase/firestore";
 import React, { useState } from "react";
 import {
   StyleSheet,
@@ -7,11 +14,10 @@ import {
   View,
 } from "react-native";
 import { Checkbox, Modal, Portal, TextInput } from "react-native-paper";
-import { useDispatch } from "react-redux";
+import { app } from "../api/config";
 import theme from "../data/theme";
-import { useAppSelector } from "../store/store";
-import { createAccount } from "../store/user/userAccountSlice";
-import { User } from "../types";
+
+const db = getFirestore(app);
 
 const CreateUserAccountScreen: React.FC<{ navigation: any }> = ({
   navigation,
@@ -19,25 +25,21 @@ const CreateUserAccountScreen: React.FC<{ navigation: any }> = ({
   const [visible, setVisible] = useState(false);
   const [showWarning, setShowWarning] = useState(false);
   const [passwordVisible, setPasswordVisible] = useState(false);
-  const [confirmationPasswordVisible, setConfirmationPasswordVisible] =
-    useState(false);
+  const [isChecked, setIsChecked] = useState(false);
   const [passwordMismatchWarning, setPasswordMismatchWarning] = useState("");
   const [missingFieldsWarning, setMissingFieldsWarning] = useState("");
   const [newName, setNewName] = useState("");
   const [newUserName, setNewUserName] = useState("");
   const [newPassword, setNewPassword] = useState("");
+  const [confirmationPasswordVisible, setConfirmationPasswordVisible] =
+    useState(false);
   const [confirmationPasswordInput, setConfirmationPasswordInput] =
     useState("");
-  const [isChecked, setIsChecked] = useState(false);
-
-  const dispatch = useDispatch();
-
-  const userAccountState = useAppSelector((state) => state.userAccount);
 
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
 
-  const handleCreateAccount = () => {
+  const handleCreateAccount = async () => {
     if (!isChecked) {
       setShowWarning(true);
     } else if (newPassword !== confirmationPasswordInput) {
@@ -45,19 +47,32 @@ const CreateUserAccountScreen: React.FC<{ navigation: any }> = ({
     } else if (!newName || !newUserName || !newPassword) {
       setMissingFieldsWarning("Fyll i alla obligatoriska fält.");
     } else {
-      // Create the new user object
-      const newUser: User = {
-        id: "1",
-        name: newName,
-        username: newUserName,
-        password: newPassword,
-      };
+      try {
+        const userCollectionRef = collection(db, "users");
+        const docRef = await addDoc(userCollectionRef, {
+          name: newName,
+          username: newUserName,
+          password: newPassword,
+        });
 
-      // Dispatch the createAccount action with the new user
-      dispatch(createAccount(newUser));
+        // Get the generated ID from Firestore
+        const userId = docRef.id;
 
-      // If all conditions are met, navigate to "Login"
-      navigation.navigate("Login");
+        // Update the document with the generated ID to show as a field
+        await setDoc(doc(db, "users", userId), {
+          id: userId,
+          name: newName,
+          username: newUserName,
+          password: newPassword,
+        });
+
+        console.log("Account created with ID:", userId);
+
+        // If all conditions are met, navigate to "Login"
+        navigation.navigate("Login");
+      } catch (error) {
+        console.error("Error creating user account:", error);
+      }
     }
   };
 
