@@ -10,10 +10,12 @@ import {
   getLastMonthDates,
   getLastWeekDates,
 } from "../utils/DateHandler";
+import STAT2 from "../screens/STAT2";
 
 export type TopTabParamList = {
   HouseholdTasks: undefined;
   DennaVeckan: undefined;
+  FörraVeckan: undefined;
   TestaDatum: undefined;
 };
 
@@ -33,6 +35,7 @@ export default function TopTabNavigator() {
         })}
       />
       <TopTab.Screen name="DennaVeckan" component={StatisticScreen} />
+      <TopTab.Screen name="FörraVeckan" component={STAT2} />
       <TopTab.Screen name={"TestaDatum"} component={TESTDATUMSCREEN} />
     </TopTab.Navigator>
   );
