@@ -1,7 +1,7 @@
 import { MaterialIcons } from "@expo/vector-icons";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, View, Image } from "react-native";
-import { Button, Card, Text } from "react-native-paper";
+import { Avatar, Button, Card, Text } from "react-native-paper";
 import { useTheme } from "../contexts/themeContext";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import {
@@ -11,6 +11,7 @@ import {
 import { findTaskById } from "../store/tasks/taskSlice";
 import { AvatarUrls, Avatars } from "../data/avatars";
 import { RootNavigationScreenProps } from "../navigators/navigationTypes";
+import { profiles } from "../data";
 
 type TaskDetailProps = RootNavigationScreenProps<"TaskDetail">;
 export default function TaskDetailScreen({
@@ -19,6 +20,7 @@ export default function TaskDetailScreen({
 }: TaskDetailProps) {
   const { theme } = useTheme();
   const { taskId } = route.params;
+  const [avatar, setAvatars] = useState<string []> ([]);
   const activeProfile = useAppSelector((state) => state.profile.activeProfile);
   const activeHousehold = useAppSelector(
     (state) => state.household.activehousehold,
@@ -27,17 +29,43 @@ export default function TaskDetailScreen({
   const taskSlice = useAppSelector((state) => state.task);
   const dispatch = useAppDispatch();
   const taskCompletionSlice = useAppSelector((state) => state.taskCompletion);
-  const fetchAvatars = () => {
-    dispatch(findAllAvatarFortodayCompletionByTaskId({ taskId }));
-  };
+//   const fetchAvatars = () => {
+//     dispatch(findAllAvatarFortodayCompletionByTaskId({ taskId }));
 
-  const profileSlice = useAppSelector((state) => state.profile);
-  const profileId = profileSlice.activeProfile?.id;
+//   };
+
+  function findAllAvatarFortodayCompletionByTaskId(taskId: string) {
+    const today = new Date().toISOString();
+    //filter the completions with the same taskId---------can be moved out and share with getdays function
+    const filteredTodaysCompletionsForTask =
+      taskCompletionSlice.completions.filter(
+        (completion: any) =>
+          completion.completionDate.split("T")[0] === today.split("T")[0] &&
+          completion.taskId === taskId,
+      );
+    // get the unique profileIds
+    const uniqueProfileIds = [
+      ...new Set(
+        filteredTodaysCompletionsForTask?.map(
+          (completion: any) => completion.profileId,
+        ),
+      ),
+    ];
+    console.log(uniqueProfileIds);
+    // profiles corresponding to the unique profileIds----------need to fetch from db
+    const profilesForTask = profiles.filter((profile) =>
+      uniqueProfileIds.includes(profile.id),
+    );
+    const avatarList = profilesForTask.map((profile) => profile.avatar);
+    setAvatars(avatarList);
+    return avatarList;
+  }
+
 
   useEffect(() => {
     if (taskId) {
       dispatch(findTaskById({ taskId }));
-      fetchAvatars();
+      setAvatars(findAllAvatarFortodayCompletionByTaskId(taskId));
     }
   }, [dispatch, taskId]);
 
@@ -47,8 +75,11 @@ export default function TaskDetailScreen({
     householdId: string,
   ) => {
     if (taskId && profileId) {
-      dispatch(setTaskAsCompleted({ taskId, profileId, householdId }));
-      fetchAvatars();
+      dispatch(setTaskAsCompleted({ taskId, profileId, householdId }));;
+      if (activeProfile?.avatar) {
+        setAvatars([...avatar, activeProfile.avatar]);
+      }
+
     } else {
       console.error("Task ID or profile ID is undefined.");
     }
@@ -112,7 +143,7 @@ export default function TaskDetailScreen({
 
       <View>
         <View style={styles.avatarContainer}>
-          {taskCompletionSlice.avatars.map((avatar, index) => (
+          {avatar.map((avatar, index) => (
             <View key={index} style={styles.avatarText}>
               <Image
                 source={{ uri: AvatarUrls[avatar as Avatars] }}

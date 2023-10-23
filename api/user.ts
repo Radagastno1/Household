@@ -6,15 +6,12 @@ import {
   doc,
   getDoc,
   getDocs,
-  getFirestore,
   query,
   updateDoc,
   where,
 } from "firebase/firestore";
 import { User } from "../types";
-import { app } from "./config";
-
-const db = getFirestore(app);
+import { db } from "./config";
 
 export const addUserToDB = async (user: User) => {
   const userCollectionRef = collection(db, "users");

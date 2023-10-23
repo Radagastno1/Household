@@ -1,15 +1,18 @@
 import { AntDesign } from "@expo/vector-icons";
 import { useFocusEffect } from "@react-navigation/native";
-import React, { useCallback } from "react";
-import { Image, ScrollView, StyleSheet, View } from "react-native";
+import React, { useCallback, useEffect } from "react";
+import { ScrollView, StyleSheet, View, Image } from "react-native";
 import { Button, Card, Text } from "react-native-paper";
-// import { profiles } from "../data";
+import { households, profiles } from "../data";
 import { useAppDispatch, useAppSelector } from "../store/store";
+import { fetchCompletions } from "../store/taskCompletionSlice";
 import { fetchTasks, filterTaskListByHouseId } from "../store/tasks/taskSlice";
 import { Task } from "../types";
+import { useTheme } from "../contexts/themeContext";
 
 import { AvatarUrls, Avatars } from "../data/avatars";
 import { TopTabScreenProps } from "../navigators/navigationTypes";
+import { useColorScheme } from "react-native";
 
 type HouseholdTasksProps = TopTabScreenProps<"HouseholdTasks">;
 
@@ -42,6 +45,8 @@ export default function HouseholdTasksScreen({
 
   //   // Call this function to start the schedule
   //   scheduleMidnightReset(dispatch); //
+  const { theme } = useTheme();
+  const colorScheme = useColorScheme();
 
   const activeHousehold = useAppSelector(
     (state) => state.household.activehousehold,
@@ -49,9 +54,6 @@ export default function HouseholdTasksScreen({
 
   // Use useSelector to access the profiles
   const activeProfile = useAppSelector((state) => state.profile.activeProfile);
-  const profilesForHousehold = useAppSelector(
-    (state) => state.profile.profiles,
-  );
   // const household = households.find((h) => h.id === activeProfile?.householdId);
   const taskSlice = useAppSelector((state) => state.task);
   const taskCompletionSlice = useAppSelector((state) => state.taskCompletion);
@@ -79,19 +81,14 @@ export default function HouseholdTasksScreen({
   };
 
   function findAllAvatarFortodayCompletionByTaskId(taskId: string) {
-    const today = new Date();
-    console.log(
-      "ALLLLLAAAAA TASK COMPLETIONNSSSSSs:",
-      taskCompletionSlice.completions,
-    );
+    const today = new Date().toISOString();
     //filter the completions with the same taskId---------can be moved out and share with getdays function
     const filteredTodaysCompletionsForTask =
       taskCompletionSlice.completions.filter(
-        (completion) =>
-          completion.completionDate?.split("T")[0] ===
-            today.toISOString().split("T")[0] && completion.taskId === taskId,
+        (completion: any) =>
+          completion.completionDate.split("T")[0] === today.split("T")[0] &&
+          completion.taskId === taskId,
       );
-
     // get the unique profileIds
     const uniqueProfileIds = [
       ...new Set(
@@ -101,8 +98,8 @@ export default function HouseholdTasksScreen({
       ),
     ];
     console.log(uniqueProfileIds);
-    // profiles corresponding to the unique profileIds
-    const profilesForTask = profilesForHousehold.filter((profile) =>
+    // profiles corresponding to the unique profileIds------------need to fetch from db
+    const profilesForTask = profiles.filter((profile) =>
       uniqueProfileIds.includes(profile.id),
     );
 
@@ -111,92 +108,161 @@ export default function HouseholdTasksScreen({
   }
 
   function getDaysSinceLastCompletion(task: Task) {
-    const today = new Date().toISOString().split("T")[0];
+    let lastCompletionDate: Date;
+    const today = new Date().toISOString();
+    //all todays taskcompletions for task ---------can be moved out and share with getAvatar function
 
-    const latestCompletion = taskCompletionSlice.completions
-      .filter((completion) => completion.taskId === task.id)
-      .reduce((latest, completion) => {
-        const completionDate = completion.completionDate.split("T")[0];
-        return completionDate > latest ? completionDate : latest;
-      }, "");
+    const filteredTodaysCompletionsForTask =
+      taskCompletionSlice.completions.filter(
+        (completion) =>
+          completion.taskId === task.id &&
+          completion.completionDate.split("T")[0] === today.split("T")[0],
+      );
 
-    const currentDate = new Date().toISOString().split("T")[0];
-    const lastCompletionDate =
-      latestCompletion || task.creatingDate.split("T")[0];
-
-    const timeDifference =
-      Date.parse(currentDate) - Date.parse(lastCompletionDate);
+    if (filteredTodaysCompletionsForTask.length === 0) {
+      //if it is empty, no one did it today
+      lastCompletionDate = new Date(task.creatingDate);
+    } else {
+      //get the latest date it was done
+      lastCompletionDate = new Date(
+        filteredTodaysCompletionsForTask.slice().sort((a, b) => {
+          return (
+            new Date(b.completionDate).getTime() -
+            new Date(a.completionDate).getTime()
+          );
+        })[0].completionDate,
+      );
+    }
+    // get the timeDifference since last done date
+    const currentDate = new Date();
+    const timeDifference = currentDate.getTime() - lastCompletionDate.getTime();
+    //convert it to days minus the interval days
     const daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-
-    console.log("days difference: ", daysDifference);
     return daysDifference;
   }
 
   return (
-    <View style={styles.container}>
-      <ScrollView
-        style={
-          isOwner ? styles.scrollContainerOwner : styles.scrollContainerNonOwner
-        }
-      >
-        {taskSlice.filteredTasks.map((task) => (
+    <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
+      <View style={styles.container}>
+        <ScrollView
+          style={
+            isOwner
+              ? styles.scrollContainerOwner
+              : styles.scrollContainerNonOwner
+          }
+        >
+          {taskSlice.filteredTasks.map((task) => (
+            <Card
+              key={task.id}
+              style={[
+                styles.card,
+                {
+                  backgroundColor:
+                    colorScheme === "dark"
+                      ? "white"
+                      : theme.cardButton.backgroundColor,
+                },
+              ]}
+              onPress={() => handleTaskPress(task.id)}
+            >
+              {/* {taskSlice.filteredTasks.map((task) => (
           <Card
             key={task.id}
             style={styles.card}
             onPress={() => handleTaskPress(task.id)}
-          >
-            <View style={styles.taskItem}>
-              <View>
-                <Text variant="titleLarge">{task.title}</Text>
-              </View>
-
-              {findAllAvatarFortodayCompletionByTaskId(task.id).map(
-                (avatar, index) => (
-                  <View key={index}>
-                    <Image
-                      source={{ uri: AvatarUrls[avatar as Avatars] }}
-                      style={{ height: 20, width: 20 }}
-                    />
-                    {/* <Text variant="bodyMedium">{avatar}</Text> */}
-                  </View>
-                ),
-              )}
-
-              {getDaysSinceLastCompletion(task) > 0 && (
-                <View style={styles.intervalNumberCircle}>
-                  <Text style={styles.circleText} variant="bodyMedium">
-                    {getDaysSinceLastCompletion(task)}
+          > */}
+              <View style={styles.taskItem}>
+                <View>
+                  <Text
+                    variant="titleLarge"
+                    style={{
+                      color:
+                        colorScheme === "dark"
+                          ? "white"
+                          : theme.buttonText.color,
+                    }}
+                  >
+                    {task.title}
                   </Text>
                 </View>
-              )}
+                {/* <View style={styles.taskItem}>
+              <View>
+                <Text variant="titleLarge">{task.title}</Text>
+              </View> */}
+
+                {findAllAvatarFortodayCompletionByTaskId(task.id).map(
+                  (avatar, index) => (
+                    <View key={index}>
+                      <Image
+                        source={{ uri: AvatarUrls[avatar as Avatars] }}
+                        style={{ height: 20, width: 20 }}
+                      />
+                    </View>
+                  ),
+                )}
+
+                {getDaysSinceLastCompletion(task) > 0 && (
+                  <View
+                    style={[
+                      styles.intervalNumberCircle,
+                      {
+                        backgroundColor:
+                          getDaysSinceLastCompletion(task) < task.interval
+                            ? "lightgrey"
+                            : "red",
+                      },
+                    ]}
+                  >
+                    {getDaysSinceLastCompletion(task) > 30 ? (
+                      <Text style={styles.circleText} variant="bodyMedium">
+                        30+
+                      </Text>
+                    ) : (
+                      <Text style={styles.circleText} variant="bodyMedium">
+                        {getDaysSinceLastCompletion(task)}
+                      </Text>
+                    )}
+                  </View>
+                )}
+              </View>
+            </Card>
+          ))}
+
+          <Card style={styles.card}>
+            <View style={styles.taskItem}>
+              <View>
+                <Text variant="titleLarge">test</Text>
+              </View>
+              <View>
+                <Text variant="bodyMedium">avatarer1</Text>
+              </View>
             </View>
           </Card>
-        ))}
+        </ScrollView>
 
-        <Card style={styles.card}>
-          <View style={styles.taskItem}>
-            <View>
-              <Text variant="titleLarge">test</Text>
-            </View>
-            <View>
-              <Text variant="bodyMedium">avatarer1</Text>
-            </View>
-          </View>
-        </Card>
+        <View style={styles.buttonContainer}>
+          {isOwner && (
+            <Button
+              icon={({ size, color }) => (
+                <AntDesign name="pluscircleo" size={20} color="black" />
+              )}
+              mode="outlined"
+              onPress={() => navigation.navigate("HandleTask", { taskId: "0" })}
+              style={[
+                styles.button,
+                {
+                  backgroundColor:  colorScheme === "dark"
+                  ? "white"
+                  : theme.cardButton.backgroundColor,
+                },
+              ]}
+            >
+              Lägg Till
+            </Button>
+          )}
+        </View>
 
-        <Card style={styles.card}>
-          <View style={styles.taskItem}>
-            <View>
-              <Text variant="titleLarge">test</Text>
-            </View>
-            <View>
-              <Text variant="bodyMedium">avatarer1</Text>
-            </View>
-          </View>
-        </Card>
-      </ScrollView>
-
-      <View style={styles.buttonContainer}>
+        {/* <View style={styles.buttonContainer}>
         {isOwner && (
           <Button
             icon={({ size, color }) => (
@@ -209,6 +275,7 @@ export default function HouseholdTasksScreen({
             Lägg Till
           </Button>
         )}
+      </View> */}
       </View>
     </View>
   );

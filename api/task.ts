@@ -1,3 +1,4 @@
+import { FirebaseError } from "firebase/app";
 import "firebase/firestore";
 import {
   addDoc,
@@ -6,15 +7,12 @@ import {
   doc,
   getDoc,
   getDocs,
-  getFirestore,
   query,
   updateDoc,
   where,
 } from "firebase/firestore";
 import { Task } from "../types";
-import { app } from "./config";
-
-const db = getFirestore(app);
+import { db } from "./config";
 
 //doc först  - skapa dokumentet för idt först
 //sen i docRef.id får man idt
@@ -47,7 +45,10 @@ export const addTaskToDB = async (task: Task) => {
       console.error("Uppgiftsdokumentet finns inte i databasen.");
       return null;
     }
-  } catch (error) {
+  } catch (error: any) {
+    if (error) {
+      console.error("Firestore Error Code:", error.code);
+    }
     console.error("Fel vid tillägg av uppgift:", error);
     return null;
   }
