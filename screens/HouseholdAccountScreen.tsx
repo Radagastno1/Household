@@ -21,9 +21,6 @@ const styles = StyleSheet.create({
 type HouseholdProps = RootNavigationScreenProps<"HouseholdAccount">;
 
 export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
-  //att få state på user verkar inte funka än - det ska in sen
-  //för nu så hårdkodar vi ett user id
-  // const activeUser = useAppSelector((state) => state.user.user);
   const activeUser = useAppSelector((state) => state.user.user);
   const [households, setHouseholds] = useState<Household[] | undefined>([]);
   console.log("Nu är användaren ", activeUser, "inloggad");
@@ -31,27 +28,16 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const householdsIds = await GetProfilesFromActiveUser();
-        const multibleHousehold = await GetHouseholds(householdsIds);
-
-        console.log("householdIds: ", householdsIds);
-        return multibleHousehold;
+        const multibleHousehold = await GetHouseholds();
+        setHouseholds(multibleHousehold);
+        console.log("households: ", multibleHousehold); // Uppdatera loggningen här
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
 
-    const fetch = async () => {
-      console.log("här är jag");
-      return await fetchData();
-    };
-
-    fetch().then((result) => {
-      setHouseholds(result);
-    });
-
-    console.log("households: ", households);
-  }, [activeUser]);
+    fetchData(); // Anropa den asynkrona funktionen inuti useEffect
+  }, []); // Beroendelistan är tom, så useEffect körs en gång när komponenten monteras
 
   async function GetProfilesFromActiveUser() {
     const householdsId: string[] = [];
@@ -63,16 +49,25 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
     return householdsId;
   }
 
-  async function GetHouseholds(householdsIds: string[]) {
-    const households: Household[] = [];
-    householdsIds.forEach(async (household) => {
-      const fetchHousehold = await getHouseholdsFromDB(household);
-      if (fetchHousehold) {
-        households.push(fetchHousehold);
-      }
-    });
-
-    return households;
+  async function GetHouseholds() {
+    // Anropa GetProfilesFromActiveUser och använd .then
+    return GetProfilesFromActiveUser()
+      .then(async (householdsIds) => {
+        const households: Household[] = [];
+        await Promise.all(
+          householdsIds.map(async (household) => {
+            const fetchHousehold = await getHouseholdsFromDB(household);
+            if (fetchHousehold) {
+              households.push(fetchHousehold);
+            }
+          }),
+        );
+        return households;
+      })
+      .catch((error) => {
+        console.error("Error fetching households:", error);
+        return [];
+      });
   }
 
   // const activeUser = "5NCx5MKcUu6UYKjFqRkg";
@@ -134,7 +129,7 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
       <View style={styles.container}>
         <Text style={theme.buttonText}>MINA HUSHÅLL</Text>
 
-        {allHouseholds.map((household: Household) => (
+        {households?.map((household: Household) => (
           <TouchableOpacity
             key={household.id}
             style={theme.cardButton as any}
