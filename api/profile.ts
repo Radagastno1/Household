@@ -98,6 +98,27 @@ export const getAllProfilesByHouseholdId = async (householdId: string) => {
   }
 };
 
+export const getAllProfilesByUserId = async (userId: string) => {
+  try {
+    const profileCollectionRef = collection(db, "profiles");
+
+    const q = query(profileCollectionRef, where("userId", "==", userId));
+
+    const querySnapshot = await getDocs(q);
+
+    const profiles: Profile[] = [];
+
+    querySnapshot.forEach((doc) => {
+      profiles.push(doc.data() as Profile);
+    });
+
+    console.log("Profiler hämtade:", profiles);
+    return profiles;
+  } catch (error) {
+    console.error("Fel vid hämtning av uppgifter:", error);
+  }
+};
+
 // export const editTaskToDB = async (task: Task) => {
 //   task.householdId = "fYHVLNiQvWEG9KNUGqBT";
 //   const taskCollectionRef = collection(db, "tasks");

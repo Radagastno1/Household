@@ -1,7 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { addHouseholdToDB } from "../../api/household";
+import { addHouseholdToDB, getHouseholdsFromDB } from "../../api/household";
 import { RootStackParamList } from "../../navigators/RootNavigator";
 import { Household } from "../../types";
 

@@ -2,9 +2,7 @@ import { Button, StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { setHouseholdByHouseholdId } from "../store/household/householdSlice";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { Household } from "../types";
-
 import { RootNavigationScreenProps } from "../navigators/navigationTypes";
-
 import { useState } from "react";
 import { useTheme } from "../contexts/themeContext";
 import { fetchAllProfilesByHousehold } from "../store/profile/profileSlice";
