@@ -41,43 +41,45 @@ export default function StatisticScreen() {
       endOfCurrentWeek,
     );
     const uniqueData = getUniqueSummarizedData(summarizedData);
+    const empty: StatData[] = [];
+    setStatsForTasks(empty);
     setStatsForTasks(uniqueData);
     console.log("Nu renderas datan från statisticScreen: ", statsForTasks);
   }, [completions, tasks, profiles, startOfCurrentWeek, endOfCurrentWeek]);
 
   const chunkedCharts = arrayChunk(statsForTasks, 3);
-  const {theme} = useTheme();
+  const { theme } = useTheme();
 
   const slices = [20, 15, 20];
   const colors = ["red", "yellow", "blue"];
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
-    <ScrollView style={styles.container}>
-      <View style={styles.topChart}>
-        <PiechartComponent
-          widthAndHeight={250}
-          series={slices}
-          sliceColor={colors}
-        />
-      </View>
+      <ScrollView style={styles.container}>
+        <View style={styles.topChart}>
+          <PiechartComponent
+            widthAndHeight={250}
+            series={slices}
+            sliceColor={colors}
+          />
+        </View>
 
-      <View style={styles.chartContainer}>
-        {chunkedCharts.map((row, rowIndex) => (
-          <View style={styles.row} key={rowIndex}>
-            {row.map((chart, columnIndex) => (
-              <View style={styles.piechartContainer} key={columnIndex}>
-                <Text style={styles.taskTitle}>{chart.title}</Text>
-                <PiechartComponent
-                  widthAndHeight={100}
-                  series={chart.series}
-                  sliceColor={chart.colors}
-                />
-              </View>
-            ))}
-          </View>
-        ))}
-      </View>
-    </ScrollView>
+        <View style={styles.chartContainer}>
+          {chunkedCharts.map((row, rowIndex) => (
+            <View style={styles.row} key={rowIndex}>
+              {row.map((chart, columnIndex) => (
+                <View style={styles.piechartContainer} key={columnIndex}>
+                  <Text style={styles.taskTitle}>{chart.title}</Text>
+                  <PiechartComponent
+                    widthAndHeight={100}
+                    series={chart.series}
+                    sliceColor={chart.colors}
+                  />
+                </View>
+              ))}
+            </View>
+          ))}
+        </View>
+      </ScrollView>
     </View>
   );
 }
