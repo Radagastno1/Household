@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { getHouseholdsFromDB } from "../api/household";
 import { getAllProfilesByUserId } from "../api/profile";
 import { useTheme } from "../contexts/themeContext";
 import { RootNavigationScreenProps } from "../navigators/navigationTypes";
-import { setHouseholdByHouseholdId } from "../store/household/householdSlice";
+import { sethouseholdActive } from "../store/household/householdSlice";
 import { fetchAllProfilesByHousehold } from "../store/profile/profileSlice";
 import { useAppDispatch, useAppSelector } from "../store/store";
-import { Household, Profile } from "../types";
-import { getHouseholdsFromDB } from "../api/household";
+import { Household } from "../types";
 
 const styles = StyleSheet.create({
   container: {
@@ -79,17 +79,17 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
   const { setColorScheme } = useTheme();
   const [currentTheme, setCurrentTheme] = useState("auto");
 
-  const handleEnterHousehold = async (householdId: string) => {
-    console.log("HUS HÅLLSID: ", householdId);
-    dispatch(setHouseholdByHouseholdId({ householdId: householdId }));
-
+  const handleEnterHousehold = async (household: Household) => {
+    dispatch(sethouseholdActive(household));
+    //denna sen när man hämtat alla hushåll och lagt i state households
+    // dispatch(setHouseholdByHouseholdId({ householdId: householdId }));
     try {
       // Fetch all profiles for the household
-      await dispatch(fetchAllProfilesByHousehold(householdId, activeUser));
+      await dispatch(fetchAllProfilesByHousehold(household.id, activeUser));
 
       // Navigate to the ProfileAccount screen
       navigation.navigate("ProfileAccount", {
-        householdId: householdId,
+        householdId: household.id,
       });
     } catch (error) {
       console.error("Error entering household:", error);
@@ -134,7 +134,7 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
             key={household.id}
             style={theme.cardButton as any}
             onPress={() => {
-              handleEnterHousehold(household.id);
+              handleEnterHousehold(household);
             }}
           >
             {/* <Button title="" /> */}
