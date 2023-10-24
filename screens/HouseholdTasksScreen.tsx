@@ -45,7 +45,7 @@ export default function HouseholdTasksScreen({
   //   scheduleMidnightReset(dispatch); //
 
   const activeHousehold = useAppSelector(
-    (state) => state.household.activehousehold,
+    (state) => state.household.activeHousehold,
   );
 
   // Use useSelector to access the profiles

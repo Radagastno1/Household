@@ -32,7 +32,7 @@ export default function CreateTaskScreen({
   const [isCreateMode, setIsCreateMode] = useState(true);
   const [taskToEdit, setTaskToEdit] = useState<Task>();
   const activeHousehold = useAppSelector(
-    (state) => state.household.activehousehold,
+    (state) => state.household.activeHousehold,
   );
 
   const householdId = activeHousehold?.id;
