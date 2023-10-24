@@ -12,12 +12,12 @@ import {
   View,
 } from "react-native";
 import { Text, TextInput } from "react-native-paper";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { getUsersFromDB } from "../api/user"; // Import the getUsersFromDB function
 import { useTheme } from "../contexts/themeContext";
-import { users } from "../data";
 import { RootNavigationScreenProps } from "../navigators/navigationTypes";
-import { RootState } from "../store/store";
 import { loginUser } from "../store/user/userAuthSlice";
+import { User } from "../types";
 
 type SignInProps = RootNavigationScreenProps<"Login">;
 
@@ -28,10 +28,7 @@ export const SignInScreen = ({ navigation }: SignInProps) => {
   const { theme } = useTheme();
   const dispatch = useDispatch();
 
-  function getPasswordForUsername(username: string) {
-    const user = users.find((u) => u.username === username);
-    return user ? user.password : "";
-  }
+  const [] = useState<User[]>([]);
 
   const translateY = useRef(new Animated.Value(6)).current;
 
@@ -45,15 +42,20 @@ export const SignInScreen = ({ navigation }: SignInProps) => {
     }).start();
   }, []);
 
-  // So we don´t have to write the password when logging in (remove this later)
+  // So you don't have to write the password when logging in (remove this later)
   function clearFieldsAndTogglePassword(event: GestureResponderEvent): void {
     if (!showPassword) {
-      const passwordForUsername = getPasswordForUsername(username);
-      if (passwordForUsername) {
-        // If the password exists, show it
-        setPassword(passwordForUsername);
-        setShowPassword(true);
-      }
+      // You can call the getUsersFromDB function with the provided username
+      getUsersFromDB(username).then((users) => {
+        if (users && users.length > 0) {
+          const user = users[0];
+          // If the user exists in the database, show the password
+          setPassword(user.password);
+          setShowPassword(true);
+        } else {
+          console.error("User not found in the database.");
+        }
+      });
     } else {
       // If the password is already shown, clear it
       setPassword("");
@@ -62,22 +64,27 @@ export const SignInScreen = ({ navigation }: SignInProps) => {
   }
 
   function handleLogin() {
-    const user = users.find(
-      (u) => u.username === username && u.password === password,
-    );
+    getUsersFromDB(username)
+      .then((users) => {
+        if (users && users.length > 0) {
+          const user = users[0];
 
-    if (user) {
-      dispatch(loginUser(user));
-      console.log("Authentication successful");
-      console.log("User data:", user);
-      navigation.navigate("HouseholdAccount");
-    } else {
-      console.error("Authentication failed");
-    }
+          if (user.password === password) {
+            dispatch(loginUser(user));
+            console.log("Authentication successful");
+            console.log("User data:", user);
+            navigation.navigate("HouseholdAccount");
+          } else {
+            console.error("Authentication failed: Invalid password");
+          }
+        } else {
+          console.error("Authentication failed: User not found");
+        }
+      })
+      .catch((error) => {
+        console.error("Error while fetching users:", error);
+      });
   }
-
-  // UserProfileComponent code directly within SignInScreen, can move to its own file
-  const currentUser = useSelector((state: RootState) => state.userAccount.user);
 
   return (
     <Animated.View
@@ -200,7 +207,7 @@ const styles = StyleSheet.create({
     // backgroundColor: theme.colors.background,
   },
   loginButton: {
-    // backgroundColor: theme.colors.primary,
+    // backgroundColor: theme.colors primary,
     // padding: 10,
     // alignItems: "center",
     // margin: 20,
@@ -211,7 +218,7 @@ const styles = StyleSheet.create({
     // fontSize: theme.buttonText.fontSize,
   },
   // signupButton: {
-  //   // backgroundColor: theme.colors.background,
+  //   // backgroundColor: theme.colors background,
   //   padding: 5,
   //   alignItems: "center",
   //   margin: 10,
@@ -224,7 +231,7 @@ const styles = StyleSheet.create({
     // fontSize: theme.buttonText.fontSize,
   },
   // forgotPasswordButton: {
-  //   // backgroundColor: theme.colors.background,
+  //   // backgroundColor: theme.colors background,
   //   // flex: 1,
   //   padding: 5,
   //   alignItems: "center",

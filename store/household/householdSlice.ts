@@ -1,14 +1,17 @@
+import { useNavigation } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { addHouseholdToDB } from "../../api/household";
+import { RootStackParamList } from "../../navigators/RootNavigator";
 import { Household } from "../../types";
 
-interface HouseholdState {
+export interface HouseholdState {
   households: Household[];
   selectedHousehold: Household | null;
   activeHousehold: Household | null;
 }
 
-const initialState: HouseholdState = {
+export const initialState: HouseholdState = {
   households: [],
   selectedHousehold: null,
   activeHousehold: null,
@@ -35,6 +38,9 @@ const householdSlice = createSlice({
       state.households = [...state.households, action.payload];
     },
     addHousehold: (state, action: PayloadAction<Household>) => {
+      const navigation =
+        useNavigation<StackNavigationProp<RootStackParamList>>();
+
       const code = generateHouseholdCode(); // Generate a unique code
       const householdWithCode = { ...action.payload, code }; // Add the code to the household
       addHouseholdToDB(householdWithCode)
@@ -81,12 +87,13 @@ const householdSlice = createSlice({
       );
 
       if (joinedHouseholdByCode) {
-        // Add logic for joining the household here, e.g., set the active household
+        // Set the active household
         state.activeHousehold = joinedHouseholdByCode;
       }
     },
   },
 });
+
 export const {
   addHousehold,
   findHouseholdById,

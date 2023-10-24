@@ -8,13 +8,16 @@ import {
 import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Appbar, Button, Text, TextInput } from "react-native-paper";
+import { useDispatch, useSelector } from "react-redux";
 import { app } from "../api/config";
 import { useTheme } from "../contexts/themeContext";
 import { RootNavigationScreenProps } from "../navigators/navigationTypes";
 import {
+  HouseholdState,
   generateHouseholdCode,
   joinHouseholdByCode,
 } from "../store/household/householdSlice";
+
 const db = getFirestore(app);
 
 type HandleHouseholdProps = RootNavigationScreenProps<"HandleHousehold">;
@@ -25,6 +28,7 @@ export default function HandleHouseholdScreen({
   const { theme } = useTheme();
   const [householdName, setHouseholdName] = useState("");
   const [joinCode, setJoinCode] = useState("");
+  const dispatch = useDispatch();
 
   const handleCreateHousehold = async () => {
     const householdCollectionRef = collection(db, "households");
@@ -45,6 +49,9 @@ export default function HandleHouseholdScreen({
       });
 
       console.log("Household created with ID:", householdId);
+
+      // After creating a household, you can navigate to "CreateProfile"
+      navigation.navigate("HouseholdAccount");
     } catch (error) {
       console.error("Error creating household:", error);
     }
@@ -52,91 +59,102 @@ export default function HandleHouseholdScreen({
 
   const handleJoinHousehold = () => {
     if (joinCode) {
-      // Join a household with the provided code
-      joinHouseholdByCode(joinCode);
+      dispatch(joinHouseholdByCode(joinCode));
+
+      // Type the state variable explicitly as HouseholdState
+      const activeHousehold = useSelector(
+        (state: { household: HouseholdState }) =>
+          state.household.activeHousehold,
+      );
+
+      if (activeHousehold) {
+        // Navigate to the "CreateProfileScreen" after joining
+        navigation.navigate("CreateProfile", {
+          householdId: activeHousehold.id,
+        });
+      }
     } else {
-      // Handle case where join code is not provided
       console.error("Join code is required.");
     }
   };
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
-    <View>
       <View>
-        <Appbar.Header style={{ height: 70, backgroundColor: "white" }}>
-          <Appbar.Content title={"Välkommen användare!"} />
-          {/* <Appbar.Content title={`Välkommen ${userName}!`} /> */}
-        </Appbar.Header>
+        <View>
+          <Appbar.Header style={{ height: 70, backgroundColor: "white" }}>
+            <Appbar.Content title={"Välkommen användare!"} />
+            {/* <Appbar.Content title={`Välkommen ${userName}!`} /> */}
+          </Appbar.Header>
+        </View>
+
+        <View style={styles.centeredContent}>
+          <Text style={theme.buttonText}>Skapa ett hushåll</Text>
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={theme.buttonText}
+              placeholder="Hushållets namn"
+              value={householdName}
+              onChangeText={(text) => setHouseholdName(text)}
+            />
+          </View>
+
+          <Button
+            style={theme.button as any}
+            labelStyle={{
+              color: "black",
+              fontSize: 16,
+            }}
+            onPress={handleCreateHousehold}
+          >
+            Skapa
+          </Button>
+
+          <View style={styles.verticalSpace} />
+
+          <View style={styles.horizontalLine}>
+            <View style={styles.line} />
+            <Text style={styles.ellerText}>eller</Text>
+            <View style={styles.line} />
+          </View>
+
+          <View style={styles.verticalSpace} />
+
+          <Text style={theme.buttonText}>Gå med ett hushåll</Text>
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={theme.buttonText}
+              placeholder="Skriv in din kod"
+              value={joinCode}
+              onChangeText={(text) => setJoinCode(text)}
+            />
+          </View>
+
+          <Button
+            style={theme.button as any}
+            labelStyle={{
+              color: "black",
+              fontSize: 16,
+            }}
+            onPress={handleJoinHousehold}
+          >
+            Gå med
+          </Button>
+
+          <View style={styles.verticalSpace} />
+
+          <Button
+            style={styles.centeredButton}
+            labelStyle={{
+              color: "black",
+              fontSize: 16,
+            }}
+            onPress={() => navigation.navigate("HouseholdAccount")}
+          >
+            Tillbaka
+          </Button>
+        </View>
       </View>
-
-      <View style={styles.centeredContent}>
-        <Text style={theme.buttonText}>Skapa ett hushåll</Text>
-        <View style={styles.inputContainer}>
-          <TextInput
-            style={theme.buttonText}
-            placeholder="Hushållets namn"
-            value={householdName}
-            onChangeText={(text) => setHouseholdName(text)}
-          />
-        </View>
-
-        <Button
-          style={theme.button as any}
-          labelStyle={{
-            color: "black",
-            fontSize: 16,
-          }}
-          onPress={handleCreateHousehold}
-        >
-          Skapa
-        </Button>
-
-        <View style={styles.verticalSpace} />
-
-        <View style={styles.horizontalLine}>
-          <View style={styles.line} />
-          <Text style={styles.ellerText}>eller</Text>
-          <View style={styles.line} />
-        </View>
-
-        <View style={styles.verticalSpace} />
-
-        <Text style={theme.buttonText}>Gå med ett hushåll</Text>
-        <View style={styles.inputContainer}>
-          <TextInput
-            style={theme.buttonText}
-            placeholder="Skriv in din kod"
-            value={joinCode}
-            onChangeText={(text) => setJoinCode(text)}
-          />
-        </View>
-
-        <Button
-          style={theme.button as any}
-          labelStyle={{
-            color: "black",
-            fontSize: 16,
-          }}
-          onPress={handleJoinHousehold}
-        >
-          Gå med
-        </Button>
-
-        <View style={styles.verticalSpace} />
-
-        <Button
-          style={styles.centeredButton}
-          labelStyle={{
-            color: "black",
-            fontSize: 16,
-          }}
-          onPress={() => navigation.navigate("HouseholdAccount")}
-        >
-          Tillbaka
-        </Button>
-      </View>
-    </View>
     </View>
   );
 }

@@ -67,11 +67,32 @@ export const editUserToDB = async (user: User) => {
   }
 };
 
-export const getUsersFromDB = async (householdId: string) => {
+// export const getUsersFromDB = async (householdId: string) => {
+//   try {
+//     const userCollectionRef = collection(db, "users");
+
+//     const q = query(userCollectionRef, where("householdId", "==", householdId));
+
+//     const querySnapshot = await getDocs(q);
+
+//     const users: User[] = [];
+
+//     querySnapshot.forEach((doc) => {
+//       users.push(doc.data() as User);
+//     });
+
+//     console.log("Uppgifter hämtade:", users);
+//     return users; // Return an empty array when no users are found
+//   } catch (error) {
+//     console.error("Fel vid hämtning av uppgifter:", error);
+//     return []; // Return an empty array in case of an error
+//   }
+// };
+export const getUsersFromDB = async (username: string) => {
   try {
     const userCollectionRef = collection(db, "users");
 
-    const q = query(userCollectionRef, where("householdId", "==", householdId));
+    const q = query(userCollectionRef, where("username", "==", username));
 
     const querySnapshot = await getDocs(q);
 
@@ -84,7 +105,8 @@ export const getUsersFromDB = async (householdId: string) => {
     console.log("Uppgifter hämtade:", users);
     return users;
   } catch (error) {
-    console.error("Fel vid hämtning av uppgifter:", error);
+    console.error("Error fetching users:", error);
+    return null;
   }
 };
 
@@ -96,5 +118,24 @@ export const deleteUserFromDB = async (userId: string) => {
     console.log("User borttagen med Id:", userId);
   } catch (error) {
     console.error("Fel vid borttagning av usern:", error);
+  }
+};
+export const getUserByUserId = async (userId: string) => {
+  try {
+    const userCollectionRef = collection(db, "users");
+    const userQuery = query(userCollectionRef, where("id", "==", userId));
+    const querySnapshot = await getDocs(userQuery);
+
+    if (querySnapshot.size === 0) {
+      console.error("User not found with ID:", userId);
+      return null;
+    }
+
+    const userData = querySnapshot.docs[0].data() as User;
+    console.log("User data retrieved:", userData);
+    return userData;
+  } catch (error) {
+    console.error("Error fetching user by userId:", error);
+    return null;
   }
 };
