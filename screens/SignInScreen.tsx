@@ -164,7 +164,7 @@ export const SignInScreen = ({ navigation }: SignInProps) => {
               </TouchableOpacity>
 
               <TouchableOpacity
-                style={styles.forgotPasswordButton}
+                style={theme.signupButton as any}
                 onPress={clearFieldsAndTogglePassword}
               >
                 <Text style={theme.buttonText}>
@@ -223,13 +223,13 @@ const styles = StyleSheet.create({
     // color: theme.buttonText.color,
     // fontSize: theme.buttonText.fontSize,
   },
-  forgotPasswordButton: {
-    // backgroundColor: theme.colors.background,
-    // flex: 1,
-    padding: 5,
-    alignItems: "center",
-    margin: 10,
-  },
+  // forgotPasswordButton: {
+  //   // backgroundColor: theme.colors.background,
+  //   // flex: 1,
+  //   padding: 5,
+  //   alignItems: "center",
+  //   margin: 10,
+  // },
   // forgotPasswordButtonText: {
 
   //   // color: theme.buttonText.color,

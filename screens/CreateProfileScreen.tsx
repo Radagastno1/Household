@@ -4,6 +4,7 @@ import { Button } from "react-native-paper";
 import { useDispatch } from "react-redux";
 import { households } from "../data";
 import { AvatarColors, AvatarUrls, Avatars } from "../data/avatars";
+import { useColorScheme } from "react-native";
 
 import {
   StyleSheet,
@@ -43,6 +44,7 @@ export default function CreateProfileScreen({
   const { householdId } = route.params;
   const household = households.find((h) => h.id === householdId);
   const { theme } = useTheme();
+  const colorScheme = useColorScheme();
   const dispatch = useDispatch();
   const todaysDate = new Date();
 
@@ -85,20 +87,46 @@ export default function CreateProfileScreen({
   };
 
   return (
+    <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
     <View style={styles.container}>
       <View style={styles.sectionContainer}>
-        <View style={styles.rectContainer}>
-          <Text style={styles.rectText}>{householdId}</Text>
+        <View   style={[
+          styles.rectContainer,
+          {
+            backgroundColor:
+              colorScheme === "dark"
+                ? "white"
+                : theme.cardButton.backgroundColor,
+          },
+        ]}>
+          <Text   style={[
+          styles.rectText,
+          {
+            backgroundColor:
+              colorScheme === "dark"
+                ? "white"
+                : theme.cardButton.backgroundColor,
+          },
+        ]}>{householdId}</Text>
         </View>
       </View>
       <View style={styles.sectionContainer}>
-        <View style={styles.rectContainer}>
-          <Text style={styles.rectText}>Profil namn</Text>
+        <View style={theme.button as any}>
+          <Text style={theme.buttonText}>Välj ditt profilnamn</Text>
         </View>
       </View>
       <TextInput
         placeholder="Skriv ditt profilnamn"
-        style={styles.input}
+        // style={styles.input}
+        style={[
+          styles.input,
+          {
+            backgroundColor:
+              colorScheme === "dark"
+                ? "white"
+                : theme.cardButton.backgroundColor,
+          },
+        ]}
         onChangeText={(text) => setHouseholdName(text)}
       />
       <View style={styles.avatarsContainer}>
@@ -131,6 +159,7 @@ export default function CreateProfileScreen({
       >
         <Text style={theme.buttonText}>Skapa</Text>
       </Button>
+    </View>
     </View>
   );
 }

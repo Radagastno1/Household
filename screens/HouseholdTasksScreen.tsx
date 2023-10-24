@@ -8,9 +8,11 @@ import { useAppDispatch, useAppSelector } from "../store/store";
 import { fetchCompletions } from "../store/taskCompletionSlice";
 import { fetchTasks, filterTaskListByHouseId } from "../store/tasks/taskSlice";
 import { Task } from "../types";
+import { useTheme } from "../contexts/themeContext";
 
 import { AvatarUrls, Avatars } from "../data/avatars";
 import { TopTabScreenProps } from "../navigators/navigationTypes";
+import { useColorScheme } from "react-native";
 
 type HouseholdTasksProps = TopTabScreenProps<"HouseholdTasks">;
 
@@ -43,6 +45,8 @@ export default function HouseholdTasksScreen({
 
   //   // Call this function to start the schedule
   //   scheduleMidnightReset(dispatch); //
+  const { theme } = useTheme();
+  const colorScheme = useColorScheme();
 
   const activeHousehold = useAppSelector(
     (state) => state.household.activehousehold,
@@ -138,74 +142,127 @@ export default function HouseholdTasksScreen({
   }
 
   return (
-    <View style={styles.container}>
-      <ScrollView
-        style={
-          isOwner ? styles.scrollContainerOwner : styles.scrollContainerNonOwner
-        }
-      >
-        {taskSlice.filteredTasks.map((task) => (
+    <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
+      <View style={styles.container}>
+        <ScrollView
+          style={
+            isOwner
+              ? styles.scrollContainerOwner
+              : styles.scrollContainerNonOwner
+          }
+        >
+          {taskSlice.filteredTasks.map((task) => (
+            <Card
+              key={task.id}
+              style={[
+                styles.card,
+                {
+                  backgroundColor:
+                    colorScheme === "dark"
+                      ? "white"
+                      : theme.cardButton.backgroundColor,
+                },
+              ]}
+              onPress={() => handleTaskPress(task.id)}
+            >
+              {/* {taskSlice.filteredTasks.map((task) => (
           <Card
             key={task.id}
             style={styles.card}
             onPress={() => handleTaskPress(task.id)}
-          >
-            <View style={styles.taskItem}>
+          > */}
+              <View style={styles.taskItem}>
+                <View>
+                  <Text
+                    variant="titleLarge"
+                    style={{
+                      color:
+                        colorScheme === "dark"
+                          ? "white"
+                          : theme.buttonText.color,
+                    }}
+                  >
+                    {task.title}
+                  </Text>
+                </View>
+                {/* <View style={styles.taskItem}>
               <View>
                 <Text variant="titleLarge">{task.title}</Text>
-              </View>
+              </View> */}
 
-              {findAllAvatarFortodayCompletionByTaskId(task.id).map(
-                (avatar, index) => (
-                  <View key={index}>
-                    <Image
-                      source={{ uri: AvatarUrls[avatar as Avatars] }}
-                      style={{ height: 20, width: 20 }}
-                    />
+                {findAllAvatarFortodayCompletionByTaskId(task.id).map(
+                  (avatar, index) => (
+                    <View key={index}>
+                      <Image
+                        source={{ uri: AvatarUrls[avatar as Avatars] }}
+                        style={{ height: 20, width: 20 }}
+                      />
+                    </View>
+                  ),
+                )}
+
+                {getDaysSinceLastCompletion(task) > 0 && (
+                  <View
+                    style={[
+                      styles.intervalNumberCircle,
+                      {
+                        backgroundColor:
+                          getDaysSinceLastCompletion(task) < task.interval
+                            ? "lightgrey"
+                            : "red",
+                      },
+                    ]}
+                  >
+                    {getDaysSinceLastCompletion(task) > 30 ? (
+                      <Text style={styles.circleText} variant="bodyMedium">
+                        30+
+                      </Text>
+                    ) : (
+                      <Text style={styles.circleText} variant="bodyMedium">
+                        {getDaysSinceLastCompletion(task)}
+                      </Text>
+                    )}
                   </View>
-                ),
-              )}
+                )}
+              </View>
+            </Card>
+          ))}
 
-              {getDaysSinceLastCompletion(task) > 0 && (
-                <View
-                  style={[
-                    styles.intervalNumberCircle,
-                    {
-                      backgroundColor:
-                        getDaysSinceLastCompletion(task) < task.interval
-                          ? "lightgrey"
-                          : "red",
-                    },
-                  ]}
-                >
-                  {getDaysSinceLastCompletion(task) > 30 ? (
-                    <Text style={styles.circleText} variant="bodyMedium">
-                      30+
-                    </Text>
-                  ) : (
-                    <Text style={styles.circleText} variant="bodyMedium">
-                      {getDaysSinceLastCompletion(task)}
-                    </Text>
-                  )}
-                </View>
-              )}
+          <Card style={styles.card}>
+            <View style={styles.taskItem}>
+              <View>
+                <Text variant="titleLarge">test</Text>
+              </View>
+              <View>
+                <Text variant="bodyMedium">avatarer1</Text>
+              </View>
             </View>
           </Card>
-        ))}
+        </ScrollView>
 
-        <Card style={styles.card}>
-          <View style={styles.taskItem}>
-            <View>
-              <Text variant="titleLarge">test</Text>
-            </View>
-            <View>
-              <Text variant="bodyMedium">avatarer1</Text>
-            </View>
-          </View>
-        </Card>
-      </ScrollView>
+        <View style={styles.buttonContainer}>
+          {isOwner && (
+            <Button
+              icon={({ size, color }) => (
+                <AntDesign name="pluscircleo" size={20} color="black" />
+              )}
+              mode="outlined"
+              onPress={() => navigation.navigate("HandleTask", { taskId: "0" })}
+              style={[
+                styles.button,
+                {
+                  backgroundColor:  colorScheme === "dark"
+                  ? "white"
+                  : theme.cardButton.backgroundColor,
+                },
+              ]}
+            >
+              Lägg Till
+            </Button>
+          )}
+        </View>
 
-      <View style={styles.buttonContainer}>
+        {/* <View style={styles.buttonContainer}>
         {isOwner && (
           <Button
             icon={({ size, color }) => (
@@ -218,6 +275,7 @@ export default function HouseholdTasksScreen({
             Lägg Till
           </Button>
         )}
+      </View> */}
       </View>
     </View>
   );

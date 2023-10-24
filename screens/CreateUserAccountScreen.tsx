@@ -14,24 +14,20 @@ import {
   View,
 } from "react-native";
 import { Checkbox, Modal, Portal, TextInput } from "react-native-paper";
-
+import { useDispatch } from "react-redux";
 import { app } from "../api/config";
+import { useTheme } from "../contexts/themeContext";
+import { RootNavigationScreenProps } from "../navigators/navigationTypes";
+import { useAppSelector } from "../store/store";
+import { useColorScheme } from "react-native";
 
 const db = getFirestore(app);
 
-import { useDispatch } from "react-redux";
-// import theme from "../data/theme";
-import { useTheme } from "../contexts/themeContext";
-import { useAppSelector } from "../store/store";
-import { createAccount } from "../store/user/userAccountSlice";
-import { User } from "../types";
-import { RootNavigationScreenProps } from "../navigators/navigationTypes";
-
 type CreateUserProps = RootNavigationScreenProps<"Signup">;
 
-const CreateUserAccountScreen: React.FC<{ navigation: CreateUserProps }> = ({
+export default function CreateUserAccountScreen({
   navigation,
-}) => {
+}: CreateUserProps) {
   const [visible, setVisible] = useState(false);
   const [showWarning, setShowWarning] = useState(false);
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -46,10 +42,10 @@ const CreateUserAccountScreen: React.FC<{ navigation: CreateUserProps }> = ({
   const [confirmationPasswordInput, setConfirmationPasswordInput] =
     useState("");
 
-  const { theme } = useTheme(); // la till theme här
-
+  const { theme } = useTheme();
+  const colorScheme = useColorScheme();
+  
   const dispatch = useDispatch();
-
   const userAccountState = useAppSelector((state) => state.userAccount);
 
   const showModal = () => setVisible(true);
@@ -71,10 +67,8 @@ const CreateUserAccountScreen: React.FC<{ navigation: CreateUserProps }> = ({
           password: newPassword,
         });
 
-        // Get the generated ID from Firestore
         const userId = docRef.id;
 
-        // Update the document with the generated ID to show as a field
         await setDoc(doc(db, "users", userId), {
           id: userId,
           name: newName,
@@ -84,8 +78,7 @@ const CreateUserAccountScreen: React.FC<{ navigation: CreateUserProps }> = ({
 
         console.log("Account created with ID:", userId);
 
-        // If all conditions are met, navigate to "Login"
-        navigation.navigation.navigate("Login");
+        navigation.navigate("Login");
       } catch (error) {
         console.error("Error creating user account:", error);
       }
@@ -97,6 +90,7 @@ const CreateUserAccountScreen: React.FC<{ navigation: CreateUserProps }> = ({
   };
 
   return (
+    <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
     <View style={styles.container}>
       <View style={theme.button as any}>
         <Text style={styles.headerText}>Skapa konto</Text>
@@ -117,7 +111,10 @@ const CreateUserAccountScreen: React.FC<{ navigation: CreateUserProps }> = ({
       <TextInput
         label={
           !newUserName && missingFieldsWarning ? (
-            <Text style={{ color: "red" }}>Användarnamn*</Text>
+            <Text style={{ color: colorScheme === "dark" ? "black" : "red" }}>
+            Användarnamn"
+          </Text>
+            // <Text style={{ color: "red" }}>Användarnamn*</Text>
           ) : (
             "Användarnamn"
           )
@@ -178,7 +175,7 @@ const CreateUserAccountScreen: React.FC<{ navigation: CreateUserProps }> = ({
           <Text style={styles.checkboxText}>
             Jag accepterar{" "}
             <Text
-              style={{ color: "blue", textDecorationLine: "underline" }}
+              style={{ color: "blue", textDecorationLine: "underline",  }}
               onPress={showModal}
             >
               villkoren
@@ -210,39 +207,29 @@ const CreateUserAccountScreen: React.FC<{ navigation: CreateUserProps }> = ({
       </Portal>
 
       <TouchableOpacity
-        style={{
-          backgroundColor: theme.colors.primary,
-          padding: 10,
-          alignItems: "center",
-          margin: 20,
-          borderRadius: 10,
-        }}
+        style={theme.button as any}
         onPress={handleCreateAccount}
       >
-        <Text style={{ color: "black", fontSize: theme.buttonText.fontSize }}>
-          Skapa konto
-        </Text>
+        <Text style={theme.buttonText}>Skapa konto</Text>
       </TouchableOpacity>
       <TouchableOpacity
-        style={styles.loginButton}
-        onPress={() => navigation.navigation.navigate("Login")}
+        style={theme.button as any}
+        onPress={() => navigation.navigate("Login")}
       >
-        <Text style={{ color: "black", fontSize: theme.buttonText.fontSize }}>
-          Tillbaka
-        </Text>
+        <Text style={styles.loginButtonText}>Tillbaka</Text>
       </TouchableOpacity>
     </View>
+    </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-
-    backgroundColor: "#fff",
+    // backgroundColor: "#fff",
   },
   header: {
-    backgroundColor: "yellow",
+    // backgroundColor: "yellow",
     padding: 10,
     alignItems: "center",
     justifyContent: "center",
@@ -260,7 +247,7 @@ const styles = StyleSheet.create({
     padding: 5,
     fontSize: 16,
     color: "black",
-    backgroundColor: "white",
+    // backgroundColor: "white",
   },
   checkboxContainer: {
     flexDirection: "row",
@@ -289,6 +276,17 @@ const styles = StyleSheet.create({
     color: "red",
     fontSize: 16,
   },
+  // createAccountButton: {
+  //   backgroundColor: "yellow",
+  //   padding: 10,
+  //   alignItems: "center",
+  //   margin: 20,
+  //   borderRadius: 10,
+  // },
+  // createAccountButtonText: {
+  //   color: "black",
+  //   fontSize: 16,
+  // },
   loginButton: {
     backgroundColor: "white",
     padding: 5,
@@ -296,6 +294,8 @@ const styles = StyleSheet.create({
     margin: 5,
     borderRadius: 10,
   },
+  loginButtonText: {
+    color: "black",
+    fontSize: 16,
+  },
 });
-
-export default CreateUserAccountScreen;

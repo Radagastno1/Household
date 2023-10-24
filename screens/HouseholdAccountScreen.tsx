@@ -1,4 +1,4 @@
-import { Button, StyleSheet, Text, View } from "react-native";
+import { Button, StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { setHouseholdByHouseholdId } from "../store/household/householdSlice";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { Household } from "../types";
@@ -12,7 +12,7 @@ import { fetchAllProfilesByHousehold } from "../store/profile/profileSlice";
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    // backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
   },
@@ -77,31 +77,62 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
       console.error("setColorScheme is not defined.");
     }
   };
-  
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
-    <View style={styles.container}>
-      <Text>Här listas alla households:</Text>
-      {allHouseholds.map((household: Household) => (
-        <Button
-          key={household.id}
-          title={household.name}
-          onPress={() => {
-            handleEnterHousehold(household.id);
-          }}
-        />
-      ))}
-      <Button
-        title="Skapa nytt hushåll"
-        onPress={() =>
-          navigation.navigate("CreateProfile", { householdId: "household1" })
-        } // denna e hårdkodad sålänge
-      />
-      <Button title="Logga ut" onPress={() => navigation.navigate("Login")} />
-      <Button  title="Toggle Theme" onPress={handleToggleTheme} />
-      <Button title="Auto Theme" onPress={handleToggleTheme} />
-    </View>
+      <View style={styles.container}>
+        <Text style={theme.buttonText}>MINA HUSHÅLL</Text>
+
+        {allHouseholds.map((household: Household) => (
+          <TouchableOpacity
+            key={household.id}
+            style={theme.cardButton as any}
+            onPress={() => {
+              handleEnterHousehold(household.id);
+            }}
+          >
+            {/* <Button title="" /> */}
+            <Text style={theme.buttonText}>{household.name}</Text>
+          </TouchableOpacity>
+        ))}
+
+        <TouchableOpacity
+          style={theme.cardButton as any}
+          onPress={() => navigation.navigate("HandleHousehold")}
+          // onPress={() =>
+          //   navigation.navigate("CreateProfile", {
+          //     householdId: "household1",
+          //   })
+          // }
+        >
+          {/* <Button title="" /> */}
+          <Text style={theme.buttonText}>Skapa nytt hushåll</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={theme.cardButton as any}
+          onPress={() => navigation.navigate("Login")}
+        >
+          {/* <Button title="" /> */}
+          <Text style={theme.buttonText}>Logga ut</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={theme.button as any}
+          onPress={handleToggleTheme}
+        >
+          {/* <Button title="" /> */}
+          <Text style={theme.buttonText}>Toggle Theme</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={theme.button as any}
+          onPress={handleToggleTheme}
+        >
+          {/* <Button title="" /> */}
+          <Text style={theme.buttonText}>Auto Theme</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }

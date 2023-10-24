@@ -12,6 +12,7 @@ import {
   sortProfilesFromCompletions,
   sortTasksFromCompletions,
 } from "../utils/statisticHandler";
+import { useTheme } from "../contexts/themeContext";
 
 export default function TESTDATUMSCREEN() {
   const tasks = useAppSelector((state) => state.task.tasks);
@@ -19,6 +20,9 @@ export default function TESTDATUMSCREEN() {
   const completions = useAppSelector(
     (state) => state.taskCompletion.completions,
   );
+
+export default function TESTDATUMSCREEN() {
+  const {theme} = useTheme();
   // --------------- DAGENS DATUM  ----------------
   const { todaysDate } = getCurrentDate();
   // --------------- DENNA VECKAN ----------------
@@ -39,7 +43,7 @@ export default function TESTDATUMSCREEN() {
   }
 
   return (
-    <ScrollView style={styles.container}>
+    <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
       <View style={styles.dates}>
         <Text style={styles.title}>DENNA VECKAN</Text>
         <Text>{startOfCurrentWeek}</Text>
@@ -74,6 +78,7 @@ export default function TESTDATUMSCREEN() {
         <Button title="Tryck" onPress={PressOnButton} />
       </View>
     </ScrollView>
+    </View>
   );
 }
 
