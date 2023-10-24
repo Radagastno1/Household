@@ -8,10 +8,6 @@ import {
   getLastMonthDates,
   getLastWeekDates,
 } from "../utils/DateHandler";
-import {
-  sortProfilesFromCompletions,
-  sortTasksFromCompletions,
-} from "../utils/statisticHandler";
 
 export default function TESTDATUMSCREEN() {
   const tasks = useAppSelector((state) => state.task.tasks);
@@ -32,11 +28,6 @@ export default function TESTDATUMSCREEN() {
 
   // --------------- FÖRRA MÅNADEN ----------------
   const { startOfLastMonth, endOfLastMonth } = getLastMonthDates();
-
-  function PressOnButton() {
-    sortTasksFromCompletions(completions, tasks);
-    sortProfilesFromCompletions(completions, profiles);
-  }
 
   return (
     <ScrollView style={styles.container}>
@@ -66,12 +57,6 @@ export default function TESTDATUMSCREEN() {
         </Text>
         <Text>{todaysDate}</Text>
         <Text>{startOfLastMonth}</Text>
-      </View>
-      <View style={styles.dates}>
-        <Text style={styles.title}>
-          Lista ut alla sorterade tasks från completions
-        </Text>
-        <Button title="Tryck" onPress={PressOnButton} />
       </View>
     </ScrollView>
   );
