@@ -80,10 +80,6 @@ export default function CreateProfileScreen({
 const selectedHousehold = useAppSelector((state) =>
   state.household.households.find((household) => household.id === householdId)
 );
-
-
-
-  // useEffect(() => {}, [householdId, dispatch]);
  
   const isAvatarOccupied = (avatarId: string) => {
     return activeProfiles.some((profile) => profile.avatar === avatarId);

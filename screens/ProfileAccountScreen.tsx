@@ -37,6 +37,8 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
   // const householdId = "fYHVLNiQvWEG9KNUGqBT"; // kommenterade ut denna, bara denna som jag inte satt tillbaka
 
   const dispatch = useAppDispatch();
+  const activeHouseholdCode = activeHousehold?.code || "Ingen kod tillgänglig";
+
 
   //UTKOMMENTERAR DENNA:
   // useEffect(() => {
@@ -161,20 +163,7 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
                 )}
               </View>
 
-              {/* <View style={styles.nameContainer}>
-                {isEditing ? (
-                  <TextInput
-                    placeholder={activeProfile?.profileName}
-                    onChangeText={(text) => {
-                      setUpdatedProfilename(text);
-                    }}
-                  />
-                ) : (
-                  <Text style={styles.profileTitle}>
-                    {activeProfile?.profileName}
-                  </Text>
-                )}
-              </View> */}
+              
               <IconButton
                 icon="pencil"
                 size={20}
@@ -208,7 +197,7 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
           <Card style={styles.card}>
             <View style={styles.taskItem}>
               <View style={styles.nameContainer}>
-                <Text variant="titleLarge">Hushållskod</Text>
+                <Text variant="titleLarge">Hushållskod: {activeHouseholdCode}</Text>
               </View>
             </View>
           </Card>
