@@ -5,7 +5,6 @@ import { profileReducer } from "./profile/profileSlice";
 import { taskCompletionReducer } from "./taskCompletionSlice";
 import { taskReducer } from "./tasks/taskSlice";
 import { userAccountReducer } from "./user/userAccountSlice";
-import userAuthReducer from "./user/userAuthSlice";
 import { householdReducer } from "./household/householdSlice";
 import { userReducer } from "./user/userSlice";
 
@@ -13,7 +12,6 @@ const store = configureStore({
   reducer: {
     task: taskReducer,
     profile: profileReducer,
-    userAuth: userAuthReducer,
     taskCompletion: taskCompletionReducer,
     userAccount: userAccountReducer,
     app: appReducer,

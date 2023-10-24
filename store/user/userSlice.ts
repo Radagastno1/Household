@@ -21,6 +21,7 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     loginUser: (state, action: PayloadAction<User>) => {
+      console.log("Vi kommer hit");
       state.user = action.payload;
     },
 

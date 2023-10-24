@@ -24,7 +24,9 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
   //att få state på user verkar inte funka än - det ska in sen
   //för nu så hårdkodar vi ett user id
   // const activeUser = useAppSelector((state) => state.user.user);
-  const mockedUserId = "5NCx5MKcUu6UYKjFqRkg";
+  const activeUser = useAppSelector((state) => state.user.user);
+  console.log("Nu är användaren ", activeUser, "inloggad");
+  // const activeUser = "5NCx5MKcUu6UYKjFqRkg";
   const dispatch = useAppDispatch();
   const householdSlice = useAppSelector((state) => state.household);
   const allHouseholds = householdSlice.households;
@@ -39,7 +41,7 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
 
     try {
       // Fetch all profiles for the household
-      await dispatch(fetchAllProfilesByHousehold(householdId, mockedUserId));
+      await dispatch(fetchAllProfilesByHousehold(householdId, activeUser));
 
       // Navigate to the ProfileAccount screen
       navigation.navigate("ProfileAccount", {

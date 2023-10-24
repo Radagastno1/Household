@@ -16,7 +16,7 @@ import { useDispatch } from "react-redux";
 import { getUsersFromDB } from "../api/user"; // Import the getUsersFromDB function
 import { useTheme } from "../contexts/themeContext";
 import { RootNavigationScreenProps } from "../navigators/navigationTypes";
-import { loginUser } from "../store/user/userAuthSlice";
+import { loginUser } from "../store/user/userSlice";
 import { User } from "../types";
 
 type SignInProps = RootNavigationScreenProps<"Login">;
