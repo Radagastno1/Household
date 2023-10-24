@@ -56,8 +56,8 @@ export default function RootNavigator() {
         <Stack.Screen name="ProfileAccount" component={ProfileAccountScreen} />
         <Stack.Screen
           name="HandleHousehold"
-          component={HandleHouseholdScreen}
           options={{ headerShown: false }}
+          component={HandleHouseholdScreen}
         />
         <Stack.Screen
           name="CreateProfile"

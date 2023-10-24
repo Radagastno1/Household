@@ -1,8 +1,21 @@
+import {
+  addDoc,
+  collection,
+  doc,
+  getFirestore,
+  setDoc,
+} from "firebase/firestore";
 import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Appbar, Button, Text, TextInput } from "react-native-paper";
+import { app } from "../api/config";
 import { useTheme } from "../contexts/themeContext";
 import { RootNavigationScreenProps } from "../navigators/navigationTypes";
+import {
+  generateHouseholdCode,
+  joinHouseholdByCode,
+} from "../store/household/householdSlice";
+const db = getFirestore(app);
 
 type HandleHouseholdProps = RootNavigationScreenProps<"HandleHousehold">;
 
@@ -13,24 +26,46 @@ export default function HandleHouseholdScreen({
   const [householdName, setHouseholdName] = useState("");
   const [joinCode, setJoinCode] = useState("");
 
-  const createHousehold = () => {
-    console.log("Creating household with name:", householdName);
+  const handleCreateHousehold = async () => {
+    const householdCollectionRef = collection(db, "households");
+    const randomCode = generateHouseholdCode();
 
-    // After creating the household, navigate to the next screen
-    navigation.navigate("CreateProfile", {
-      householdId: "fYHVLNiQvWEG9KNUGqBT",
-    });
+    try {
+      const docRef = await addDoc(householdCollectionRef, {
+        name: householdName,
+        code: randomCode, // Use the generated code
+      });
+
+      const householdId = docRef.id;
+
+      await setDoc(doc(db, "households", householdId), {
+        id: householdId,
+        name: householdName,
+        code: randomCode, // Use the generated code
+      });
+
+      console.log("Household created with ID:", householdId);
+    } catch (error) {
+      console.error("Error creating household:", error);
+    }
   };
 
-  const joinHousehold = () => {
-    console.log("Joining household with code:", joinCode);
+  const handleJoinHousehold = () => {
+    if (joinCode) {
+      // Join a household with the provided code
+      joinHouseholdByCode(joinCode);
+    } else {
+      // Handle case where join code is not provided
+      console.error("Join code is required.");
+    }
   };
 
   return (
     <View>
       <View>
         <Appbar.Header style={{ height: 70, backgroundColor: "white" }}>
-          <Appbar.Content title="Välkommen användar-namn!" />
+          <Appbar.Content title={"Välkommen användare!"} />
+          {/* <Appbar.Content title={`Välkommen ${userName}!`} /> */}
         </Appbar.Header>
       </View>
 
@@ -51,7 +86,7 @@ export default function HandleHouseholdScreen({
             color: "black",
             fontSize: 16,
           }}
-          onPress={createHousehold}
+          onPress={handleCreateHousehold}
         >
           Skapa
         </Button>
@@ -82,7 +117,7 @@ export default function HandleHouseholdScreen({
             color: "black",
             fontSize: 16,
           }}
-          onPress={joinHousehold}
+          onPress={handleJoinHousehold}
         >
           Gå med
         </Button>
