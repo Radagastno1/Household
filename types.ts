@@ -7,6 +7,8 @@ export interface User {
 }
 
 export interface Profile {
+  length: number;
+  map(arg0: (profile: { avatar: import("./data/avatars").Avatars; }, index: import("react").Key | null | undefined) => import("react").JSX.Element): import("react").ReactNode;
   id: string;
   profileName: string;
   userId: string;

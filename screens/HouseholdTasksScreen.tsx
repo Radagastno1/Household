@@ -240,7 +240,7 @@ export default function HouseholdTasksScreen({
         </ScrollView>
 
         <View style={styles.buttonContainer}>
-          {isOwner && (
+          {/* {isOwner && ( */}
             <Button
               icon={({ size, color }) => (
                 <AntDesign name="pluscircleo" size={20} color="black" />
@@ -258,7 +258,7 @@ export default function HouseholdTasksScreen({
             >
               Lägg Till
             </Button>
-          )}
+          {/* )} */}
         </View>
 
         {/* <View style={styles.buttonContainer}>
@@ -338,8 +338,8 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     position: "absolute",
-    bottom: 0,
-    right: 0,
+    bottom: 20,
+    right: 20,
     margin: 16,
   },
   button: {

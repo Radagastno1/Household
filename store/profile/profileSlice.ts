@@ -84,6 +84,8 @@ export const fetchAllProfilesByHousehold =
         console.log("aktiva profilen: ", activeProfile);
       }
     }
+
+    
   };
 
 export const { setProfiles } = profileSlice.actions;
