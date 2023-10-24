@@ -70,6 +70,23 @@ export const getHouseholdsFromDB = async (householdId: string) => {
 
     const querySnapshot = await getDocs(q);
 
+    const household = querySnapshot.docs[0].data() as Household;
+
+    console.log("Uppgifter hämtade:", household);
+    return household;
+  } catch (error) {
+    console.error("Fel vid hämtning av uppgifter:", error);
+  }
+};
+
+export const getHouseholdsFromDBbyProfileId = async (profileId: string[]) => {
+  try {
+    const householdCollectionRef = collection(db, "households");
+
+    const q = query(householdCollectionRef, where("id", "==", profileId));
+
+    const querySnapshot = await getDocs(q);
+
     const households: Household[] = [];
 
     querySnapshot.forEach((doc) => {
