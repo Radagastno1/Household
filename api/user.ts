@@ -17,6 +17,7 @@ export const addUserToDB = async (user: User) => {
   const userCollectionRef = collection(db, "users");
 
   try {
+    console.log("inne i tri i user.ts");
     const docRef = await addDoc(userCollectionRef, {});
 
     user.id = docRef.id;
