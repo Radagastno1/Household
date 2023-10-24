@@ -7,6 +7,7 @@ import { setHouseholdByHouseholdId } from "../store/household/householdSlice";
 import { fetchAllProfilesByHousehold } from "../store/profile/profileSlice";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { Household, Profile } from "../types";
+import { getHouseholdsFromDB } from "../api/household";
 
 const styles = StyleSheet.create({
   container: {
@@ -24,19 +25,32 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
   //för nu så hårdkodar vi ett user id
   // const activeUser = useAppSelector((state) => state.user.user);
   const activeUser = useAppSelector((state) => state.user.user);
+  const [households, setHouseholds] = useState<Household[] | undefined>([]);
   console.log("Nu är användaren ", activeUser, "inloggad");
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const householdsIds = await GetProfilesFromActiveUser();
+        const multibleHousehold = await GetHouseholds(householdsIds);
+
         console.log("householdIds: ", householdsIds);
+        return multibleHousehold;
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
 
-    fetchData();
+    const fetch = async () => {
+      console.log("här är jag");
+      return await fetchData();
+    };
+
+    fetch().then((result) => {
+      setHouseholds(result);
+    });
+
+    console.log("households: ", households);
   }, [activeUser]);
 
   async function GetProfilesFromActiveUser() {
@@ -47,6 +61,18 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
       householdsId.push(id);
     });
     return householdsId;
+  }
+
+  async function GetHouseholds(householdsIds: string[]) {
+    const households: Household[] = [];
+    householdsIds.forEach(async (household) => {
+      const fetchHousehold = await getHouseholdsFromDB(household);
+      if (fetchHousehold) {
+        households.push(fetchHousehold);
+      }
+    });
+
+    return households;
   }
 
   // const activeUser = "5NCx5MKcUu6UYKjFqRkg";

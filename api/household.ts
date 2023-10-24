@@ -70,14 +70,10 @@ export const getHouseholdsFromDB = async (householdId: string) => {
 
     const querySnapshot = await getDocs(q);
 
-    const households: Household[] = [];
+    const household = querySnapshot.docs[0].data() as Household;
 
-    querySnapshot.forEach((doc) => {
-      households.push(doc.data() as Household);
-    });
-
-    console.log("Uppgifter hämtade:", households);
-    return households;
+    console.log("Uppgifter hämtade:", household);
+    return household;
   } catch (error) {
     console.error("Fel vid hämtning av uppgifter:", error);
   }
