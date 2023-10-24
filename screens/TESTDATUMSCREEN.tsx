@@ -1,5 +1,6 @@
 import React from "react";
-import { Button, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
+import { useAppSelector } from "../store/store";
 import {
   getCurrentDate,
   getCurrentMonthDates,
@@ -10,8 +11,13 @@ import {
 import { useTheme } from "../contexts/themeContext";
 
 export default function TESTDATUMSCREEN() {
-  const {theme} = useTheme();
+  const tasks = useAppSelector((state) => state.task.tasks);
+  const profiles = useAppSelector((state) => state.profile.profiles);
+  const completions = useAppSelector(
+    (state) => state.taskCompletion.completions,
+  );
 
+  const { theme } = useTheme();
   // --------------- DAGENS DATUM  ----------------
   const { todaysDate } = getCurrentDate();
   // --------------- DENNA VECKAN ----------------
@@ -28,7 +34,6 @@ export default function TESTDATUMSCREEN() {
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
-    <View style={styles.container}>
       <View style={styles.dates}>
         <Text style={styles.title}>DENNA VECKAN</Text>
         <Text>{startOfCurrentWeek}</Text>
@@ -57,7 +62,6 @@ export default function TESTDATUMSCREEN() {
         <Text>{startOfLastMonth}</Text>
       </View>
     </View>
-    </View>
   );
 }
 
@@ -65,7 +69,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 12,
-    alignItems: "center",
   },
   dates: {
     flexDirection: "column",

@@ -46,7 +46,7 @@ export default function CreateTaskScreen({
     taskToEdit ? taskToEdit.interval : 7,
   );
   const [selectedEnergy, setSelectedEnergy] = useState<number>(
-    taskToEdit ? taskToEdit.energiWeight : 2,
+    taskToEdit ? taskToEdit.energyWeight : 2,
   );
 
   const [title, setTitle] = useState<string>(
@@ -80,7 +80,7 @@ export default function CreateTaskScreen({
         setTitle(taskToEdit.title);
         setDescription(taskToEdit.description);
         setSelectedInterval(taskToEdit.interval);
-        setSelectedEnergy(taskToEdit.energiWeight);
+        setSelectedEnergy(taskToEdit.energyWeight);
         console.log("task to edit interval:", taskToEdit.interval);
       } else {
         //navigera tillbaka?
@@ -114,7 +114,7 @@ export default function CreateTaskScreen({
           id: "",
           title: title,
           description: description,
-          energiWeight: selectedEnergy,
+          energyWeight: selectedEnergy,
           interval: selectedInterval,
           creatingDate: new Date().toISOString(),
           householdId: householdId,
@@ -130,7 +130,7 @@ export default function CreateTaskScreen({
           id: taskToEdit.id,
           title: title,
           description: description,
-          energiWeight: selectedEnergy,
+          energyWeight: selectedEnergy,
           interval: selectedInterval,
           creatingDate: new Date().toISOString(),
           householdId: householdId,

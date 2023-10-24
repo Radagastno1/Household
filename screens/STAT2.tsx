@@ -3,8 +3,7 @@ import { ScrollView, StyleSheet, Text, View } from "react-native";
 import PiechartComponent from "../components/PiechartComponent";
 import { useAppSelector } from "../store/store";
 import { StatData } from "../types";
-import { getCurrentWeekDates } from "../utils/DateHandler";
-import { useTheme } from "../contexts/themeContext";
+import { getCurrentWeekDates, getLastWeekDates } from "../utils/DateHandler";
 import {
   SummerizeEachTask,
   getUniqueSummarizedData,
@@ -23,8 +22,8 @@ function arrayChunk<T>(array: T[], chunkSize: number): T[][] {
   return chunkedArray;
 }
 
-export default function StatisticScreen() {
-  const { startOfCurrentWeek, endOfCurrentWeek } = getCurrentWeekDates();
+export default function STAT2() {
+  const { startOfLastWeek, endOfLastWeek } = getLastWeekDates();
   const tasks = useAppSelector((state) => state.task.tasks);
   const profiles = useAppSelector((state) => state.profile.profiles);
   const completions = useAppSelector(
@@ -37,21 +36,18 @@ export default function StatisticScreen() {
       completions,
       tasks,
       profiles,
-      startOfCurrentWeek,
-      endOfCurrentWeek,
+      startOfLastWeek,
+      endOfLastWeek,
     );
     const uniqueData = getUniqueSummarizedData(summarizedData);
     setStatsForTasks(uniqueData);
     console.log("Nu renderas datan från statisticScreen: ", statsForTasks);
-  }, [completions, tasks, profiles, startOfCurrentWeek, endOfCurrentWeek]);
+  }, [completions, tasks, profiles, startOfLastWeek, endOfLastWeek]);
 
   const chunkedCharts = arrayChunk(statsForTasks, 3);
-  const {theme} = useTheme();
-
   const slices = [20, 15, 20];
   const colors = ["red", "yellow", "blue"];
   return (
-    <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
     <ScrollView style={styles.container}>
       <View style={styles.topChart}>
         <PiechartComponent
@@ -78,7 +74,6 @@ export default function StatisticScreen() {
         ))}
       </View>
     </ScrollView>
-    </View>
   );
 }
 

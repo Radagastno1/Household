@@ -1,17 +1,14 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
-import { StyleSheet, View, Image } from "react-native";
-import { Avatar, Button, Card, Text } from "react-native-paper";
+import { Image, StyleSheet, View } from "react-native";
+import { Button, Card, Text } from "react-native-paper";
 import { useTheme } from "../contexts/themeContext";
 import { useColorScheme } from "react-native";
-import { useAppDispatch, useAppSelector } from "../store/store";
-import {
-  findAllAvatarFortodayCompletionByTaskId,
-  setTaskAsCompleted,
-} from "../store/taskCompletionSlice";
-import { findTaskById } from "../store/tasks/taskSlice";
 import { AvatarUrls, Avatars } from "../data/avatars";
 import { RootNavigationScreenProps } from "../navigators/navigationTypes";
+import { useAppDispatch, useAppSelector } from "../store/store";
+import { setTaskAsCompleted } from "../store/taskCompletionSlice";
+import { findTaskById } from "../store/tasks/taskSlice";
 import { profiles } from "../data";
 
 type TaskDetailProps = RootNavigationScreenProps<"TaskDetail">;
@@ -161,10 +158,7 @@ export default function TaskDetailScreen({
                 style={[
                   styles.intervalNumber,
                   {
-                    color:
-                      colorScheme === "dark"
-                        ? "black"
-                        : "black",
+                    color: colorScheme === "dark" ? "black" : "black",
                   },
                 ]}
               >
@@ -188,20 +182,17 @@ export default function TaskDetailScreen({
                 style={[
                   styles.valueNumber,
                   {
-                    color:
-                      colorScheme === "dark"
-                        ? "black"
-                        : "black",
+                    color: colorScheme === "dark" ? "black" : "black",
                   },
                 ]}
               >
-                {taskSlice.selectedTask?.energiWeight}
+                {taskSlice.selectedTask?.energyWeight}
               </Text>
             </View>
 
             {/* <View style={styles.circle}>
             <Text style={styles.valueNumber}>
-              {taskSlice.selectedTask?.energiWeight}
+              {taskSlice.selectedTask?.energyWeight}
             </Text>
           </View> */}
           </View>

@@ -65,7 +65,7 @@ export const editTaskToDB = async (task: Task) => {
       id: task.id,
       title: task.title,
       description: task.description,
-      energiWeight: task.energiWeight,
+      energiWeight: task.energyWeight,
       creatingDate: task.creatingDate,
       interval: task.interval,
       householdId: task.householdId,

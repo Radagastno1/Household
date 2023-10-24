@@ -18,7 +18,7 @@ export default function DeleteTaskModule(props: Props) {
       id: props.task.id,
       title: props.task.title,
       description: props.task.description,
-      energiWeight: props.task.energiWeight,
+      energyWeight: props.task.energyWeight,
       interval: props.task.interval,
       creatingDate: props.task.creatingDate,
       householdId: props.task.householdId,

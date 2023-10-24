@@ -27,7 +27,7 @@ export interface Task {
   id: string;
   title: string;
   description: string;
-  energiWeight: number;
+  energyWeight: number;
   creatingDate: string; //default blir dagens datum
   interval: number; //dagar emellan?
   householdId: string;
@@ -42,8 +42,36 @@ export interface TaskCompletion {
   completionDate: string;
 }
 
+export interface TaskCompletionStat {
+  id: string;
+  householdId: string;
+  taskId: string;
+  profileId: string;
+  completionDate: Date;
+}
+
 export interface AppState {
   isLoading: boolean;
+}
+
+export interface TaskData {
+  id: string;
+  taskTitle: string;
+  energyWeight: number;
+  values: ProfileData[];
+}
+
+export interface ProfileData {
+  id: string;
+  avatar: string;
+  color: string;
+  sum: number;
+}
+
+export interface StatData {
+  title: string;
+  series: number[];
+  colors: string[];
 }
 
 // Show how to make a day function work between task-data and taskCompletion-data

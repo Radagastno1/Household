@@ -4,6 +4,13 @@ import HouseholdTasksScreen from "../screens/HouseholdTasksScreen";
 import StatisticScreen from "../screens/StatisticScreen";
 import CustomTabBar from "../store/shared/CustomTabBar";
 import TESTDATUMSCREEN from "../screens/TESTDATUMSCREEN";
+import {
+  getCurrentDate,
+  getCurrentWeekDates,
+  getLastMonthDates,
+  getLastWeekDates,
+} from "../utils/DateHandler";
+import STAT2 from "../screens/STAT2";
 
 export type TopTabParamList = {
   HouseholdTasks: undefined;
@@ -12,9 +19,9 @@ export type TopTabParamList = {
 };
 
 const TopTab = createMaterialTopTabNavigator<TopTabParamList>();
-const currentDate = new Date();
-// denna och alla andra övriga uträkningar över veckor och månader behöver vara i sin egna fil!!!
-const currentMonth = (currentDate.getMonth() + 1).toString();
+const { startOfCurrentWeek, endOfCurrentWeek } = getCurrentWeekDates();
+const { startOfLastWeek, endOfLastWeek } = getLastWeekDates();
+const { startOfLastMonth, endOfLastMonth } = getLastMonthDates();
 
 export default function TopTabNavigator() {
   return (
