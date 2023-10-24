@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, ScrollView, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { useAppSelector } from "../store/store";
 import {
   getCurrentDate,
@@ -8,7 +8,7 @@ import {
   getLastMonthDates,
   getLastWeekDates,
 } from "../utils/DateHandler";
-
+import { useTheme } from "../contexts/themeContext";
 
 export default function TESTDATUMSCREEN() {
   const tasks = useAppSelector((state) => state.task.tasks);
@@ -17,8 +17,7 @@ export default function TESTDATUMSCREEN() {
     (state) => state.taskCompletion.completions,
   );
 
-export default function TESTDATUMSCREEN() {
-  const {theme} = useTheme();
+  const { theme } = useTheme();
   // --------------- DAGENS DATUM  ----------------
   const { todaysDate } = getCurrentDate();
   // --------------- DENNA VECKAN ----------------
