@@ -1,4 +1,4 @@
-import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { addUserToDB, getUsersFromDB } from "../../api/user";
 import { User } from "../../types";
 
@@ -16,6 +16,25 @@ export const initialState: UserState = {
   user: undefined,
 };
 
+export const addUserAsync = createAsyncThunk<
+  User,
+  User,
+  { rejectValue: string }
+>("user/addUser", async (user, thunkAPI) => {
+  console.log("INNAN TRY I USER SLICE")
+  try {
+    console.log("inne i try i user slice ");
+    const addedUser = await addUserToDB(user);
+    if (addedUser) {
+      return addedUser;
+    } else {
+      return thunkAPI.rejectWithValue("failed to add user");
+    }
+  } catch (error: any) {
+    return thunkAPI.rejectWithValue(error.message);
+  }
+});
+
 const userSlice = createSlice({
   name: "user",
   initialState,
@@ -31,29 +50,20 @@ const userSlice = createSlice({
     setUsers: (state, action) => {
       state.users = action.payload;
     },
-    addUser: (state, action: PayloadAction<User>) => {
-      addUserToDB(action.payload)
-        .then((createdUser) => {
-          if (createdUser) {
-            state.users = [...state.users, createdUser];
-            console.log("Användare som las till: ", action.payload);
-            console.log("nu är state användare listan;", state.users);
-            console.log(
-              "nu är state filtered användare listan;",
-              state.filteredUsers,
-            );
-          }
-        })
-        .catch((error) => {
-          console.error("Fel vid tillägg av uppgift:", error);
-        });
-    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(addUserAsync.fulfilled, (state, action) => {
+        if (action.payload) {
+          state.users = [...state.users, action.payload];
+        }
+      })
+      .addCase(addUserAsync.rejected, (state, action) => {
+        console.log("error vid add user: ", action.payload);
+      });
   },
 });
 
-export const { addUser } = userSlice.actions;
-
-// Asynct Thunk Action (Redux Core)
 export const fetchUsers =
   (activeHouseholdId: string) => async (dispatch: any, _getState: any) => {
     const users = await getUsersFromDB(activeHouseholdId);
