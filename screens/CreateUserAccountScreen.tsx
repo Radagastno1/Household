@@ -19,6 +19,7 @@ import { app } from "../api/config";
 import { useTheme } from "../contexts/themeContext";
 import { RootNavigationScreenProps } from "../navigators/navigationTypes";
 import { useAppSelector } from "../store/store";
+import { useColorScheme } from "react-native";
 
 const db = getFirestore(app);
 
@@ -42,6 +43,8 @@ export default function CreateUserAccountScreen({
     useState("");
 
   const { theme } = useTheme();
+  const colorScheme = useColorScheme();
+  
   const dispatch = useDispatch();
   const userAccountState = useAppSelector((state) => state.userAccount);
 
@@ -87,8 +90,9 @@ export default function CreateUserAccountScreen({
   };
 
   return (
+    <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
     <View style={styles.container}>
-      <View style={styles.header}>
+      <View style={theme.button as any}>
         <Text style={styles.headerText}>Skapa konto</Text>
       </View>
 
@@ -107,7 +111,10 @@ export default function CreateUserAccountScreen({
       <TextInput
         label={
           !newUserName && missingFieldsWarning ? (
-            <Text style={{ color: "red" }}>Användarnamn*</Text>
+            <Text style={{ color: colorScheme === "dark" ? "black" : "red" }}>
+            Användarnamn"
+          </Text>
+            // <Text style={{ color: "red" }}>Användarnamn*</Text>
           ) : (
             "Användarnamn"
           )
@@ -168,7 +175,7 @@ export default function CreateUserAccountScreen({
           <Text style={styles.checkboxText}>
             Jag accepterar{" "}
             <Text
-              style={{ color: "blue", textDecorationLine: "underline" }}
+              style={{ color: "blue", textDecorationLine: "underline",  }}
               onPress={showModal}
             >
               villkoren
@@ -200,17 +207,18 @@ export default function CreateUserAccountScreen({
       </Portal>
 
       <TouchableOpacity
-        style={styles.createAccountButton}
+        style={theme.button as any}
         onPress={handleCreateAccount}
       >
-        <Text style={styles.createAccountButtonText}>Skapa konto</Text>
+        <Text style={theme.buttonText}>Skapa konto</Text>
       </TouchableOpacity>
       <TouchableOpacity
-        style={styles.loginButton}
+        style={theme.button as any}
         onPress={() => navigation.navigate("Login")}
       >
         <Text style={styles.loginButtonText}>Tillbaka</Text>
       </TouchableOpacity>
+    </View>
     </View>
   );
 }
@@ -218,10 +226,10 @@ export default function CreateUserAccountScreen({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    // backgroundColor: "#fff",
   },
   header: {
-    backgroundColor: "yellow",
+    // backgroundColor: "yellow",
     padding: 10,
     alignItems: "center",
     justifyContent: "center",
@@ -239,7 +247,7 @@ const styles = StyleSheet.create({
     padding: 5,
     fontSize: 16,
     color: "black",
-    backgroundColor: "white",
+    // backgroundColor: "white",
   },
   checkboxContainer: {
     flexDirection: "row",
@@ -268,17 +276,17 @@ const styles = StyleSheet.create({
     color: "red",
     fontSize: 16,
   },
-  createAccountButton: {
-    backgroundColor: "yellow",
-    padding: 10,
-    alignItems: "center",
-    margin: 20,
-    borderRadius: 10,
-  },
-  createAccountButtonText: {
-    color: "black",
-    fontSize: 16,
-  },
+  // createAccountButton: {
+  //   backgroundColor: "yellow",
+  //   padding: 10,
+  //   alignItems: "center",
+  //   margin: 20,
+  //   borderRadius: 10,
+  // },
+  // createAccountButtonText: {
+  //   color: "black",
+  //   fontSize: 16,
+  // },
   loginButton: {
     backgroundColor: "white",
     padding: 5,

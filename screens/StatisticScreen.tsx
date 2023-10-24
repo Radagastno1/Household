@@ -1,6 +1,7 @@
 import { View, Text, FlatList, StyleSheet, ScrollView } from "react-native";
 import React from "react";
 import PiechartComponent from "../components/PiechartComponent";
+import { useTheme } from "../contexts/themeContext";
 
 function arrayChunk<T>(array: T[], chunkSize: number): T[][] {
   const chunkedArray: T[][] = [];
@@ -74,10 +75,13 @@ const exemples = [
 ];
 
 export default function StatisticScreen() {
+  const {theme} = useTheme();
+
   const chunkedCharts = arrayChunk(exemples, 3);
   const slices = [20, 15, 20];
   const colors = ["red", "yellow", "blue"];
   return (
+    <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
     <ScrollView style={styles.container}>
       <View style={styles.topChart}>
         <PiechartComponent
@@ -104,6 +108,7 @@ export default function StatisticScreen() {
         ))}
       </View>
     </ScrollView>
+    </View>
   );
 }
 

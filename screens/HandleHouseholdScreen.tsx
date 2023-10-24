@@ -47,7 +47,7 @@ export default function HandleHouseholdScreen({
         </View>
 
         <Button
-          style={styles.centeredButton}
+          style={theme.button as any}
           labelStyle={{
             color: "black",
             fontSize: 16,
@@ -78,7 +78,7 @@ export default function HandleHouseholdScreen({
         </View>
 
         <Button
-          style={styles.centeredButton}
+          style={theme.button as any}
           labelStyle={{
             color: "black",
             fontSize: 16,

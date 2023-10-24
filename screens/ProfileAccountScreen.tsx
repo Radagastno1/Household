@@ -4,6 +4,7 @@ import { Button, Card, IconButton, Text, TextInput } from "react-native-paper";
 import { useTheme } from "../contexts/themeContext";
 import { households } from "../data";
 import HouseholdProfileModal from "../modules/HouseholdMemberModal";
+import { useColorScheme } from "react-native";
 import {
   editProfileName,
   setProfileByHouseholdAndUser,
@@ -61,6 +62,7 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
   );
 
   const { theme } = useTheme();
+  const colorScheme = useColorScheme();
   const [isModalVisible, setModalVisible] = useState(false);
   const [headerTitle, setHeaderTitle] = useState<string>(
     activeHousehold?.name ?? "",
@@ -105,7 +107,7 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
             style={{
               fontSize: 25,
               textAlign: "center",
-              color: theme.colors.text,
+              color: colorScheme === "dark" ? "gray" : theme.colors.text,
             }}
           >
             Profilnamn: {activeProfile?.profileName}
@@ -136,13 +138,39 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
                     onChangeText={(text) => {
                       setUpdatedProfilename(text);
                     }}
+                    style={{
+                      color: colorScheme === "dark" ? "white" : "black",
+                    }}
+                  />
+                ) : (
+                  <Text
+                    style={[
+                      styles.profileTitle,
+                      {
+                        color:
+                          colorScheme === "dark" ? "white" : theme.colors.text,
+                      },
+                    ]}
+                  >
+                    {activeProfile?.profileName}
+                  </Text>
+                )}
+              </View>
+
+              {/* <View style={styles.nameContainer}>
+                {isEditing ? (
+                  <TextInput
+                    placeholder={activeProfile?.profileName}
+                    onChangeText={(text) => {
+                      setUpdatedProfilename(text);
+                    }}
                   />
                 ) : (
                   <Text style={styles.profileTitle}>
                     {activeProfile?.profileName}
                   </Text>
                 )}
-              </View>
+              </View> */}
               <IconButton
                 icon="pencil"
                 size={20}
