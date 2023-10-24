@@ -49,7 +49,7 @@ export default function HouseholdTasksScreen({
   const colorScheme = useColorScheme();
 
   const activeHousehold = useAppSelector(
-    (state) => state.household.activehousehold,
+    (state) => state.household.activeHousehold,
   );
 
   // Use useSelector to access the profiles

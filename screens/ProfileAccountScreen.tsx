@@ -30,7 +30,7 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
 
   // const householdId = "fYHVLNiQvWEG9KNUGqBT"; // kommenterade ut denna, bara denna som jag inte satt tillbaka
   const activeHousehold = useAppSelector(
-    (state) => state.household.activehousehold,
+    (state) => state.household.activeHousehold,
   );
   const dispatch = useAppDispatch();
 

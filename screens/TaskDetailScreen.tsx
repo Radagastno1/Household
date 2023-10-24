@@ -25,7 +25,7 @@ export default function TaskDetailScreen({
   const [avatar, setAvatars] = useState<string[]>([]);
   const activeProfile = useAppSelector((state) => state.profile.activeProfile);
   const activeHousehold = useAppSelector(
-    (state) => state.household.activehousehold,
+    (state) => state.household.activeHousehold,
   );
   const isOwner = activeProfile?.isOwner;
   const taskSlice = useAppSelector((state) => state.task);
