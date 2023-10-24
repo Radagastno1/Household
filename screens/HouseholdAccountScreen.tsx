@@ -1,11 +1,12 @@
-import { Button, StyleSheet, Text, View, TouchableOpacity } from "react-native";
-import { setHouseholdByHouseholdId } from "../store/household/householdSlice";
-import { useAppDispatch, useAppSelector } from "../store/store";
-import { Household } from "../types";
-import { RootNavigationScreenProps } from "../navigators/navigationTypes";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { getAllProfilesByUserId } from "../api/profile";
 import { useTheme } from "../contexts/themeContext";
+import { RootNavigationScreenProps } from "../navigators/navigationTypes";
+import { setHouseholdByHouseholdId } from "../store/household/householdSlice";
 import { fetchAllProfilesByHousehold } from "../store/profile/profileSlice";
+import { useAppDispatch, useAppSelector } from "../store/store";
+import { Household, Profile } from "../types";
 
 const styles = StyleSheet.create({
   container: {
@@ -24,6 +25,30 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
   // const activeUser = useAppSelector((state) => state.user.user);
   const activeUser = useAppSelector((state) => state.user.user);
   console.log("Nu är användaren ", activeUser, "inloggad");
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const householdsIds = await GetProfilesFromActiveUser();
+        console.log("householdIds: ", householdsIds);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, [activeUser]);
+
+  async function GetProfilesFromActiveUser() {
+    const householdsId: string[] = [];
+    const profiles = await getAllProfilesByUserId(activeUser.id);
+    profiles?.map((profile) => {
+      const id = profile.householdId;
+      householdsId.push(id);
+    });
+    return householdsId;
+  }
+
   // const activeUser = "5NCx5MKcUu6UYKjFqRkg";
   const dispatch = useAppDispatch();
   const householdSlice = useAppSelector((state) => state.household);

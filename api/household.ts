@@ -83,6 +83,27 @@ export const getHouseholdsFromDB = async (householdId: string) => {
   }
 };
 
+export const getHouseholdsFromDBbyProfileId = async (profileId: string[]) => {
+  try {
+    const householdCollectionRef = collection(db, "households");
+
+    const q = query(householdCollectionRef, where("id", "==", profileId));
+
+    const querySnapshot = await getDocs(q);
+
+    const households: Household[] = [];
+
+    querySnapshot.forEach((doc) => {
+      households.push(doc.data() as Household);
+    });
+
+    console.log("Uppgifter hämtade:", households);
+    return households;
+  } catch (error) {
+    console.error("Fel vid hämtning av uppgifter:", error);
+  }
+};
+
 export const deleteHouseholdFromDB = async (householdId: string) => {
   try {
     const householdDocRef = doc(db, "households", householdId);
