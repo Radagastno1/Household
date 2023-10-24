@@ -2,19 +2,14 @@ import "firebase/firestore";
 import {
   addDoc,
   collection,
-  doc,
   getDoc,
   getDocs,
-  getFirestore,
   query,
   updateDoc,
   where,
 } from "firebase/firestore";
-import { profiles } from "../data";
 import { Profile } from "../types";
-import { app } from "./config";
-
-const db = getFirestore(app);
+import { db } from "./config";
 
 export const addProfileToDB = async (profile: Profile) => {
   const profileCollectionRef = collection(db, "profiles");

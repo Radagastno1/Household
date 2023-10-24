@@ -3,7 +3,13 @@ import React, { useEffect, useState } from "react";
 import { Image, StyleSheet, View } from "react-native";
 import { Button, Card, Text } from "react-native-paper";
 import { useTheme } from "../contexts/themeContext";
-import { profiles } from "../data";
+import { useColorScheme } from "react-native";
+import { useAppDispatch, useAppSelector } from "../store/store";
+import {
+  findAllAvatarFortodayCompletionByTaskId,
+  setTaskAsCompleted,
+} from "../store/taskCompletionSlice";
+import { findTaskById } from "../store/tasks/taskSlice";
 import { AvatarUrls, Avatars } from "../data/avatars";
 import { RootNavigationScreenProps } from "../navigators/navigationTypes";
 import { useAppDispatch, useAppSelector } from "../store/store";
@@ -16,6 +22,7 @@ export default function TaskDetailScreen({
   route,
 }: TaskDetailProps) {
   const { theme } = useTheme();
+  const colorScheme = useColorScheme();
   const { taskId } = route.params;
   const [avatar, setAvatars] = useState<string[]>([]);
   const activeProfile = useAppSelector((state) => state.profile.activeProfile);
@@ -81,91 +88,160 @@ export default function TaskDetailScreen({
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.cardContainer}>
-        <Card style={styles.card}>
-          <View style={styles.taskItem}>
-            <View style={styles.titleContainer}>
-              <Text variant="titleLarge">{taskSlice.selectedTask?.title}</Text>
+    <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
+      <View style={styles.container}>
+        <View style={styles.cardContainer}>
+          <Card style={styles.card}>
+            <View
+              style={[
+                styles.taskItem,
+                {
+                  backgroundColor:
+                    colorScheme === "dark"
+                      ? "white"
+                      : theme.cardButton.backgroundColor,
+                },
+              ]}
+            >
+              <View style={styles.titleContainer}>
+                <Text variant="titleLarge">
+                  {taskSlice.selectedTask?.title}
+                </Text>
+              </View>
+              <View>
+                {isOwner && (
+                  <Button
+                    icon={({ size, color }) => (
+                      <MaterialIcons name="edit" size={24} color="black" />
+                    )}
+                    mode="elevated"
+                    onPress={() =>
+                      navigation.navigate("HandleTask", { taskId: taskId })
+                    }
+                    style={[
+                      styles.changeButton,
+                      {
+                        backgroundColor:
+                          colorScheme === "dark" ? "gray" : "gray",
+                      },
+                    ]}
+                  >
+                    Ändra
+                  </Button>
+
+                  // <Button
+                  //   icon={({ size, color }) => (
+                  //     <MaterialIcons name="edit" size={24} color="black" />
+                  //   )}
+                  //   mode="elevated"
+                  //   onPress={() =>
+                  //     navigation.navigate("HandleTask", { taskId: taskId })
+                  //   }
+                  //   style={styles.changeButton}
+                  // >
+                  //   Ändra
+                  // </Button>
+                )}
+              </View>
             </View>
+          </Card>
+        </View>
+
+        <View style={styles.descriptionContainer}>
+          <Text variant="bodyMedium">
+            {taskSlice.selectedTask?.description}
+          </Text>
+        </View>
+
+        <View style={styles.intervalValueContainer}>
+          <View style={styles.intervalContainer}>
             <View>
-              {isOwner && (
-                <Button
-                  icon={({ size, color }) => (
-                    <MaterialIcons name="edit" size={24} color="black" />
-                  )}
-                  mode="elevated"
-                  onPress={() =>
-                    navigation.navigate("HandleTask", { taskId: taskId })
-                  }
-                  style={styles.changeButton}
-                >
-                  Ändra
-                </Button>
-              )}
+              <Text style={styles.intervalText}>Återcommande</Text>
             </View>
-          </View>
-        </Card>
-      </View>
+            <View style={styles.circle}>
+              <Text
+                style={[
+                  styles.intervalNumber,
+                  {
+                    color:
+                      colorScheme === "dark"
+                        ? "black"
+                        : "black",
+                  },
+                ]}
+              >
+                {taskSlice.selectedTask?.interval}
+              </Text>
+            </View>
 
-      <View style={styles.descriptionContainer}>
-        <Text variant="bodyMedium">{taskSlice.selectedTask?.description}</Text>
-      </View>
-
-      <View style={styles.intervalValueContainer}>
-        <View style={styles.intervalContainer}>
-          <View>
-            <Text style={styles.intervalText}>Återcommande</Text>
-          </View>
-          <View style={styles.circle}>
+            {/* <View style={styles.circle}>
             <Text style={styles.intervalNumber}>
               {taskSlice.selectedTask?.interval}
             </Text>
+          </View> */}
           </View>
-        </View>
 
-        <View style={styles.valueContainer}>
-          <View>
-            <Text style={styles.valueText}>Värde</Text>
-          </View>
-          <View style={styles.circle}>
+          <View style={styles.valueContainer}>
+            <View>
+              <Text style={styles.valueText}>Värde</Text>
+            </View>
+            <View style={styles.circle}>
+              <Text
+                style={[
+                  styles.valueNumber,
+                  {
+                    color:
+                      colorScheme === "dark"
+                        ? "black"
+                        : "black",
+                  },
+                ]}
+              >
+                {taskSlice.selectedTask?.energiWeight}
+              </Text>
+            </View>
+
+            {/* <View style={styles.circle}>
             <Text style={styles.valueNumber}>
               {taskSlice.selectedTask?.energyWeight}
             </Text>
+          </View> */}
           </View>
         </View>
-      </View>
 
-      <View>
-        <View style={styles.avatarContainer}>
-          {avatar.map((avatar, index) => (
-            <View key={index} style={styles.avatarText}>
-              <Image
-                source={{ uri: AvatarUrls[avatar as Avatars] }}
-                style={{ height: 20, width: 20 }}
-              />
-            </View>
-          ))}
+        <View>
+          <View style={styles.avatarContainer}>
+            {avatar.map((avatar, index) => (
+              <View key={index} style={styles.avatarText}>
+                <Image
+                  source={{ uri: AvatarUrls[avatar as Avatars] }}
+                  style={{ height: 20, width: 20 }}
+                />
+              </View>
+            ))}
+          </View>
         </View>
-      </View>
 
-      <View style={styles.klarButtonContainer}>
-        <Button
-          mode="text"
-          onPress={() => {
-            handleTaskCompletion(
-              taskId,
-              activeProfile?.id ?? "",
-              activeHousehold?.id ?? "",
-            );
-          }}
-          style={[styles.klarButton, theme.button]}
-        >
-          <Text style={[styles.klarButton, theme.buttonText]}>Klar</Text>
-        </Button>
-        <Button mode="text" onPress={() => navigation.navigate("Tab")}>
-          <Text style={[styles.klarButton, theme.buttonText]}>Till Tasks</Text>
-        </Button>
+        <View style={styles.klarButtonContainer}>
+          <Button
+            mode="text"
+            onPress={() => {
+              handleTaskCompletion(
+                taskId,
+                activeProfile?.id ?? "",
+                activeHousehold?.id ?? "",
+              );
+            }}
+            style={[styles.klarButton, theme.button]}
+          >
+            <Text style={[styles.klarButton, theme.buttonText]}>Klar</Text>
+          </Button>
+          <Button mode="text" onPress={() => navigation.navigate("Tab")}>
+            <Text style={[styles.klarButton, theme.buttonText]}>
+              Till Tasks
+            </Text>
+          </Button>
+        </View>
       </View>
     </View>
   );
@@ -174,7 +250,7 @@ export default function TaskDetailScreen({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    // backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
   },

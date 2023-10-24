@@ -9,12 +9,16 @@ import {
   getLastWeekDates,
 } from "../utils/DateHandler";
 
+
 export default function TESTDATUMSCREEN() {
   const tasks = useAppSelector((state) => state.task.tasks);
   const profiles = useAppSelector((state) => state.profile.profiles);
   const completions = useAppSelector(
     (state) => state.taskCompletion.completions,
   );
+
+export default function TESTDATUMSCREEN() {
+  const {theme} = useTheme();
   // --------------- DAGENS DATUM  ----------------
   const { todaysDate } = getCurrentDate();
   // --------------- DENNA VECKAN ----------------
@@ -30,7 +34,7 @@ export default function TESTDATUMSCREEN() {
   const { startOfLastMonth, endOfLastMonth } = getLastMonthDates();
 
   return (
-    <ScrollView style={styles.container}>
+    <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
       <View style={styles.dates}>
         <Text style={styles.title}>DENNA VECKAN</Text>
         <Text>{startOfCurrentWeek}</Text>
@@ -58,7 +62,7 @@ export default function TESTDATUMSCREEN() {
         <Text>{todaysDate}</Text>
         <Text>{startOfLastMonth}</Text>
       </View>
-    </ScrollView>
+    </View>
   );
 }
 

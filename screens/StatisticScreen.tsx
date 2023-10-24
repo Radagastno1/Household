@@ -4,6 +4,7 @@ import PiechartComponent from "../components/PiechartComponent";
 import { useAppSelector } from "../store/store";
 import { StatData } from "../types";
 import { getCurrentWeekDates } from "../utils/DateHandler";
+import { useTheme } from "../contexts/themeContext";
 import {
   SummerizeEachTask,
   getUniqueSummarizedData,
@@ -45,9 +46,12 @@ export default function StatisticScreen() {
   }, [completions, tasks, profiles, startOfCurrentWeek, endOfCurrentWeek]);
 
   const chunkedCharts = arrayChunk(statsForTasks, 3);
+  const {theme} = useTheme();
+
   const slices = [20, 15, 20];
   const colors = ["red", "yellow", "blue"];
   return (
+    <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
     <ScrollView style={styles.container}>
       <View style={styles.topChart}>
         <PiechartComponent
@@ -74,6 +78,7 @@ export default function StatisticScreen() {
         ))}
       </View>
     </ScrollView>
+    </View>
   );
 }
 
