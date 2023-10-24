@@ -250,9 +250,10 @@ export default function HouseholdTasksScreen({
               style={[
                 styles.button,
                 {
-                  backgroundColor:  colorScheme === "dark"
-                  ? "white"
-                  : theme.cardButton.backgroundColor,
+                  backgroundColor:
+                    colorScheme === "dark"
+                      ? "white"
+                      : theme.cardButton.backgroundColor,
                 },
               ]}
             >
