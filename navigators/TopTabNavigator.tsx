@@ -11,10 +11,13 @@ import {
   getLastWeekDates,
 } from "../utils/DateHandler";
 import STAT2 from "../screens/STAT2";
+import STAT3 from "../screens/STAT3";
 
 export type TopTabParamList = {
   HouseholdTasks: undefined;
   DennaVeckan: undefined;
+  FörraVeckan: { startDate: string; endDate: string };
+  FÖRRAMÅNADEN: { startDate: string; endDate: string };
   TestaDatum: undefined;
 };
 
@@ -34,6 +37,16 @@ export default function TopTabNavigator() {
         })}
       />
       <TopTab.Screen name="DennaVeckan" component={StatisticScreen} />
+      <TopTab.Screen
+        name={"FörraVeckan"}
+        component={STAT2}
+        initialParams={{ startDate: startOfLastWeek, endDate: endOfLastWeek }}
+      />
+      <TopTab.Screen
+        name={"FÖRRAMÅNADEN"}
+        component={STAT3}
+        initialParams={{ startDate: startOfLastMonth, endDate: endOfLastMonth }}
+      />
       <TopTab.Screen name={"TestaDatum"} component={TESTDATUMSCREEN} />
     </TopTab.Navigator>
   );

@@ -10,10 +10,9 @@ import {
 } from "../utils/statisticHandler";
 import { useFocusEffect } from "@react-navigation/native";
 import { AvatarUrls, Avatars, getAvatarColorString } from "../data/avatars";
-import { TopTabParamList } from "../navigators/TopTabNavigator";
 import { TopTabScreenProps } from "../navigators/navigationTypes";
 
-type StatProps = TopTabScreenProps<"FörraVeckan">;
+type StatProps = TopTabScreenProps<"FÖRRAMÅNADEN">;
 
 function arrayChunk<T>(array: T[], chunkSize: number): T[][] {
   const chunkedArray: T[][] = [];
@@ -150,7 +149,6 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: "row",
-    // justifyContent: "center",
   },
   piechartContainer: {
     flexDirection: "column",
