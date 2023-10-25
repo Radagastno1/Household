@@ -7,6 +7,7 @@ import {
   query,
   updateDoc,
   where,
+  doc
 } from "firebase/firestore";
 import { Profile } from "../types";
 import { db } from "./config";
@@ -39,6 +40,23 @@ export const addProfileToDB = async (profile: Profile) => {
   } catch (error) {
     console.error("Fel vid tillägg av profil:", error);
     return null;
+  }
+};
+
+export const saveProfileNameToDatabase = async (profileId: string, newProfileName: string) => {
+  const profileDocRef = doc(db, "profiles", profileId);
+
+  try {
+    // Uppdatera profilnamnet i Firestore-dokumentet
+    await updateDoc(profileDocRef, {
+      profileName: newProfileName,
+    });
+
+    console.log("Profilnamnet har uppdaterats i databasen.");
+    return { success: true };
+  } catch (error) {
+    console.error("Fel vid uppdatering av profilnamnet i databasen:", error);
+    return { success: false, error };
   }
 };
 

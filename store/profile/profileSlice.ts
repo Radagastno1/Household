@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { addProfileToDB, getAllProfilesByHouseholdId } from "../../api/profile";
+import { addProfileToDB, getAllProfilesByHouseholdId, saveProfileNameToDatabase } from "../../api/profile";
 import { profiles } from "../../data";
 import { Profile } from "../../types";
 
@@ -40,17 +40,35 @@ const profileSlice = createSlice({
           console.error("Fel vid tillägg av profil:", error);
         });
     },
-    editProfileName: (
-      state,
-      action: PayloadAction<{ profileId: string; newProfileName: string }>,
-    ) => {
-      const profileToEdit = state.profiles.find(
-        (profile) => profile.id === action.payload.profileId,
-      );
+    // editProfileName: (
+    //   state,
+    //   action: PayloadAction<{ profileId: string; newProfileName: string }>,
+    // ) => {
+    //   const profileToEdit = state.profiles.find(
+    //     (profile) => profile.id === action.payload.profileId,
+    //   );
+    //   if (profileToEdit) {
+    //     profileToEdit.profileName = action.payload.newProfileName;
+    //   }
+    // },
+    editProfileName: (state, action: PayloadAction<{ profileId: string; newProfileName: string }>) => {
+      const profileToEdit = state.profiles.find((profile) => profile.id === action.payload.profileId);
       if (profileToEdit) {
         profileToEdit.profileName = action.payload.newProfileName;
+        saveProfileNameToDatabase(profileToEdit.id, action.payload.newProfileName)
+          .then((response) => {
+            if (response.success) {
+              console.log("Profilnamnet har sparats i databasen.");
+            } else {
+              console.error("Fel vid spara profilnamnet i databasen.");
+            }
+          })
+          .catch((error) => {
+            console.error("Fel vid spara profilnamnet i databasen:", error);
+          });
       }
     },
+
     setProfileByHouseholdAndUser: (
       state,
       action: PayloadAction<{ userId: string; householdId: string }>,

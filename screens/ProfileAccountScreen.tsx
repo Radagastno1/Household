@@ -37,6 +37,7 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
   // const householdId = "fYHVLNiQvWEG9KNUGqBT"; // kommenterade ut denna, bara denna som jag inte satt tillbaka
 
   const dispatch = useAppDispatch();
+  const activeHouseholdCode = activeHousehold?.code || "Ingen kod tillgänglig";
 
   //UTKOMMENTERAR DENNA:
   // useEffect(() => {
@@ -62,7 +63,7 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
 
   const [isEditing, setIsEditing] = useState(false);
   const [updatedProfileName, setUpdatedProfilename] = useState(
-    activeProfile?.profileName,
+    activeProfile?.profileName
   );
 
   const { theme } = useTheme();
@@ -85,6 +86,18 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
     }
   }, [activeProfile]);
 
+
+  useEffect(() => {
+    if (activeProfile) {
+      
+      setUpdatedProfilename(activeProfile.profileName);
+    }
+  }, [activeProfile]);
+
+
+  
+  
+
   const handleSaveClick = () => {
     if (activeProfile) {
       dispatch(
@@ -94,6 +107,7 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
         }),
       );
       setIsEditing(false);
+      console.log("NYA PROFILNAMNET", {updatedProfileName})
     }
   };
 
@@ -117,9 +131,7 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
             Profilnamn: {activeProfile?.profileName}
           </Text>
         </View>
-        {/* <Text style={{ color: theme.colors.text }}>
-          Avatar: {activeProfile?.avatar}
-        </Text> */}
+     
         <Image
           source={{ uri: AvatarUrls[activeProfile?.avatar as Avatars] }}
           style={{ height: 20, width: 20 }}
@@ -161,20 +173,6 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
                 )}
               </View>
 
-              {/* <View style={styles.nameContainer}>
-                {isEditing ? (
-                  <TextInput
-                    placeholder={activeProfile?.profileName}
-                    onChangeText={(text) => {
-                      setUpdatedProfilename(text);
-                    }}
-                  />
-                ) : (
-                  <Text style={styles.profileTitle}>
-                    {activeProfile?.profileName}
-                  </Text>
-                )}
-              </View> */}
               <IconButton
                 icon="pencil"
                 size={20}
@@ -186,6 +184,7 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
           </Card>
 
           {isEditing ? <Button onPress={handleSaveClick}>Spara</Button> : null}
+
 
           <Card style={styles.card}>
             <View style={styles.taskItem}>
@@ -208,7 +207,9 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
           <Card style={styles.card}>
             <View style={styles.taskItem}>
               <View style={styles.nameContainer}>
-                <Text variant="titleLarge">Hushållskod</Text>
+                <Text variant="titleLarge">
+                  Hushållskod: {activeHouseholdCode}
+                </Text>
               </View>
             </View>
           </Card>
