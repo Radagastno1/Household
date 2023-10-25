@@ -7,7 +7,6 @@ import HandleHouseholdScreen from "../screens/HandleHouseholdScreen";
 import HouseholdAccountScreen from "../screens/HouseholdAccountScreen";
 import ProfileAccountScreen from "../screens/ProfileAccountScreen";
 import SignInScreen from "../screens/SignInScreen";
-import SplashScreen from "../screens/SplashScreen";
 import TaskDetailScreen from "../screens/TaskDetailScreen";
 import CustomHeader from "../store/shared/CustomHeader";
 import { useAppSelector } from "../store/store";
@@ -64,7 +63,7 @@ export default function RootNavigator() {
         <Stack.Screen
           name="CreateProfile"
           component={CreateProfileScreen}
-          initialParams={{ householdId: "fYHVLNiQvWEG9KNUGqBT" }}
+          // initialParams={{ householdId: "fYHVLNiQvWEG9KNUGqBT" }}
         />
         <Stack.Screen name="HandleTask" component={CreateTaskScreen} />
         <Stack.Screen

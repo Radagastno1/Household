@@ -13,7 +13,7 @@ import {
 } from "react-native";
 import { Text, TextInput } from "react-native-paper";
 import { useDispatch } from "react-redux";
-import { getUsersFromDB } from "../api/user"; // Import the getUsersFromDB function
+import { getUsersFromDB } from "../api/user";
 import { useTheme } from "../contexts/themeContext";
 import { RootNavigationScreenProps } from "../navigators/navigationTypes";
 import { loginUser } from "../store/user/userSlice";
@@ -33,7 +33,6 @@ export const SignInScreen = ({ navigation }: SignInProps) => {
   const translateY = useRef(new Animated.Value(6)).current;
 
   useEffect(() => {
-    // Start the navigation animation early
     Animated.timing(translateY, {
       toValue: -0.5,
       duration: 1000,
@@ -104,7 +103,7 @@ export const SignInScreen = ({ navigation }: SignInProps) => {
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
-          <StatusBar backgroundColor="yellow" />
+          <StatusBar backgroundColor="#FFD700" />
 
           <View style={{ backgroundColor: theme.colors.background }}>
             <View style={styles.container}>
@@ -132,7 +131,6 @@ export const SignInScreen = ({ navigation }: SignInProps) => {
                   color: theme.buttonText.color,
                   fontSize: 24,
                   fontWeight: "bold",
-                  // marginTop: 30,
                   textAlign: "center",
                 }}
               >
@@ -189,7 +187,6 @@ export const SignInScreen = ({ navigation }: SignInProps) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // justifyContent: "center",
     alignItems: "center",
     marginBottom: 39,
   },
@@ -203,45 +200,8 @@ const styles = StyleSheet.create({
     margin: 5,
     padding: 10,
     fontSize: 18,
-    // color: theme.buttonText.color,
-    // backgroundColor: theme.colors.background,
   },
-  loginButton: {
-    // backgroundColor: theme.colors primary,
-    // padding: 10,
-    // alignItems: "center",
-    // margin: 20,
-    // borderRadius: 10,
-  },
-  loginButtonText: {
-    // color: theme.buttonText.color,
-    // fontSize: theme.buttonText.fontSize,
-  },
-  // signupButton: {
-  //   // backgroundColor: theme.colors background,
-  //   padding: 5,
-  //   alignItems: "center",
-  //   margin: 10,
-  //   borderRadius: 10,
-  //   borderWidth: 1,
-  //   // borderColor: theme.buttonText.color,
-  // },
-  signupButtonText: {
-    // color: theme.buttonText.color,
-    // fontSize: theme.buttonText.fontSize,
-  },
-  // forgotPasswordButton: {
-  //   // backgroundColor: theme.colors background,
-  //   // flex: 1,
-  //   padding: 5,
-  //   alignItems: "center",
-  //   margin: 10,
-  // },
-  // forgotPasswordButtonText: {
 
-  //   // color: theme.buttonText.color,
-  //   // fontSize: theme.buttonText.fontSize,
-  // },
   headerText: {
     fontSize: 20,
     fontWeight: "bold",
@@ -250,9 +210,7 @@ const styles = StyleSheet.create({
   },
   header: {
     backgroundColor: "yellow",
-    // padding: 10,
     alignItems: "center",
-    // marginTop: 30,
   },
   textContainer: {
     padding: 20,

@@ -8,15 +8,14 @@ import {
 import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Appbar, Button, Text, TextInput } from "react-native-paper";
-import { useDispatch, useSelector } from "react-redux";
 import { app } from "../api/config";
 import { useTheme } from "../contexts/themeContext";
 import { RootNavigationScreenProps } from "../navigators/navigationTypes";
 import {
-  HouseholdState,
   generateHouseholdCode,
-  joinHouseholdByCode,
+  handleJoinHousehold,
 } from "../store/household/householdSlice";
+import { useAppSelector } from "../store/store";
 
 const db = getFirestore(app);
 
@@ -28,7 +27,6 @@ export default function HandleHouseholdScreen({
   const { theme } = useTheme();
   const [householdName, setHouseholdName] = useState("");
   const [joinCode, setJoinCode] = useState("");
-  const dispatch = useDispatch();
 
   const handleCreateHousehold = async () => {
     const householdCollectionRef = collection(db, "households");
@@ -37,7 +35,7 @@ export default function HandleHouseholdScreen({
     try {
       const docRef = await addDoc(householdCollectionRef, {
         name: householdName,
-        code: randomCode, // Use the generated code
+        code: randomCode,
       });
 
       const householdId = docRef.id;
@@ -45,48 +43,50 @@ export default function HandleHouseholdScreen({
       await setDoc(doc(db, "households", householdId), {
         id: householdId,
         name: householdName,
-        code: randomCode, // Use the generated code
+        code: randomCode,
       });
 
       console.log("Household created with ID:", householdId);
 
-      // After creating a household, you can navigate to "CreateProfile"
       navigation.navigate("CreateProfile", {
-        householdId: householdId // Pass the household ID
+        householdId: householdId,
       });
     } catch (error) {
       console.error("Error creating household:", error);
     }
   };
 
-  const handleJoinHousehold = () => {
+  const activeHousehold = useAppSelector(
+    (state) => state.household.activeHousehold,
+  );
+
+  const handleJoin = async () => {
     if (joinCode) {
-      dispatch(joinHouseholdByCode(joinCode));
+      console.log("Dispatching joinHouseholdByCode with code:", joinCode);
+      const household = await handleJoinHousehold(joinCode);
 
-      // Type the state variable explicitly as HouseholdState
-      const activeHousehold = useSelector(
-        (state: { household: HouseholdState }) =>
-          state.household.activeHousehold,
-      );
-
-      if (activeHousehold) {
-        // Navigate to the "CreateProfileScreen" after joining
+      if (household) {
+        console.log("activeHousehold is available:", household);
         navigation.navigate("CreateProfile", {
-          householdId: activeHousehold.id,
+          householdId: household.id,
         });
+      } else {
+        console.log("activeHousehold is not available yet.");
       }
     } else {
       console.error("Join code is required.");
     }
   };
+  const loggedInUser = useAppSelector((state) => state.user.user);
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
       <View>
         <View>
           <Appbar.Header style={{ height: 70, backgroundColor: "white" }}>
-            <Appbar.Content title={"Välkommen användare!"} />
-            {/* <Appbar.Content title={`Välkommen ${userName}!`} /> */}
+            {loggedInUser && (
+              <Appbar.Content title={`Välkommen ${loggedInUser.username}!`} />
+            )}
           </Appbar.Header>
         </View>
 
@@ -138,7 +138,7 @@ export default function HandleHouseholdScreen({
               color: "black",
               fontSize: 16,
             }}
-            onPress={handleJoinHousehold}
+            onPress={handleJoin}
           >
             Gå med
           </Button>

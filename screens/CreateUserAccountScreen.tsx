@@ -8,7 +8,6 @@ import {
   useColorScheme,
 } from "react-native";
 import { Checkbox, Modal, Portal, TextInput } from "react-native-paper";
-import { useDispatch } from "react-redux";
 import { useTheme } from "../contexts/themeContext";
 import { RootNavigationScreenProps } from "../navigators/navigationTypes";
 import { useAppDispatch, useAppSelector } from "../store/store";
@@ -90,10 +89,10 @@ export default function CreateUserAccountScreen({
           label={
             !newUserName && missingFieldsWarning ? (
               <Text style={{ color: colorScheme === "dark" ? "black" : "red" }}>
+                <Text style={{ color: "red" }}>Användarnamn*</Text>
                 Användarnamn"
               </Text>
             ) : (
-              // <Text style={{ color: "red" }}>Användarnamn*</Text>
               "Användarnamn"
             )
           }
@@ -204,10 +203,8 @@ export default function CreateUserAccountScreen({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: "#fff",
   },
   header: {
-    // backgroundColor: "yellow",
     padding: 10,
     alignItems: "center",
     justifyContent: "center",
@@ -225,7 +222,6 @@ const styles = StyleSheet.create({
     padding: 5,
     fontSize: 16,
     color: "black",
-    // backgroundColor: "white",
   },
   checkboxContainer: {
     flexDirection: "row",
@@ -254,17 +250,6 @@ const styles = StyleSheet.create({
     color: "red",
     fontSize: 16,
   },
-  // createAccountButton: {
-  //   backgroundColor: "yellow",
-  //   padding: 10,
-  //   alignItems: "center",
-  //   margin: 20,
-  //   borderRadius: 10,
-  // },
-  // createAccountButtonText: {
-  //   color: "black",
-  //   fontSize: 16,
-  // },
   loginButton: {
     backgroundColor: "white",
     padding: 5,
