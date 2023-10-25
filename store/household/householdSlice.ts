@@ -21,7 +21,7 @@ export const handleJoinHousehold = async (joinCode: string) => {
     // Dispatch the action and await its completion
     const household = await checkHouseholdWithCode(joinCode);
     if (household) {
-      const householdId = household.id;
+      console.log(household);
       return household;
     } else {
       console.error(
@@ -99,8 +99,7 @@ const householdSlice = createSlice({
   },
 });
 
-export const { addHousehold, findHouseholdById, setHouseholdByHouseholdId   sethouseholdActive,
-} =
+export const { addHousehold, findHouseholdById, setHouseholdByHouseholdId } =
   householdSlice.actions;
 
 export const householdReducer = householdSlice.reducer;

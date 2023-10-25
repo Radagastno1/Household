@@ -5,19 +5,17 @@ import {
   getFirestore,
   setDoc,
 } from "firebase/firestore";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Appbar, Button, Text, TextInput } from "react-native-paper";
-import { useDispatch, useSelector } from "react-redux";
 import { app } from "../api/config";
 import { useTheme } from "../contexts/themeContext";
 import { RootNavigationScreenProps } from "../navigators/navigationTypes";
 import {
-  HouseholdState,
   generateHouseholdCode,
   handleJoinHousehold,
 } from "../store/household/householdSlice";
-import { AppDispatch } from "../store/store";
+import { useAppSelector } from "../store/store";
 
 const db = getFirestore(app);
 
@@ -57,25 +55,25 @@ export default function HandleHouseholdScreen({
     }
   };
 
-  const activeHousehold = useSelector(
-    (state: { household: HouseholdState }) => state.household.activeHousehold,
+  const activeHousehold = useAppSelector(
+    (state) => state.household.activeHousehold,
   );
-  const dispatch = useDispatch<AppDispatch>();
+  // const dispatch = useDispatch<AppDispatch>();
 
-  useEffect(() => {
-    if (activeHousehold) {
-      navigation.navigate("CreateProfile", {
-        householdId: activeHousehold.id,
-      });
-    }
-  }, [activeHousehold, navigation]);
+  // useEffect(() => {
+  //   if (activeHousehold) {
+  //     navigation.navigate("CreateProfile", {
+  //       householdId: activeHousehold.id,
+  //     });
+  //   }
+  // }, [activeHousehold, navigation]);
   const handleJoin = async () => {
     if (joinCode) {
       console.log("Dispatching joinHouseholdByCode with code:", joinCode);
       const household = await handleJoinHousehold(joinCode);
 
       if (household) {
-        console.log("activeHousehold is available:", activeHousehold);
+        console.log("activeHousehold is available:", household);
         navigation.navigate("CreateProfile", {
           householdId: household.id,
         });

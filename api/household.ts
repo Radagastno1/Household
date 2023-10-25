@@ -121,11 +121,16 @@ export const checkHouseholdWithCode = async (joinCode: string) => {
   // const querySnapshot = await getDocs(q);
   // const householdDoc = await getDoc(q);
   const querySnapshot = await getDocs(q);
+  if (querySnapshot.size === 0) {
+    console.error("Household not found with ID:", joinCode);
+    return null;
+  }
   const householdData = querySnapshot.docs[0].data() as Household;
+  console.log(householdData);
 
   if (householdData) {
     // Household with the entered code exists
-    return householdData as Household;
+    return householdData;
 
     // return households;
   } else {

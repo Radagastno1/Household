@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import { Image } from "react-native";
 import { Button } from "react-native-paper";
 import { useDispatch } from "react-redux";
-import { households } from "../data/index";
-import { AvatarColors, AvatarUrls, Avatars } from "../data/avatars";
+// import { households } from "../data/index";
 import { useColorScheme } from "react-native";
+import { AvatarColors, AvatarUrls, Avatars } from "../data/avatars";
 
 import {
   StyleSheet,
@@ -42,17 +42,17 @@ export default function CreateProfileScreen({
   const [householdName, setHouseholdName] = useState("");
   const [selectedAvatar, setSelectedAvatar] = useState<string | null>(null);
   const { householdId } = route.params;
-  const household = households.find((h) => h.id === householdId);
+  // const household = households.find((h) => h.id === householdId);
   const { theme } = useTheme();
   const colorScheme = useColorScheme();
   const dispatch = useDispatch();
   const todaysDate = new Date();
 
   //MOCKAR ETT ID SÅLÄNGE FÖR USERN
-  const mockedUserId = "5NCx5MKcUu6UYKjFqRkg";
+  // const mockedUserId = "5NCx5MKcUu6UYKjFqRkg";
 
   //UTKOMMENTERAR DENNA SÅLÄNGE FÖR FINNS INGET STATE FÖR EN AKTIV USER ÄN
-  // const activeUser = useAppSelector((state) => state.userAccount.user);
+  const activeUser = useAppSelector((state) => state.userAccount.user);
 
   const activeProfiles = useAppSelector((state) =>
     state.profile.profiles.filter(
@@ -73,7 +73,7 @@ export default function CreateProfileScreen({
       const newProfile = {
         id: todaysDate.getUTCMilliseconds.toString().slice(-4),
         profileName: householdName,
-        userId: mockedUserId,
+        userId: activeUser.id,
         householdId: householdId,
         avatar: selectedAvatar,
         avatarsColors: avatarsColor,
@@ -88,78 +88,86 @@ export default function CreateProfileScreen({
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
-    <View style={styles.container}>
-      <View style={styles.sectionContainer}>
-        <View   style={[
-          styles.rectContainer,
-          {
-            backgroundColor:
-              colorScheme === "dark"
-                ? "white"
-                : theme.cardButton.backgroundColor,
-          },
-        ]}>
-          <Text   style={[
-          styles.rectText,
-          {
-            backgroundColor:
-              colorScheme === "dark"
-                ? "white"
-                : theme.cardButton.backgroundColor,
-          },
-        ]}>{householdId}</Text>
-        </View>
-      </View>
-      <View style={styles.sectionContainer}>
-        <View style={theme.button as any}>
-          <Text style={theme.buttonText}>Välj ditt profilnamn</Text>
-        </View>
-      </View>
-      <TextInput
-        placeholder="Skriv ditt profilnamn"
-        // style={styles.input}
-        style={[
-          styles.input,
-          {
-            backgroundColor:
-              colorScheme === "dark"
-                ? "white"
-                : theme.cardButton.backgroundColor,
-          },
-        ]}
-        onChangeText={(text) => setHouseholdName(text)}
-      />
-      <View style={styles.avatarsContainer}>
-        {avatars.map((avatar) => (
-          <TouchableOpacity
-            key={avatar.id}
+      <View style={styles.container}>
+        <View style={styles.sectionContainer}>
+          <View
             style={[
-              styles.avatar,
-              selectedAvatar === avatar.id ? styles.selectedAvatar : undefined,
-              isAvatarOccupied(avatar.id) ? styles.occupiedAvatar : undefined,
-              { backgroundColor: AvatarColors[avatar.id as Avatars] },
+              styles.rectContainer,
+              {
+                backgroundColor:
+                  colorScheme === "dark"
+                    ? "white"
+                    : theme.cardButton.backgroundColor,
+              },
             ]}
-            onPress={() => {
-              if (!isAvatarOccupied(avatar.id)) {
-                setSelectedAvatar(avatar.id as Avatars);
-              }
-            }}
           >
-            <Image
-              source={{ uri: AvatarUrls[avatar.id as Avatars] }}
-              style={styles.avatarImage}
-            />
-          </TouchableOpacity>
-        ))}
+            <Text
+              style={[
+                styles.rectText,
+                {
+                  backgroundColor:
+                    colorScheme === "dark"
+                      ? "white"
+                      : theme.cardButton.backgroundColor,
+                },
+              ]}
+            >
+              {householdId}
+            </Text>
+          </View>
+        </View>
+        <View style={styles.sectionContainer}>
+          <View style={theme.button as any}>
+            <Text style={theme.buttonText}>Välj ditt profilnamn</Text>
+          </View>
+        </View>
+        <TextInput
+          placeholder="Skriv ditt profilnamn"
+          // style={styles.input}
+          style={[
+            styles.input,
+            {
+              backgroundColor:
+                colorScheme === "dark"
+                  ? "white"
+                  : theme.cardButton.backgroundColor,
+            },
+          ]}
+          onChangeText={(text) => setHouseholdName(text)}
+        />
+        <View style={styles.avatarsContainer}>
+          {avatars.map((avatar) => (
+            <TouchableOpacity
+              key={avatar.id}
+              style={[
+                styles.avatar,
+                selectedAvatar === avatar.id
+                  ? styles.selectedAvatar
+                  : undefined,
+                isAvatarOccupied(avatar.id) ? styles.occupiedAvatar : undefined,
+                { backgroundColor: AvatarColors[avatar.id as Avatars] },
+              ]}
+              onPress={() => {
+                if (!isAvatarOccupied(avatar.id)) {
+                  setSelectedAvatar(avatar.id as Avatars);
+                }
+              }}
+            >
+              <Image
+                source={{ uri: AvatarUrls[avatar.id as Avatars] }}
+                style={styles.avatarImage}
+              />
+            </TouchableOpacity>
+          ))}
+        </View>
+        <Button
+          style={theme.button as any}
+          onPress={saveProfile}
+          disabled={!selectedAvatar}
+        >
+          <Text style={theme.buttonText}>Skapa</Text>
+        </Button>
       </View>
-      <Button
-        style={theme.button as any}
-        onPress={saveProfile}
-        disabled={!selectedAvatar}
-      >
-        <Text style={theme.buttonText}>Skapa</Text>
-      </Button>
-    </View>
     </View>
   );
 }
