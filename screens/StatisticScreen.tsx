@@ -43,10 +43,8 @@ export default function StatisticScreen() {
       startOfCurrentWeek,
       endOfCurrentWeek,
     );
-    const uniqueData = getUniqueSummarizedData(summarizedData);
-    const empty: StatData[] = [];
-    setStatsForTasks(empty);
-    setStatsForTasks(uniqueData);
+    // const uniqueData = getUniqueSummarizedData(summarizedData);
+    setStatsForTasks(summarizedData);
     console.log("Nu renderas datan från statisticScreen: ", statsForTasks);
   }, [completions, tasks, profiles, startOfCurrentWeek, endOfCurrentWeek]);
 
