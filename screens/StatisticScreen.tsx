@@ -3,7 +3,6 @@ import { ScrollView, StyleSheet, Text, View, Image } from "react-native";
 import PiechartComponent from "../components/PiechartComponent";
 import { useAppSelector } from "../store/store";
 import { StatData } from "../types";
-import { getCurrentWeekDates } from "../utils/DateHandler";
 import { useTheme } from "../contexts/themeContext";
 import {
   SummerizeEachTask,
@@ -11,11 +10,12 @@ import {
 } from "../utils/statisticHandler";
 import { useFocusEffect } from "@react-navigation/native";
 import { AvatarUrls, Avatars, getAvatarColorString } from "../data/avatars";
+import { TopTabScreenProps } from "../navigators/navigationTypes";
 
-interface StatDatesProps {
-  startDate: string;
-  endDate: string;
-}
+type StatProps =
+  | TopTabScreenProps<"StatisticsCurrentWeek">
+  | TopTabScreenProps<"StatisticsLastWeek">
+  | TopTabScreenProps<"LastMonth">;
 
 function arrayChunk<T>(array: T[], chunkSize: number): T[][] {
   const chunkedArray: T[][] = [];
@@ -25,9 +25,10 @@ function arrayChunk<T>(array: T[], chunkSize: number): T[][] {
   return chunkedArray;
 }
 
-export default function StatisticScreen() {
+export default function StatisticScreen({ route }: StatProps) {
   const { theme } = useTheme();
-  const { startOfCurrentWeek, endOfCurrentWeek } = getCurrentWeekDates();
+  const startDate = route.params.startDate;
+  const endDate = route.params.endDate;
   const tasks = useAppSelector((state) => state.task.tasks);
   const profiles = useAppSelector((state) => state.profile.profiles);
   const completions = useAppSelector(
@@ -45,8 +46,8 @@ export default function StatisticScreen() {
       completions,
       tasks,
       profiles,
-      startOfCurrentWeek,
-      endOfCurrentWeek,
+      startDate,
+      endDate,
     );
     setStatsForTasks(summarizedData);
     const data = summarizeDataByColor(summarizedData);
@@ -55,7 +56,7 @@ export default function StatisticScreen() {
     console.log("DATA.SERIES: ", totalSumSeries);
     console.log("DATA.COLORS: ", totalSumColors);
     console.log("Nu renderas datan från statisticScreen: ", statsForTasks);
-  }, [completions, tasks, profiles, startOfCurrentWeek, endOfCurrentWeek]);
+  }, [completions, tasks, profiles, startDate, endDate]);
 
   useFocusEffect(handleFocusEffect);
   const chunkedCharts = arrayChunk(statsForTasks, 3);
@@ -151,7 +152,6 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: "row",
-    justifyContent: "center",
   },
   piechartContainer: {
     flexDirection: "column",
@@ -162,6 +162,7 @@ const styles = StyleSheet.create({
     width: 110,
     textAlign: "center",
     padding: 2,
+    fontWeight: "bold",
   },
   topChart: {
     alignItems: "center",
