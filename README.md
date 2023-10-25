@@ -15,6 +15,10 @@ jag skriver lite här fö ratt testa och se om workflow körs eller ej
 
 David har gett oss godkänt att flytta på knappen `Ändra` i HouseholdTasksScreen till TaskDetailScreen samt ändra appens titel från `Hushållet` till `Buzzter`.
 
+## 2023-10-13
+
+David godkände att avatarerna inte behövde vara i cirkeldiagrammet
+
 ## Betygs-krav
 
 Antal krav: 40.
@@ -24,9 +28,9 @@ VG: 32 (80%).
 ## G
 
 Kravlista (3)
-[] En logga, splashscreen och appikon ska designas och användas.
-[] Applikationen ska byggas med RN, Expo & TS.
-[] Designen av appen ska utgå ifrån befintliga skisser, undantag kan ges men ska diskuteras
+[x] En logga, splashscreen och appikon ska designas och användas.
+[x] Applikationen ska byggas med RN, Expo & TS.
+[x] Designen av appen ska utgå ifrån befintliga skisser, undantag kan ges men ska diskuteras
 med produktägare, godkännas och dokumenteras.
 
 Hushåll (1)
@@ -58,19 +62,19 @@ sedan sysslan gjordes senast samt om den är försenad.
 med ett enkelt tryck gå att markera sysslan som gjord.
 
 Statistik (3)
-[] En användare ska kunna se fördelningen av gjorda sysslor mellan användarna i sitt
+[x] En användare ska kunna se fördelningen av gjorda sysslor mellan användarna i sitt
 hushåll.
-[] Varje statistikvy ska visa den totala fördelningen (inräknat vikterna för sysslorna) samt
+[x] Varje statistikvy ska visa den totala fördelningen (inräknat vikterna för sysslorna) samt
 fördelning av varje enskild syssla.
-[] Det ska finnas en statistikvy över ”nuvarande vecka”.
+[x] Det ska finnas en statistikvy över ”nuvarande vecka”.
 
 ## VG
 
 Kravlista (1)
-[] Information ska kommuniceras till och från en server.
+[x] Information ska kommuniceras till och från en server.
 
 Hushåll (6)
-[] Alla användare i ett hushåll ska kunna se vilka som tillhör ett hushåll.
+[x] Alla användare i ett hushåll ska kunna se vilka som tillhör ett hushåll.
 [] En ägare av ett hushåll ska kunna se förfrågningar om att gå med i hushållet.
 [] En ägare ska kunna acceptera eller neka förfrågningar.
 [] En ägare ska kunna göra andra till ägare.
@@ -85,21 +89,21 @@ godkänna användaren.
 [] En användare ska kunna lämna ett hushåll.
 
 Profil (2)
-[] En användare ska kunna ställa in appens utseende (mörkt, ljust, auto).
-[] Om en användare tillhör två eller fler hushåll ska denne kunna välja att byta mellan de
+[x] En användare ska kunna ställa in appens utseende (mörkt, ljust, auto).
+[x] Om en användare tillhör två eller fler hushåll ska denne kunna välja att byta mellan de
 olika hushållen.
 
 Sysslor (3)
 [] En användare ska kunna lägga till en ljudinspelning och en bild för att beskriva sysslan
 ytterligare.
-[X] En ägare ska kunna ta bort en syssla.
+[x] En ägare ska kunna ta bort en syssla.
 [] När en syssla tas bort ska användaren få en varning om att all statistik gällande sysslan
 också kommer att tas bort och få valet att arkivera sysslan istället.
 
 Statistik (3)
-[] Det ska finnas en statistikvy över ”förra vecka”.
-[] Det ska finnas en statistikvy över ”förra månaden”.
-[] Om det inte finns statistik för en av vyerna ska den vyn inte visas.
+[x] Det ska finnas en statistikvy över ”förra vecka”.
+[x] Det ska finnas en statistikvy över ”förra månaden”.
+[x] Om det inte finns statistik för en av vyerna ska den vyn inte visas.
 
 Schemaläggning (3)
 [] En ägare ska kunna tilldela och ta bort sysslor från användare i hushållet.
