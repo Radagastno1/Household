@@ -188,13 +188,49 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
 
           <Card style={styles.card}>
             <View style={styles.taskItem}>
-              <View style={styles.nameContainer}>
-                {/* tog headertitle som du satt till hushållsnamnet för att testa så det funkar */}
-                <Text variant="titleLarge">{headerTitle}</Text>
+            <View style={styles.nameContainer}>
+                {isEditing ? (
+                  <TextInput
+                    placeholder={headerTitle}
+                    onChangeText={(text) => {
+                      setUpdatedProfilename(text);
+                    }}
+                    style={{
+                      color: colorScheme === "dark" ? "white" : "black",
+                    }}
+                  />
+                ) : (
+                  <Text
+                    style={[
+                      styles.profileTitle,
+                      {
+                        color:
+                          colorScheme === "dark" ? "white" : theme.colors.text,
+                      },
+                    ]}
+                  >
+                    {activeHousehold?.name}
+                  </Text>
+                )}
               </View>
-              <IconButton icon="pencil" size={20} onPress={() => {}} />
+              {/* <View style={styles.nameContainer}>
+                {/* tog headertitle som du satt till hushållsnamnet för att testa så det funkar */}
+                {/* <Text variant="titleLarge">{headerTitle}</Text>
+              </View>  */}
+
+              <IconButton
+                icon="pencil"
+                size={20}
+                onPress={() => {
+                  setIsEditing(true);
+                }}
+              />
+              
+              {/* <IconButton icon="pencil" size={20} onPress={() => {}} /> */}
             </View>
           </Card>
+
+          {isEditing ? <Button onPress={handleSaveClick}>Spara</Button> : null}
 
           <Card style={styles.card} onPress={() => setModalVisible(true)}>
             <View style={styles.taskItem}>
