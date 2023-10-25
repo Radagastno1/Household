@@ -74,6 +74,11 @@ export interface StatData {
   colors: string[];
 }
 
+export interface PieChart {
+  color: string;
+  serie: number;
+}
+
 // Show how to make a day function work between task-data and taskCompletion-data
 // task created today 2023-10-12
 // interval : 3 days

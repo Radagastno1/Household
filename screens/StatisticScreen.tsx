@@ -5,7 +5,10 @@ import { useAppSelector } from "../store/store";
 import { StatData } from "../types";
 import { getCurrentWeekDates } from "../utils/DateHandler";
 import { useTheme } from "../contexts/themeContext";
-import { SummerizeEachTask } from "../utils/statisticHandler";
+import {
+  SummerizeEachTask,
+  summarizeDataByColor,
+} from "../utils/statisticHandler";
 import { useFocusEffect } from "@react-navigation/native";
 
 interface StatDatesProps {
@@ -29,6 +32,8 @@ export default function StatisticScreen() {
     (state) => state.taskCompletion.completions,
   );
   const [statsForTasks, setStatsForTasks] = useState<StatData[]>([]);
+  const [totalSumColors, setTotalSumColors] = useState<string[]>([]);
+  const [totalSumSeries, setTotalSumSeries] = useState<number[]>([]);
 
   const handleFocusEffect = useCallback(() => {
     console.log("USE-EFFECT STATS: ", completions);
@@ -41,6 +46,11 @@ export default function StatisticScreen() {
       endOfCurrentWeek,
     );
     setStatsForTasks(summarizedData);
+    const data = summarizeDataByColor(summarizedData);
+    setTotalSumColors(data.colors);
+    setTotalSumSeries(data.series);
+    console.log("DATA.SERIES: ", totalSumSeries);
+    console.log("DATA.COLORS: ", totalSumColors);
     console.log("Nu renderas datan från statisticScreen: ", statsForTasks);
   }, [completions, tasks, profiles, startOfCurrentWeek, endOfCurrentWeek]);
 
@@ -54,13 +64,23 @@ export default function StatisticScreen() {
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
       <ScrollView style={styles.container}>
-        <View style={styles.topChart}>
-          <PiechartComponent
-            widthAndHeight={250}
-            series={slices}
-            sliceColor={colors}
-          />
-        </View>
+        {totalSumColors.length > 0 && totalSumSeries.length > 0 ? ( // Kontrollera om totalSumColors har data
+          <View style={styles.topChart}>
+            <PiechartComponent
+              widthAndHeight={250}
+              series={totalSumSeries}
+              sliceColor={totalSumColors}
+            />
+          </View>
+        ) : (
+          <View style={styles.topChart}>
+            <PiechartComponent
+              widthAndHeight={250}
+              series={[100]}
+              sliceColor={["gray"]}
+            />
+          </View>
+        )}
 
         <View style={styles.chartContainer}>
           {chunkedCharts.map((row, rowIndex) => (
