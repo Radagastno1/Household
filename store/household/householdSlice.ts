@@ -1,7 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { addHouseholdToDB, getHouseholdsFromDB } from "../../api/household";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { addHouseholdToDB, checkHouseholdWithCode } from "../../api/household";
 import { RootStackParamList } from "../../navigators/RootNavigator";
 import { Household } from "../../types";
 
@@ -15,6 +15,21 @@ export const initialState: HouseholdState = {
   households: [],
   selectedHousehold: null,
   activeHousehold: null,
+};
+export const handleJoinHousehold = async (joinCode: string) => {
+  if (joinCode) {
+    // Dispatch the action and await its completion
+    const household = await checkHouseholdWithCode(joinCode);
+    if (household) {
+      console.log(household);
+      return household;
+    } else {
+      console.error(
+        "Failed to join the household. Please check the join code.",
+      );
+      return null;
+    }
+  }
 };
 
 // Code generator function
@@ -68,7 +83,6 @@ const householdSlice = createSlice({
         state.activeHousehold = activehousehold;
       }
     },
-
     findHouseholdById: (
       state,
       action: PayloadAction<{ householdId: string }>,
@@ -80,18 +94,6 @@ const householdSlice = createSlice({
       if (foundHousehold) {
         state.selectedHousehold = foundHousehold;
       } else {
-        // Handle the case when the household is not found
-      }
-    },
-    joinHouseholdByCode: (state, action: PayloadAction<string>) => {
-      // Find the household by the provided code
-      const joinedHouseholdByCode = state.households.find(
-        (household) => household.code === action.payload,
-      );
-
-      if (joinedHouseholdByCode) {
-        // Set the active household
-        state.activeHousehold = joinedHouseholdByCode;
       }
     },
   },
@@ -100,15 +102,28 @@ const householdSlice = createSlice({
 export const {
   addHousehold,
   findHouseholdById,
-  joinHouseholdByCode,
   setHouseholdByHouseholdId,
   sethouseholdActive,
 } = householdSlice.actions;
 
 export const householdReducer = householdSlice.reducer;
 
+const setActiveHousehold = (household: Household) => {
+  return {
+    type: "household/setActiveHousehold",
+    payload: household,
+  };
+};
+
 // Helper function to get a random element from a string
 const getRandomElement = (array: string) => {
   const index = Math.floor(Math.random() * array.length);
   return array[index];
 };
+function dispatch(arg0: any) {
+  throw new Error("Function not implemented.");
+}
+
+function joinHouseholdByCode(joinCode: string) {
+  throw new Error("Function not implemented.");
+}
