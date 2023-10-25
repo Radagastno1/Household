@@ -1,5 +1,9 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { addProfileToDB, getAllProfilesByHouseholdId, saveProfileNameToDatabase } from "../../api/profile";
+import {
+  addProfileToDB,
+  getAllProfilesByHouseholdId,
+  saveProfileNameToDatabase,
+} from "../../api/profile";
 import { Profile } from "../../types";
 
 interface ProfileState {
@@ -28,7 +32,16 @@ const profileSlice = createSlice({
     //   state.profiles = [...state.profiles, action.payload];
     // },
     addProfile: (state, action: PayloadAction<Profile>) => {
-      addProfileToDB(action.payload)
+      const profileToAdd = action.payload;
+      getAllProfilesByHouseholdId(action.payload.householdId)
+        .then((otherProfilesOnHousehold) => {
+          if (otherProfilesOnHousehold && otherProfilesOnHousehold.length > 0) {
+            profileToAdd.isOwner = false;
+          } else {
+            profileToAdd.isOwner = true;
+          }
+          return addProfileToDB(profileToAdd);
+        })
         .then((createdProfile) => {
           if (createdProfile) {
             state.profiles = [...state.profiles, createdProfile];
@@ -50,11 +63,19 @@ const profileSlice = createSlice({
     //     profileToEdit.profileName = action.payload.newProfileName;
     //   }
     // },
-    editProfileName: (state, action: PayloadAction<{ profileId: string; newProfileName: string }>) => {
-      const profileToEdit = state.profiles.find((profile) => profile.id === action.payload.profileId);
+    editProfileName: (
+      state,
+      action: PayloadAction<{ profileId: string; newProfileName: string }>,
+    ) => {
+      const profileToEdit = state.profiles.find(
+        (profile) => profile.id === action.payload.profileId,
+      );
       if (profileToEdit) {
         profileToEdit.profileName = action.payload.newProfileName;
-        saveProfileNameToDatabase(profileToEdit.id, action.payload.newProfileName)
+        saveProfileNameToDatabase(
+          profileToEdit.id,
+          action.payload.newProfileName,
+        )
           .then((response) => {
             if (response.success) {
               console.log("Profilnamnet har sparats i databasen.");

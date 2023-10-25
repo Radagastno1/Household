@@ -1,4 +1,4 @@
-import React, { useEffect, useState,  useCallback } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Image } from "react-native";
 import { Button } from "react-native-paper";
 import { useDispatch } from "react-redux";
@@ -6,7 +6,10 @@ import { useDispatch } from "react-redux";
 import { useColorScheme } from "react-native";
 import { AvatarColors, AvatarUrls, Avatars } from "../data/avatars";
 
-import { findHouseholdById, sethouseholdActive} from "../store/household/householdSlice";
+import {
+  findHouseholdById,
+  sethouseholdActive,
+} from "../store/household/householdSlice";
 
 import {
   StyleSheet,
@@ -54,14 +57,13 @@ export default function CreateProfileScreen({
     (state) => state.household.activeHousehold,
   );
 
-
   const householdSlice = useAppSelector((state) => state.household);
 
   //MOCKAR ETT ID SÅLÄNGE FÖR USERN
   // const mockedUserId = "5NCx5MKcUu6UYKjFqRkg";
 
   //UTKOMMENTERAR DENNA SÅLÄNGE FÖR FINNS INGET STATE FÖR EN AKTIV USER ÄN
-  const activeUser = useAppSelector((state) => state.userAccount.user);
+  const activeUser = useAppSelector((state) => state.user.user);
 
   const activeProfiles = useAppSelector((state) =>
     state.profile.profiles.filter(
@@ -69,23 +71,19 @@ export default function CreateProfileScreen({
     ),
   );
 
- 
-  
+  const selectedHousehold = useAppSelector((state) =>
+    state.household.households.find(
+      (household) => household.id === householdId,
+    ),
+  );
 
-  
-
-
-
-const selectedHousehold = useAppSelector((state) =>
-  state.household.households.find((household) => household.id === householdId)
-);
- 
   const isAvatarOccupied = (avatarId: string) => {
     return activeProfiles.some((profile) => profile.avatar === avatarId);
   };
 
   const saveProfile = () => {
     console.log("hushållsid är", householdId);
+
     if (selectedAvatar) {
       const avatarsColor = AvatarColors[selectedAvatar as Avatars];
       const newProfile = {
@@ -98,7 +96,6 @@ const selectedHousehold = useAppSelector((state) =>
         isOwner: false,
         isActive: false,
       };
-
       dispatch(addProfile(newProfile));
       navigation.navigate("HouseholdAccount");
     }

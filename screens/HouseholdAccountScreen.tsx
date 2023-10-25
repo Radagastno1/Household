@@ -1,18 +1,21 @@
-import { useEffect, useState } from "react";
+import { MaterialIcons } from "@expo/vector-icons";
+import React, { useEffect, useState } from "react";
 import {
+  Image,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
-  Image,
 } from "react-native";
+import { Appbar } from "react-native-paper";
 import { getHouseholdsFromDB } from "../api/household";
 import {
   getAllProfilesByHouseholdId,
   getAllProfilesByUserId,
 } from "../api/profile";
 import { useTheme } from "../contexts/themeContext";
+import { AvatarUrls, Avatars } from "../data/avatars";
 import { RootNavigationScreenProps } from "../navigators/navigationTypes";
 import { sethouseholdActive } from "../store/household/householdSlice";
 import {
@@ -21,10 +24,6 @@ import {
 } from "../store/profile/profileSlice";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { Household, Profile } from "../types";
-import React from "react";
-import { Appbar } from "react-native-paper";
-import { AvatarUrls, Avatars } from "../data/avatars";
-import { MaterialIcons } from "@expo/vector-icons";
 
 // const styles = StyleSheet.create({
 //   container: {
@@ -96,7 +95,7 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
   }
 
   const dispatch = useAppDispatch();
-//   const activeProfile = useAppSelector((state) => state.profile.activeProfile);
+  //   const activeProfile = useAppSelector((state) => state.profile.activeProfile);
   const householdSlice = useAppSelector((state) => state.household);
   const allHouseholds = householdSlice.households;
 
@@ -146,7 +145,9 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
               alignItems: "center",
               justifyContent: "center",
             }}
-            title={`Welcome ${activeUser.username}`}
+            title={
+              activeUser ? `Välkommen ${activeUser.username}` : "Välkommen"
+            }
           />
         </Appbar.Header>
       </View>
@@ -167,11 +168,13 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
             marginTop: 10,
           }}
         >
-            
           {households?.map((household: Household, index) => (
             <TouchableOpacity
               key={index}
-              style={[theme.cardButton as any,{ flexDirection: "row", justifyContent: "space-between" }]}
+              style={[
+                theme.cardButton as any,
+                { flexDirection: "row", justifyContent: "space-between" },
+              ]}
               onPress={() => {
                 handleEnterHousehold(household);
               }}
@@ -252,7 +255,6 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
 }
 
 const styles = StyleSheet.create({
-  
   themeButtonContainer: {
     padding: 20,
     alignItems: "center",
