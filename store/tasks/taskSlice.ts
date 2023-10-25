@@ -7,6 +7,7 @@ import {
   editTaskToDB,
   getTasksFromDB,
 } from "../../api/task";
+import { deleteAllTaskCompletionsByTaskId } from "../../api/taskCompletion";
 import { fetchCompletions } from "../taskCompletionSlice";
 
 interface TaskState {
@@ -63,9 +64,11 @@ const taskSlice = createSlice({
       state.tasks = action.payload;
       console.log("antal tasks:", state.tasks.length);
     },
+    //denna ska också vara en thunk tror jag?
     deleteTask: (state, action: PayloadAction<string>) => {
       const taskIdToDelete = action.payload;
       deleteTaskFromDB(taskIdToDelete);
+      deleteAllTaskCompletionsByTaskId(taskIdToDelete);
       state.tasks = state.tasks.filter((task) => task.id !== taskIdToDelete);
     },
     filterTaskListByHouseId: (
