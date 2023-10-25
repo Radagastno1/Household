@@ -1,7 +1,9 @@
 import { MaterialIcons } from "@expo/vector-icons";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
+    Animated,
   Image,
+  PanResponder,
   ScrollView,
   StyleSheet,
   Text,
@@ -136,6 +138,82 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
     }
   };
 
+  const pan = useRef(new Animated.Value(0)).current;
+  const panResponder = PanResponder.create({
+    onStartShouldSetPanResponder: () => true,
+    onPanResponderMove: (e, gestureState) => {
+      pan.setValue(gestureState.dx);
+    },
+    onPanResponderRelease: (e, gestureState) => {
+      if (Math.abs(gestureState.dx) > 50) {
+        handleToggleTheme();
+        // Do not reset the position here
+      }
+    },
+  });
+
+  const translateX = pan.interpolate({
+    inputRange: [-50, 0, 50],
+    outputRange: [-50, 0, 50],
+    extrapolate: 'clamp',
+  });
+
+//   const panResponder = PanResponder.create({
+//     onStartShouldSetPanResponder: () => true,
+//     onPanResponderMove: (e, gestureState) => {
+//       pan.setValue(gestureState.dx);
+//     },
+//     onPanResponderRelease: (e, gestureState) => {
+//       if (Math.abs(gestureState.dx) > 50) {
+//         handleToggleTheme();
+//       }
+
+//       Animated.spring(pan, {
+//         toValue: 0,
+//         friction: 5,
+//         useNativeDriver: false,
+//       }).start();
+//     },
+//   });
+
+//   const translateX = pan.interpolate({
+//     inputRange: [-50, 0, 50],
+//     outputRange: [-50, 0, 50],
+//     extrapolate: 'clamp',
+//   });
+
+//   const panResponder = PanResponder.create({
+//     onStartShouldSetPanResponder: () => true,
+//     onPanResponderMove: (e, gestureState) => {
+//       pan.setValue(gestureState.dx);
+//     },
+//     onPanResponderRelease: (e, gestureState) => {
+//       if (gestureState.dx > 50) {
+//         handleToggleTheme();
+//         Animated.timing(pan, {
+//           toValue: 0,
+//           duration: 300,
+//           useNativeDriver: false,
+//         }).start();
+//       } else {
+//         Animated.spring(pan, {
+//           toValue: 0,
+//           friction: 5,
+//           useNativeDriver: false,
+//         }).start();
+//       }
+//     },
+//   });
+
+//   const translateX = pan.interpolate({
+//     inputRange: [0, 50],
+//     outputRange: [0, 50],
+//     extrapolate: 'clamp',
+//   });
+
+
+
+
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
       <View>
@@ -152,9 +230,6 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
         </Appbar.Header>
       </View>
 
-      {/* <View style={{marginTop:15,alignItems:"center"}}><Text style={[theme.buttonText]}>MINA HUSHÅLL</Text>
-      </View> */}
-
       <View
         style={{ marginTop: 0, alignItems: "center", justifyContent: "center" }}
       >
@@ -164,7 +239,7 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
 
         <ScrollView
           style={{
-            maxHeight: "55%",
+            maxHeight: "50%",
             marginTop: 10,
           }}
         >
@@ -236,12 +311,15 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
                 {currentTheme === "dark" ? "dark" : "light"}
               </Text>
             </View>
-            <TouchableOpacity
-              style={styles.innerButton}
-              onPress={handleToggleTheme}
-            >
-              <Text style={styles.innerButtonText}>auto</Text>
-            </TouchableOpacity>
+            <Animated.View
+          style={[
+            styles.innerButton,
+            { transform: [{ translateX }] },
+          ]}
+          {...panResponder.panHandlers}
+        >
+          <Text style={styles.innerButtonText}>auto</Text>
+        </Animated.View>        
             <View>
               <Text style={styles.themeButtonText}>
                 {currentTheme === "light" ? "light" : "dark"}
