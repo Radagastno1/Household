@@ -5,7 +5,7 @@ import {
   getFirestore,
   setDoc,
 } from "firebase/firestore";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Appbar, Button, Text, TextInput } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
@@ -15,8 +15,9 @@ import { RootNavigationScreenProps } from "../navigators/navigationTypes";
 import {
   HouseholdState,
   generateHouseholdCode,
-  joinHouseholdByCode,
+  handleJoinHousehold,
 } from "../store/household/householdSlice";
+import { AppDispatch } from "../store/store";
 
 const db = getFirestore(app);
 
@@ -28,7 +29,6 @@ export default function HandleHouseholdScreen({
   const { theme } = useTheme();
   const [householdName, setHouseholdName] = useState("");
   const [joinCode, setJoinCode] = useState("");
-  const dispatch = useDispatch();
 
   const handleCreateHousehold = async () => {
     const householdCollectionRef = collection(db, "households");
@@ -37,7 +37,7 @@ export default function HandleHouseholdScreen({
     try {
       const docRef = await addDoc(householdCollectionRef, {
         name: householdName,
-        code: randomCode, // Use the generated code
+        code: randomCode,
       });
 
       const householdId = docRef.id;
@@ -45,7 +45,7 @@ export default function HandleHouseholdScreen({
       await setDoc(doc(db, "households", householdId), {
         id: householdId,
         name: householdName,
-        code: randomCode, // Use the generated code
+        code: randomCode,
       });
 
       console.log("Household created with ID:", householdId);
@@ -57,21 +57,30 @@ export default function HandleHouseholdScreen({
     }
   };
 
-  const handleJoinHousehold = () => {
+  const activeHousehold = useSelector(
+    (state: { household: HouseholdState }) => state.household.activeHousehold,
+  );
+  const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(() => {
+    if (activeHousehold) {
+      navigation.navigate("CreateProfile", {
+        householdId: activeHousehold.id,
+      });
+    }
+  }, [activeHousehold, navigation]);
+  const handleJoin = async () => {
     if (joinCode) {
-      dispatch(joinHouseholdByCode(joinCode));
+      console.log("Dispatching joinHouseholdByCode with code:", joinCode);
+      const household = await handleJoinHousehold(joinCode);
 
-      // Type the state variable explicitly as HouseholdState
-      const activeHousehold = useSelector(
-        (state: { household: HouseholdState }) =>
-          state.household.activeHousehold,
-      );
-
-      if (activeHousehold) {
-        // Navigate to the "CreateProfileScreen" after joining
+      if (household) {
+        console.log("activeHousehold is available:", activeHousehold);
         navigation.navigate("CreateProfile", {
-          householdId: activeHousehold.id,
+          householdId: household.id,
         });
+      } else {
+        console.log("activeHousehold is not available yet.");
       }
     } else {
       console.error("Join code is required.");
@@ -136,7 +145,7 @@ export default function HandleHouseholdScreen({
               color: "black",
               fontSize: 16,
             }}
-            onPress={handleJoinHousehold}
+            onPress={handleJoin}
           >
             Gå med
           </Button>

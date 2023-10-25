@@ -110,6 +110,26 @@ export const deleteHouseholdFromDB = async (householdId: string) => {
     console.error("Fel vid borttagning av household:", error);
   }
 };
+// Function to check if a household with the entered code exists
+export const checkHouseholdWithCode = async (joinCode: string) => {
+  const householdCollectionRef = collection(db, "households");
+  const q = query(householdCollectionRef, where("code", "==", joinCode));
+
+  // const querySnapshot = await getDocs(q);
+  // const householdDoc = await getDoc(q);
+  const querySnapshot = await getDocs(q);
+  const householdData = querySnapshot.docs[0].data() as Household;
+
+  if (householdData) {
+    // Household with the entered code exists
+    return householdData as Household;
+
+    // return households;
+  } else {
+    console.log("Household does not exist");
+    return null;
+  }
+};
 
 // import { addDoc, collection, getFirestore } from "firebase/firestore";
 // import { app } from "./config";
