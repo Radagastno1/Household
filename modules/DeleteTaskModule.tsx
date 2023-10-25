@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Button, Text } from "react-native";
 import { Modal } from "react-native-paper";
 import { Task } from "../types";
+import React from "react";
 
 interface Props {
   task: Task;

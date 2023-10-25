@@ -1,15 +1,11 @@
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-
-
-
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { addHouseholdToDB, checkHouseholdWithCode,  getHouseholdsFromDB } from "../../api/household";
-
 import { RootStackParamList } from "../../navigators/RootNavigator";
 import { Household } from "../../types";
 import { editHouseholdToDB } from "../../api/household";
-import { households } from "../../data";
+
 
 export interface HouseholdState {
   households: Household[];

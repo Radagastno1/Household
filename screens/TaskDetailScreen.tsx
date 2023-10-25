@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { Image, StyleSheet, View, useColorScheme } from "react-native";
 import { Button, Card, Text } from "react-native-paper";
 import { useTheme } from "../contexts/themeContext";
-import { profiles } from "../data";
 import { AvatarUrls, Avatars } from "../data/avatars";
 import { RootNavigationScreenProps } from "../navigators/navigationTypes";
 import { useAppDispatch, useAppSelector } from "../store/store";
@@ -28,6 +27,7 @@ export default function TaskDetailScreen({
   const taskSlice = useAppSelector((state) => state.task);
   const dispatch = useAppDispatch();
   const taskCompletionSlice = useAppSelector((state) => state.taskCompletion);
+  const profiles = useAppSelector((state) => state.profile.profiles);
   //   const fetchAvatars = () => {
   //     dispatch(findAllAvatarFortodayCompletionByTaskId({ taskId }));
 

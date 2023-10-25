@@ -1,7 +1,17 @@
 import { useEffect, useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  Image,
+} from "react-native";
 import { getHouseholdsFromDB } from "../api/household";
-import { getAllProfilesByUserId } from "../api/profile";
+import {
+  getAllProfilesByHouseholdId,
+  getAllProfilesByUserId,
+} from "../api/profile";
 import { useTheme } from "../contexts/themeContext";
 import { RootNavigationScreenProps } from "../navigators/navigationTypes";
 import { sethouseholdActive } from "../store/household/householdSlice";
@@ -10,7 +20,11 @@ import {
   setProfileByHouseholdAndUser,
 } from "../store/profile/profileSlice";
 import { useAppDispatch, useAppSelector } from "../store/store";
-import { Household } from "../types";
+import { Household, Profile } from "../types";
+import React from "react";
+import { Appbar } from "react-native-paper";
+import { AvatarUrls, Avatars } from "../data/avatars";
+import { MaterialIcons } from "@expo/vector-icons";
 
 // const styles = StyleSheet.create({
 //   container: {
@@ -26,14 +40,22 @@ type HouseholdProps = RootNavigationScreenProps<"HouseholdAccount">;
 export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
   const activeUser = useAppSelector((state) => state.user.user);
   const [households, setHouseholds] = useState<Household[] | undefined>([]);
+  const [profiles, setProfiles] = useState<(Profile[] | undefined)[]>([]);
   console.log("Nu är användaren ", activeUser, "inloggad");
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const multibleHousehold = await GetHouseholds();
+
         setHouseholds(multibleHousehold);
-        console.log("households: ", multibleHousehold); // Uppdatera loggningen här
+        console.log("households: ", multibleHousehold);
+        // get all householdIds under user
+        const householdsIds = await GetHouseholdIdsFromActiveUser();
+        const profilesByHouse = await Promise.all(
+          householdsIds.map((houseId) => GetProfilesForEachHousehold(houseId)),
+        );
+        setProfiles(profilesByHouse);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -42,7 +64,7 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
     fetchData(); // Anropa den asynkrona funktionen inuti useEffect
   }, []); // Beroendelistan är tom, så useEffect körs en gång när komponenten monteras
 
-  async function GetProfilesFromActiveUser() {
+  async function GetHouseholdIdsFromActiveUser() {
     const householdsId: string[] = [];
     const profiles = await getAllProfilesByUserId(activeUser.id);
     profiles?.map((profile) => {
@@ -54,7 +76,7 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
 
   async function GetHouseholds() {
     // Anropa GetProfilesFromActiveUser och använd .then
-    return GetProfilesFromActiveUser()
+    return GetHouseholdIdsFromActiveUser()
       .then(async (householdsIds) => {
         const households: Household[] = [];
         await Promise.all(
@@ -73,19 +95,13 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
       });
   }
 
-  // const activeUser = "5NCx5MKcUu6UYKjFqRkg";
   const dispatch = useAppDispatch();
-  const activeProfile = useAppSelector((state) => state.profile.activeProfile);
+//   const activeProfile = useAppSelector((state) => state.profile.activeProfile);
   const householdSlice = useAppSelector((state) => state.household);
   const allHouseholds = householdSlice.households;
 
-  const { theme, setColorScheme } = useTheme();
-  const [currentTheme, setCurrentTheme] = useState("auto");
-
   const handleEnterHousehold = async (household: Household) => {
     dispatch(sethouseholdActive(household));
-    //denna sen när man hämtat alla hushåll och lagt i state households
-    // dispatch(setHouseholdByHouseholdId({ householdId: householdId }));
     try {
       // Fetch all profiles for the household
       await dispatch(fetchAllProfilesByHousehold(household.id, activeUser));
@@ -107,6 +123,13 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
     }
   };
 
+  async function GetProfilesForEachHousehold(householdId: string) {
+    const profiles = await getAllProfilesByHouseholdId(householdId);
+    return profiles;
+  }
+
+  const { theme, setColorScheme } = useTheme();
+  const [currentTheme, setCurrentTheme] = useState("auto");
   const handleToggleTheme = () => {
     if (setColorScheme) {
       setColorScheme(currentTheme === "dark" ? "light" : "dark");
@@ -116,20 +139,70 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
-      <View style={styles.container}>
-        <Text style={theme.buttonText}>MINA HUSHÅLL</Text>
-
-        {households?.map((household: Household) => (
-          <TouchableOpacity
-            key={household.id}
-            style={theme.cardButton as any}
-            onPress={() => {
-              handleEnterHousehold(household);
+      <View>
+        <Appbar.Header style={{ height: 70, backgroundColor: "white" }}>
+          <Appbar.Content
+            style={{
+              alignItems: "center",
+              justifyContent: "center",
             }}
-          >
-            <Text style={theme.buttonText}>{household.name}</Text>
-          </TouchableOpacity>
-        ))}
+            title={`Welcome ${activeUser.username}`}
+          />
+        </Appbar.Header>
+      </View>
+
+      {/* <View style={{marginTop:15,alignItems:"center"}}><Text style={[theme.buttonText]}>MINA HUSHÅLL</Text>
+      </View> */}
+
+      <View
+        style={{ marginTop: 0, alignItems: "center", justifyContent: "center" }}
+      >
+        <View style={{ marginTop: 15, alignItems: "center" }}>
+          <Text style={[theme.buttonText]}>MINA HUSHÅLL</Text>
+        </View>
+
+        <ScrollView
+          style={{
+            maxHeight: "55%",
+            marginTop: 10,
+          }}
+        >
+            
+          {households?.map((household: Household, index) => (
+            <TouchableOpacity
+              key={index}
+              style={[theme.cardButton as any,{ flexDirection: "row", justifyContent: "space-between" }]}
+              onPress={() => {
+                handleEnterHousehold(household);
+              }}
+            >
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                {profiles[index] && profiles[index]!.length > 0 && (
+                  <Image
+                    key={0}
+                    source={{
+                      uri: AvatarUrls[profiles[index]![0].avatar as Avatars],
+                    }}
+                    style={{ height: 20, width: 20 }}
+                    alt={`Avatar ${index}`}
+                  />
+                )}
+                {profiles[index] && profiles[index]!.length > 1 && (
+                  <Text>...</Text>
+                )}
+              </View>
+
+              <View>
+                <Text style={theme.buttonText}>{household.name}</Text>
+              </View>
+
+              <View>
+                {/* if it is owner */}
+                <MaterialIcons name="edit" size={24} color="black" />
+              </View>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
 
         <TouchableOpacity
           style={theme.cardButton as any}
@@ -168,7 +241,7 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
             </TouchableOpacity>
             <View>
               <Text style={styles.themeButtonText}>
-                {currentTheme === "dark" ? "dark" : "light"}
+                {currentTheme === "light" ? "light" : "dark"}
               </Text>
             </View>
           </View>
@@ -179,60 +252,7 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    position: "relative",
-  },
-  card: {
-    margin: 16,
-    padding: 16,
-    borderRadius: 8,
-    backgroundColor: "white",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-    width: "80%",
-  },
-  taskItem: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  logOutButton: {
-    padding: 10,
-    alignItems: "center",
-    width: "60%",
-    marginTop: 20,
-    borderRadius: 10,
-    elevation: 2,
-    borderWidth: 0,
-    backgroundColor: "lightgrey",
-  },
-  createHouseholdButtonContent: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  skapaButton: {
-    padding: 10,
-    alignItems: "center",
-    width: "60%",
-    borderRadius: 10,
-    elevation: 2,
-    borderWidth: 0,
-    backgroundColor: "#FFD700",
-    marginTop: 30,
-  },
-
-  buttonText: {
-    color: "black",
-    fontSize: 16,
-    marginLeft: 10,
-  },
+  
   themeButtonContainer: {
     padding: 20,
     alignItems: "center",

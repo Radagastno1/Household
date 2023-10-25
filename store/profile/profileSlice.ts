@@ -1,6 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { addProfileToDB, getAllProfilesByHouseholdId, saveProfileNameToDatabase } from "../../api/profile";
-import { profiles } from "../../data";
 import { Profile } from "../../types";
 
 interface ProfileState {
@@ -9,7 +8,7 @@ interface ProfileState {
 }
 
 export const initialState: ProfileState = {
-  profiles: profiles,
+  profiles: [],
   activeProfile: null,
 };
 
