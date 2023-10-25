@@ -39,7 +39,6 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
   const dispatch = useAppDispatch();
   const activeHouseholdCode = activeHousehold?.code || "Ingen kod tillgänglig";
 
-
   //UTKOMMENTERAR DENNA:
   // useEffect(() => {
   //   if (activeHousehold) {
@@ -64,7 +63,7 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
 
   const [isEditing, setIsEditing] = useState(false);
   const [updatedProfileName, setUpdatedProfilename] = useState(
-    activeProfile?.profileName,
+    activeProfile?.profileName
   );
 
   const { theme } = useTheme();
@@ -87,6 +86,18 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
     }
   }, [activeProfile]);
 
+
+  useEffect(() => {
+    if (activeProfile) {
+      
+      setUpdatedProfilename(activeProfile.profileName);
+    }
+  }, [activeProfile]);
+
+
+  
+  
+
   const handleSaveClick = () => {
     if (activeProfile) {
       dispatch(
@@ -96,6 +107,7 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
         }),
       );
       setIsEditing(false);
+      console.log("NYA PROFILNAMNET", {updatedProfileName})
     }
   };
 
@@ -119,9 +131,7 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
             Profilnamn: {activeProfile?.profileName}
           </Text>
         </View>
-        {/* <Text style={{ color: theme.colors.text }}>
-          Avatar: {activeProfile?.avatar}
-        </Text> */}
+     
         <Image
           source={{ uri: AvatarUrls[activeProfile?.avatar as Avatars] }}
           style={{ height: 20, width: 20 }}
@@ -163,7 +173,6 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
                 )}
               </View>
 
-              
               <IconButton
                 icon="pencil"
                 size={20}
@@ -175,6 +184,7 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
           </Card>
 
           {isEditing ? <Button onPress={handleSaveClick}>Spara</Button> : null}
+
 
           <Card style={styles.card}>
             <View style={styles.taskItem}>
@@ -197,7 +207,9 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
           <Card style={styles.card}>
             <View style={styles.taskItem}>
               <View style={styles.nameContainer}>
-                <Text variant="titleLarge">Hushållskod: {activeHouseholdCode}</Text>
+                <Text variant="titleLarge">
+                  Hushållskod: {activeHouseholdCode}
+                </Text>
               </View>
             </View>
           </Card>
