@@ -88,11 +88,19 @@ export default function StatisticScreen() {
               {row.map((chart, columnIndex) => (
                 <View style={styles.piechartContainer} key={columnIndex}>
                   <Text style={styles.taskTitle}>{chart.title}</Text>
-                  <PiechartComponent
-                    widthAndHeight={100}
-                    series={chart.series}
-                    sliceColor={chart.colors}
-                  />
+                  {chart.colors.length > 0 && chart.series.length > 0 ? (
+                    <PiechartComponent
+                      widthAndHeight={100}
+                      series={chart.series}
+                      sliceColor={chart.colors}
+                    />
+                  ) : (
+                    <PiechartComponent
+                      widthAndHeight={100}
+                      series={[100]}
+                      sliceColor={["gray"]}
+                    />
+                  )}
                 </View>
               ))}
             </View>
