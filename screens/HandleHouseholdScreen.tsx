@@ -48,9 +48,8 @@ export default function HandleHouseholdScreen({
 
       console.log("Household created with ID:", householdId);
 
-      // After creating a household, you can navigate to "CreateProfile"
       navigation.navigate("CreateProfile", {
-        householdId: householdId // Pass the household ID
+        householdId: householdId,
       });
     } catch (error) {
       console.error("Error creating household:", error);
@@ -60,15 +59,7 @@ export default function HandleHouseholdScreen({
   const activeHousehold = useAppSelector(
     (state) => state.household.activeHousehold,
   );
-  // const dispatch = useDispatch<AppDispatch>();
 
-  // useEffect(() => {
-  //   if (activeHousehold) {
-  //     navigation.navigate("CreateProfile", {
-  //       householdId: activeHousehold.id,
-  //     });
-  //   }
-  // }, [activeHousehold, navigation]);
   const handleJoin = async () => {
     if (joinCode) {
       console.log("Dispatching joinHouseholdByCode with code:", joinCode);
@@ -86,14 +77,16 @@ export default function HandleHouseholdScreen({
       console.error("Join code is required.");
     }
   };
+  const loggedInUser = useAppSelector((state) => state.user.user);
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
       <View>
         <View>
           <Appbar.Header style={{ height: 70, backgroundColor: "white" }}>
-            <Appbar.Content title={"Välkommen användare!"} />
-            {/* <Appbar.Content title={`Välkommen ${userName}!`} /> */}
+            {loggedInUser && (
+              <Appbar.Content title={`Välkommen ${loggedInUser.username}!`} />
+            )}
           </Appbar.Header>
         </View>
 
