@@ -7,11 +7,13 @@ import {
   TaskCompletion,
   TaskCompletionStat,
   TaskData,
+  PieChart,
 } from "../types";
 
 let sortedTasks: Task[] = [];
 let sortedProfiles: Profile[] = [];
 let summarizedByTasks: TaskData[] = [];
+let totalSumByProfile: Profile[] = [];
 
 export function sortTaskCompletionsByDate(
   startDate: string,
@@ -156,4 +158,32 @@ function mapToPieChart(summarizedByTasks: TaskData[]) {
 
   console.log("MaptoPieChart: ", statDataArray);
   return statDataArray;
+}
+
+export function summarizeDataByColor(data: StatData[]) {
+  const colors: string[] = [];
+  const series: number[] = [];
+
+  data.forEach((item) => {
+    const itemColors = item.colors;
+    const itemSeries = item.series;
+
+    itemColors.forEach((color, index) => {
+      const existingIndex = colors.indexOf(color);
+
+      if (existingIndex !== -1) {
+        // Om färgen redan finns i colors-arrayen, uppdatera den befintliga serievärdet
+        series[existingIndex] += itemSeries[index];
+      } else {
+        // Annars lägg till färgen i colors-arrayen och det motsvarande serievärdet i series-arrayen
+        colors.push(color);
+        series.push(itemSeries[index]);
+      }
+    });
+  });
+
+  console.log("Colors: ", colors);
+  console.log("Series: ", series);
+
+  return { colors, series };
 }
