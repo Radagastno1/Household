@@ -1,145 +1,145 @@
-import { Household, Profile, Task, TaskCompletion, User } from "../types";
-import { Avatars } from "./avatars";
+// import { Household, Profile, Task, TaskCompletion, User } from "../types";
+// import { Avatars } from "./avatars";
 
-export const users: User[] = [
-  {
-    id: "5NCx5MKcUu6UYKjFqRkg",
-    name: "User One",
-    username: "userone",
-    password: "password1",
-  },
-  {
-    id: "user2",
-    name: "User Two",
-    username: "usertwo",
-    password: "password2",
-  },
-  {
-    id: "user3",
-    name: "User Three",
-    username: "userthree",
-    password: "password3",
-  },
-  {
-    id: "user4",
-    name: "User Four",
-    username: "userfour",
-    password: "password4",
-  },
-  {
-    id: "user5",
-    name: "User Five",
-    username: "userfive",
-    password: "password5",
-  },
-];
+// export const users: User[] = [
+//   {
+//     id: "5NCx5MKcUu6UYKjFqRkg",
+//     name: "User One",
+//     username: "userone",
+//     password: "password1",
+//   },
+//   {
+//     id: "user2",
+//     name: "User Two",
+//     username: "usertwo",
+//     password: "password2",
+//   },
+//   {
+//     id: "user3",
+//     name: "User Three",
+//     username: "userthree",
+//     password: "password3",
+//   },
+//   {
+//     id: "user4",
+//     name: "User Four",
+//     username: "userfour",
+//     password: "password4",
+//   },
+//   {
+//     id: "user5",
+//     name: "User Five",
+//     username: "userfive",
+//     password: "password5",
+//   },
+// ];
 
-export const households: Household[] = [
-  {
-    id: "fYHVLNiQvWEG9KNUGqBT",
-    name: "Household One",
-    code: "code1",
-  },
-  {
-    id: "household2",
-    name: "Household Two",
-    code: "code2",
-  },
-];
+// export const households: Household[] = [
+//   {
+//     id: "fYHVLNiQvWEG9KNUGqBT",
+//     name: "Household One",
+//     code: "code1",
+//   },
+//   {
+//     id: "household2",
+//     name: "Household Two",
+//     code: "code2",
+//   },
+// ];
 
-// Added avatarcolor to profile so long
-export const profiles: Profile[] = [
-  {
-    id: "moNj4qvcbKNQdEsnhEjL",
-    profileName: "Silly User 1",
-    userId: "5NCx5MKcUu6UYKjFqRkg",
-    householdId: "fYHVLNiQvWEG9KNUGqBT",
-    avatar: Avatars.Bee,
-    isOwner: true,
-    isActive: true,
-  },
-  {
-    id: "profile2",
-    profileName: "Funny User 2",
-    userId: "user2",
-    householdId: "fYHVLNiQvWEG9KNUGqBT",
-    avatar: Avatars.Monkey,
-    isOwner: false,
-    isActive: true,
-  },
-  {
-    id: "profile3",
-    profileName: "Horny User 3",
-    userId: "user3",
-    householdId: "fYHVLNiQvWEG9KNUGqBT",
-    avatar: Avatars.Cat,
-    isOwner: false,
-    isActive: true,
-  },
-  {
-    id: "profile4",
-    profileName: "Clever User 4",
-    userId: "user4",
-    householdId: "fYHVLNiQvWEG9KNUGqBT",
-    avatar: Avatars.Frog,
-    isOwner: false,
-    isActive: false,
-  },
-  {
-    id: "profile5",
-    profileName: "Lazy User 5",
-    userId: "user5",
-    householdId: "fYHVLNiQvWEG9KNUGqBT",
-    avatar: Avatars.Fox,
-    isOwner: false,
-    isActive: true,
-  },
-  {
-    id: "profile6",
-    profileName: "Hungry User 6",
-    userId: "user2",
-    householdId: "household2",
-    avatar: Avatars.Bee,
-    isOwner: true,
-    isActive: true,
-  },
-  {
-    id: "profile7",
-    profileName: "Fast User 7",
-    userId: "user3",
-    householdId: "household2",
-    avatar: Avatars.Pig,
-    isOwner: false,
-    isActive: true,
-  },
-  {
-    id: "profile8",
-    profileName: "Jumpy User 8",
-    userId: "user4",
-    householdId: "household2",
-    avatar: Avatars.Frog,
-    isOwner: false,
-    isActive: true,
-  },
-  {
-    id: "profile9",
-    profileName: "Slow User 9",
-    userId: "user5",
-    householdId: "household2",
-    avatar: Avatars.Frog,
-    isOwner: false,
-    isActive: false,
-  },
-  {
-    id: "profile10",
-    profileName: "Dreamy User 10",
-    userId: "user1",
-    householdId: "household2",
-    avatar: Avatars.Koala,
-    isOwner: false,
-    isActive: true,
-  },
-];
+// // Added avatarcolor to profile so long
+// export const profiles: Profile[] = [
+//   {
+//     id: "moNj4qvcbKNQdEsnhEjL",
+//     profileName: "Silly User 1",
+//     userId: "5NCx5MKcUu6UYKjFqRkg",
+//     householdId: "fYHVLNiQvWEG9KNUGqBT",
+//     avatar: Avatars.Bee,
+//     isOwner: true,
+//     isActive: true,
+//   },
+//   {
+//     id: "profile2",
+//     profileName: "Funny User 2",
+//     userId: "user2",
+//     householdId: "fYHVLNiQvWEG9KNUGqBT",
+//     avatar: Avatars.Monkey,
+//     isOwner: false,
+//     isActive: true,
+//   },
+//   {
+//     id: "profile3",
+//     profileName: "Horny User 3",
+//     userId: "user3",
+//     householdId: "fYHVLNiQvWEG9KNUGqBT",
+//     avatar: Avatars.Cat,
+//     isOwner: false,
+//     isActive: true,
+//   },
+//   {
+//     id: "profile4",
+//     profileName: "Clever User 4",
+//     userId: "user4",
+//     householdId: "fYHVLNiQvWEG9KNUGqBT",
+//     avatar: Avatars.Frog,
+//     isOwner: false,
+//     isActive: false,
+//   },
+//   {
+//     id: "profile5",
+//     profileName: "Lazy User 5",
+//     userId: "user5",
+//     householdId: "fYHVLNiQvWEG9KNUGqBT",
+//     avatar: Avatars.Fox,
+//     isOwner: false,
+//     isActive: true,
+//   },
+//   {
+//     id: "profile6",
+//     profileName: "Hungry User 6",
+//     userId: "user2",
+//     householdId: "household2",
+//     avatar: Avatars.Bee,
+//     isOwner: true,
+//     isActive: true,
+//   },
+//   {
+//     id: "profile7",
+//     profileName: "Fast User 7",
+//     userId: "user3",
+//     householdId: "household2",
+//     avatar: Avatars.Pig,
+//     isOwner: false,
+//     isActive: true,
+//   },
+//   {
+//     id: "profile8",
+//     profileName: "Jumpy User 8",
+//     userId: "user4",
+//     householdId: "household2",
+//     avatar: Avatars.Frog,
+//     isOwner: false,
+//     isActive: true,
+//   },
+//   {
+//     id: "profile9",
+//     profileName: "Slow User 9",
+//     userId: "user5",
+//     householdId: "household2",
+//     avatar: Avatars.Frog,
+//     isOwner: false,
+//     isActive: false,
+//   },
+//   {
+//     id: "profile10",
+//     profileName: "Dreamy User 10",
+//     userId: "user1",
+//     householdId: "household2",
+//     avatar: Avatars.Koala,
+//     isOwner: false,
+//     isActive: true,
+//   },
+// ];
 
 // export const tasks: Task[] = [
 //   {
