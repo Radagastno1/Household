@@ -74,7 +74,7 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
   const dispatch = useAppDispatch();
   const householdSlice = useAppSelector((state) => state.household);
   const allHouseholds = householdSlice.households;
-  
+
   const { theme, setColorScheme } = useTheme();
   const [currentTheme, setCurrentTheme] = useState("auto");
 
@@ -102,8 +102,6 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
     }
   };
 
-
-
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
       <View style={styles.container}>
@@ -117,7 +115,6 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
               handleEnterHousehold(household);
             }}
           >
-          
             <Text style={theme.buttonText}>{household.name}</Text>
           </TouchableOpacity>
         ))}
@@ -125,9 +122,7 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
         <TouchableOpacity
           style={theme.cardButton as any}
           onPress={() => navigation.navigate("HandleHousehold")}
-       
         >
-         
           <Text style={theme.buttonText}>Skapa nytt hushåll</Text>
         </TouchableOpacity>
 
@@ -135,39 +130,37 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
           style={theme.cardButton as any}
           onPress={() => navigation.navigate("Login")}
         >
-        
           <Text style={theme.buttonText}>Logga ut</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
-         style={[
-          styles.themeButtonContainer,
-          {
-            backgroundColor: theme.button.backgroundColor, 
-          },
-        ]}
-        onPress={handleToggleTheme}
-      >
-        <View style={styles.themeButton}>
-          <View>
-            <Text style={styles.themeButtonText}>
-              {currentTheme === "dark" ? "dark" : "light"}
-            </Text>
+          style={[
+            styles.themeButtonContainer,
+            {
+              backgroundColor: theme.button.backgroundColor,
+            },
+          ]}
+          onPress={handleToggleTheme}
+        >
+          <View style={styles.themeButton}>
+            <View>
+              <Text style={styles.themeButtonText}>
+                {currentTheme === "dark" ? "dark" : "light"}
+              </Text>
+            </View>
+            <TouchableOpacity
+              style={styles.innerButton}
+              onPress={handleToggleTheme}
+            >
+              <Text style={styles.innerButtonText}>auto</Text>
+            </TouchableOpacity>
+            <View>
+              <Text style={styles.themeButtonText}>
+                {currentTheme === "dark" ? "dark" : "light"}
+              </Text>
+            </View>
           </View>
-          <TouchableOpacity
-            style={styles.innerButton}
-            onPress={handleToggleTheme}
-          >
-            <Text style={styles.innerButtonText}>auto</Text>
-          </TouchableOpacity>
-          <View>
-            <Text style={styles.themeButtonText}>
-              {currentTheme === "dark" ? "dark" : "light"}
-            </Text>
-          </View>
-        </View>
-      </TouchableOpacity>
-
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -181,7 +174,6 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   card: {
-   
     margin: 16,
     padding: 16,
     borderRadius: 8,
@@ -209,7 +201,7 @@ const styles = StyleSheet.create({
     backgroundColor: "lightgrey",
   },
   createHouseholdButtonContent: {
-    flexDirection: "row", 
+    flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
   },
@@ -223,7 +215,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFD700",
     marginTop: 30,
   },
- 
+
   buttonText: {
     color: "black",
     fontSize: 16,
@@ -264,9 +256,7 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   bottomContent: {
-    
-   marginBottom:0,
+    marginBottom: 0,
     alignItems: "center",
   },
-  
 });

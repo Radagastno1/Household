@@ -99,8 +99,12 @@ const householdSlice = createSlice({
   },
 });
 
-export const { addHousehold, findHouseholdById, setHouseholdByHouseholdId } =
-  householdSlice.actions;
+export const {
+  addHousehold,
+  findHouseholdById,
+  setHouseholdByHouseholdId,
+  sethouseholdActive,
+} = householdSlice.actions;
 
 export const householdReducer = householdSlice.reducer;
 
