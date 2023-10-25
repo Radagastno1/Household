@@ -48,15 +48,12 @@ export function sortTasksFromCompletions(
   tasks: Task[],
 ) {
   sortedTasks = [];
-  completions.forEach((completion) => {
-    tasks.forEach((task) => {
-      if (completion.taskId === task.id) {
-        if (!sortedTasks.includes(task)) {
-          sortedTasks.push(task);
-        }
-      }
-    });
-  });
+
+  const taskWithCompletions = new Set(
+    completions.map((completion) => completion.taskId),
+  );
+  console.log("task with completions: ", taskWithCompletions);
+  sortedTasks = tasks.filter((task) => taskWithCompletions.has(task.id));
 
   console.log("SortedtTasks: ", sortedTasks);
   console.log(sortedTasks.length);
