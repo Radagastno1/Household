@@ -49,7 +49,9 @@ export default function HandleHouseholdScreen({
       console.log("Household created with ID:", householdId);
 
       // After creating a household, you can navigate to "CreateProfile"
-      navigation.navigate("HouseholdAccount");
+      navigation.navigate("CreateProfile", {
+        householdId: householdId // Pass the household ID
+      });
     } catch (error) {
       console.error("Error creating household:", error);
     }

@@ -1,14 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import PiechartComponent from "../components/PiechartComponent";
 import { useAppSelector } from "../store/store";
 import { StatData } from "../types";
 import { getCurrentWeekDates } from "../utils/DateHandler";
 import { useTheme } from "../contexts/themeContext";
-import {
-  SummerizeEachTask,
-  getUniqueSummarizedData,
-} from "../utils/statisticHandler";
+import { SummerizeEachTask } from "../utils/statisticHandler";
+import { useFocusEffect } from "@react-navigation/native";
 
 interface StatDatesProps {
   startDate: string;
@@ -32,7 +30,9 @@ export default function StatisticScreen() {
   );
   const [statsForTasks, setStatsForTasks] = useState<StatData[]>([]);
 
-  useEffect(() => {
+  const handleFocusEffect = useCallback(() => {
+    console.log("USE-EFFECT STATS: ", completions);
+    console.log("USE-EFFECT STATS HUR MÅNGA: ", completions.length);
     const summarizedData = SummerizeEachTask(
       completions,
       tasks,
@@ -40,44 +40,45 @@ export default function StatisticScreen() {
       startOfCurrentWeek,
       endOfCurrentWeek,
     );
-    const uniqueData = getUniqueSummarizedData(summarizedData);
-    setStatsForTasks(uniqueData);
+    setStatsForTasks(summarizedData);
     console.log("Nu renderas datan från statisticScreen: ", statsForTasks);
   }, [completions, tasks, profiles, startOfCurrentWeek, endOfCurrentWeek]);
 
+  useFocusEffect(handleFocusEffect);
+
   const chunkedCharts = arrayChunk(statsForTasks, 3);
-  const {theme} = useTheme();
+  const { theme } = useTheme();
 
   const slices = [20, 15, 20];
   const colors = ["red", "yellow", "blue"];
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
-    <ScrollView style={styles.container}>
-      <View style={styles.topChart}>
-        <PiechartComponent
-          widthAndHeight={250}
-          series={slices}
-          sliceColor={colors}
-        />
-      </View>
+      <ScrollView style={styles.container}>
+        <View style={styles.topChart}>
+          <PiechartComponent
+            widthAndHeight={250}
+            series={slices}
+            sliceColor={colors}
+          />
+        </View>
 
-      <View style={styles.chartContainer}>
-        {chunkedCharts.map((row, rowIndex) => (
-          <View style={styles.row} key={rowIndex}>
-            {row.map((chart, columnIndex) => (
-              <View style={styles.piechartContainer} key={columnIndex}>
-                <Text style={styles.taskTitle}>{chart.title}</Text>
-                <PiechartComponent
-                  widthAndHeight={100}
-                  series={chart.series}
-                  sliceColor={chart.colors}
-                />
-              </View>
-            ))}
-          </View>
-        ))}
-      </View>
-    </ScrollView>
+        <View style={styles.chartContainer}>
+          {chunkedCharts.map((row, rowIndex) => (
+            <View style={styles.row} key={rowIndex}>
+              {row.map((chart, columnIndex) => (
+                <View style={styles.piechartContainer} key={columnIndex}>
+                  <Text style={styles.taskTitle}>{chart.title}</Text>
+                  <PiechartComponent
+                    widthAndHeight={100}
+                    series={chart.series}
+                    sliceColor={chart.colors}
+                  />
+                </View>
+              ))}
+            </View>
+          ))}
+        </View>
+      </ScrollView>
     </View>
   );
 }
