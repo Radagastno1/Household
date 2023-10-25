@@ -69,6 +69,9 @@ export const getHouseholdsFromDB = async (householdId: string) => {
     const q = query(householdCollectionRef, where("id", "==", householdId));
 
     const querySnapshot = await getDocs(q);
+    if (querySnapshot.size === 0) {
+      return null;
+    }
 
     const household = querySnapshot.docs[0].data() as Household;
 

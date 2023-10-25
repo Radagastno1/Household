@@ -1,15 +1,15 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
-import { Image, StyleSheet, View } from "react-native";
+import { Image, StyleSheet, View, useColorScheme } from "react-native";
 import { Button, Card, Text } from "react-native-paper";
 import { useTheme } from "../contexts/themeContext";
-import { useColorScheme } from "react-native";
+import { profiles } from "../data";
 import { AvatarUrls, Avatars } from "../data/avatars";
 import { RootNavigationScreenProps } from "../navigators/navigationTypes";
 import { useAppDispatch, useAppSelector } from "../store/store";
-import { setTaskAsCompleted } from "../store/taskCompletionSlice";
+import { addCompletionAsync } from "../store/taskCompletionSlice";
 import { findTaskById } from "../store/tasks/taskSlice";
-import { profiles } from "../data";
+import { TaskCompletion } from "../types";
 
 type TaskDetailProps = RootNavigationScreenProps<"TaskDetail">;
 export default function TaskDetailScreen({
@@ -73,7 +73,14 @@ export default function TaskDetailScreen({
     householdId: string,
   ) => {
     if (taskId && profileId) {
-      dispatch(setTaskAsCompleted({ taskId, profileId, householdId }));
+      const newTaskCompletion: TaskCompletion = {
+        id: "",
+        taskId: taskId,
+        householdId: householdId,
+        profileId: profileId,
+        completionDate: new Date().toISOString(),
+      };
+      dispatch(addCompletionAsync(newTaskCompletion));
       if (activeProfile?.avatar) {
         setAvatars([...avatar, activeProfile.avatar]);
       }

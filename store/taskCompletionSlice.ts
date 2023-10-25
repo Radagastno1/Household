@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
   addTaskCompletionToDB,
   getTaskCompletionsFromDB,
@@ -19,41 +19,29 @@ const initialState: TaskCompletionState = {
 
 //createEntityAdapter - setAll   (householdId och inte varje task - id ELLER alla taskidn)
 
+export const addCompletionAsync = createAsyncThunk<
+  TaskCompletion,
+  TaskCompletion,
+  { rejectValue: string }
+>("completions/addCompletion", async (completion, thunkAPI) => {
+  try {
+    const addedCompletion = await addTaskCompletionToDB(completion);
+    if (addedCompletion) {
+      return addedCompletion;
+    } else {
+      return thunkAPI.rejectWithValue("failed to add completion");
+    }
+  } catch (error: any) {
+    return thunkAPI.rejectWithValue(error.message);
+  }
+});
+
 const taskCompletionSlice = createSlice({
   name: "taskCompletion",
   initialState,
   reducers: {
     setCompletions: (state, action) => {
       state.completions = action.payload;
-    },
-    setTaskAsCompleted: (
-      state,
-      action: PayloadAction<{
-        taskId: string;
-        profileId: string;
-        householdId: string;
-      }>,
-    ) => {
-      console.log("profile id som kommer in:", action.payload.profileId);
-
-      const newTaskCompletion: TaskCompletion = {
-        id: "",
-        taskId: action.payload.taskId,
-        householdId: action.payload.householdId,
-        profileId: action.payload.profileId,
-        completionDate: new Date().toISOString(),
-      };
-      console.log("new task", newTaskCompletion);
-
-      addTaskCompletionToDB(newTaskCompletion)
-        .then((createdTaskCompletion) => {
-          if (createdTaskCompletion) {
-            state.completions.push(newTaskCompletion);
-          }
-        })
-        .catch((error) => {
-          console.error("Fel vid tillägg av task completion:", error);
-        });
     },
     //taskt detail screen still using this function
     findAllAvatarFortodayCompletionByTaskId: (
@@ -159,10 +147,20 @@ const taskCompletionSlice = createSlice({
       state.avatars = avatarList;
     },
   },
+  extraReducers: (builder) => {
+    builder
+      .addCase(addCompletionAsync.fulfilled, (state, action) => {
+        if (action.payload) {
+          state.completions = [...state.completions, action.payload];
+        }
+      })
+      .addCase(addCompletionAsync.rejected, (state, action) => {
+        console.log("error vid add completion: ", action.payload);
+      });
+  },
 });
 
 export const {
-  setTaskAsCompleted,
   findCompletionsByTaskId,
   findCompletionsByTaskIdAndCompletionDate,
   findCompletionsByTaskAndProfielId,

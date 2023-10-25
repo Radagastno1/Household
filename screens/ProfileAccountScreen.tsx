@@ -28,10 +28,14 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
 
   const [selectedAvatar] = useState<string>("");
 
-  // const householdId = "fYHVLNiQvWEG9KNUGqBT"; // kommenterade ut denna, bara denna som jag inte satt tillbaka
+  //  -------------- det aktiva hushållet är rätt här men viewn hinner renderas innan denna körs liksom -----------------------------
   const activeHousehold = useAppSelector(
     (state) => state.household.activeHousehold,
   );
+  console.log("aktiva hushållet: ", activeHousehold);
+
+  // const householdId = "fYHVLNiQvWEG9KNUGqBT"; // kommenterade ut denna, bara denna som jag inte satt tillbaka
+
   const dispatch = useAppDispatch();
 
   //UTKOMMENTERAR DENNA:

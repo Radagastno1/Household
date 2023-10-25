@@ -72,7 +72,7 @@ export default function HouseholdTasksScreen({
         //this one fetches the tasks from the database and put it in the state "tasks"
         dispatch(fetchTasks(activeProfile.householdId));
       }
-    }, [dispatch]),
+    }, [dispatch, taskSlice.tasks]),
   );
 
   const handleTaskPress = (taskId: string) => {
@@ -250,9 +250,10 @@ export default function HouseholdTasksScreen({
               style={[
                 styles.button,
                 {
-                  backgroundColor:  colorScheme === "dark"
-                  ? "white"
-                  : theme.cardButton.backgroundColor,
+                  backgroundColor:
+                    colorScheme === "dark"
+                      ? "white"
+                      : theme.cardButton.backgroundColor,
                 },
               ]}
             >
