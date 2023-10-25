@@ -72,7 +72,7 @@ export default function HouseholdTasksScreen({
         //this one fetches the tasks from the database and put it in the state "tasks"
         dispatch(fetchTasks(activeProfile.householdId));
       }
-    }, [dispatch, taskSlice.tasks]),
+    }, [dispatch]),
   );
 
   const handleTaskPress = (taskId: string) => {
