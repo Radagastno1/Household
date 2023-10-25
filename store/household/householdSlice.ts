@@ -52,6 +52,9 @@ const householdSlice = createSlice({
     sethousehold: (state, action: PayloadAction<Household>) => {
       state.households = [...state.households, action.payload];
     },
+    sethouseholdActive: (state, action: PayloadAction<Household>) => {
+      state.activeHousehold = action.payload;
+    },
     addHousehold: (state, action: PayloadAction<Household>) => {
       const navigation =
         useNavigation<StackNavigationProp<RootStackParamList>>();
@@ -96,7 +99,8 @@ const householdSlice = createSlice({
   },
 });
 
-export const { addHousehold, findHouseholdById, setHouseholdByHouseholdId } =
+export const { addHousehold, findHouseholdById, setHouseholdByHouseholdId   sethouseholdActive,
+} =
   householdSlice.actions;
 
 export const householdReducer = householdSlice.reducer;

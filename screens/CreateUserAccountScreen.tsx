@@ -1,10 +1,3 @@
-import {
-  addDoc,
-  collection,
-  doc,
-  getFirestore,
-  setDoc,
-} from "firebase/firestore";
 import React, { useState } from "react";
 import {
   StyleSheet,
@@ -12,16 +5,15 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
+  useColorScheme,
 } from "react-native";
 import { Checkbox, Modal, Portal, TextInput } from "react-native-paper";
 import { useDispatch } from "react-redux";
-import { app } from "../api/config";
 import { useTheme } from "../contexts/themeContext";
 import { RootNavigationScreenProps } from "../navigators/navigationTypes";
-import { useAppSelector } from "../store/store";
-import { useColorScheme } from "react-native";
-
-const db = getFirestore(app);
+import { useAppDispatch, useAppSelector } from "../store/store";
+import { addUserAsync } from "../store/user/userSlice";
+import { User } from "../types";
 
 type CreateUserProps = RootNavigationScreenProps<"Signup">;
 
@@ -44,8 +36,8 @@ export default function CreateUserAccountScreen({
 
   const { theme } = useTheme();
   const colorScheme = useColorScheme();
-  
-  const dispatch = useDispatch();
+
+  const dispatch = useAppDispatch();
   const userAccountState = useAppSelector((state) => state.userAccount);
 
   const showModal = () => setVisible(true);
@@ -59,29 +51,15 @@ export default function CreateUserAccountScreen({
     } else if (!newName || !newUserName || !newPassword) {
       setMissingFieldsWarning("Fyll i alla obligatoriska fält.");
     } else {
-      try {
-        const userCollectionRef = collection(db, "users");
-        const docRef = await addDoc(userCollectionRef, {
-          name: newName,
-          username: newUserName,
-          password: newPassword,
-        });
-
-        const userId = docRef.id;
-
-        await setDoc(doc(db, "users", userId), {
-          id: userId,
-          name: newName,
-          username: newUserName,
-          password: newPassword,
-        });
-
-        console.log("Account created with ID:", userId);
-
-        navigation.navigate("Login");
-      } catch (error) {
-        console.error("Error creating user account:", error);
-      }
+      console.log("ELSE");
+      const newUser: User = {
+        id: "",
+        name: newName,
+        username: newUserName,
+        password: newPassword,
+      };
+      dispatch(addUserAsync(newUser));
+      navigation.navigate("Login");
     }
   };
 
@@ -91,134 +69,134 @@ export default function CreateUserAccountScreen({
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
-    <View style={styles.container}>
-      <View style={theme.button as any}>
-        <Text style={styles.headerText}>Skapa konto</Text>
-      </View>
-
-      <TextInput
-        label={
-          !newName && missingFieldsWarning ? (
-            <Text style={{ color: "red" }}>Namn*</Text>
-          ) : (
-            "Namn"
-          )
-        }
-        style={styles.input}
-        value={newName}
-        onChangeText={setNewName}
-      />
-      <TextInput
-        label={
-          !newUserName && missingFieldsWarning ? (
-            <Text style={{ color: colorScheme === "dark" ? "black" : "red" }}>
-            Användarnamn"
-          </Text>
-            // <Text style={{ color: "red" }}>Användarnamn*</Text>
-          ) : (
-            "Användarnamn"
-          )
-        }
-        style={styles.input}
-        value={newUserName}
-        onChangeText={setNewUserName}
-      />
-      <TextInput
-        label={
-          !newPassword && missingFieldsWarning ? (
-            <Text style={{ color: "red" }}>Lösenord*</Text>
-          ) : (
-            "Lösenord"
-          )
-        }
-        style={styles.input}
-        secureTextEntry={!passwordVisible}
-        value={newPassword}
-        onChangeText={setNewPassword}
-        right={
-          <TextInput.Icon
-            icon={passwordVisible ? "eye" : "eye-off"}
-            onPress={() => setPasswordVisible(!passwordVisible)}
-          />
-        }
-      />
-
-      <TextInput
-        label={
-          !confirmationPasswordInput && missingFieldsWarning ? (
-            <Text style={{ color: "red" }}>Bekräfta lösenord*</Text>
-          ) : (
-            "Bekräfta lösenord"
-          )
-        }
-        style={styles.input}
-        secureTextEntry={!confirmationPasswordVisible}
-        value={confirmationPasswordInput}
-        onChangeText={setConfirmationPasswordInput}
-        right={
-          <TextInput.Icon
-            icon={confirmationPasswordVisible ? "eye" : "eye-off"}
-            onPress={() =>
-              setConfirmationPasswordVisible(!confirmationPasswordVisible)
-            }
-          />
-        }
-      />
-
-      {passwordMismatchWarning ? (
-        <Text style={styles.warning}>{passwordMismatchWarning}</Text>
-      ) : null}
-
-      <TouchableWithoutFeedback onPress={toggleCheckbox}>
-        <View style={styles.checkboxContainer}>
-          <Checkbox status={isChecked ? "checked" : "unchecked"} />
-          <Text style={styles.checkboxText}>
-            Jag accepterar{" "}
-            <Text
-              style={{ color: "blue", textDecorationLine: "underline",  }}
-              onPress={showModal}
-            >
-              villkoren
-            </Text>
-          </Text>
+      <View style={styles.container}>
+        <View style={theme.button as any}>
+          <Text style={styles.headerText}>Skapa konto</Text>
         </View>
-      </TouchableWithoutFeedback>
 
-      <Portal>
-        <Modal visible={visible} onDismiss={hideModal}>
-          <View style={styles.modalContainer}>
-            <Text>Här står villkoren</Text>
+        <TextInput
+          label={
+            !newName && missingFieldsWarning ? (
+              <Text style={{ color: "red" }}>Namn*</Text>
+            ) : (
+              "Namn"
+            )
+          }
+          style={styles.input}
+          value={newName}
+          onChangeText={setNewName}
+        />
+        <TextInput
+          label={
+            !newUserName && missingFieldsWarning ? (
+              <Text style={{ color: colorScheme === "dark" ? "black" : "red" }}>
+                Användarnamn"
+              </Text>
+            ) : (
+              // <Text style={{ color: "red" }}>Användarnamn*</Text>
+              "Användarnamn"
+            )
+          }
+          style={styles.input}
+          value={newUserName}
+          onChangeText={setNewUserName}
+        />
+        <TextInput
+          label={
+            !newPassword && missingFieldsWarning ? (
+              <Text style={{ color: "red" }}>Lösenord*</Text>
+            ) : (
+              "Lösenord"
+            )
+          }
+          style={styles.input}
+          secureTextEntry={!passwordVisible}
+          value={newPassword}
+          onChangeText={setNewPassword}
+          right={
+            <TextInput.Icon
+              icon={passwordVisible ? "eye" : "eye-off"}
+              onPress={() => setPasswordVisible(!passwordVisible)}
+            />
+          }
+        />
+
+        <TextInput
+          label={
+            !confirmationPasswordInput && missingFieldsWarning ? (
+              <Text style={{ color: "red" }}>Bekräfta lösenord*</Text>
+            ) : (
+              "Bekräfta lösenord"
+            )
+          }
+          style={styles.input}
+          secureTextEntry={!confirmationPasswordVisible}
+          value={confirmationPasswordInput}
+          onChangeText={setConfirmationPasswordInput}
+          right={
+            <TextInput.Icon
+              icon={confirmationPasswordVisible ? "eye" : "eye-off"}
+              onPress={() =>
+                setConfirmationPasswordVisible(!confirmationPasswordVisible)
+              }
+            />
+          }
+        />
+
+        {passwordMismatchWarning ? (
+          <Text style={styles.warning}>{passwordMismatchWarning}</Text>
+        ) : null}
+
+        <TouchableWithoutFeedback onPress={toggleCheckbox}>
+          <View style={styles.checkboxContainer}>
+            <Checkbox status={isChecked ? "checked" : "unchecked"} />
+            <Text style={styles.checkboxText}>
+              Jag accepterar{" "}
+              <Text
+                style={{ color: "blue", textDecorationLine: "underline" }}
+                onPress={showModal}
+              >
+                villkoren
+              </Text>
+            </Text>
           </View>
-        </Modal>
-      </Portal>
+        </TouchableWithoutFeedback>
 
-      <Portal>
-        <Modal visible={showWarning} onDismiss={() => setShowWarning(false)}>
-          <View style={styles.warningContainer}>
-            <Text>Du måste acceptera villkoren för att skapa konto.</Text>
-            <TouchableOpacity
-              onPress={() => setShowWarning(false)}
-              style={styles.okButton}
-            >
-              <Text style={{ color: "black" }}>OK</Text>
-            </TouchableOpacity>
-          </View>
-        </Modal>
-      </Portal>
+        <Portal>
+          <Modal visible={visible} onDismiss={hideModal}>
+            <View style={styles.modalContainer}>
+              <Text>Här står villkoren</Text>
+            </View>
+          </Modal>
+        </Portal>
 
-      <TouchableOpacity
-        style={theme.button as any}
-        onPress={handleCreateAccount}
-      >
-        <Text style={theme.buttonText}>Skapa konto</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={theme.button as any}
-        onPress={() => navigation.navigate("Login")}
-      >
-        <Text style={styles.loginButtonText}>Tillbaka</Text>
-      </TouchableOpacity>
-    </View>
+        <Portal>
+          <Modal visible={showWarning} onDismiss={() => setShowWarning(false)}>
+            <View style={styles.warningContainer}>
+              <Text>Du måste acceptera villkoren för att skapa konto.</Text>
+              <TouchableOpacity
+                onPress={() => setShowWarning(false)}
+                style={styles.okButton}
+              >
+                <Text style={{ color: "black" }}>OK</Text>
+              </TouchableOpacity>
+            </View>
+          </Modal>
+        </Portal>
+
+        <TouchableOpacity
+          style={theme.button as any}
+          onPress={handleCreateAccount}
+        >
+          <Text style={theme.buttonText}>Skapa konto</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={theme.button as any}
+          onPress={() => navigation.navigate("Login")}
+        >
+          <Text style={styles.loginButtonText}>Tillbaka</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
