@@ -9,7 +9,9 @@ import {
   editProfileName,
   setProfileByHouseholdAndUser,
 } from "../store/profile/profileSlice";
+
 import { useAppDispatch, useAppSelector } from "../store/store";
+import { editHouseHoldeName } from "../store/household/householdSlice";
 import { fetchTasks } from "../store/tasks/taskSlice";
 import { RootNavigationScreenProps } from "../navigators/navigationTypes";
 import { setStatusBarBackgroundColor } from "expo-status-bar";
@@ -62,13 +64,19 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
   const activeProfile = useAppSelector((state) => state.profile.activeProfile);
 
   const [isEditing, setIsEditing] = useState(false);
+
   const [updatedProfileName, setUpdatedProfilename] = useState(
+    activeProfile?.profileName
+  );
+
+  const [updatedHouseholdName, setUpdatedHouseholdname] = useState(
     activeProfile?.profileName
   );
 
   const { theme } = useTheme();
   const colorScheme = useColorScheme();
   const [isModalVisible, setModalVisible] = useState(false);
+
   const [headerTitle, setHeaderTitle] = useState<string>(
     activeHousehold?.name ?? "",
   );
@@ -91,6 +99,7 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
     if (activeProfile) {
       
       setUpdatedProfilename(activeProfile.profileName);
+      setUpdatedHouseholdname(activeHousehold?.name)
     }
   }, [activeProfile]);
 
@@ -104,10 +113,26 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
         editProfileName({
           profileId: activeProfile?.id,
           newProfileName: updatedProfileName ?? activeProfile.profileName,
+          
         }),
       );
       setIsEditing(false);
       console.log("NYA PROFILNAMNET", {updatedProfileName})
+    }
+  };
+
+  
+  const handleHouseholdSaveClick = async () => {
+    if (activeHousehold) {
+       dispatch(
+        editHouseHoldeName({
+          householdId: activeHousehold.id,
+          newHouseholdName: updatedHouseholdName ?? activeHousehold.name,
+          
+        }),
+      );
+      setIsEditing(false);
+      console.log("NYA PROFILNAMNET", {updatedHouseholdName})
     }
   };
 
@@ -191,9 +216,9 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
             <View style={styles.nameContainer}>
                 {isEditing ? (
                   <TextInput
-                    placeholder={headerTitle}
+                    placeholder={activeHousehold?.name}
                     onChangeText={(text) => {
-                      setUpdatedProfilename(text);
+                      setUpdatedHouseholdname(text);
                     }}
                     style={{
                       color: colorScheme === "dark" ? "white" : "black",
@@ -230,7 +255,7 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
             </View>
           </Card>
 
-          {isEditing ? <Button onPress={handleSaveClick}>Spara</Button> : null}
+          {isEditing ? <Button onPress={handleHouseholdSaveClick}>Spara</Button> : null}
 
           <Card style={styles.card} onPress={() => setModalVisible(true)}>
             <View style={styles.taskItem}>

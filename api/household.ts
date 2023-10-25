@@ -41,7 +41,7 @@ export const addHouseholdToDB = async (household: Household) => {
 };
 
 export const editHouseholdToDB = async (household: Household) => {
-  household.id = "";
+  console.log("hushåll som kommer in i edit: ", household)
   const householdCollectionRef = collection(db, "households");
 
   try {
@@ -113,6 +113,7 @@ export const deleteHouseholdFromDB = async (householdId: string) => {
     console.error("Fel vid borttagning av household:", error);
   }
 };
+
 
 // import { addDoc, collection, getFirestore } from "firebase/firestore";
 // import { app } from "./config";
