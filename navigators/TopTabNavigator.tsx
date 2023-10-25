@@ -5,16 +5,17 @@ import StatisticScreen from "../screens/StatisticScreen";
 import CustomTabBar from "../store/shared/CustomTabBar";
 import TESTDATUMSCREEN from "../screens/TESTDATUMSCREEN";
 import {
-  getCurrentDate,
   getCurrentWeekDates,
   getLastMonthDates,
   getLastWeekDates,
 } from "../utils/DateHandler";
-import STAT2 from "../screens/STAT2";
 
 export type TopTabParamList = {
   HouseholdTasks: undefined;
   DennaVeckan: undefined;
+  StatisticsCurrentWeek: { startDate: string; endDate: string };
+  StatisticsLastWeek: { startDate: string; endDate: string };
+  LastMonth: { startDate: string; endDate: string };
   TestaDatum: undefined;
 };
 
@@ -33,7 +34,24 @@ export default function TopTabNavigator() {
           title: (route.params as unknown as { name?: string })?.name || "Idag",
         })}
       />
-      <TopTab.Screen name="DennaVeckan" component={StatisticScreen} />
+      <TopTab.Screen
+        name="StatisticsCurrentWeek"
+        component={StatisticScreen}
+        initialParams={{
+          startDate: startOfCurrentWeek,
+          endDate: endOfCurrentWeek,
+        }}
+      />
+      <TopTab.Screen
+        name={"StatisticsLastWeek"}
+        component={StatisticScreen}
+        initialParams={{ startDate: startOfLastWeek, endDate: endOfLastWeek }}
+      />
+      <TopTab.Screen
+        name={"LastMonth"}
+        component={StatisticScreen}
+        initialParams={{ startDate: startOfLastMonth, endDate: endOfLastMonth }}
+      />
       <TopTab.Screen name={"TestaDatum"} component={TESTDATUMSCREEN} />
     </TopTab.Navigator>
   );
