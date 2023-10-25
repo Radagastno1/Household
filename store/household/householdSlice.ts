@@ -9,7 +9,6 @@ import { addHouseholdToDB, checkHouseholdWithCode,  getHouseholdsFromDB } from "
 import { RootStackParamList } from "../../navigators/RootNavigator";
 import { Household } from "../../types";
 import { editHouseholdToDB } from "../../api/household";
-import { households } from "../../data";
 
 export interface HouseholdState {
   households: Household[];
