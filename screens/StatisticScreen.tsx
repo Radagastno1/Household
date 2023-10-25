@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import React, { useCallback, useState } from "react";
+import { ScrollView, StyleSheet, Text, View, Image } from "react-native";
 import PiechartComponent from "../components/PiechartComponent";
 import { useAppSelector } from "../store/store";
 import { StatData } from "../types";
@@ -10,6 +10,7 @@ import {
   summarizeDataByColor,
 } from "../utils/statisticHandler";
 import { useFocusEffect } from "@react-navigation/native";
+import { AvatarUrls, Avatars, getAvatarColorString } from "../data/avatars";
 
 interface StatDatesProps {
   startDate: string;
@@ -25,12 +26,14 @@ function arrayChunk<T>(array: T[], chunkSize: number): T[][] {
 }
 
 export default function StatisticScreen() {
+  const { theme } = useTheme();
   const { startOfCurrentWeek, endOfCurrentWeek } = getCurrentWeekDates();
   const tasks = useAppSelector((state) => state.task.tasks);
   const profiles = useAppSelector((state) => state.profile.profiles);
   const completions = useAppSelector(
     (state) => state.taskCompletion.completions,
   );
+  const profileSlice = useAppSelector((state) => state.profile.profiles);
   const [statsForTasks, setStatsForTasks] = useState<StatData[]>([]);
   const [totalSumColors, setTotalSumColors] = useState<string[]>([]);
   const [totalSumSeries, setTotalSumSeries] = useState<number[]>([]);
@@ -55,12 +58,8 @@ export default function StatisticScreen() {
   }, [completions, tasks, profiles, startOfCurrentWeek, endOfCurrentWeek]);
 
   useFocusEffect(handleFocusEffect);
-
   const chunkedCharts = arrayChunk(statsForTasks, 3);
-  const { theme } = useTheme();
 
-  const slices = [20, 15, 20];
-  const colors = ["red", "yellow", "blue"];
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
       <ScrollView style={styles.container}>
@@ -82,21 +81,55 @@ export default function StatisticScreen() {
           </View>
         )}
 
+        <View
+          style={{
+            justifyContent: "center",
+            flexDirection: "row",
+            paddingTop: 8,
+            paddingBottom: 8,
+          }}
+        >
+          {profileSlice.map((profile) => (
+            <View
+              key={profile.id}
+              style={[
+                {
+                  borderColor: getAvatarColorString(profile.avatar),
+                  borderWidth: 5,
+                  borderRadius: 50,
+                  width: 40,
+                  height: 40,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  margin: 5,
+                },
+              ]}
+            >
+              <Image
+                source={{ uri: AvatarUrls[profile.avatar as Avatars] }}
+                style={{ height: 30, width: 30 }}
+              />
+            </View>
+          ))}
+        </View>
+
         <View style={styles.chartContainer}>
           {chunkedCharts.map((row, rowIndex) => (
             <View style={styles.row} key={rowIndex}>
               {row.map((chart, columnIndex) => (
                 <View style={styles.piechartContainer} key={columnIndex}>
-                  <Text style={styles.taskTitle}>{chart.title}</Text>
+                  <Text style={styles.taskTitle} numberOfLines={2}>
+                    {chart.title}
+                  </Text>
                   {chart.colors.length > 0 && chart.series.length > 0 ? (
                     <PiechartComponent
-                      widthAndHeight={100}
+                      widthAndHeight={110}
                       series={chart.series}
                       sliceColor={chart.colors}
                     />
                   ) : (
                     <PiechartComponent
-                      widthAndHeight={100}
+                      widthAndHeight={110}
                       series={[100]}
                       sliceColor={["gray"]}
                     />
@@ -126,6 +159,7 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   taskTitle: {
+    width: 110,
     textAlign: "center",
     padding: 2,
   },
