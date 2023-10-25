@@ -9,7 +9,6 @@ import { fetchCompletions } from "../store/taskCompletionSlice";
 import { fetchTasks, filterTaskListByHouseId } from "../store/tasks/taskSlice";
 import { Task } from "../types";
 import { useTheme } from "../contexts/themeContext";
-
 import { AvatarUrls, Avatars } from "../data/avatars";
 import { TopTabScreenProps } from "../navigators/navigationTypes";
 import { useColorScheme } from "react-native";
@@ -73,7 +72,7 @@ export default function HouseholdTasksScreen({
         //this one fetches the tasks from the database and put it in the state "tasks"
         dispatch(fetchTasks(activeProfile.householdId));
       }
-    }, [dispatch]),
+    }, [dispatch, taskSlice.tasks]),
   );
 
   const handleTaskPress = (taskId: string) => {
@@ -251,9 +250,10 @@ export default function HouseholdTasksScreen({
               style={[
                 styles.button,
                 {
-                  backgroundColor:  colorScheme === "dark"
-                  ? "white"
-                  : theme.cardButton.backgroundColor,
+                  backgroundColor:
+                    colorScheme === "dark"
+                      ? "white"
+                      : theme.cardButton.backgroundColor,
                 },
               ]}
             >

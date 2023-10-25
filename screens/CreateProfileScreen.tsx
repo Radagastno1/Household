@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Image } from "react-native";
 import { Button } from "react-native-paper";
 import { useDispatch } from "react-redux";
-import { households } from "../data";
+import { households } from "../data/index";
 import { AvatarColors, AvatarUrls, Avatars } from "../data/avatars";
 import { useColorScheme } from "react-native";
 
