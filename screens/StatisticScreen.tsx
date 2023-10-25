@@ -5,10 +5,7 @@ import { useAppSelector } from "../store/store";
 import { StatData } from "../types";
 import { getCurrentWeekDates } from "../utils/DateHandler";
 import { useTheme } from "../contexts/themeContext";
-import {
-  SummerizeEachTask,
-  getUniqueSummarizedData,
-} from "../utils/statisticHandler";
+import { SummerizeEachTask } from "../utils/statisticHandler";
 import { useFocusEffect } from "@react-navigation/native";
 
 interface StatDatesProps {
@@ -43,10 +40,7 @@ export default function StatisticScreen() {
       startOfCurrentWeek,
       endOfCurrentWeek,
     );
-    const uniqueData = getUniqueSummarizedData(summarizedData);
-    const empty: StatData[] = [];
-    setStatsForTasks(empty);
-    setStatsForTasks(uniqueData);
+    setStatsForTasks(summarizedData);
     console.log("Nu renderas datan från statisticScreen: ", statsForTasks);
   }, [completions, tasks, profiles, startOfCurrentWeek, endOfCurrentWeek]);
 
