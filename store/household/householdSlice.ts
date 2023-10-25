@@ -1,9 +1,15 @@
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
+
+
+
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { addHouseholdToDB, checkHouseholdWithCode } from "../../api/household";
+import { addHouseholdToDB, checkHouseholdWithCode,  getHouseholdsFromDB } from "../../api/household";
+
 import { RootStackParamList } from "../../navigators/RootNavigator";
 import { Household } from "../../types";
+import { editHouseholdToDB } from "../../api/household";
+import { households } from "../../data";
 
 export interface HouseholdState {
   households: Household[];
@@ -96,13 +102,39 @@ const householdSlice = createSlice({
       } else {
       }
     },
-  },
-});
+
+    editHouseHoldeName: (state, action: PayloadAction<{ householdId: string; newHouseholdName: string }>) => {
+      console.log("HUSHÅLLID SOM KOMMER IN: ", action.payload.householdId)
+      console.log("AKTIVA HUSHÅLLET ID: ", state.activeHousehold?.id)
+      if(state.activeHousehold?.id === action.payload.householdId){
+        const householdToEdit = state.activeHousehold;
+        console.log("HUSHÅLLET SOM HITTAS, ", householdToEdit)
+        if (householdToEdit) {
+         
+          householdToEdit.name = action.payload.newHouseholdName;
+          console.log("det nya NAMNET BLIR: ", householdToEdit.name)
+          
+         editHouseholdToDB(householdToEdit).then((updatedHousehold) => {
+          if (updatedHousehold) {
+              const editedHouseholdIndex = state.households.findIndex(
+                (household) => household.id === updatedHousehold.id,
+              );
+                state.households[editedHouseholdIndex] = updatedHousehold;
+          }
+        })
+        .catch((error) => {
+          console.error("Error editing household:", error);
+        });
+      }
+  }},
+
+}});
 
 export const {
   addHousehold,
   findHouseholdById,
   setHouseholdByHouseholdId,
+  editHouseHoldeName,
   sethouseholdActive,
 } = householdSlice.actions;
 
