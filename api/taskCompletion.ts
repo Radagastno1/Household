@@ -3,6 +3,7 @@ import {
   Timestamp,
   addDoc,
   collection,
+  deleteDoc,
   getDoc,
   getDocs,
   query,
@@ -91,6 +92,23 @@ export const getTaskCompletionsFromDB = async (householdId: string) => {
     return taskCompletions;
   } catch (error) {
     console.error("Fel vid hämtning av task completions:", error);
+  }
+};
+
+export const deleteAllTaskCompletionsByTaskId = async (taskId: string) => {
+  try {
+    const q = query(taskCompletionCollectionRef, where("taskId", "==", taskId));
+    const querySnapshot = await getDocs(q);
+
+    // Loopa igenom resultatet och radera varje post
+    querySnapshot.forEach(async (doc) => {
+      await deleteDoc(doc.ref);
+      console.log(`raderade task completion med id: ${doc.id}`);
+    });
+
+    console.log(`raderade alla task completions med taskId: ${taskId}`);
+  } catch (error) {
+    console.error("fel vid radering av task completions:", error);
   }
 };
 

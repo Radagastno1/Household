@@ -101,6 +101,7 @@ export default function CreateTaskScreen({
 
   const deleteFunctionToModule = (taskId: string) => {
     dispatch(deleteTask(taskId));
+    setDeleteTaskModalVisible(false);
   };
 
   const editFunctionToModule = (editedTask: Task) => {
@@ -338,7 +339,7 @@ export default function CreateTaskScreen({
                     style={[
                       styles.removeText,
                       {
-                        color: colorScheme === "dark" ? "white" : "white",
+                        color: colorScheme === "dark" ? "white" : "black",
                       },
                     ]}
                   >

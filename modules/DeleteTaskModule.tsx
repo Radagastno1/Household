@@ -1,8 +1,7 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Text } from "react-native";
 import { Modal } from "react-native-paper";
 import { Task } from "../types";
-import React from "react";
 
 interface Props {
   task: Task;
@@ -27,10 +26,12 @@ export default function DeleteTaskModule(props: Props) {
     };
     console.log("den redigerade tasken: ", editedTask.title);
     props.onEditTask(editedTask);
+    closeModal();
   };
 
   const handleDeleteTask = () => {
     props.onDeleteTask(props.task.id);
+    closeModal();
   };
 
   useEffect(() => {
