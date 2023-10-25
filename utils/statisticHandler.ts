@@ -160,17 +160,3 @@ function mapToPieChart(summarizedByTasks: TaskData[]) {
   console.log("MaptoPieChart: ", statDataArray);
   return statDataArray;
 }
-
-export function getUniqueSummarizedData(summarizedData: StatData[]) {
-  const uniqueData: StatData[] = [];
-  const titles = new Set(); // Använd en uppsättning för att hålla reda på unika titlar
-
-  summarizedData.forEach((data) => {
-    if (!titles.has(data.title)) {
-      titles.add(data.title);
-      uniqueData.push(data);
-    }
-  });
-
-  return uniqueData;
-}
