@@ -3,11 +3,10 @@ import { useFocusEffect } from "@react-navigation/native";
 import React, { useCallback, useEffect } from "react";
 import { ScrollView, StyleSheet, View, Image } from "react-native";
 import { Button, Card, Text } from "react-native-paper";
-import { households, profiles } from "../data";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { fetchCompletions } from "../store/taskCompletionSlice";
 import { fetchTasks, filterTaskListByHouseId } from "../store/tasks/taskSlice";
-import { Task } from "../types";
+import { Profile, Task } from "../types";
 import { useTheme } from "../contexts/themeContext";
 import { AvatarUrls, Avatars } from "../data/avatars";
 import { TopTabScreenProps } from "../navigators/navigationTypes";
@@ -18,6 +17,7 @@ type HouseholdTasksProps = TopTabScreenProps<"HouseholdTasks">;
 export default function HouseholdTasksScreen({
   navigation,
 }: HouseholdTasksProps) {
+    const profiles = useAppSelector((state) => state.profile.profiles);
   // function resetAvatars(dispatch: Dispatch) {
   //     // Clear the avatars data, set it to an empty array or an initial value
   //     // For example:
@@ -71,6 +71,7 @@ export default function HouseholdTasksScreen({
         //TINA HERE: THIS DISPATCH MUST HAPPEND EVERY TIME WE GO TO THIS SCREEN
         //this one fetches the tasks from the database and put it in the state "tasks"
         dispatch(fetchTasks(activeProfile.householdId));
+        
       }
     }, [dispatch]),
   );
@@ -79,7 +80,7 @@ export default function HouseholdTasksScreen({
     navigation.navigate("TaskDetail", { taskId });
   };
 
-  function findAllAvatarFortodayCompletionByTaskId(taskId: string) {
+  function findAllAvatarFortodayCompletionByTaskId(taskId: string,activeProfile:Profile) {
     const today = new Date().toISOString();
     //filter the completions with the same taskId---------can be moved out and share with getdays function
     const filteredTodaysCompletionsForTask =
@@ -189,7 +190,7 @@ export default function HouseholdTasksScreen({
                 <Text variant="titleLarge">{task.title}</Text>
               </View> */}
 
-                {findAllAvatarFortodayCompletionByTaskId(task.id).map(
+                {findAllAvatarFortodayCompletionByTaskId(task.id,activeProfile!!).map(
                   (avatar, index) => (
                     <View key={index}>
                       <Image

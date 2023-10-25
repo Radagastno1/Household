@@ -12,6 +12,7 @@ import TaskDetailScreen from "../screens/TaskDetailScreen";
 import CustomHeader from "../store/shared/CustomHeader";
 import { useAppSelector } from "../store/store";
 import TopTabNavigator from "./TopTabNavigator";
+import React from "react";
 
 export type RootStackParamList = {
   SplashScreen: undefined;

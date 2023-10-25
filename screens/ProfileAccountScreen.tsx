@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { StyleSheet, View, Image } from "react-native";
 import { Button, Card, IconButton, Text, TextInput } from "react-native-paper";
 import { useTheme } from "../contexts/themeContext";
-import { households } from "../data";
 import HouseholdProfileModal from "../modules/HouseholdMemberModal";
 import { useColorScheme } from "react-native";
 import {
@@ -72,7 +71,7 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
   const [headerTitle, setHeaderTitle] = useState<string>(
     activeHousehold?.name ?? "",
   );
-
+  const households = useAppSelector((state) => state.household.households)
   useEffect(() => {
     if (activeProfile && activeHousehold) {
       const household = households.find(
