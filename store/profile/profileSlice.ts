@@ -52,6 +52,10 @@ const profileSlice = createSlice({
           console.error("Fel vid tillägg av profil:", error);
         });
     },
+
+   
+
+
     // editProfileName: (
     //   state,
     //   action: PayloadAction<{ profileId: string; newProfileName: string }>,

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, Profiler } from "react";
 import { Image } from "react-native";
 import { Button } from "react-native-paper";
 import { useDispatch } from "react-redux";
@@ -77,9 +77,19 @@ export default function CreateProfileScreen({
     ),
   );
 
+      // Lite slarvigt kanske en stund här men funkar sålänge
+  const hasActiveProfiles = activeProfiles.length > 0;
+
+  const isOwner = !hasActiveProfiles;
   const isAvatarOccupied = (avatarId: string) => {
     return activeProfiles.some((profile) => profile.avatar === avatarId);
   };
+
+  
+ 
+  
+  
+  
 
   const saveProfile = () => {
     console.log("hushållsid är", householdId);
@@ -157,10 +167,17 @@ export default function CreateProfileScreen({
               key={avatar.id}
               style={[
                 styles.avatar,
+                
+                isOwner && avatar.id !== Avatars.Bee
+                  ? styles.occupiedAvatar
+                  : undefined,
+              
+                !isOwner && isAvatarOccupied(avatar.id)
+                  ? styles.occupiedAvatar
+                  : undefined,
                 selectedAvatar === avatar.id
                   ? styles.selectedAvatar
                   : undefined,
-                isAvatarOccupied(avatar.id) ? styles.occupiedAvatar : undefined,
                 { backgroundColor: AvatarColors[avatar.id as Avatars] },
               ]}
               onPress={() => {
