@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import PiechartComponent from "../components/PiechartComponent";
 import { useAppSelector } from "../store/store";
@@ -9,6 +9,7 @@ import {
   SummerizeEachTask,
   getUniqueSummarizedData,
 } from "../utils/statisticHandler";
+import { useFocusEffect } from "@react-navigation/native";
 
 interface StatDatesProps {
   startDate: string;
@@ -32,7 +33,9 @@ export default function StatisticScreen() {
   );
   const [statsForTasks, setStatsForTasks] = useState<StatData[]>([]);
 
-  useEffect(() => {
+  const handleFocusEffect = useCallback(() => {
+    console.log("USE-EFFECT STATS: ", completions);
+    console.log("USE-EFFECT STATS HUR MÅNGA: ", completions.length);
     const summarizedData = SummerizeEachTask(
       completions,
       tasks,
@@ -46,6 +49,8 @@ export default function StatisticScreen() {
     setStatsForTasks(uniqueData);
     console.log("Nu renderas datan från statisticScreen: ", statsForTasks);
   }, [completions, tasks, profiles, startOfCurrentWeek, endOfCurrentWeek]);
+
+  useFocusEffect(handleFocusEffect);
 
   const chunkedCharts = arrayChunk(statsForTasks, 3);
   const { theme } = useTheme();
