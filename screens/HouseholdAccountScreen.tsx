@@ -13,10 +13,10 @@ import {
 } from "../api/profile";
 import { useTheme } from "../contexts/themeContext";
 import { RootNavigationScreenProps } from "../navigators/navigationTypes";
-import {  useAppSelector } from "../store/store";
+import { useAppSelector } from "../store/store";
 import { Household, Profile } from "../types";
 import { getHouseholdsFromDB } from "../api/household";
-import { Appbar} from "react-native-paper";
+import { Appbar } from "react-native-paper";
 import { MaterialIcons } from "@expo/vector-icons";
 import { AvatarUrls, Avatars } from "../data/avatars";
 
@@ -166,22 +166,22 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
                 </View>
               ))} */}
 
-<View style={{ flexDirection: 'row', alignItems: 'center' }}>
-{profiles[index] && profiles[index]!.length > 0 && (
-        <Image
-          key={0}
-          source={{
-            uri: AvatarUrls[profiles[index]![0].avatar as Avatars],
-          }}
-          style={{ height: 20, width: 20 }}
-          alt={`Avatar ${index}`}
-        />
-      )}
-      {profiles[index] && profiles[index]!.length > 1 && (
-        <Text>...</Text>
-      )}
-          </View>
-            
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                {profiles[index] && profiles[index]!.length > 0 && (
+                  <Image
+                    key={0}
+                    source={{
+                      uri: AvatarUrls[profiles[index]![0].avatar as Avatars],
+                    }}
+                    style={{ height: 20, width: 20 }}
+                    alt={`Avatar ${index}`}
+                  />
+                )}
+                {profiles[index] && profiles[index]!.length > 1 && (
+                  <Text>...</Text>
+                )}
+              </View>
+
               {/* <Button title="" /> */}
               <Text style={theme.buttonText}>{household.name}</Text>
               <View>
