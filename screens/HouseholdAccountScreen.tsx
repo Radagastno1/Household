@@ -13,12 +13,10 @@ import {
 } from "../api/profile";
 import { useTheme } from "../contexts/themeContext";
 import { RootNavigationScreenProps } from "../navigators/navigationTypes";
-import { setHouseholdByHouseholdId } from "../store/household/householdSlice";
-import { fetchAllProfilesByHousehold } from "../store/profile/profileSlice";
-import { useAppDispatch, useAppSelector } from "../store/store";
+import {  useAppSelector } from "../store/store";
 import { Household, Profile } from "../types";
 import { getHouseholdsFromDB } from "../api/household";
-import { Appbar, Avatar, Card } from "react-native-paper";
+import { Appbar} from "react-native-paper";
 import { MaterialIcons } from "@expo/vector-icons";
 import { AvatarUrls, Avatars } from "../data/avatars";
 
