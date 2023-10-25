@@ -5,7 +5,10 @@ import { getAllProfilesByUserId } from "../api/profile";
 import { useTheme } from "../contexts/themeContext";
 import { RootNavigationScreenProps } from "../navigators/navigationTypes";
 import { sethouseholdActive } from "../store/household/householdSlice";
-import { fetchAllProfilesByHousehold } from "../store/profile/profileSlice";
+import {
+  fetchAllProfilesByHousehold,
+  setProfileByHouseholdAndUser,
+} from "../store/profile/profileSlice";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { Household } from "../types";
 
@@ -72,6 +75,7 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
 
   // const activeUser = "5NCx5MKcUu6UYKjFqRkg";
   const dispatch = useAppDispatch();
+  const activeProfile = useAppSelector((state) => state.profile.activeProfile);
   const householdSlice = useAppSelector((state) => state.household);
   const allHouseholds = householdSlice.households;
 
@@ -85,7 +89,15 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
     try {
       // Fetch all profiles for the household
       await dispatch(fetchAllProfilesByHousehold(household.id, activeUser));
+      //här måste man sätta aktiva profilen
+      dispatch(
+        setProfileByHouseholdAndUser({
+          userId: activeUser.id,
+          householdId: household.id,
+        }),
+      );
 
+      console.log("aktiva profilen: ");
       // Navigate to the ProfileAccount screen
       navigation.navigate("ProfileAccount", {
         householdId: household.id,
