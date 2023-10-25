@@ -4,10 +4,7 @@ import PiechartComponent from "../components/PiechartComponent";
 import { useAppSelector } from "../store/store";
 import { StatData } from "../types";
 import { getCurrentWeekDates, getLastWeekDates } from "../utils/DateHandler";
-import {
-  SummerizeEachTask,
-  getUniqueSummarizedData,
-} from "../utils/statisticHandler";
+import { SummerizeEachTask } from "../utils/statisticHandler";
 
 interface StatDatesProps {
   startDate: string;
@@ -39,8 +36,7 @@ export default function STAT2() {
       startOfLastWeek,
       endOfLastWeek,
     );
-    const uniqueData = getUniqueSummarizedData(summarizedData);
-    setStatsForTasks(uniqueData);
+    setStatsForTasks(summarizedData);
     console.log("Nu renderas datan från statisticScreen: ", statsForTasks);
   }, [completions, tasks, profiles, startOfLastWeek, endOfLastWeek]);
 
