@@ -25,6 +25,7 @@ export const SignInScreen = ({ navigation }: SignInProps) => {
   const [showPassword, setShowPassword] = useState(false);
   const { theme } = useTheme();
   const dispatch = useAppDispatch();
+  const [activeUserInternal, setActiveUserInternal] = useState<User>();
 
   const [] = useState<User[]>([]);
 

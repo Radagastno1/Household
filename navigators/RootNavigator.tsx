@@ -11,6 +11,7 @@ import HouseholdAccountScreen from "../screens/HouseholdAccountScreen";
 import ProfileAccountScreen from "../screens/ProfileAccountScreen";
 import SignInScreen from "../screens/SignInScreen";
 import TaskDetailScreen from "../screens/TaskDetailScreen";
+import { getProfilesByUserIdAsync } from "../store/profile/profileSlice";
 import CustomHeader from "../store/shared/CustomHeader";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { setActiveUser } from "../store/user/userSlice";

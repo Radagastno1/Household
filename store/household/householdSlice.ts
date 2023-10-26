@@ -1,11 +1,14 @@
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { addHouseholdToDB, checkHouseholdWithCode,  getHouseholdsFromDB } from "../../api/household";
+import {
+  addHouseholdToDB,
+  checkHouseholdWithCode,
+  getHouseholdsFromDB,
+} from "../../api/household";
 import { RootStackParamList } from "../../navigators/RootNavigator";
 import { Household } from "../../types";
 import { editHouseholdToDB } from "../../api/household";
-
 
 export interface HouseholdState {
   households: Household[];
@@ -98,33 +101,46 @@ const householdSlice = createSlice({
       } else {
       }
     },
-
-    editHouseHoldeName: (state, action: PayloadAction<{ householdId: string; newHouseholdName: string }>) => {
-      console.log("HUSHÅLLID SOM KOMMER IN: ", action.payload.householdId)
-      console.log("AKTIVA HUSHÅLLET ID: ", state.activeHousehold?.id)
-      if(state.activeHousehold?.id === action.payload.householdId){
+    getHouseholdsByHouseholdId: (
+      state,
+      action: PayloadAction<{ householdId: string }>,
+    ) => {
+      const { householdId } = action.payload;
+      const households = getHouseholdsFromDB(householdId).then((household) => {
+        const uniqueHouseholds = new Set([...state.households, household]);
+        return [...uniqueHouseholds];
+      });
+    },
+    editHouseHoldeName: (
+      state,
+      action: PayloadAction<{ householdId: string; newHouseholdName: string }>,
+    ) => {
+      console.log("HUSHÅLLID SOM KOMMER IN: ", action.payload.householdId);
+      console.log("AKTIVA HUSHÅLLET ID: ", state.activeHousehold?.id);
+      if (state.activeHousehold?.id === action.payload.householdId) {
         const householdToEdit = state.activeHousehold;
-        console.log("HUSHÅLLET SOM HITTAS, ", householdToEdit)
+        console.log("HUSHÅLLET SOM HITTAS, ", householdToEdit);
         if (householdToEdit) {
-         
           householdToEdit.name = action.payload.newHouseholdName;
-          console.log("det nya NAMNET BLIR: ", householdToEdit.name)
-          
-         editHouseholdToDB(householdToEdit).then((updatedHousehold) => {
-          if (updatedHousehold) {
-              const editedHouseholdIndex = state.households.findIndex(
-                (household) => household.id === updatedHousehold.id,
-              );
-                state.households[editedHouseholdIndex] = updatedHousehold;
-          }
-        })
-        .catch((error) => {
-          console.error("Error editing household:", error);
-        });
-      }
-  }},
+          console.log("det nya NAMNET BLIR: ", householdToEdit.name);
 
-}});
+          editHouseholdToDB(householdToEdit)
+            .then((updatedHousehold) => {
+              if (updatedHousehold) {
+                const editedHouseholdIndex = state.households.findIndex(
+                  (household) => household.id === updatedHousehold.id,
+                );
+                state.households[editedHouseholdIndex] = updatedHousehold;
+              }
+            })
+            .catch((error) => {
+              console.error("Error editing household:", error);
+            });
+        }
+      }
+    },
+  },
+});
 
 export const {
   addHousehold,
@@ -132,6 +148,7 @@ export const {
   setHouseholdByHouseholdId,
   editHouseHoldeName,
   sethouseholdActive,
+  getHouseholdsByHouseholdId,
 } = householdSlice.actions;
 
 export const householdReducer = householdSlice.reducer;

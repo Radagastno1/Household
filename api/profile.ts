@@ -119,7 +119,7 @@ export const getAllProfilesByHouseholdId = async (householdId: string) => {
   }
 };
 
-export const getAllProfilesByUserId = async (userId: string) => {
+export const getAllProfilesByUserIdFromDb = async (userId: string) => {
   try {
     console.log("Hämta profiler: ", userId);
 

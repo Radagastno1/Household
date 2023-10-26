@@ -1,10 +1,10 @@
 import { MaterialIcons } from "@expo/vector-icons";
+import { useFocusEffect } from "@react-navigation/native";
 import { signOut } from "firebase/auth";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   Alert,
   Animated,
-  Image,
   PanResponder,
   ScrollView,
   StyleSheet,
@@ -14,103 +14,88 @@ import {
 } from "react-native";
 import { Appbar } from "react-native-paper";
 import { auth } from "../api/config";
-import { getHouseholdsFromDB } from "../api/household";
-import {
-  getAllProfilesByHouseholdId,
-  getAllProfilesByUserId,
-} from "../api/profile";
 import { useTheme } from "../contexts/themeContext";
-import { AvatarUrls, Avatars } from "../data/avatars";
 import { RootNavigationScreenProps } from "../navigators/navigationTypes";
-import { sethouseholdActive } from "../store/household/householdSlice";
+import {
+  getHouseholdsByHouseholdId,
+  sethouseholdActive,
+} from "../store/household/householdSlice";
 import {
   fetchAllProfilesByHousehold,
+  getProfilesByUserIdAsync,
   setProfileByHouseholdAndUser,
-  setProfiles,
 } from "../store/profile/profileSlice";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { Household } from "../types";
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     // backgroundColor: "#fff",
-//     alignItems: "center",
-//     justifyContent: "center",
-//   },
-// });
 
 type HouseholdProps = RootNavigationScreenProps<"HouseholdAccount">;
 
 export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
   const activeUser = useAppSelector((state) => state.user.user);
-  const [households, setHouseholds] = useState<Household[] | undefined>([]);
+  // const [households, setHouseholds] = useState<Household[] | undefined>([]);
   // const [profiles, setProfiles] = useState<(Profile[] | undefined)[]>([]);
   const dispatch = useAppDispatch();
   const profiles = useAppSelector((state) => state.profile.profiles);
+  const households = useAppSelector((state) => state.household.households);
   console.log("Nu är användaren ", activeUser, "inloggad");
 
-  //focus effect här inne senare
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const multibleHousehold = await GetHouseholds();
+  // Andra useFocusEffect
+  useFocusEffect(
+    React.useCallback(() => {
+      const fetchData = async () => {
+        if (activeUser) {
+          console.log("anropar thunken");
+          dispatch(getProfilesByUserIdAsync(activeUser.uid));
+          // if (profiles) {
+          //   console.log("nu kollar den efter profiler", profiles);
+          //   profiles.forEach((profile) =>
+          //     dispatch(
+          //       getHouseholdsByHouseholdId({
+          //         householdId: profile.householdId,
+          //       }),
+          //     ),
+          //   );
+          // }
+        }
+      };
+      fetchData();
+    }, [profiles]),
+  );
+  // async function GetHouseholdIdsFromActiveUser() {
+  //   const householdsId: string[] = [];
+  //   if (activeUser) {
+  //     console.log("aktiva user: ", activeUser);
+  //     const profiles = await getAllProfilesByUserId(activeUser?.uid);
+  //     profiles?.map((profile) => {
+  //       const id = profile.householdId;
+  //       householdsId.push(id);
+  //     });
+  //     return householdsId;
+  //   }
+  // }
 
-        setHouseholds(multibleHousehold);
-        console.log("households: ", multibleHousehold);
-        // get all householdIds under user
-        const householdsIds = await GetHouseholdIdsFromActiveUser();
-
-        const profilesByHouse = await Promise.all(
-          householdsIds!.map((houseId) => GetProfilesForEachHousehold(houseId)),
-        ).then((profilesFetched) => dispatch(setProfiles(profilesFetched)));
-
-        console.log("profiler : ", profiles);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchData(); // Anropa den asynkrona funktionen inuti useEffect
-  }, []); // Beroendelistan är tom, så useEffect körs en gång när komponenten monteras
-
-  async function GetHouseholdIdsFromActiveUser() {
-    const householdsId: string[] = [];
-    if (activeUser) {
-      console.log("aktiva user: ", activeUser);
-      const profiles = await getAllProfilesByUserId(activeUser?.uid);
-      profiles?.map((profile) => {
-        const id = profile.householdId;
-        householdsId.push(id);
-      });
-      return householdsId;
-    }
-  }
-
-  async function GetHouseholds() {
-    // Anropa GetProfilesFromActiveUser och använd .then
-    return GetHouseholdIdsFromActiveUser()
-      .then(async (householdsIds) => {
-        const households: Household[] = [];
-        await Promise.all(
-          householdsIds!.map(async (household) => {
-            const fetchHousehold = await getHouseholdsFromDB(household);
-            if (fetchHousehold) {
-              households.push(fetchHousehold);
-            }
-          }),
-        );
-        return households;
-      })
-      .catch((error) => {
-        console.error("Error fetching households:", error);
-        return [];
-      });
-  }
+  // async function GetHouseholds() {
+  //   // Anropa GetProfilesFromActiveUser och använd .then
+  //   return GetHouseholdIdsFromActiveUser()
+  //     .then(async (householdsIds) => {
+  //       const households: Household[] = [];
+  //       await Promise.all(
+  //         householdsIds!.map(async (household) => {
+  //           const fetchHousehold = await getHouseholdsFromDB(household);
+  //           if (fetchHousehold) {
+  //             households.push(fetchHousehold);
+  //           }
+  //         }),
+  //       );
+  //       return households;
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching households:", error);
+  //       return [];
+  //     });
+  // }
 
   //   const activeProfile = useAppSelector((state) => state.profile.activeProfile);
-  const householdSlice = useAppSelector((state) => state.household);
-  const allHouseholds = householdSlice.households;
 
   const handleEnterHousehold = async (household: Household) => {
     dispatch(sethouseholdActive(household));
@@ -157,14 +142,14 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
       });
   }
 
-  async function GetProfilesForEachHousehold(householdId: string) {
-    const profiles = await getAllProfilesByHouseholdId(householdId).then(
-      (profiles) => {
-        return profiles;
-      },
-    );
-    return profiles;
-  }
+  // async function GetProfilesForEachHousehold(householdId: string) {
+  //   const profiles = await getAllProfilesByHouseholdId(householdId).then(
+  //     (profiles) => {
+  //       return profiles;
+  //     },
+  //   );
+  //   return profiles;
+  // }
 
   const { theme, setColorScheme } = useTheme();
   const [currentTheme, setCurrentTheme] = useState("auto");
@@ -286,7 +271,7 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
                 handleEnterHousehold(household);
               }}
             >
-              <View style={{ flexDirection: "row", alignItems: "center" }}>
+              {/* <View style={{ flexDirection: "row", alignItems: "center" }}>
                 {profiles[index] && profiles[index]!.length > 0 && (
                   <Image
                     key={0}
@@ -300,7 +285,7 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
                 {profiles[index] && profiles[index]!.length > 1 && (
                   <Text>...</Text>
                 )}
-              </View>
+              </View> */}
 
               <View>
                 <Text style={theme.buttonText}>{household.name}</Text>
@@ -401,3 +386,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 });
+function getAllProfilesByUserId(uid: string) {
+  throw new Error("Function not implemented.");
+}
