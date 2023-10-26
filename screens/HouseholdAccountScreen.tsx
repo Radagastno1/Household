@@ -1,7 +1,7 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import { useFocusEffect } from "@react-navigation/native";
 import { signOut } from "firebase/auth";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Alert,
   Animated,
@@ -17,7 +17,7 @@ import { auth } from "../api/config";
 import { useTheme } from "../contexts/themeContext";
 import { RootNavigationScreenProps } from "../navigators/navigationTypes";
 import {
-  getHouseholdsByHouseholdId,
+  getHouseholdsByHouseholdIdAsync,
   sethouseholdActive,
 } from "../store/household/householdSlice";
 import {
@@ -37,30 +37,44 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
   const dispatch = useAppDispatch();
   const profiles = useAppSelector((state) => state.profile.profiles);
   const households = useAppSelector((state) => state.household.households);
+  const [profilesLoaded, setProfilesLoaded] = useState(false);
+  let householdIds: string[] = [];
   console.log("Nu är användaren ", activeUser, "inloggad");
 
+  useEffect(() => {
+    console.log("USEFFECT");
+
+    console.log("anropar thunken");
+    dispatch(getProfilesByUserIdAsync(activeUser?.uid ?? "hej")).then(
+      (profiles) => {
+        setProfilesLoaded;
+      },
+    );
+    console.log("nu kollar den efter profiler", profiles);
+    householdIds = profiles.map((p) => p.householdId);
+  }, [activeUser]);
+
+  useEffect(() => {
+    dispatch(getHouseholdsByHouseholdIdAsync(householdIds));
+    console.log("HOUSEHOLDIDS: ", householdIds);
+  }, [profilesLoaded]);
+
   // Andra useFocusEffect
-  useFocusEffect(
-    React.useCallback(() => {
-      const fetchData = async () => {
-        if (activeUser) {
-          console.log("anropar thunken");
-          dispatch(getProfilesByUserIdAsync(activeUser.uid));
-          // if (profiles) {
-          //   console.log("nu kollar den efter profiler", profiles);
-          //   profiles.forEach((profile) =>
-          //     dispatch(
-          //       getHouseholdsByHouseholdId({
-          //         householdId: profile.householdId,
-          //       }),
-          //     ),
-          //   );
-          // }
-        }
-      };
-      fetchData();
-    }, [profiles]),
-  );
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     const fetchData = async () => {
+  //       if (activeUser) {
+  //         console.log("anropar thunken");
+  //         dispatch(getProfilesByUserIdAsync(activeUser.uid));
+  //         // if (profiles) {
+  //         console.log("nu kollar den efter profiler", profiles);
+  //         const householdsId = profiles.map((p) => p.householdId);
+  //         dispatch(getHouseholdsByHouseholdIdAsync(householdsId));
+  //       }
+  //       fetchData();
+  //     };
+  //   }, [activeUser]),
+  // );
   // async function GetHouseholdIdsFromActiveUser() {
   //   const householdsId: string[] = [];
   //   if (activeUser) {

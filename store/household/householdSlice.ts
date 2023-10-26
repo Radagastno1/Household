@@ -1,14 +1,14 @@
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
   addHouseholdToDB,
   checkHouseholdWithCode,
+  editHouseholdToDB,
   getHouseholdsFromDB,
 } from "../../api/household";
 import { RootStackParamList } from "../../navigators/RootNavigator";
 import { Household } from "../../types";
-import { editHouseholdToDB } from "../../api/household";
 
 export interface HouseholdState {
   households: Household[];
@@ -21,6 +21,29 @@ export const initialState: HouseholdState = {
   selectedHousehold: null,
   activeHousehold: null,
 };
+
+export const getHouseholdsByHouseholdIdAsync = createAsyncThunk<
+  Household[],
+  string[],
+  { rejectValue: string }
+>("households/getHouseholdByHouseholdId", async (householdIds, thunkAPI) => {
+  try {
+    const fetchedHouseholds: Household[] = [];
+
+    for (const id of householdIds) {
+      const household = await getHouseholdsFromDB(id);
+      if (household) {
+        fetchedHouseholds.push(household as Household);
+      }
+    }
+
+    console.log("Hämtade hushåll: ", fetchedHouseholds);
+    return fetchedHouseholds;
+  } catch (error: any) {
+    return thunkAPI.rejectWithValue(error.message);
+  }
+});
+
 export const handleJoinHousehold = async (joinCode: string) => {
   if (joinCode) {
     // Dispatch the action and await its completion
@@ -101,16 +124,17 @@ const householdSlice = createSlice({
       } else {
       }
     },
-    getHouseholdsByHouseholdId: (
-      state,
-      action: PayloadAction<{ householdId: string }>,
-    ) => {
-      const { householdId } = action.payload;
-      const households = getHouseholdsFromDB(householdId).then((household) => {
-        const uniqueHouseholds = new Set([...state.households, household]);
-        return [...uniqueHouseholds];
-      });
-    },
+    // getHouseholdsByHouseholdId: (
+    //   state,
+    //   action: PayloadAction<{ householdId: string }>,
+    // ) => {
+    //   const { householdId } = action.payload;
+    //   const households = getHouseholdsFromDB(householdId).then((household) => {
+    //     const uniqueHouseholds = new Set([...state.households, household]);
+    //     console.log("UNIKA HUSHÅLL: ", uniqueHouseholds);
+    //     return [...uniqueHouseholds];
+    //   });
+    // },
     editHouseHoldeName: (
       state,
       action: PayloadAction<{ householdId: string; newHouseholdName: string }>,
@@ -140,6 +164,17 @@ const householdSlice = createSlice({
       }
     },
   },
+  extraReducers: (builder) => {
+    builder
+      .addCase(getHouseholdsByHouseholdIdAsync.fulfilled, (state, action) => {
+        if (action.payload) {
+          state.households = action.payload;
+        }
+      })
+      .addCase(getHouseholdsByHouseholdIdAsync.rejected, (state, action) => {
+        console.log("error vid get households: ", action.payload);
+      });
+  },
 });
 
 export const {
@@ -148,7 +183,7 @@ export const {
   setHouseholdByHouseholdId,
   editHouseHoldeName,
   sethouseholdActive,
-  getHouseholdsByHouseholdId,
+  // getHouseholdsByHouseholdId,
 } = householdSlice.actions;
 
 export const householdReducer = householdSlice.reducer;
