@@ -1,16 +1,18 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import React, { useEffect, useRef, useState } from "react";
 import {
-    Animated,
+  Animated,
   Image,
   PanResponder,
   ScrollView,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
+  useColorScheme,
 } from "react-native";
-import { Appbar } from "react-native-paper";
+import { Button, Appbar, IconButton } from "react-native-paper";
 import { getHouseholdsFromDB } from "../api/household";
 import {
   getAllProfilesByHouseholdId,
@@ -19,15 +21,17 @@ import {
 import { useTheme } from "../contexts/themeContext";
 import { AvatarUrls, Avatars } from "../data/avatars";
 import { RootNavigationScreenProps } from "../navigators/navigationTypes";
-import { editHouseHoldeName, sethouseholdActive } from "../store/household/householdSlice";
 import {
-    editProfileName,
+  editHouseHoldeName,
+  sethouseholdActive,
+} from "../store/household/householdSlice";
+import {
+  editProfileName,
   fetchAllProfilesByHousehold,
   setProfileByHouseholdAndUser,
 } from "../store/profile/profileSlice";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { Household, Profile } from "../types";
-
 
 type HouseholdProps = RootNavigationScreenProps<"HouseholdAccount">;
 
@@ -37,7 +41,7 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
   const [profiles, setProfiles] = useState<(Profile[] | undefined)[]>([]);
   console.log("Nu är användaren ", activeUser, "inloggad");
 
-//------------------------------------------------------------------------------
+  //------------------------------------------------------------------------------
   const activeProfiles = useAppSelector((state) => state.profile.profiles);
   const activeProfile = useAppSelector((state) => state.profile.activeProfile);
   const isOwner = activeProfile?.isOwner;
@@ -63,12 +67,12 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
     }
   };
 
-  const handleHouseholdSaveClick = async (household: Household) => {
-    if (household) {
+  const handleHouseholdSaveClick = async (editHouseholdId: string) => {
+    if (editHouseholdId) {
       dispatch(
         editHouseHoldeName({
-          householdId: household.id,
-          newHouseholdName: updatedHouseholdName ?? household.name,
+          householdId: editHouseholdId,
+          newHouseholdName: updatedHouseholdName ?? editHouseholdId,
         }),
       );
       setIsEditing(false);
@@ -92,7 +96,9 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
         // get all householdIds under user
         const householdsIds = await GetHouseholdIdsFromActiveUser();
         const profilesByHouse = await Promise.all(
-          householdsIds.map((houseId) => GetCurrentUserProfilesForEachHousehold(houseId)),
+          householdsIds.map((houseId) =>
+            GetCurrentUserProfilesForEachHousehold(houseId),
+          ),
         );
         setProfiles(profilesByHouse);
       } catch (error) {
@@ -100,7 +106,7 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
       }
     };
 
-    fetchData(); 
+    fetchData();
   }, []); //runs only onece
 
   async function GetHouseholdIdsFromActiveUser() {
@@ -163,13 +169,19 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
   };
 
   async function GetCurrentUserProfilesForEachHousehold(householdId: string) {
-    const allprofilesForEachHousehold = await getAllProfilesByHouseholdId(householdId);
-  const currentUserProfilesForAllHouseholds = allprofilesForEachHousehold?.filter((profile)=>profile.userId === activeUser.id);
+    const allprofilesForEachHousehold =
+      await getAllProfilesByHouseholdId(householdId);
+    const currentUserProfilesForAllHouseholds =
+      allprofilesForEachHousehold?.filter(
+        (profile) => profile.userId === activeUser.id,
+      );
     return currentUserProfilesForAllHouseholds;
   }
 
   const { theme, setColorScheme } = useTheme();
+  const colorScheme = useColorScheme();
   const [currentTheme, setCurrentTheme] = useState("auto");
+
   const handleToggleTheme = () => {
     if (setColorScheme) {
       setColorScheme(currentTheme === "dark" ? "light" : "dark");
@@ -194,9 +206,11 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
   const translateX = pan.interpolate({
     inputRange: [-50, 0, 50],
     outputRange: [-50, 0, 50],
-    extrapolate: 'clamp',
+    extrapolate: "clamp",
   });
 
+
+  const [editingStates, setEditingStates] = useState(Array(households?.length).fill(false));
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
@@ -238,9 +252,9 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
                 handleEnterHousehold(household);
               }}
             >
-              <View style={{ flexDirection: "row", alignItems: "center" }}>
-              {!isEditing &&  profiles[index] && (
-                //  profiles[index]!.map((profile, profileIndex) => (
+               <View style={{ flexDirection: "row", alignItems: "center" }}>
+                {!editingStates[index] && profiles[index] && (
+                 
                   <Image
                     key={0}
                     source={{
@@ -249,20 +263,69 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
                     style={{ height: 20, width: 20 }}
                     alt={`Avatar ${index}`}
                   />
-                //  )
-                 )
-               }  
-            
-              </View>
+                 
+                )}
+              </View> 
+              {/* <View style={styles.nameContainer}> */}
+              <View style={styles.taskItem}>
+                {editingStates[index] ? (
+                  <TextInput
+                    placeholder={household.name}
+                    onChangeText={(text) => {
+                      setUpdatedHouseholdname(text);
+                    }}
+                    style={{
+                      color: colorScheme === "dark" ? "white" : "black",
+                    }}
+                  />
+                ) : (
+                  <>
+                    <Text
+                      style={[
+                        styles.profileTitle,
+                        {
+                          color:
+                            colorScheme === "dark"
+                              ? "white"
+                              : theme.colors.text,
+                        },
+                      ]}
+                    >
+                      {household.name}
+                    </Text>
 
-              <View>
-                <Text style={theme.buttonText}>{household.name}</Text>
+                    <IconButton
+                      icon="pencil"
+                      size={20}
+                      onPress={() => {
+                        // Toggle the editing state for the clicked household
+                        const updatedEditingStates = [...editingStates];
+                        updatedEditingStates[index] = !editingStates[index];
+                        setEditingStates(updatedEditingStates);
+                      }}
+                    //   onPress={() => {
+                    //     setIsEditing(true);
+                    //   }}
+                    />
+                  </>
+                )}
               </View>
-
-              <View>
-                {/* if it is owner */}
-                <MaterialIcons name="edit" size={24} color="black" />
-              </View>
+              {editingStates[index] ? (
+                <View>
+                  <Button
+                    mode="elevated"
+                    onPress={() => cancelEditing(household)}
+                  >
+                    Avbryt
+                  </Button>
+                  <Button
+                    mode="elevated"
+                    onPress={() => handleHouseholdSaveClick(household.id)}
+                  >
+                    Spara
+                  </Button>
+                </View>
+              ) : null}
             </TouchableOpacity>
           ))}
         </ScrollView>
@@ -297,14 +360,11 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
               </Text>
             </View>
             <Animated.View
-          style={[
-            styles.innerButton,
-            { transform: [{ translateX }] },
-          ]}
-          {...panResponder.panHandlers}
-        >
-          <Text style={styles.innerButtonText}>auto</Text>
-        </Animated.View>        
+              style={[styles.innerButton, { transform: [{ translateX }] }]}
+              {...panResponder.panHandlers}
+            >
+              <Text style={styles.innerButtonText}>auto</Text>
+            </Animated.View>
             <View>
               <Text style={styles.themeButtonText}>
                 {currentTheme === "light" ? "light" : "dark"}
@@ -355,5 +415,18 @@ const styles = StyleSheet.create({
   bottomContent: {
     marginBottom: 0,
     alignItems: "center",
+  },
+  nameContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  taskItem: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  profileTitle: {
+    fontSize: 25,
+    textAlign: "center",
+    color: "black",
   },
 });
