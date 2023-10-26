@@ -1,7 +1,7 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { onAuthStateChanged } from "firebase/auth";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { auth } from "../api/config";
 import CreateProfileScreen from "../screens/CreateProfileScreen";
 import CreateTaskScreen from "../screens/CreateTaskScreen";
@@ -11,7 +11,6 @@ import HouseholdAccountScreen from "../screens/HouseholdAccountScreen";
 import ProfileAccountScreen from "../screens/ProfileAccountScreen";
 import SignInScreen from "../screens/SignInScreen";
 import TaskDetailScreen from "../screens/TaskDetailScreen";
-import { getProfilesByUserIdAsync } from "../store/profile/profileSlice";
 import CustomHeader from "../store/shared/CustomHeader";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { setActiveUser } from "../store/user/userSlice";
@@ -36,6 +35,7 @@ export default function RootNavigator() {
   const { isLoading } = useAppSelector((state) => state.app);
   const dispatch = useAppDispatch();
   const userSlice = useAppSelector((state) => state.user.user);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     onAuthStateChanged(auth, (userSlice) => {
@@ -43,9 +43,11 @@ export default function RootNavigator() {
         const uid = userSlice.uid;
         console.log("USER IS LOGGED IN", uid);
         dispatch(setActiveUser(uid));
+        setIsLoggedIn(true);
       } else {
         // User is signed out
         console.log("USER IS SIGNED OUT");
+        setIsLoggedIn(false);
         // Dispatch no user to redux
       }
     });
@@ -61,7 +63,7 @@ export default function RootNavigator() {
       // }
       >
         {/* <Stack.Screen name="SplashScreen" component={SplashScreen} /> */}
-        {userSlice ? (
+        {isLoggedIn ? (
           <>
             <Stack.Screen
               name="HouseholdAccount"
@@ -118,44 +120,3 @@ export default function RootNavigator() {
     </NavigationContainer>
   );
 }
-// <NavigationContainer>
-//   <Stack.Navigator>
-//     {user ? (
-//       <>
-//         <Stack.Screen
-//           name="HouseholdAccountScreen"
-//           component={HouseholdAccountScreen}
-//           options={{ title: "Välkommen" }}
-//         />
-//         <Stack.Screen
-//           name="HouseholdTasksScreen"
-//           component={HouseholdTasksScreen}
-//           options={{ title: "Hushållet" }}
-//         />
-
-//         <Stack.Screen
-//           name="HandleHouseholdScreen"
-//           component={HandleHouseholdScreen}
-//           options={{ title: "Skapa hushåll" }}
-//         />
-//         <Stack.Screen //fråga david hur tänka kring navigationen här med statistik och swipe
-//           name="StatisticScreen"
-//           component={StatisticScreen}
-//           options={{ title: "Hushållet" }}
-//         />
-//         <Stack.Screen
-//           name="TaskDetailScreen"
-//           component={TaskDetailScreen}
-//           options={{ title: "Detaljer" }}
-//         />
-//         <Stack.Screen
-//           name="CreateTaskScreen"
-//           component={CreateTaskScreen}
-//           options={{ title: "Skapa syssla" }}
-//         />
-//       </>
-//     ) : (
-
-//     )}
-//   </Stack.Navigator>
-// </NavigationContainer>
