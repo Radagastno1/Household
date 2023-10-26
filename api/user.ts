@@ -25,8 +25,6 @@ export const addUserToDB = async (createUser: UserCreate) => {
     console.log(userCredential.user);
     return {
       uid: userCredential.user.uid,
-      displayName: "TODO",
-      email: userCredential.user.email!,
     } satisfies User;
   } catch (error: any) {
     console.error(error);
@@ -44,8 +42,6 @@ export const signInWithAPI = async (createUser: UserCreate) => {
     console.log(userCredential.user);
     return {
       uid: userCredential.user.uid,
-      displayName: "TODO",
-      email: userCredential.user.email!,
     } satisfies User;
   } catch (error: any) {
     console.error(error);
@@ -54,28 +50,28 @@ export const signInWithAPI = async (createUser: UserCreate) => {
   }
 };
 
-export const editUserToDB = async (user: User) => {
-  user.householdId = "";
-  const userCollectionRef = collection(db, "users");
+// export const editUserToDB = async (user: User) => {
+//   // user.householdId = "";
+//   const userCollectionRef = collection(db, "users");
 
-  try {
-    const userRef = doc(userCollectionRef, user.uid);
+//   try {
+//     const userRef = doc(userCollectionRef, user.uid);
 
-    const updatedUserData = {
-      id: user.uid,
-      name: user.displayName,
-      password: user.password,
-      username: user.username,
-    };
+//     const updatedUserData = {
+//       id: user.uid,
+//       name: user.displayName,
+//       password: user.password,
+//       username: user.username,
+//     };
 
-    await updateDoc(userRef, updatedUserData);
+//     await updateDoc(userRef, updatedUserData);
 
-    return user;
-  } catch (error) {
-    console.error("Fel vid redigering av uppgift:", error);
-    return null;
-  }
-};
+//     return user;
+//   } catch (error) {
+//     console.error("Fel vid redigering av uppgift:", error);
+//     return null;
+//   }
+// };
 
 // export const getUsersFromDB = async (householdId: string) => {
 //   try {
@@ -98,27 +94,27 @@ export const editUserToDB = async (user: User) => {
 //     return []; // Return an empty array in case of an error
 //   }
 // };
-export const getUsersFromDB = async (username: string) => {
-  try {
-    const userCollectionRef = collection(db, "users");
+// export const getUsersFromDB = async (username: string) => {
+//   try {
+//     const userCollectionRef = collection(db, "users");
 
-    const q = query(userCollectionRef, where("username", "==", username));
+//     const q = query(userCollectionRef, where("username", "==", username));
 
-    const querySnapshot = await getDocs(q);
+//     const querySnapshot = await getDocs(q);
 
-    const users: User[] = [];
+//     const users: User[] = [];
 
-    querySnapshot.forEach((doc) => {
-      users.push(doc.data() as User);
-    });
+//     querySnapshot.forEach((doc) => {
+//       users.push(doc.data() as User);
+//     });
 
-    console.log("Uppgifter hämtade:", users);
-    return users;
-  } catch (error) {
-    console.error("Error fetching users:", error);
-    return null;
-  }
-};
+//     console.log("Uppgifter hämtade:", users);
+//     return users;
+//   } catch (error) {
+//     console.error("Error fetching users:", error);
+//     return null;
+//   }
+// };
 
 export const deleteUserFromDB = async (userId: string) => {
   try {

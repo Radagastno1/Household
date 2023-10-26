@@ -12,10 +12,9 @@ import ProfileAccountScreen from "../screens/ProfileAccountScreen";
 import SignInScreen from "../screens/SignInScreen";
 import TaskDetailScreen from "../screens/TaskDetailScreen";
 import CustomHeader from "../store/shared/CustomHeader";
-import { useAppSelector } from "../store/store";
+import { useAppDispatch, useAppSelector } from "../store/store";
+import { setActiveUser } from "../store/user/userSlice";
 import TopTabNavigator from "./TopTabNavigator";
-import SplashScreen from "../screens/SplashScreen";
-import { loginUser } from "../store/user/userSlice";
 
 export type RootStackParamList = {
   SplashScreen: undefined;
@@ -34,15 +33,15 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function RootNavigator() {
   const { isLoading } = useAppSelector((state) => state.app);
-
-  const userSlice = useAppSelector((state) => state.userAccount.user);
+  const dispatch = useAppDispatch();
+  const userSlice = useAppSelector((state) => state.user.user);
 
   useEffect(() => {
     onAuthStateChanged(auth, (userSlice) => {
       if (userSlice) {
         const uid = userSlice.uid;
         console.log("USER IS LOGGED IN", uid);
-        return loginUser(userSlice);
+        dispatch(setActiveUser(uid));
       } else {
         // User is signed out
         console.log("USER IS SIGNED OUT");

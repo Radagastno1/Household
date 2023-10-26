@@ -1,8 +1,6 @@
 export interface User {
-  [x: string]: any;
   uid: string;
-  displayName: string | null;
-  email: string | null;
+  // displayName: string | null;
 }
 
 export interface UserCreate {

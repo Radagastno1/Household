@@ -1,7 +1,8 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import React, { useEffect, useRef, useState } from "react";
 import {
-    Animated,
+  Alert,
+  Animated,
   Image,
   PanResponder,
   ScrollView,
@@ -26,6 +27,8 @@ import {
 } from "../store/profile/profileSlice";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { Household, Profile } from "../types";
+import { signOut } from "firebase/auth";
+import { auth } from "../api/config";
 
 // const styles = StyleSheet.create({
 //   container: {
@@ -54,9 +57,10 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
         // get all householdIds under user
         const householdsIds = await GetHouseholdIdsFromActiveUser();
         const profilesByHouse = await Promise.all(
-          householdsIds.map((houseId) => GetProfilesForEachHousehold(houseId)),
+          householdsIds!.map((houseId) => GetProfilesForEachHousehold(houseId)),
         );
         setProfiles(profilesByHouse);
+        console.log("profiler : ", profiles);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -67,12 +71,14 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
 
   async function GetHouseholdIdsFromActiveUser() {
     const householdsId: string[] = [];
-    const profiles = await getAllProfilesByUserId(activeUser.id);
-    profiles?.map((profile) => {
-      const id = profile.householdId;
-      householdsId.push(id);
-    });
-    return householdsId;
+    if (activeUser) {
+      const profiles = await getAllProfilesByUserId(activeUser?.uid);
+      profiles?.map((profile) => {
+        const id = profile.householdId;
+        householdsId.push(id);
+      });
+      return householdsId;
+    }
   }
 
   async function GetHouseholds() {
@@ -81,7 +87,7 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
       .then(async (householdsIds) => {
         const households: Household[] = [];
         await Promise.all(
-          householdsIds.map(async (household) => {
+          householdsIds!.map(async (household) => {
             const fetchHousehold = await getHouseholdsFromDB(household);
             if (fetchHousehold) {
               households.push(fetchHousehold);
@@ -105,15 +111,19 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
     dispatch(sethouseholdActive(household));
     try {
       // Fetch all profiles for the household
-      await dispatch(fetchAllProfilesByHousehold(household.id, activeUser));
-      //här måste man sätta aktiva profilen
-      dispatch(
-        setProfileByHouseholdAndUser({
-          userId: activeUser.id,
-          householdId: household.id,
-        }),
-      );
+      if (activeUser) {
+        await dispatch(
+          fetchAllProfilesByHousehold(household.id, activeUser.uid),
+        );
 
+        //här måste man sätta aktiva profilen
+        dispatch(
+          setProfileByHouseholdAndUser({
+            userId: activeUser.uid,
+            householdId: household.id,
+          }),
+        );
+      }
       console.log("aktiva profilen: ");
       // Navigate to the ProfileAccount screen
       navigation.navigate("ProfileAccount", {
@@ -123,6 +133,24 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
       console.error("Error entering household:", error);
     }
   };
+
+  function handleLogOut() {
+    signOut(auth)
+      .then(() => {
+        // Loggning ut framgångsrikt
+        console.log("Användaren har loggats ut");
+        // Du kan också navigera användaren till din utloggningsskärm här om så önskas
+        // navigation.navigate("LogoutScreen");
+      })
+      .catch((error) => {
+        // Logga ut misslyckades, visa felmeddelande
+        console.error("Fel vid utloggning:", error.message);
+        Alert.alert(
+          "Fel vid utloggning",
+          "Det uppstod ett fel vid utloggningen.",
+        );
+      });
+  }
 
   async function GetProfilesForEachHousehold(householdId: string) {
     const profiles = await getAllProfilesByHouseholdId(householdId);
@@ -155,64 +183,61 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
   const translateX = pan.interpolate({
     inputRange: [-50, 0, 50],
     outputRange: [-50, 0, 50],
-    extrapolate: 'clamp',
+    extrapolate: "clamp",
   });
 
-//   const panResponder = PanResponder.create({
-//     onStartShouldSetPanResponder: () => true,
-//     onPanResponderMove: (e, gestureState) => {
-//       pan.setValue(gestureState.dx);
-//     },
-//     onPanResponderRelease: (e, gestureState) => {
-//       if (Math.abs(gestureState.dx) > 50) {
-//         handleToggleTheme();
-//       }
+  //   const panResponder = PanResponder.create({
+  //     onStartShouldSetPanResponder: () => true,
+  //     onPanResponderMove: (e, gestureState) => {
+  //       pan.setValue(gestureState.dx);
+  //     },
+  //     onPanResponderRelease: (e, gestureState) => {
+  //       if (Math.abs(gestureState.dx) > 50) {
+  //         handleToggleTheme();
+  //       }
 
-//       Animated.spring(pan, {
-//         toValue: 0,
-//         friction: 5,
-//         useNativeDriver: false,
-//       }).start();
-//     },
-//   });
+  //       Animated.spring(pan, {
+  //         toValue: 0,
+  //         friction: 5,
+  //         useNativeDriver: false,
+  //       }).start();
+  //     },
+  //   });
 
-//   const translateX = pan.interpolate({
-//     inputRange: [-50, 0, 50],
-//     outputRange: [-50, 0, 50],
-//     extrapolate: 'clamp',
-//   });
+  //   const translateX = pan.interpolate({
+  //     inputRange: [-50, 0, 50],
+  //     outputRange: [-50, 0, 50],
+  //     extrapolate: 'clamp',
+  //   });
 
-//   const panResponder = PanResponder.create({
-//     onStartShouldSetPanResponder: () => true,
-//     onPanResponderMove: (e, gestureState) => {
-//       pan.setValue(gestureState.dx);
-//     },
-//     onPanResponderRelease: (e, gestureState) => {
-//       if (gestureState.dx > 50) {
-//         handleToggleTheme();
-//         Animated.timing(pan, {
-//           toValue: 0,
-//           duration: 300,
-//           useNativeDriver: false,
-//         }).start();
-//       } else {
-//         Animated.spring(pan, {
-//           toValue: 0,
-//           friction: 5,
-//           useNativeDriver: false,
-//         }).start();
-//       }
-//     },
-//   });
+  //   const panResponder = PanResponder.create({
+  //     onStartShouldSetPanResponder: () => true,
+  //     onPanResponderMove: (e, gestureState) => {
+  //       pan.setValue(gestureState.dx);
+  //     },
+  //     onPanResponderRelease: (e, gestureState) => {
+  //       if (gestureState.dx > 50) {
+  //         handleToggleTheme();
+  //         Animated.timing(pan, {
+  //           toValue: 0,
+  //           duration: 300,
+  //           useNativeDriver: false,
+  //         }).start();
+  //       } else {
+  //         Animated.spring(pan, {
+  //           toValue: 0,
+  //           friction: 5,
+  //           useNativeDriver: false,
+  //         }).start();
+  //       }
+  //     },
+  //   });
 
-//   const translateX = pan.interpolate({
-//     inputRange: [0, 50],
-//     outputRange: [0, 50],
-//     extrapolate: 'clamp',
-//   });
-
-
-
+  //   const translateX = pan.interpolate({
+  //     inputRange: [0, 50],
+  //     outputRange: [0, 50],
+  //     extrapolate: 'clamp',
+  //   });
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
@@ -223,9 +248,7 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
               alignItems: "center",
               justifyContent: "center",
             }}
-            title={
-              activeUser ? `Välkommen ${activeUser.username}` : "Välkommen"
-            }
+            title={"Välkommen"}
           />
         </Appbar.Header>
       </View>
@@ -291,7 +314,7 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
 
         <TouchableOpacity
           style={theme.cardButton as any}
-          onPress={() => navigation.navigate("Login")}
+          onPress={handleLogOut}
         >
           <Text style={theme.buttonText}>Logga ut</Text>
         </TouchableOpacity>
@@ -312,14 +335,11 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
               </Text>
             </View>
             <Animated.View
-          style={[
-            styles.innerButton,
-            { transform: [{ translateX }] },
-          ]}
-          {...panResponder.panHandlers}
-        >
-          <Text style={styles.innerButtonText}>auto</Text>
-        </Animated.View>        
+              style={[styles.innerButton, { transform: [{ translateX }] }]}
+              {...panResponder.panHandlers}
+            >
+              <Text style={styles.innerButtonText}>auto</Text>
+            </Animated.View>
             <View>
               <Text style={styles.themeButtonText}>
                 {currentTheme === "light" ? "light" : "dark"}

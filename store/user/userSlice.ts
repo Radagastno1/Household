@@ -1,16 +1,14 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { addUserToDB, getUsersFromDB } from "../../api/user";
+import { addUserToDB, signInWithAPI } from "../../api/user";
 import { User, UserCreate } from "../../types";
 
 interface UserState {
-  user: any;
-  users: User[];
+  user: User | undefined;
   filteredUsers: User[];
   selectedUser: User | null;
 }
 
 export const initialState: UserState = {
-  users: [],
   filteredUsers: [],
   selectedUser: null,
   user: undefined,
@@ -39,36 +37,30 @@ const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    loginUser: (state, action: PayloadAction<User>) => {
+    loginUser: (state, action: PayloadAction<UserCreate>) => {
       console.log("Vi kommer hit");
-      state.user = action.payload;
+      signInWithAPI(action.payload).then((user) => {
+        if (user) {
+          state.user = user;
+        }
+      });
     },
 
     logOutUser: (state) => {
       state.user = initialState.user;
     },
-    setUsers: (state, action) => {
-      state.users = action.payload;
+    setActiveUser: (state, action) => {
+      const activeUser: User = { uid: action.payload };
+      state.user = activeUser;
     },
-  },
-  extraReducers: (builder) => {
-    builder
-      .addCase(addUserAsync.fulfilled, (state, action) => {
-        if (action.payload) {
-          state.users = [...state.users, action.payload];
-        }
-      })
-      .addCase(addUserAsync.rejected, (state, action) => {
-        console.log("error vid add user: ", action.payload);
-      });
   },
 });
 
-export const fetchUsers =
-  (activeHouseholdId: string) => async (dispatch: any, _getState: any) => {
-    const users = await getUsersFromDB(activeHouseholdId);
-    dispatch(userSlice.actions.setUsers(users));
-  };
+// export const fetchUsers =
+//   (activeHouseholdId: string) => async (dispatch: any, _getState: any) => {
+//     const users = await getUsersFromDB(activeHouseholdId);
+//     dispatch(userSlice.actions.setUsers(users));
+//   };
 
 export const userReducer = userSlice.reducer;
-export const { loginUser, logOutUser, setUsers } = userSlice.actions;
+export const { loginUser, logOutUser, setActiveUser } = userSlice.actions;
