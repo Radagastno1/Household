@@ -1,5 +1,4 @@
 import { MaterialIcons } from "@expo/vector-icons";
-import { useFocusEffect } from "@react-navigation/native";
 import { signOut } from "firebase/auth";
 import React, { useEffect, useRef, useState } from "react";
 import {
@@ -38,6 +37,7 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
   const profiles = useAppSelector((state) => state.profile.profiles);
   const households = useAppSelector((state) => state.household.households);
   const [profilesLoaded, setProfilesLoaded] = useState(false);
+  const activeProfile = useAppSelector((state) => state.profile.activeProfile);
   let householdIds: string[] = [];
   console.log("Nu är användaren ", activeUser, "inloggad");
 
@@ -45,94 +45,36 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
     console.log("USEFFECT");
 
     console.log("anropar thunken");
-    dispatch(getProfilesByUserIdAsync(activeUser?.uid ?? "hej")).then(
-      (profiles) => {
-        setProfilesLoaded;
-      },
-    );
+    dispatch(getProfilesByUserIdAsync(activeUser?.uid ?? "hej")).then(() => {
+      setProfilesLoaded(true);
+    });
     console.log("nu kollar den efter profiler", profiles);
     householdIds = profiles.map((p) => p.householdId);
-  }, [activeUser]);
+  }, [!profilesLoaded]);
 
   useEffect(() => {
     dispatch(getHouseholdsByHouseholdIdAsync(householdIds));
-    console.log("HOUSEHOLDIDS: ", householdIds);
   }, [profilesLoaded]);
-
-  // Andra useFocusEffect
-  // useFocusEffect(
-  //   React.useCallback(() => {
-  //     const fetchData = async () => {
-  //       if (activeUser) {
-  //         console.log("anropar thunken");
-  //         dispatch(getProfilesByUserIdAsync(activeUser.uid));
-  //         // if (profiles) {
-  //         console.log("nu kollar den efter profiler", profiles);
-  //         const householdsId = profiles.map((p) => p.householdId);
-  //         dispatch(getHouseholdsByHouseholdIdAsync(householdsId));
-  //       }
-  //       fetchData();
-  //     };
-  //   }, [activeUser]),
-  // );
-  // async function GetHouseholdIdsFromActiveUser() {
-  //   const householdsId: string[] = [];
-  //   if (activeUser) {
-  //     console.log("aktiva user: ", activeUser);
-  //     const profiles = await getAllProfilesByUserId(activeUser?.uid);
-  //     profiles?.map((profile) => {
-  //       const id = profile.householdId;
-  //       householdsId.push(id);
-  //     });
-  //     return householdsId;
-  //   }
-  // }
-
-  // async function GetHouseholds() {
-  //   // Anropa GetProfilesFromActiveUser och använd .then
-  //   return GetHouseholdIdsFromActiveUser()
-  //     .then(async (householdsIds) => {
-  //       const households: Household[] = [];
-  //       await Promise.all(
-  //         householdsIds!.map(async (household) => {
-  //           const fetchHousehold = await getHouseholdsFromDB(household);
-  //           if (fetchHousehold) {
-  //             households.push(fetchHousehold);
-  //           }
-  //         }),
-  //       );
-  //       return households;
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error fetching households:", error);
-  //       return [];
-  //     });
-  // }
-
-  //   const activeProfile = useAppSelector((state) => state.profile.activeProfile);
 
   const handleEnterHousehold = async (household: Household) => {
     dispatch(sethouseholdActive(household));
     try {
-      // Fetch all profiles for the household
-      if (activeUser) {
-        await dispatch(
-          fetchAllProfilesByHousehold(household.id, activeUser.uid),
-        );
-
-        //här måste man sätta aktiva profilen
-        dispatch(
-          setProfileByHouseholdAndUser({
-            userId: activeUser.uid,
-            householdId: household.id,
-          }),
-        );
+      await dispatch(
+        fetchAllProfilesByHousehold(household.id, activeUser!.uid),
+      );
+      dispatch(
+        setProfileByHouseholdAndUser({
+          userId: activeUser!.uid,
+          householdId: household.id,
+        }),
+      );
+      console.log("FRÅN HOUSEHOLDACCOUNT: ", activeProfile?.id);
+      console.log("aktiva profilen: ", activeProfile);
+      if (activeProfile) {
+        navigation.navigate("ProfileAccount", {
+          householdId: household.id,
+        });
       }
-      console.log("aktiva profilen: ");
-      // Navigate to the ProfileAccount screen
-      navigation.navigate("ProfileAccount", {
-        householdId: household.id,
-      });
     } catch (error) {
       console.error("Error entering household:", error);
     }
@@ -141,13 +83,9 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
   function handleLogOut() {
     signOut(auth)
       .then(() => {
-        // Loggning ut framgångsrikt
         console.log("Användaren har loggats ut");
-        // Du kan också navigera användaren till din utloggningsskärm här om så önskas
-        // navigation.navigate("LogoutScreen");
       })
       .catch((error) => {
-        // Logga ut misslyckades, visa felmeddelande
         console.error("Fel vid utloggning:", error.message);
         Alert.alert(
           "Fel vid utloggning",
@@ -155,15 +93,6 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
         );
       });
   }
-
-  // async function GetProfilesForEachHousehold(householdId: string) {
-  //   const profiles = await getAllProfilesByHouseholdId(householdId).then(
-  //     (profiles) => {
-  //       return profiles;
-  //     },
-  //   );
-  //   return profiles;
-  // }
 
   const { theme, setColorScheme } = useTheme();
   const [currentTheme, setCurrentTheme] = useState("auto");
@@ -183,7 +112,6 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
     onPanResponderRelease: (e, gestureState) => {
       if (Math.abs(gestureState.dx) > 50) {
         handleToggleTheme();
-        // Do not reset the position here
       }
     },
   });
@@ -193,59 +121,6 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
     outputRange: [-50, 0, 50],
     extrapolate: "clamp",
   });
-
-  //   const panResponder = PanResponder.create({
-  //     onStartShouldSetPanResponder: () => true,
-  //     onPanResponderMove: (e, gestureState) => {
-  //       pan.setValue(gestureState.dx);
-  //     },
-  //     onPanResponderRelease: (e, gestureState) => {
-  //       if (Math.abs(gestureState.dx) > 50) {
-  //         handleToggleTheme();
-  //       }
-
-  //       Animated.spring(pan, {
-  //         toValue: 0,
-  //         friction: 5,
-  //         useNativeDriver: false,
-  //       }).start();
-  //     },
-  //   });
-
-  //   const translateX = pan.interpolate({
-  //     inputRange: [-50, 0, 50],
-  //     outputRange: [-50, 0, 50],
-  //     extrapolate: 'clamp',
-  //   });
-
-  //   const panResponder = PanResponder.create({
-  //     onStartShouldSetPanResponder: () => true,
-  //     onPanResponderMove: (e, gestureState) => {
-  //       pan.setValue(gestureState.dx);
-  //     },
-  //     onPanResponderRelease: (e, gestureState) => {
-  //       if (gestureState.dx > 50) {
-  //         handleToggleTheme();
-  //         Animated.timing(pan, {
-  //           toValue: 0,
-  //           duration: 300,
-  //           useNativeDriver: false,
-  //         }).start();
-  //       } else {
-  //         Animated.spring(pan, {
-  //           toValue: 0,
-  //           friction: 5,
-  //           useNativeDriver: false,
-  //         }).start();
-  //       }
-  //     },
-  //   });
-
-  //   const translateX = pan.interpolate({
-  //     inputRange: [0, 50],
-  //     outputRange: [0, 50],
-  //     extrapolate: 'clamp',
-  //   });
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.background }}>

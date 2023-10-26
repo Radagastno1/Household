@@ -5,6 +5,7 @@ import {
   Animated,
   Easing,
   Keyboard,
+  KeyboardAvoidingView,
   StyleSheet,
   TouchableOpacity,
   TouchableWithoutFeedback,
@@ -172,11 +173,11 @@ export const SignInScreen = ({ navigation }: SignInProps) => {
               {/* <TouchableOpacity
                 style={theme.signupButton as any}
                 onPress={clearFieldsAndTogglePassword}
-              >
+                >
                 <Text style={theme.buttonText}>
                   {showPassword ? "Ta bort lösenord" : "Glömt lösenord?"}
-                </Text>
-              </TouchableOpacity> */}
+                  </Text>
+                </TouchableOpacity> */}
             </View>
           </View>
         </View>
