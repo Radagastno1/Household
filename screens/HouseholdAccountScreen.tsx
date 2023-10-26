@@ -35,6 +35,7 @@ import { Household, Profile } from "../types";
 type HouseholdProps = RootNavigationScreenProps<"HouseholdAccount">;
 
 export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
+    const dispatch = useAppDispatch();
   const activeUser = useAppSelector((state) => state.user.user);
   const [households, setHouseholds] = useState<Household[] | undefined>([]);
   const [profiles, setProfiles] = useState<(Profile[] | undefined)[]>([]);
@@ -126,9 +127,8 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
       });
   }
 
-  const dispatch = useAppDispatch();
-//   const householdSlice = useAppSelector((state) => state.household);
-//   const allHouseholds = householdSlice.households;
+  
+
 
   const handleEnterHousehold = async (household: Household) => {
     dispatch(sethouseholdActive(household));
@@ -225,7 +225,8 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
               key={index}
               style={[
                 theme.cardButton as any,
-                { flexDirection: "row", justifyContent: "space-between" },
+                { alignItems:"flex-start",justifyContent:"space-between",
+             },
               ]}
               onPress={() => {
                 if (!editingStates[index]) {
@@ -233,7 +234,13 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
                 }
               }}
             >
-              <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <View 
+              style={{ 
+                flexDirection: "row", 
+                alignItems: "center",
+                alignContent:"center",
+                }}>
+                <View>
                 {!editingStates[index] && profiles[index] && (
                   <Image
                     key={0}
@@ -245,9 +252,9 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
                   />
                 )}
               </View>
-              {/* <View style={styles.nameContainer}> */}
-              <View style={styles.taskItem}>
+             
                 {editingStates[index] ? (
+                    
                   <TextInput
                     placeholder={household.name}
                     onChangeText={(text) => {
@@ -255,10 +262,20 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
                     }}
                     style={{
                       color: colorScheme === "dark" ? "white" : "black",
+                      borderWidth: 1, 
+                      borderColor: 'lightgray', 
+                      borderRadius: 5,
+                      padding:10 
                     }}
                   />
                 ) : (
-                  <>
+                  <View 
+                  style={{ 
+                    flexDirection: "row", 
+                    alignItems: "center",justifyContent:"space-between",
+                   
+                    }}>
+                
                     <Text
                       style={[
                         styles.profileTitle,
@@ -267,14 +284,17 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
                             colorScheme === "dark"
                               ? "white"
                               : theme.colors.text,
+                              marginLeft:10
                         },
                       ]}
                     >
                       {household.name}
                     </Text>
-
+                    {/* </View> */}
+                    
                     <IconButton
                       icon="pencil"
+                      
                       size={20}
                       onPress={() => {
                         // Toggle the editing state for the clicked household
@@ -283,20 +303,27 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
                         setEditingStates(updatedEditingStates);
                       }}
                     />
-                  </>
+                    
+                  </View>
                 )}
               </View>
               {editingStates[index] ? (
-                <View>
+                <View style={{
+                    flexDirection:"row"
+                    }}>
+                    <View>
                   <Button mode="elevated" onPress={() => cancelEditing(index)}>
                     Avbryt
                   </Button>
+                  </View>
+                  <View>
                   <Button
                     mode="elevated"
                     onPress={() => handleHouseholdSaveClick(household.id)}
                   >
                     Spara
                   </Button>
+                  </View>
                 </View>
               ) : null}
             </TouchableOpacity>
