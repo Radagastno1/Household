@@ -74,15 +74,11 @@ export default function CreateProfileScreen({
     ),
   );
 
-  //     // Lite slarvigt kanske en stund här men funkar sålänge
-  // const hasActiveProfiles = activeProfiles.length > 0;
-
-  // const isOwner = !hasActiveProfiles;
-  // const isAvatarOccupied = (avatarId: string) => {
-  //   return activeProfiles.some((profile) => profile.avatar === avatarId);
-  // };
-
-  //då måste man kolla det hushållet som gäller - vilka profiler och avatarer den har!
+  //SÅHÄR SKA FLÖDET VARA:
+  //1. hämta isowner från params
+  //2. om det är isowner då är det ju bara biet
+  //3. om det inte är isowner då får man hämta det hushållets profiler och kolla de ockuperade avatarerna
+  //4. kunna välja de avatarerna som inte är ockuperade
   const isAvatarOccupied = (avatarId: string) => {
     return activeProfiles.some((profile) => profile.avatar === avatarId);
   };
