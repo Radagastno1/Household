@@ -15,10 +15,7 @@ import {
 } from "react-native";
 import { useTheme } from "../contexts/themeContext";
 import { RootNavigationScreenProps } from "../navigators/navigationTypes";
-import {
-  addProfile,
-  getProfilesByHouseholdId,
-} from "../store/profile/profileSlice";
+import { addProfile } from "../store/profile/profileSlice";
 import { useAppSelector } from "../store/store";
 
 type CreateProfileProps = RootNavigationScreenProps<"CreateProfile">;
@@ -85,6 +82,7 @@ export default function CreateProfileScreen({
   //   return activeProfiles.some((profile) => profile.avatar === avatarId);
   // };
 
+  //då måste man kolla det hushållet som gäller - vilka profiler och avatarer den har!
   const isAvatarOccupied = (avatarId: string) => {
     return activeProfiles.some((profile) => profile.avatar === avatarId);
   };
@@ -158,39 +156,59 @@ export default function CreateProfileScreen({
           ]}
           onChangeText={(text) => setHouseholdName(text)}
         />
+
         <View style={styles.avatarsContainer}>
           {avatars.map((avatar) => {
-            const isOccupied = avatar.id !== Avatars.Bee;
-
-            isAvatarOccupied(avatar.id);
+            const isOccupied = isAvatarOccupied(avatar.id);
             const isSelected = selectedAvatar === avatar.id;
 
-            const avatarStyles = [
-              styles.avatar,
-              isOccupied ? styles.occupiedAvatar : undefined,
-              isAvatarOccupied(avatar.id) ? styles.occupiedAvatar : undefined,
-              isSelected ? styles.selectedAvatar : undefined,
-              { backgroundColor: AvatarColors[avatar.id as Avatars] },
-            ];
+            if (isOwner) {
+              // Show only the Bee avatar for the owner
+              if (avatar.id === Avatars.Bee) {
+                return (
+                  <TouchableOpacity
+                    key={avatar.id}
+                    style={styles.avatar}
+                    onPress={() => setSelectedAvatar(avatar.id as Avatars)}
+                  >
+                    <Image
+                      source={{ uri: AvatarUrls[avatar.id as Avatars] }}
+                      style={styles.avatarImage}
+                    />
+                  </TouchableOpacity>
+                );
+              } else {
+                return null; // Hide other avatars for the owner
+              }
+            } else {
+              // Show all avatars for non-owners
+              const avatarStyles = [
+                styles.avatar,
+                isOccupied ? styles.occupiedAvatar : undefined,
+                isSelected ? styles.selectedAvatar : undefined,
+                { backgroundColor: AvatarColors[avatar.id as Avatars] },
+              ];
 
-            return (
-              <TouchableOpacity
-                key={avatar.id}
-                style={avatarStyles}
-                onPress={() => {
-                  if (!isAvatarOccupied(avatar.id)) {
-                    setSelectedAvatar(avatar.id as Avatars);
-                  }
-                }}
-              >
-                <Image
-                  source={{ uri: AvatarUrls[avatar.id as Avatars] }}
-                  style={styles.avatarImage}
-                />
-              </TouchableOpacity>
-            );
+              return (
+                <TouchableOpacity
+                  key={avatar.id}
+                  style={avatarStyles}
+                  onPress={() => {
+                    if (!isOccupied) {
+                      setSelectedAvatar(avatar.id as Avatars);
+                    }
+                  }}
+                >
+                  <Image
+                    source={{ uri: AvatarUrls[avatar.id as Avatars] }}
+                    style={styles.avatarImage}
+                  />
+                </TouchableOpacity>
+              );
+            }
           })}
         </View>
+
         <Button
           style={theme.button as any}
           onPress={saveProfile}
