@@ -65,11 +65,11 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
   const [isEditing, setIsEditing] = useState(false);
 
   const [updatedProfileName, setUpdatedProfilename] = useState(
-    activeProfile?.profileName
+    activeProfile?.profileName,
   );
 
   const [updatedHouseholdName, setUpdatedHouseholdname] = useState(
-    activeProfile?.profileName
+    activeProfile?.profileName,
   );
 
   const { theme } = useTheme();
@@ -79,7 +79,7 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
   const [headerTitle, setHeaderTitle] = useState<string>(
     activeHousehold?.name ?? "",
   );
-  const households = useAppSelector((state) => state.household.households)
+  const households = useAppSelector((state) => state.household.households);
   useEffect(() => {
     if (activeProfile && activeHousehold) {
       const household = households.find(
@@ -89,22 +89,17 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
         setHeaderTitle(household.name);
       }
       console.log("aktiva hushållsid:", activeHousehold.id);
+      console.log("aktiva profilid:", activeProfile.id);
       dispatch(fetchTasks(activeHousehold?.id));
     }
   }, [activeProfile]);
 
-
   useEffect(() => {
     if (activeProfile) {
-      
       setUpdatedProfilename(activeProfile.profileName);
-      setUpdatedHouseholdname(activeHousehold?.name)
+      setUpdatedHouseholdname(activeHousehold?.name);
     }
   }, [activeProfile]);
-
-
-  
-  
 
   const handleSaveClick = () => {
     if (activeProfile) {
@@ -112,26 +107,23 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
         editProfileName({
           profileId: activeProfile?.id,
           newProfileName: updatedProfileName ?? activeProfile.profileName,
-          
         }),
       );
       setIsEditing(false);
-      console.log("NYA PROFILNAMNET", {updatedProfileName})
+      console.log("NYA PROFILNAMNET", { updatedProfileName });
     }
   };
 
-  
   const handleHouseholdSaveClick = async () => {
     if (activeHousehold) {
-       dispatch(
+      dispatch(
         editHouseHoldeName({
           householdId: activeHousehold.id,
           newHouseholdName: updatedHouseholdName ?? activeHousehold.name,
-          
         }),
       );
       setIsEditing(false);
-      console.log("NYA PROFILNAMNET", {updatedHouseholdName})
+      console.log("NYA PROFILNAMNET", { updatedHouseholdName });
     }
   };
 
@@ -155,7 +147,7 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
             Profilnamn: {activeProfile?.profileName}
           </Text>
         </View>
-     
+
         <Image
           source={{ uri: AvatarUrls[activeProfile?.avatar as Avatars] }}
           style={{ height: 20, width: 20 }}
@@ -209,10 +201,9 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
 
           {isEditing ? <Button onPress={handleSaveClick}>Spara</Button> : null}
 
-
           <Card style={styles.card}>
             <View style={styles.taskItem}>
-            <View style={styles.nameContainer}>
+              <View style={styles.nameContainer}>
                 {isEditing ? (
                   <TextInput
                     placeholder={activeHousehold?.name}
@@ -239,7 +230,7 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
               </View>
               {/* <View style={styles.nameContainer}>
                 {/* tog headertitle som du satt till hushållsnamnet för att testa så det funkar */}
-                {/* <Text variant="titleLarge">{headerTitle}</Text>
+              {/* <Text variant="titleLarge">{headerTitle}</Text>
               </View>  */}
 
               <IconButton
@@ -249,12 +240,14 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
                   setIsEditing(true);
                 }}
               />
-              
+
               {/* <IconButton icon="pencil" size={20} onPress={() => {}} /> */}
             </View>
           </Card>
 
-          {isEditing ? <Button onPress={handleHouseholdSaveClick}>Spara</Button> : null}
+          {isEditing ? (
+            <Button onPress={handleHouseholdSaveClick}>Spara</Button>
+          ) : null}
 
           <Card style={styles.card} onPress={() => setModalVisible(true)}>
             <View style={styles.taskItem}>

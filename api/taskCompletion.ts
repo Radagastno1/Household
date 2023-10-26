@@ -17,6 +17,7 @@ import { db } from "./config";
 const taskCompletionCollectionRef = collection(db, "taskCompletions");
 
 export const addTaskCompletionToDB = async (taskCompletion: TaskCompletion) => {
+  console.log("taskcompletion: ", taskCompletion);
   try {
     const taskCompletionWithTimestamp =
       addTimestampToTaskCompletion(taskCompletion);
@@ -28,7 +29,7 @@ export const addTaskCompletionToDB = async (taskCompletion: TaskCompletion) => {
       "Dokumentreferens id:",
       docRef.id,
       " och task completions id:",
-      taskCompletion.id,
+      taskCompletionWithTimestamp.id,
     );
 
     await updateDoc(

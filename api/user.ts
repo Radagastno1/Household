@@ -1,72 +1,77 @@
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 import "firebase/firestore";
 import {
-  addDoc,
   collection,
   deleteDoc,
   doc,
-  getDoc,
   getDocs,
   query,
   updateDoc,
   where,
 } from "firebase/firestore";
-import { User } from "../types";
-import { db } from "./config";
+import { User, UserCreate } from "../types";
+import { auth, db } from "./config";
 
-export const addUserToDB = async (user: User) => {
-  const userCollectionRef = collection(db, "users");
-
+export const addUserToDB = async (createUser: UserCreate) => {
   try {
-    console.log("inne i tri i user.ts");
-    const docRef = await addDoc(userCollectionRef, {});
-
-    user.id = docRef.id;
-
-    console.log(
-      "Dokumentreferens id:",
-      docRef.id,
-      " och uppgiftens id:",
-      user.id,
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      createUser.email,
+      createUser.password,
     );
-
-    await updateDoc(docRef, user as Partial<User>);
-
-    const userDoc = await getDoc(docRef);
-    if (userDoc.exists()) {
-      const userData = userDoc.data();
-      return userData as User;
-    } else {
-      console.error("Uppgiftsdokumentet finns inte i databasen.");
-      return null;
-    }
-  } catch (error) {
-    console.error("Fel vid tillägg av uppgift:", error);
-    return null;
+    console.log(userCredential.user);
+    return {
+      uid: userCredential.user.uid,
+    } satisfies User;
+  } catch (error: any) {
+    console.error(error);
+    const errorCode = error.code;
+    const errorMessage = error.message;
   }
 };
-
-export const editUserToDB = async (user: User) => {
-  user.householdId = "";
-  const userCollectionRef = collection(db, "users");
-
+export const signInWithAPI = async (createUser: UserCreate) => {
   try {
-    const userRef = doc(userCollectionRef, user.id);
-
-    const updatedUserData = {
-      id: user.id,
-      name: user.name,
-      password: user.password,
-      username: user.username,
-    };
-
-    await updateDoc(userRef, updatedUserData);
-
-    return user;
-  } catch (error) {
-    console.error("Fel vid redigering av uppgift:", error);
-    return null;
+    const userCredential = await signInWithEmailAndPassword(
+      auth,
+      createUser.email,
+      createUser.password,
+    );
+    console.log(userCredential.user);
+    return {
+      uid: userCredential.user.uid,
+    } satisfies User;
+  } catch (error: any) {
+    console.error(error);
+    const errorCode = error.code;
+    const errorMessage = error.message;
   }
 };
+
+// export const editUserToDB = async (user: User) => {
+//   // user.householdId = "";
+//   const userCollectionRef = collection(db, "users");
+
+//   try {
+//     const userRef = doc(userCollectionRef, user.uid);
+
+//     const updatedUserData = {
+//       id: user.uid,
+//       name: user.displayName,
+//       password: user.password,
+//       username: user.username,
+//     };
+
+//     await updateDoc(userRef, updatedUserData);
+
+//     return user;
+//   } catch (error) {
+//     console.error("Fel vid redigering av uppgift:", error);
+//     return null;
+//   }
+// };
 
 // export const getUsersFromDB = async (householdId: string) => {
 //   try {
@@ -89,27 +94,27 @@ export const editUserToDB = async (user: User) => {
 //     return []; // Return an empty array in case of an error
 //   }
 // };
-export const getUsersFromDB = async (username: string) => {
-  try {
-    const userCollectionRef = collection(db, "users");
+// export const getUsersFromDB = async (username: string) => {
+//   try {
+//     const userCollectionRef = collection(db, "users");
 
-    const q = query(userCollectionRef, where("username", "==", username));
+//     const q = query(userCollectionRef, where("username", "==", username));
 
-    const querySnapshot = await getDocs(q);
+//     const querySnapshot = await getDocs(q);
 
-    const users: User[] = [];
+//     const users: User[] = [];
 
-    querySnapshot.forEach((doc) => {
-      users.push(doc.data() as User);
-    });
+//     querySnapshot.forEach((doc) => {
+//       users.push(doc.data() as User);
+//     });
 
-    console.log("Uppgifter hämtade:", users);
-    return users;
-  } catch (error) {
-    console.error("Error fetching users:", error);
-    return null;
-  }
-};
+//     console.log("Uppgifter hämtade:", users);
+//     return users;
+//   } catch (error) {
+//     console.error("Error fetching users:", error);
+//     return null;
+//   }
+// };
 
 export const deleteUserFromDB = async (userId: string) => {
   try {

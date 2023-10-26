@@ -1,7 +1,9 @@
-import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { getHouseholdsFromDB } from "../../api/household";
 import {
   addProfileToDB,
   getAllProfilesByHouseholdId,
+  getAllProfilesByUserIdFromDb,
   saveProfileNameToDatabase,
 } from "../../api/profile";
 import { Profile } from "../../types";
@@ -16,13 +18,35 @@ export const initialState: ProfileState = {
   activeProfile: null,
 };
 
+export const getProfilesByUserIdAsync = createAsyncThunk<
+  Profile[],
+  string,
+  { rejectValue: string }
+>("profiles/getProfilesByUserId", async (userId, thunkAPI) => {
+  try {
+    console.log("inne i try i thunken, userid är: ", userId);
+    const fetchedProfiles = await getAllProfilesByUserIdFromDb(userId);
+    if (fetchedProfiles) {
+      console.log("inne i try i thunken, profiles är: ", fetchedProfiles);
+
+      return fetchedProfiles;
+    } else {
+      return thunkAPI.rejectWithValue("failed to add completion");
+    }
+  } catch (error: any) {
+    return thunkAPI.rejectWithValue(error.message);
+  }
+});
+
 const profileSlice = createSlice({
   name: "profile",
   initialState,
   reducers: {
     //denna ska anropas när man går in i ett hushåll, så man får alla profiler för det hushållet varje gång
-    setProfiles: (state, action: PayloadAction<Profile[]>) => {
-      state.profiles = action.payload;
+    setProfiles: (state, action: PayloadAction<Profile[] | undefined>) => {
+      if (action.payload) {
+        state.profiles = action.payload;
+      }
     },
     //denna ska sättas när mnan får in i ett hushåll, vilken profil DU ÄR
     setActiveProfile: (state, action: PayloadAction<Profile>) => {
@@ -98,7 +122,6 @@ const profileSlice = createSlice({
           });
       }
     },
-
     setProfileByHouseholdAndUser: (
       state,
       action: PayloadAction<{ userId: string; householdId: string }>,
@@ -112,6 +135,17 @@ const profileSlice = createSlice({
         state.activeProfile = activeProfile;
       }
     },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(getProfilesByUserIdAsync.fulfilled, (state, action) => {
+        if (action.payload) {
+          state.profiles = action.payload;
+        }
+      })
+      .addCase(getProfilesByUserIdAsync.rejected, (state, action) => {
+        console.log("error vid get profiles: ", action.payload);
+      });
   },
 });
 

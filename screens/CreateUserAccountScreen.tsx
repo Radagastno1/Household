@@ -12,7 +12,7 @@ import { useTheme } from "../contexts/themeContext";
 import { RootNavigationScreenProps } from "../navigators/navigationTypes";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { addUserAsync } from "../store/user/userSlice";
-import { User } from "../types";
+import { UserCreate } from "../types";
 
 type CreateUserProps = RootNavigationScreenProps<"Signup">;
 
@@ -37,7 +37,6 @@ export default function CreateUserAccountScreen({
   const colorScheme = useColorScheme();
 
   const dispatch = useAppDispatch();
-  const userAccountState = useAppSelector((state) => state.userAccount);
 
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
@@ -51,10 +50,9 @@ export default function CreateUserAccountScreen({
       setMissingFieldsWarning("Fyll i alla obligatoriska fält.");
     } else {
       console.log("ELSE");
-      const newUser: User = {
-        id: "",
-        name: newName,
-        username: newUserName,
+      const newUser: UserCreate = {
+        // displayName: newName,
+        email: newUserName,
         password: newPassword,
       };
       dispatch(addUserAsync(newUser));
