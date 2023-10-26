@@ -1,6 +1,5 @@
 export interface User {
   uid: string;
-  // displayName: string | null;
 }
 
 export interface UserCreate {

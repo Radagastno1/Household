@@ -2,14 +2,14 @@ import "firebase/firestore";
 import {
   addDoc,
   collection,
+  doc,
   getDoc,
   getDocs,
   query,
   updateDoc,
   where,
-  doc,
 } from "firebase/firestore";
-import { Profile } from "../types";
+import { Profile, User } from "../types";
 import { db } from "./config";
 
 export const addProfileToDB = async (profile: Profile) => {
@@ -121,12 +121,11 @@ export const getAllProfilesByHouseholdId = async (householdId: string) => {
 
 export const getAllProfilesByUserId = async (userId: string) => {
   try {
-    const activeUser = JSON.parse(userId); // Deserialize the activeUser
-    const userIdValue = activeUser.uid; // Extract the UID
-    console.log("Hämta profiler: ", userIdValue);
+    console.log("Hämta profiler: ", userId);
+
     const profileCollectionRef = collection(db, "profiles");
 
-    const q = query(profileCollectionRef, where("userId", "==", userIdValue));
+    const q = query(profileCollectionRef, where("userId", "==", userId));
 
     const querySnapshot = await getDocs(q);
 
