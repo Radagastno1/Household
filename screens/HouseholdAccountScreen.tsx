@@ -54,18 +54,8 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
     activeProfile?.profileName,
   );
 
-  const handleSaveClick = () => {
-    if (activeProfile) {
-      dispatch(
-        editProfileName({
-          profileId: activeProfile?.id,
-          newProfileName: updatedProfileName ?? activeProfile.profileName,
-        }),
-      );
-      setIsEditing(false);
-      console.log("NYA PROFILNAMNET", { updatedProfileName });
-    }
-  };
+  const [editingStates, setEditingStates] = useState(Array(households?.length).fill(false));
+
 
   const handleHouseholdSaveClick = async (editHouseholdId: string) => {
     if (editHouseholdId) {
@@ -75,13 +65,15 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
           newHouseholdName: updatedHouseholdName ?? editHouseholdId,
         }),
       );
-      setIsEditing(false);
-      console.log("NYA PROFILNAMNET", { updatedHouseholdName });
+         // Update the editing state for the edited household
+         setEditingStates(Array(households?.length).fill(false));
+
     }
   };
-  const cancelEditing = (household: Household) => {
-    setIsEditing(false);
-    setUpdatedHouseholdname(household.name); // Reset the edited name to the original name
+  const cancelEditing = (index:number) => {
+    const updatedEditingStates = [...editingStates];
+    updatedEditingStates[index] = false;
+    setEditingStates(updatedEditingStates); // Reset the edited name to the original name
   };
 
   //-----------------------------------------------------------------------------------
@@ -107,7 +99,7 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
     };
 
     fetchData();
-  }, []); //runs only onece
+  }, [editingStates]); //runs only onece
 
   async function GetHouseholdIdsFromActiveUser() {
     const householdsId: string[] = [];
@@ -210,7 +202,7 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
   });
 
 
-  const [editingStates, setEditingStates] = useState(Array(households?.length).fill(false));
+ 
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
@@ -249,7 +241,9 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
                 { flexDirection: "row", justifyContent: "space-between" },
               ]}
               onPress={() => {
-                handleEnterHousehold(household);
+                if (!editingStates[index]) {
+                    handleEnterHousehold(household);
+                  }
               }}
             >
                <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -314,7 +308,7 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
                 <View>
                   <Button
                     mode="elevated"
-                    onPress={() => cancelEditing(household)}
+                    onPress={() => cancelEditing(index)}
                   >
                     Avbryt
                   </Button>
