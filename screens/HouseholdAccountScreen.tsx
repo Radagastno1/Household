@@ -1,4 +1,4 @@
-import { MaterialIcons } from "@expo/vector-icons";
+
 import React, { useEffect, useRef, useState } from "react";
 import {
   Animated,
@@ -26,7 +26,6 @@ import {
   sethouseholdActive,
 } from "../store/household/householdSlice";
 import {
-  editProfileName,
   fetchAllProfilesByHousehold,
   setProfileByHouseholdAndUser,
 } from "../store/profile/profileSlice";
@@ -41,21 +40,18 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
   const [profiles, setProfiles] = useState<(Profile[] | undefined)[]>([]);
   console.log("Nu är användaren ", activeUser, "inloggad");
 
-  //------------------------------------------------------------------------------
-  const activeProfiles = useAppSelector((state) => state.profile.profiles);
+  //------------------handle the editing of household name --------------------
+
   const activeProfile = useAppSelector((state) => state.profile.activeProfile);
   const isOwner = activeProfile?.isOwner;
-  const [isEditing, setIsEditing] = useState(false);
-  const [updatedProfileName, setUpdatedProfilename] = useState(
-    activeProfile?.profileName,
-  );
 
   const [updatedHouseholdName, setUpdatedHouseholdname] = useState(
     activeProfile?.profileName,
   );
 
-  const [editingStates, setEditingStates] = useState(Array(households?.length).fill(false));
-
+  const [editingStates, setEditingStates] = useState(
+    Array(households?.length).fill(false),
+  );
 
   const handleHouseholdSaveClick = async (editHouseholdId: string) => {
     if (editHouseholdId) {
@@ -65,19 +61,17 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
           newHouseholdName: updatedHouseholdName ?? editHouseholdId,
         }),
       );
-         // Update the editing state for the edited household
-         setEditingStates(Array(households?.length).fill(false));
-
+      // Update the editing state for the edited household
+      setEditingStates(Array(households?.length).fill(false));
     }
   };
-  const cancelEditing = (index:number) => {
+  const cancelEditing = (index: number) => {
     const updatedEditingStates = [...editingStates];
     updatedEditingStates[index] = false;
     setEditingStates(updatedEditingStates); // Reset the edited name to the original name
   };
 
-  //-----------------------------------------------------------------------------------
-
+  //-------------------get all the households under activeUser and profiles of the active user in each household------------------------------------------------------
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -99,7 +93,7 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
     };
 
     fetchData();
-  }, [editingStates]); //runs only onece
+  }, [editingStates]); //after save editing household name, run it again so refresh list
 
   async function GetHouseholdIdsFromActiveUser() {
     const householdsId: string[] = [];
@@ -133,9 +127,8 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
   }
 
   const dispatch = useAppDispatch();
-  //   const activeProfile = useAppSelector((state) => state.profile.activeProfile);
-  const householdSlice = useAppSelector((state) => state.household);
-  const allHouseholds = householdSlice.households;
+//   const householdSlice = useAppSelector((state) => state.household);
+//   const allHouseholds = householdSlice.households;
 
   const handleEnterHousehold = async (household: Household) => {
     dispatch(sethouseholdActive(household));
@@ -149,8 +142,6 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
           householdId: household.id,
         }),
       );
-
-      console.log("aktiva profilen: ");
       // Navigate to the ProfileAccount screen
       navigation.navigate("ProfileAccount", {
         householdId: household.id,
@@ -169,7 +160,7 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
       );
     return currentUserProfilesForAllHouseholds;
   }
-
+//--------------handle themes and the theme buttons------------------
   const { theme, setColorScheme } = useTheme();
   const colorScheme = useColorScheme();
   const [currentTheme, setCurrentTheme] = useState("auto");
@@ -190,7 +181,6 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
     onPanResponderRelease: (e, gestureState) => {
       if (Math.abs(gestureState.dx) > 50) {
         handleToggleTheme();
-        // Do not reset the position here
       }
     },
   });
@@ -200,9 +190,6 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
     outputRange: [-50, 0, 50],
     extrapolate: "clamp",
   });
-
-
- 
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
@@ -242,13 +229,12 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
               ]}
               onPress={() => {
                 if (!editingStates[index]) {
-                    handleEnterHousehold(household);
-                  }
+                  handleEnterHousehold(household);
+                }
               }}
             >
-               <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
                 {!editingStates[index] && profiles[index] && (
-                 
                   <Image
                     key={0}
                     source={{
@@ -257,9 +243,8 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
                     style={{ height: 20, width: 20 }}
                     alt={`Avatar ${index}`}
                   />
-                 
                 )}
-              </View> 
+              </View>
               {/* <View style={styles.nameContainer}> */}
               <View style={styles.taskItem}>
                 {editingStates[index] ? (
@@ -297,19 +282,13 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
                         updatedEditingStates[index] = !editingStates[index];
                         setEditingStates(updatedEditingStates);
                       }}
-                    //   onPress={() => {
-                    //     setIsEditing(true);
-                    //   }}
                     />
                   </>
                 )}
               </View>
               {editingStates[index] ? (
                 <View>
-                  <Button
-                    mode="elevated"
-                    onPress={() => cancelEditing(index)}
-                  >
+                  <Button mode="elevated" onPress={() => cancelEditing(index)}>
                     Avbryt
                   </Button>
                   <Button
