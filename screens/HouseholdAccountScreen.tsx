@@ -19,22 +19,15 @@ import {
 import { useTheme } from "../contexts/themeContext";
 import { AvatarUrls, Avatars } from "../data/avatars";
 import { RootNavigationScreenProps } from "../navigators/navigationTypes";
-import { sethouseholdActive } from "../store/household/householdSlice";
+import { editHouseHoldeName, sethouseholdActive } from "../store/household/householdSlice";
 import {
+    editProfileName,
   fetchAllProfilesByHousehold,
   setProfileByHouseholdAndUser,
 } from "../store/profile/profileSlice";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { Household, Profile } from "../types";
 
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     // backgroundColor: "#fff",
-//     alignItems: "center",
-//     justifyContent: "center",
-//   },
-// });
 
 type HouseholdProps = RootNavigationScreenProps<"HouseholdAccount">;
 
@@ -43,6 +36,51 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
   const [households, setHouseholds] = useState<Household[] | undefined>([]);
   const [profiles, setProfiles] = useState<(Profile[] | undefined)[]>([]);
   console.log("Nu är användaren ", activeUser, "inloggad");
+
+//------------------------------------------------------------------------------
+  const activeProfiles = useAppSelector((state) => state.profile.profiles);
+  const activeProfile = useAppSelector((state) => state.profile.activeProfile);
+  const isOwner = activeProfile?.isOwner;
+  const [isEditing, setIsEditing] = useState(false);
+  const [updatedProfileName, setUpdatedProfilename] = useState(
+    activeProfile?.profileName,
+  );
+
+  const [updatedHouseholdName, setUpdatedHouseholdname] = useState(
+    activeProfile?.profileName,
+  );
+
+  const handleSaveClick = () => {
+    if (activeProfile) {
+      dispatch(
+        editProfileName({
+          profileId: activeProfile?.id,
+          newProfileName: updatedProfileName ?? activeProfile.profileName,
+        }),
+      );
+      setIsEditing(false);
+      console.log("NYA PROFILNAMNET", { updatedProfileName });
+    }
+  };
+
+  const handleHouseholdSaveClick = async (household: Household) => {
+    if (household) {
+      dispatch(
+        editHouseHoldeName({
+          householdId: household.id,
+          newHouseholdName: updatedHouseholdName ?? household.name,
+        }),
+      );
+      setIsEditing(false);
+      console.log("NYA PROFILNAMNET", { updatedHouseholdName });
+    }
+  };
+  const cancelEditing = (household: Household) => {
+    setIsEditing(false);
+    setUpdatedHouseholdname(household.name); // Reset the edited name to the original name
+  };
+
+  //-----------------------------------------------------------------------------------
 
   useEffect(() => {
     const fetchData = async () => {
@@ -54,7 +92,7 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
         // get all householdIds under user
         const householdsIds = await GetHouseholdIdsFromActiveUser();
         const profilesByHouse = await Promise.all(
-          householdsIds.map((houseId) => GetProfilesForEachHousehold(houseId)),
+          householdsIds.map((houseId) => GetCurrentUserProfilesForEachHousehold(houseId)),
         );
         setProfiles(profilesByHouse);
       } catch (error) {
@@ -62,8 +100,8 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
       }
     };
 
-    fetchData(); // Anropa den asynkrona funktionen inuti useEffect
-  }, []); // Beroendelistan är tom, så useEffect körs en gång när komponenten monteras
+    fetchData(); 
+  }, []); //runs only onece
 
   async function GetHouseholdIdsFromActiveUser() {
     const householdsId: string[] = [];
@@ -124,9 +162,10 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
     }
   };
 
-  async function GetProfilesForEachHousehold(householdId: string) {
-    const profiles = await getAllProfilesByHouseholdId(householdId);
-    return profiles;
+  async function GetCurrentUserProfilesForEachHousehold(householdId: string) {
+    const allprofilesForEachHousehold = await getAllProfilesByHouseholdId(householdId);
+  const currentUserProfilesForAllHouseholds = allprofilesForEachHousehold?.filter((profile)=>profile.userId === activeUser.id);
+    return currentUserProfilesForAllHouseholds;
   }
 
   const { theme, setColorScheme } = useTheme();
@@ -157,61 +196,6 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
     outputRange: [-50, 0, 50],
     extrapolate: 'clamp',
   });
-
-//   const panResponder = PanResponder.create({
-//     onStartShouldSetPanResponder: () => true,
-//     onPanResponderMove: (e, gestureState) => {
-//       pan.setValue(gestureState.dx);
-//     },
-//     onPanResponderRelease: (e, gestureState) => {
-//       if (Math.abs(gestureState.dx) > 50) {
-//         handleToggleTheme();
-//       }
-
-//       Animated.spring(pan, {
-//         toValue: 0,
-//         friction: 5,
-//         useNativeDriver: false,
-//       }).start();
-//     },
-//   });
-
-//   const translateX = pan.interpolate({
-//     inputRange: [-50, 0, 50],
-//     outputRange: [-50, 0, 50],
-//     extrapolate: 'clamp',
-//   });
-
-//   const panResponder = PanResponder.create({
-//     onStartShouldSetPanResponder: () => true,
-//     onPanResponderMove: (e, gestureState) => {
-//       pan.setValue(gestureState.dx);
-//     },
-//     onPanResponderRelease: (e, gestureState) => {
-//       if (gestureState.dx > 50) {
-//         handleToggleTheme();
-//         Animated.timing(pan, {
-//           toValue: 0,
-//           duration: 300,
-//           useNativeDriver: false,
-//         }).start();
-//       } else {
-//         Animated.spring(pan, {
-//           toValue: 0,
-//           friction: 5,
-//           useNativeDriver: false,
-//         }).start();
-//       }
-//     },
-//   });
-
-//   const translateX = pan.interpolate({
-//     inputRange: [0, 50],
-//     outputRange: [0, 50],
-//     extrapolate: 'clamp',
-//   });
-
-
 
 
   return (
@@ -255,7 +239,8 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
               }}
             >
               <View style={{ flexDirection: "row", alignItems: "center" }}>
-                {profiles[index] && profiles[index]!.length > 0 && (
+              {!isEditing &&  profiles[index] && (
+                //  profiles[index]!.map((profile, profileIndex) => (
                   <Image
                     key={0}
                     source={{
@@ -264,10 +249,10 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
                     style={{ height: 20, width: 20 }}
                     alt={`Avatar ${index}`}
                   />
-                )}
-                {profiles[index] && profiles[index]!.length > 1 && (
-                  <Text>...</Text>
-                )}
+                //  )
+                 )
+               }  
+            
               </View>
 
               <View>
