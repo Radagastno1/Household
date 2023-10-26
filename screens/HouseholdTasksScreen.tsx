@@ -260,7 +260,7 @@ export default function HouseholdTasksScreen({
             >
               Lägg Till
             </Button>
-          )}
+           )} 
         </View>
 
         {/* <View style={styles.buttonContainer}>
