@@ -1,5 +1,6 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import React from "react";
 import CreateProfileScreen from "../screens/CreateProfileScreen";
 import CreateTaskScreen from "../screens/CreateTaskScreen";
 import CreateUserAccountScreen from "../screens/CreateUserAccountScreen";
@@ -11,7 +12,6 @@ import TaskDetailScreen from "../screens/TaskDetailScreen";
 import CustomHeader from "../store/shared/CustomHeader";
 import { useAppSelector } from "../store/store";
 import TopTabNavigator from "./TopTabNavigator";
-import React from "react";
 
 export type RootStackParamList = {
   SplashScreen: undefined;
@@ -22,7 +22,7 @@ export type RootStackParamList = {
   HouseholdAccount: undefined;
   ProfileAccount: { householdId: string };
   HandleHousehold: undefined;
-  CreateProfile: { householdId: string };
+  CreateProfile: { householdId: string; isOwner: boolean };
   Tab: undefined;
 };
 

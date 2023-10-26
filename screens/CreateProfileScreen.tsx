@@ -44,7 +44,9 @@ export default function CreateProfileScreen({
 }: CreateProfileProps) {
   const [householdName, setHouseholdName] = useState("");
   const [selectedAvatar, setSelectedAvatar] = useState<string | null>(null);
-  const { householdId } = route.params;
+  const householdId = route.params.householdId;
+  const isOwner = route.params.isOwner;
+
   // const household = households.find((h) => h.id === householdId);
   const { theme } = useTheme();
   const colorScheme = useColorScheme();
@@ -82,15 +84,6 @@ export default function CreateProfileScreen({
   // const isAvatarOccupied = (avatarId: string) => {
   //   return activeProfiles.some((profile) => profile.avatar === avatarId);
   // };
-
-  const householdHasOwner = () => {
-    const profiles = dispatch(getProfilesByHouseholdId(householdId));
-    if (profiles) {
-      return true;
-    } else {
-      return false;
-    }
-  };
 
   const isAvatarOccupied = (avatarId: string) => {
     return activeProfiles.some((profile) => profile.avatar === avatarId);
@@ -167,10 +160,9 @@ export default function CreateProfileScreen({
         />
         <View style={styles.avatarsContainer}>
           {avatars.map((avatar) => {
-            const isOccupied =
-              !householdHasOwner() && avatar.id !== Avatars.Bee;
+            const isOccupied = avatar.id !== Avatars.Bee;
 
-            householdHasOwner() && isAvatarOccupied(avatar.id);
+            isAvatarOccupied(avatar.id);
             const isSelected = selectedAvatar === avatar.id;
 
             const avatarStyles = [

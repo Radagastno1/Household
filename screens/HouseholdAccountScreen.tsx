@@ -1,7 +1,7 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import React, { useEffect, useRef, useState } from "react";
 import {
-    Animated,
+  Animated,
   Image,
   PanResponder,
   ScrollView,
@@ -22,6 +22,7 @@ import { RootNavigationScreenProps } from "../navigators/navigationTypes";
 import { sethouseholdActive } from "../store/household/householdSlice";
 import {
   fetchAllProfilesByHousehold,
+  getProfilesByHouseholdId,
   setProfileByHouseholdAndUser,
 } from "../store/profile/profileSlice";
 import { useAppDispatch, useAppSelector } from "../store/store";
@@ -42,6 +43,7 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
   const activeUser = useAppSelector((state) => state.user.user);
   const [households, setHouseholds] = useState<Household[] | undefined>([]);
   const [profiles, setProfiles] = useState<(Profile[] | undefined)[]>([]);
+
   console.log("Nu är användaren ", activeUser, "inloggad");
 
   useEffect(() => {
@@ -115,7 +117,6 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
       );
 
       console.log("aktiva profilen: ");
-      // Navigate to the ProfileAccount screen
       navigation.navigate("ProfileAccount", {
         householdId: household.id,
       });
@@ -155,64 +156,61 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
   const translateX = pan.interpolate({
     inputRange: [-50, 0, 50],
     outputRange: [-50, 0, 50],
-    extrapolate: 'clamp',
+    extrapolate: "clamp",
   });
 
-//   const panResponder = PanResponder.create({
-//     onStartShouldSetPanResponder: () => true,
-//     onPanResponderMove: (e, gestureState) => {
-//       pan.setValue(gestureState.dx);
-//     },
-//     onPanResponderRelease: (e, gestureState) => {
-//       if (Math.abs(gestureState.dx) > 50) {
-//         handleToggleTheme();
-//       }
+  //   const panResponder = PanResponder.create({
+  //     onStartShouldSetPanResponder: () => true,
+  //     onPanResponderMove: (e, gestureState) => {
+  //       pan.setValue(gestureState.dx);
+  //     },
+  //     onPanResponderRelease: (e, gestureState) => {
+  //       if (Math.abs(gestureState.dx) > 50) {
+  //         handleToggleTheme();
+  //       }
 
-//       Animated.spring(pan, {
-//         toValue: 0,
-//         friction: 5,
-//         useNativeDriver: false,
-//       }).start();
-//     },
-//   });
+  //       Animated.spring(pan, {
+  //         toValue: 0,
+  //         friction: 5,
+  //         useNativeDriver: false,
+  //       }).start();
+  //     },
+  //   });
 
-//   const translateX = pan.interpolate({
-//     inputRange: [-50, 0, 50],
-//     outputRange: [-50, 0, 50],
-//     extrapolate: 'clamp',
-//   });
+  //   const translateX = pan.interpolate({
+  //     inputRange: [-50, 0, 50],
+  //     outputRange: [-50, 0, 50],
+  //     extrapolate: 'clamp',
+  //   });
 
-//   const panResponder = PanResponder.create({
-//     onStartShouldSetPanResponder: () => true,
-//     onPanResponderMove: (e, gestureState) => {
-//       pan.setValue(gestureState.dx);
-//     },
-//     onPanResponderRelease: (e, gestureState) => {
-//       if (gestureState.dx > 50) {
-//         handleToggleTheme();
-//         Animated.timing(pan, {
-//           toValue: 0,
-//           duration: 300,
-//           useNativeDriver: false,
-//         }).start();
-//       } else {
-//         Animated.spring(pan, {
-//           toValue: 0,
-//           friction: 5,
-//           useNativeDriver: false,
-//         }).start();
-//       }
-//     },
-//   });
+  //   const panResponder = PanResponder.create({
+  //     onStartShouldSetPanResponder: () => true,
+  //     onPanResponderMove: (e, gestureState) => {
+  //       pan.setValue(gestureState.dx);
+  //     },
+  //     onPanResponderRelease: (e, gestureState) => {
+  //       if (gestureState.dx > 50) {
+  //         handleToggleTheme();
+  //         Animated.timing(pan, {
+  //           toValue: 0,
+  //           duration: 300,
+  //           useNativeDriver: false,
+  //         }).start();
+  //       } else {
+  //         Animated.spring(pan, {
+  //           toValue: 0,
+  //           friction: 5,
+  //           useNativeDriver: false,
+  //         }).start();
+  //       }
+  //     },
+  //   });
 
-//   const translateX = pan.interpolate({
-//     inputRange: [0, 50],
-//     outputRange: [0, 50],
-//     extrapolate: 'clamp',
-//   });
-
-
-
+  //   const translateX = pan.interpolate({
+  //     inputRange: [0, 50],
+  //     outputRange: [0, 50],
+  //     extrapolate: 'clamp',
+  //   });
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
@@ -312,14 +310,11 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
               </Text>
             </View>
             <Animated.View
-          style={[
-            styles.innerButton,
-            { transform: [{ translateX }] },
-          ]}
-          {...panResponder.panHandlers}
-        >
-          <Text style={styles.innerButtonText}>auto</Text>
-        </Animated.View>        
+              style={[styles.innerButton, { transform: [{ translateX }] }]}
+              {...panResponder.panHandlers}
+            >
+              <Text style={styles.innerButtonText}>auto</Text>
+            </Animated.View>
             <View>
               <Text style={styles.themeButtonText}>
                 {currentTheme === "light" ? "light" : "dark"}

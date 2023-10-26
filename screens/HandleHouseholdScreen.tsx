@@ -15,7 +15,8 @@ import {
   generateHouseholdCode,
   handleJoinHousehold,
 } from "../store/household/householdSlice";
-import { useAppSelector } from "../store/store";
+import { getProfilesByHouseholdId } from "../store/profile/profileSlice";
+import { useAppDispatch, useAppSelector } from "../store/store";
 
 const db = getFirestore(app);
 
@@ -27,6 +28,8 @@ export default function HandleHouseholdScreen({
   const { theme } = useTheme();
   const [householdName, setHouseholdName] = useState("");
   const [joinCode, setJoinCode] = useState("");
+  const [isOwner, setIsOwner] = useState(false);
+  const dispatch = useAppDispatch();
 
   const handleCreateHousehold = async () => {
     const householdCollectionRef = collection(db, "households");
@@ -48,8 +51,16 @@ export default function HandleHouseholdScreen({
 
       console.log("Household created with ID:", householdId);
 
+      const profiles = dispatch(getProfilesByHouseholdId(householdId));
+      if (profiles) {
+        setIsOwner(false);
+      } else {
+        setIsOwner(true);
+      }
+
       navigation.navigate("CreateProfile", {
         householdId: householdId,
+        isOwner: isOwner,
       });
     } catch (error) {
       console.error("Error creating household:", error);
@@ -69,6 +80,7 @@ export default function HandleHouseholdScreen({
         console.log("activeHousehold is available:", household);
         navigation.navigate("CreateProfile", {
           householdId: household.id,
+          isOwner: false,
         });
       } else {
         console.log("activeHousehold is not available yet.");
