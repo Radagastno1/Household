@@ -28,6 +28,15 @@ const profileSlice = createSlice({
     setActiveProfile: (state, action: PayloadAction<Profile>) => {
       state.activeProfile = action.payload;
     },
+    getProfilesByHouseholdId: (state, action: PayloadAction<string>) => {
+      getAllProfilesByHouseholdId(action.payload).then((profiles) => {
+        if (profiles) {
+          return profiles;
+        } else {
+          return null;
+        }
+      });
+    },
     // editProfileName: (state, action: PayloadAction<Profile>) => {
     //   state.profiles = [...state.profiles, action.payload];
     // },
@@ -52,9 +61,6 @@ const profileSlice = createSlice({
           console.error("Fel vid tillägg av profil:", error);
         });
     },
-
-   
-
 
     // editProfileName: (
     //   state,
@@ -132,5 +138,6 @@ export const { setProfiles } = profileSlice.actions;
 export const { addProfile } = profileSlice.actions;
 export const { editProfileName } = profileSlice.actions;
 export const { setProfileByHouseholdAndUser } = profileSlice.actions;
+export const { getProfilesByHouseholdId } = profileSlice.actions;
 
 export const profileReducer = profileSlice.reducer;

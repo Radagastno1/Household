@@ -1,15 +1,10 @@
-import React, { useEffect, useState, useCallback, Profiler } from "react";
+import React, { useState } from "react";
 import { Image } from "react-native";
 import { Button } from "react-native-paper";
 import { useDispatch } from "react-redux";
 
 import { useColorScheme } from "react-native";
 import { AvatarColors, AvatarUrls, Avatars } from "../data/avatars";
-
-import {
-  findHouseholdById,
-  sethouseholdActive,
-} from "../store/household/householdSlice";
 
 import {
   StyleSheet,
@@ -20,7 +15,10 @@ import {
 } from "react-native";
 import { useTheme } from "../contexts/themeContext";
 import { RootNavigationScreenProps } from "../navigators/navigationTypes";
-import { addProfile } from "../store/profile/profileSlice";
+import {
+  addProfile,
+  getProfilesByHouseholdId,
+} from "../store/profile/profileSlice";
 import { useAppSelector } from "../store/store";
 
 type CreateProfileProps = RootNavigationScreenProps<"CreateProfile">;
@@ -77,19 +75,26 @@ export default function CreateProfileScreen({
     ),
   );
 
-      // Lite slarvigt kanske en stund här men funkar sålänge
-  const hasActiveProfiles = activeProfiles.length > 0;
+  //     // Lite slarvigt kanske en stund här men funkar sålänge
+  // const hasActiveProfiles = activeProfiles.length > 0;
 
-  const isOwner = !hasActiveProfiles;
+  // const isOwner = !hasActiveProfiles;
+  // const isAvatarOccupied = (avatarId: string) => {
+  //   return activeProfiles.some((profile) => profile.avatar === avatarId);
+  // };
+
+  const householdHasOwner = () => {
+    const profiles = dispatch(getProfilesByHouseholdId(householdId));
+    if (profiles) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   const isAvatarOccupied = (avatarId: string) => {
     return activeProfiles.some((profile) => profile.avatar === avatarId);
   };
-
-  
- 
-  
-  
-  
 
   const saveProfile = () => {
     console.log("hushållsid är", householdId);
@@ -137,7 +142,6 @@ export default function CreateProfileScreen({
                 },
               ]}
             >
-              {" "}
               {selectedHousehold?.name}
             </Text>
           </View>
@@ -162,36 +166,38 @@ export default function CreateProfileScreen({
           onChangeText={(text) => setHouseholdName(text)}
         />
         <View style={styles.avatarsContainer}>
-          {avatars.map((avatar) => (
-            <TouchableOpacity
-              key={avatar.id}
-              style={[
-                styles.avatar,
-                
-                isOwner && avatar.id !== Avatars.Bee
-                  ? styles.occupiedAvatar
-                  : undefined,
-              
-                !isOwner && isAvatarOccupied(avatar.id)
-                  ? styles.occupiedAvatar
-                  : undefined,
-                selectedAvatar === avatar.id
-                  ? styles.selectedAvatar
-                  : undefined,
-                { backgroundColor: AvatarColors[avatar.id as Avatars] },
-              ]}
-              onPress={() => {
-                if (!isAvatarOccupied(avatar.id)) {
-                  setSelectedAvatar(avatar.id as Avatars);
-                }
-              }}
-            >
-              <Image
-                source={{ uri: AvatarUrls[avatar.id as Avatars] }}
-                style={styles.avatarImage}
-              />
-            </TouchableOpacity>
-          ))}
+          {avatars.map((avatar) => {
+            const isOccupied =
+              !householdHasOwner() && avatar.id !== Avatars.Bee;
+
+            householdHasOwner() && isAvatarOccupied(avatar.id);
+            const isSelected = selectedAvatar === avatar.id;
+
+            const avatarStyles = [
+              styles.avatar,
+              isOccupied ? styles.occupiedAvatar : undefined,
+              isAvatarOccupied(avatar.id) ? styles.occupiedAvatar : undefined,
+              isSelected ? styles.selectedAvatar : undefined,
+              { backgroundColor: AvatarColors[avatar.id as Avatars] },
+            ];
+
+            return (
+              <TouchableOpacity
+                key={avatar.id}
+                style={avatarStyles}
+                onPress={() => {
+                  if (!isAvatarOccupied(avatar.id)) {
+                    setSelectedAvatar(avatar.id as Avatars);
+                  }
+                }}
+              >
+                <Image
+                  source={{ uri: AvatarUrls[avatar.id as Avatars] }}
+                  style={styles.avatarImage}
+                />
+              </TouchableOpacity>
+            );
+          })}
         </View>
         <Button
           style={theme.button as any}
