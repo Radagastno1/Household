@@ -91,7 +91,7 @@ export default function CreateProfileScreen({
   //     return false;
   //   }
   // };
-
+  const [lastSelectedAvatar, setLastSelectedAvatar] = useState<string | null>(null);
   const isAvatarOccupied = (avatarId: string) => {
     if (profiles) {
       return profiles.some((profile) => profile.avatar === avatarId);
@@ -174,7 +174,8 @@ export default function CreateProfileScreen({
         key={Avatars.Bee}
         style={[
           styles.avatar,
-          selectedBee ? styles.selectedAvatar : null
+          // selectedBee ? styles.selectedAvatar : null
+          selectedAvatar === Avatars.Bee ? { backgroundColor: "lightgray" } : null         
         ]}
         onPress={() => {
           setSelectedAvatar(Avatars.Bee);
@@ -194,12 +195,14 @@ export default function CreateProfileScreen({
 
                 const avatarStyles = [
                   styles.avatar,
+                 
                   isOccupied ? styles.occupiedAvatar : undefined,
                   isAvatarOccupied(avatar.id)
                     ? styles.occupiedAvatar
                     : undefined,
-                  isSelected ? styles.selectedAvatar : undefined,
-                  { backgroundColor: AvatarColors[avatar.id as Avatars] },
+                  // isSelected ? styles.selectedAvatar : undefined,
+                  isSelected ? { backgroundColor: "lightgray" } : undefined,
+          
                 ];
 
                 return (
