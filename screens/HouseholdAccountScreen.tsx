@@ -127,9 +127,6 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
       });
   }
 
-  
-
-
   const handleEnterHousehold = async (household: Household) => {
     dispatch(sethouseholdActive(household));
     try {
