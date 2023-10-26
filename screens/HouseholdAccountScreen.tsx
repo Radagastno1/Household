@@ -1,43 +1,42 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import { signOut } from "firebase/auth";
-
 import React, { useEffect, useRef, useState } from "react";
 import {
-    Animated,
+  Alert,
   Image,
+  Animated,
   PanResponder,
   ScrollView,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
+  useColorScheme,
 } from "react-native";
-import { Appbar } from "react-native-paper";
+import { Button, Appbar, IconButton, Avatar } from "react-native-paper";
 import { auth } from "../api/config";
 import { useTheme } from "../contexts/themeContext";
 import { RootNavigationScreenProps } from "../navigators/navigationTypes";
-import { sethouseholdActive } from "../store/household/householdSlice";
+import {
+  editHouseHoldeName,
+  getHouseholdsByHouseholdIdAsync,
+  sethouseholdActive,
+} from "../store/household/householdSlice";
 import {
   fetchAllProfilesByHousehold,
   getProfilesByUserIdAsync,
   setProfileByHouseholdAndUser,
 } from "../store/profile/profileSlice";
 import { useAppDispatch, useAppSelector } from "../store/store";
-import { Household, Profile } from "../types";
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     // backgroundColor: "#fff",
-//     alignItems: "center",
-//     justifyContent: "center",
-//   },
-// });
+import { Household } from "../types";
+import { AvatarUrls, Avatars } from "../data/avatars";
 
 type HouseholdProps = RootNavigationScreenProps<"HouseholdAccount">;
 
 export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
   const activeUser = useAppSelector((state) => state.user.user);
+  const colorScheme = useColorScheme();
   // const [households, setHouseholds] = useState<Household[] | undefined>([]);
   // const [profiles, setProfiles] = useState<(Profile[] | undefined)[]>([]);
   const dispatch = useAppDispatch();
@@ -75,20 +74,57 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
           householdId: household.id,
         }),
       );
-
-      console.log("aktiva profilen: ");
-      // Navigate to the ProfileAccount screen
-      navigation.navigate("ProfileAccount", {
-        householdId: household.id,
-      });
+      console.log("FRÅN HOUSEHOLDACCOUNT: ", activeProfile?.id);
+      console.log("aktiva profilen: ", activeProfile);
+      if (activeProfile) {
+        navigation.navigate("ProfileAccount", {
+          householdId: household.id,
+        });
+      }
     } catch (error) {
       console.error("Error entering household:", error);
     }
   };
 
-  async function GetProfilesForEachHousehold(householdId: string) {
-    const profiles = await getAllProfilesByHouseholdId(householdId);
-    return profiles;
+  const [editingStates, setEditingStates] = useState(
+    Array(households?.length).fill(false),
+  );
+
+  const [updatedHouseholdName, setUpdatedHouseholdname] = useState(
+    activeProfile?.profileName,
+  );
+
+  const cancelEditing = (index: number) => {
+    const updatedEditingStates = [...editingStates];
+    updatedEditingStates[index] = false;
+    setEditingStates(updatedEditingStates); // Reset the edited name to the original name
+  };
+
+  const handleHouseholdSaveClick = async (editHouseholdId: string) => {
+    if (editHouseholdId) {
+      dispatch(
+        editHouseHoldeName({
+          householdId: editHouseholdId,
+          newHouseholdName: updatedHouseholdName ?? editHouseholdId,
+        }),
+      );
+      // Update the editing state for the edited household
+      setEditingStates(Array(households?.length).fill(false));
+    }
+  };
+
+  function handleLogOut() {
+    signOut(auth)
+      .then(() => {
+        console.log("Användaren har loggats ut");
+      })
+      .catch((error) => {
+        console.error("Fel vid utloggning:", error.message);
+        Alert.alert(
+          "Fel vid utloggning",
+          "Det uppstod ett fel vid utloggningen.",
+        );
+      });
   }
 
   const { theme, setColorScheme } = useTheme();
@@ -116,64 +152,8 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
   const translateX = pan.interpolate({
     inputRange: [-50, 0, 50],
     outputRange: [-50, 0, 50],
-    extrapolate: 'clamp',
+    extrapolate: "clamp",
   });
-
-//   const panResponder = PanResponder.create({
-//     onStartShouldSetPanResponder: () => true,
-//     onPanResponderMove: (e, gestureState) => {
-//       pan.setValue(gestureState.dx);
-//     },
-//     onPanResponderRelease: (e, gestureState) => {
-//       if (Math.abs(gestureState.dx) > 50) {
-//         handleToggleTheme();
-//       }
-
-//       Animated.spring(pan, {
-//         toValue: 0,
-//         friction: 5,
-//         useNativeDriver: false,
-//       }).start();
-//     },
-//   });
-
-//   const translateX = pan.interpolate({
-//     inputRange: [-50, 0, 50],
-//     outputRange: [-50, 0, 50],
-//     extrapolate: 'clamp',
-//   });
-
-//   const panResponder = PanResponder.create({
-//     onStartShouldSetPanResponder: () => true,
-//     onPanResponderMove: (e, gestureState) => {
-//       pan.setValue(gestureState.dx);
-//     },
-//     onPanResponderRelease: (e, gestureState) => {
-//       if (gestureState.dx > 50) {
-//         handleToggleTheme();
-//         Animated.timing(pan, {
-//           toValue: 0,
-//           duration: 300,
-//           useNativeDriver: false,
-//         }).start();
-//       } else {
-//         Animated.spring(pan, {
-//           toValue: 0,
-//           friction: 5,
-//           useNativeDriver: false,
-//         }).start();
-//       }
-//     },
-//   });
-
-//   const translateX = pan.interpolate({
-//     inputRange: [0, 50],
-//     outputRange: [0, 50],
-//     extrapolate: 'clamp',
-//   });
-
-
-
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
@@ -205,38 +185,112 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
           {households?.map((household: Household, index) => (
             <TouchableOpacity
               key={index}
-              style={[
-                theme.cardButton as any,
-                { flexDirection: "row", justifyContent: "space-between" },
-              ]}
+              style={[theme.cardButton as any, { alignItems: "flex-start" }]}
               onPress={() => {
-                handleEnterHousehold(household);
+                if (!editingStates[index]) {
+                  handleEnterHousehold(household);
+                }
               }}
             >
-              <View style={{ flexDirection: "row", alignItems: "center" }}>
-                {profiles[index] && profiles[index]!.length > 0 && (
-                  <Image
-                    key={0}
-                    source={{
-                      uri: AvatarUrls[profiles[index]![0].avatar as Avatars],
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  alignContent: "center",
+                }}
+              >
+                {!editingStates[index] && profiles[index] && (
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      justifyContent: "space-between",
                     }}
-                    style={{ height: 20, width: 20 }}
-                    alt={`Avatar ${index}`}
-                  />
-                )}
-                {profiles[index] && profiles[index]!.length > 1 && (
-                  <Text>...</Text>
-                )}
-              </View> */}
+                  >
+                    <Image
+                      key={0}
+                      source={{
+                        uri: AvatarUrls[profiles[index].avatar as Avatars],
+                      }}
+                      style={{ height: 20, width: 20 }}
+                      alt={`Avatar ${index}`}
+                    />
 
-              <View>
-                <Text style={theme.buttonText}>{household.name}</Text>
+                    <Text
+                      style={[
+                        styles.profileTitle,
+                        {
+                          color:
+                            colorScheme === "dark"
+                              ? "white"
+                              : theme.colors.text,
+                          marginLeft: 10,
+                          flex: 1,
+                        },
+                      ]}
+                    >
+                      {household.name}
+                    </Text>
+                    <IconButton
+                      icon="pencil"
+                      size={20}
+                      onPress={() => {
+                        // Toggle the editing state for the clicked household
+                        const updatedEditingStates = [...editingStates];
+                        updatedEditingStates[index] = !editingStates[index];
+                        setEditingStates(updatedEditingStates);
+                      }}
+                    />
+                  </View>
+                )}
               </View>
 
-              <View>
-                {/* if it is owner */}
-                <MaterialIcons name="edit" size={24} color="black" />
-              </View>
+              {editingStates[index] ? (
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    flex: 1,
+                  }}
+                >
+                  <View
+                    style={{
+                      flex: 1,
+                    }}
+                  >
+                    <TextInput
+                      placeholder={household.name}
+                      onChangeText={(text) => {
+                        setUpdatedHouseholdname(text);
+                      }}
+                      style={{
+                        color: colorScheme === "dark" ? "white" : "black",
+                        borderWidth: 1,
+                        borderColor: "lightgray",
+                        borderRadius: 5,
+                        padding: 10,
+                      }}
+                    />
+                  </View>
+                  <View>
+                    <Button
+                      mode="elevated"
+                      onPress={() => cancelEditing(index)}
+                    >
+                      Avbryt
+                    </Button>
+                  </View>
+                  <View>
+                    <Button
+                      mode="elevated"
+                      onPress={() => handleHouseholdSaveClick(household.id)}
+                    >
+                      Spara
+                    </Button>
+                  </View>
+                </View>
+              ) : null}
             </TouchableOpacity>
           ))}
         </ScrollView>
@@ -271,14 +325,11 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
               </Text>
             </View>
             <Animated.View
-          style={[
-            styles.innerButton,
-            { transform: [{ translateX }] },
-          ]}
-          {...panResponder.panHandlers}
-        >
-          <Text style={styles.innerButtonText}>auto</Text>
-        </Animated.View>        
+              style={[styles.innerButton, { transform: [{ translateX }] }]}
+              {...panResponder.panHandlers}
+            >
+              <Text style={styles.innerButtonText}>auto</Text>
+            </Animated.View>
             <View>
               <Text style={styles.themeButtonText}>
                 {currentTheme === "light" ? "light" : "dark"}
@@ -330,7 +381,9 @@ const styles = StyleSheet.create({
     marginBottom: 0,
     alignItems: "center",
   },
+  profileTitle: {
+    fontSize: 25,
+    textAlign: "center",
+    color: "black",
+  },
 });
-function getAllProfilesByUserId(uid: string) {
-  throw new Error("Function not implemented.");
-}
