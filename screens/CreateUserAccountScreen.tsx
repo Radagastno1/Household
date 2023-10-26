@@ -37,7 +37,6 @@ export default function CreateUserAccountScreen({
   const colorScheme = useColorScheme();
 
   const dispatch = useAppDispatch();
-  const userAccountState = useAppSelector((state) => state.userAccount);
 
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
