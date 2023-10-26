@@ -63,6 +63,25 @@ export const saveProfileNameToDatabase = async (
   }
 };
 
+export const getAllProfilesByHouseholdIdDb = async (
+  householdId: string,
+) => {
+  const profileCollectionRef = collection(db, "profiles");
+
+    const q = query(profileCollectionRef, where("householdId", "==", householdId));
+
+    const querySnapshot = await getDocs(q);
+
+    const profiles: Profile[] = [];
+
+    querySnapshot.forEach((doc) => {
+      profiles.push(doc.data() as Profile);
+    });
+
+    console.log("profiler hämtade från DB:", profiles);
+    return profiles;
+};
+
 //DENNA BEHÖVS NOG INTE DÅ VI HÄMTAR ALLA EN GÅNG
 // export const getProfileByHouseholdAndUser = async (
 //   householdId: string,

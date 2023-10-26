@@ -5,8 +5,10 @@ import {
   getAllProfilesByHouseholdId,
   getAllProfilesByUserIdFromDb,
   saveProfileNameToDatabase,
+  getAllProfilesByHouseholdIdDb
 } from "../../api/profile";
 import { Profile } from "../../types";
+
 
 interface ProfileState {
   profiles: Profile[];
@@ -38,6 +40,24 @@ export const getProfilesByUserIdAsync = createAsyncThunk<
   }
 });
 
+export const getProfilesByHouseholdIdAsync = createAsyncThunk<
+  Profile[],
+  string,
+  { rejectValue: string }
+>("profiles/getProfilesByHouseholdId", async (householdId, thunkAPI) => {
+  try {
+    const fetchedProfiles = await getAllProfilesByHouseholdIdDb(householdId);
+    if (fetchedProfiles) {
+      console.log("inne i try i thunken, profiles är för hurhållet är: ", fetchedProfiles);
+      return fetchedProfiles;
+    } else {
+      return thunkAPI.rejectWithValue("failed to get profi.es");
+    }
+  } catch (error: any) {
+    return thunkAPI.rejectWithValue(error.message);
+  }
+});
+
 const profileSlice = createSlice({
   name: "profile",
   initialState,
@@ -52,18 +72,6 @@ const profileSlice = createSlice({
     setActiveProfile: (state, action: PayloadAction<Profile>) => {
       state.activeProfile = action.payload;
     },
-    getProfilesByHouseholdId: (state, action: PayloadAction<string>) => {
-      getAllProfilesByHouseholdId(action.payload).then((profiles) => {
-        if (profiles) {
-          return profiles;
-        } else {
-          return null;
-        }
-      });
-    },
-    // editProfileName: (state, action: PayloadAction<Profile>) => {
-    //   state.profiles = [...state.profiles, action.payload];
-    // },
     addProfile: (state, action: PayloadAction<Profile>) => {
       const profileToAdd = action.payload;
       getAllProfilesByHouseholdId(action.payload.householdId)
@@ -145,6 +153,14 @@ const profileSlice = createSlice({
       })
       .addCase(getProfilesByUserIdAsync.rejected, (state, action) => {
         console.log("error vid get profiles: ", action.payload);
+      })
+      .addCase(getProfilesByHouseholdIdAsync.fulfilled, (state, action) => {
+        if (action.payload) {
+          state.profiles = action.payload;
+        }
+      })
+      .addCase(getProfilesByHouseholdIdAsync.rejected, (state, action) => {
+        console.log("error vid get profiles: ", action.payload);
       });
   },
 });
@@ -172,6 +188,5 @@ export const { setProfiles } = profileSlice.actions;
 export const { addProfile } = profileSlice.actions;
 export const { editProfileName } = profileSlice.actions;
 export const { setProfileByHouseholdAndUser } = profileSlice.actions;
-export const { getProfilesByHouseholdId } = profileSlice.actions;
 
 export const profileReducer = profileSlice.reducer;
