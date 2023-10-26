@@ -50,6 +50,7 @@ export default function HandleHouseholdScreen({
 
       navigation.navigate("CreateProfile", {
         householdId: householdId,
+        isOwner:true
       });
     } catch (error) {
       console.error("Error creating household:", error);
@@ -69,6 +70,7 @@ export default function HandleHouseholdScreen({
         console.log("activeHousehold is available:", household);
         navigation.navigate("CreateProfile", {
           householdId: household.id,
+          isOwner:false
         });
       } else {
         console.log("activeHousehold is not available yet.");

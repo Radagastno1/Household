@@ -25,7 +25,7 @@ export type RootStackParamList = {
   HouseholdAccount: undefined;
   ProfileAccount: { householdId: string };
   HandleHousehold: undefined;
-  CreateProfile: { householdId: string };
+  CreateProfile: { householdId: string, isOwner:boolean };
   Tab: undefined;
 };
 
