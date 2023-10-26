@@ -1,6 +1,6 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { addUserToDB, getUsersFromDB } from "../../api/user";
-import { User } from "../../types";
+import { User, UserCreate } from "../../types";
 
 interface UserState {
   user: any;
@@ -18,10 +18,10 @@ export const initialState: UserState = {
 
 export const addUserAsync = createAsyncThunk<
   User,
-  User,
+  UserCreate,
   { rejectValue: string }
 >("user/addUser", async (user, thunkAPI) => {
-  console.log("INNAN TRY I USER SLICE")
+  console.log("INNAN TRY I USER SLICE");
   try {
     console.log("inne i try i user slice ");
     const addedUser = await addUserToDB(user);

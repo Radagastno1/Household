@@ -1,5 +1,8 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { onAuthStateChanged } from "firebase/auth";
+import React, { useEffect } from "react";
+import { auth } from "../api/config";
 import CreateProfileScreen from "../screens/CreateProfileScreen";
 import CreateTaskScreen from "../screens/CreateTaskScreen";
 import CreateUserAccountScreen from "../screens/CreateUserAccountScreen";
@@ -11,7 +14,6 @@ import TaskDetailScreen from "../screens/TaskDetailScreen";
 import CustomHeader from "../store/shared/CustomHeader";
 import { useAppSelector } from "../store/store";
 import TopTabNavigator from "./TopTabNavigator";
-import React from "react";
 
 export type RootStackParamList = {
   SplashScreen: undefined;
@@ -33,11 +35,27 @@ export default function RootNavigator() {
 
   const userSlice = useAppSelector((state) => state.userAccount.user);
 
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const uid = user.uid;
+        console.log("USER IS LOGGED IN", uid);
+        // Dispatch user to redux
+      } else {
+        // User is signed out
+        console.log("USER IS SIGNED OUT");
+        // Dispatch no user to redux
+      }
+    });
+  }, []);
+
   return (
     <NavigationContainer>
       <Stack.Navigator
         initialRouteName={
           isLoading ? "SplashScreen" : userSlice ? "Login" : "Login"
+          // om användaren är inloggad så visa husvyn
+          // om användaren har vald hus, så gå in dagsvyn
         }
       >
         {/* <Stack.Screen name="SplashScreen" component={SplashScreen} /> */}

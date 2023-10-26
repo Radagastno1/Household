@@ -13,10 +13,9 @@ import {
 } from "react-native";
 import { Text, TextInput } from "react-native-paper";
 import { useDispatch } from "react-redux";
-import { getUsersFromDB } from "../api/user";
+import { getUsersFromDB, signInWithAPI } from "../api/user";
 import { useTheme } from "../contexts/themeContext";
 import { RootNavigationScreenProps } from "../navigators/navigationTypes";
-import { loginUser } from "../store/user/userSlice";
 import { User } from "../types";
 
 type SignInProps = RootNavigationScreenProps<"Login">;
@@ -62,27 +61,29 @@ export const SignInScreen = ({ navigation }: SignInProps) => {
     }
   }
 
-  function handleLogin() {
-    getUsersFromDB(username)
-      .then((users) => {
-        if (users && users.length > 0) {
-          const user = users[0];
+  async function handleLogin() {
+    await signInWithAPI({ email: username, password });
+    console.log("DONE");
+    // getUsersFromDB(username)
+    //   .then((users) => {
+    //     if (users && users.length > 0) {
+    //       const user = users[0];
 
-          if (user.password === password) {
-            dispatch(loginUser(user));
-            console.log("Authentication successful");
-            console.log("User data:", user);
-            navigation.navigate("HouseholdAccount");
-          } else {
-            console.error("Authentication failed: Invalid password");
-          }
-        } else {
-          console.error("Authentication failed: User not found");
-        }
-      })
-      .catch((error) => {
-        console.error("Error while fetching users:", error);
-      });
+    //       if (user.password === password) {
+    //         dispatch(loginUser(user));
+    //         console.log("Authentication successful");
+    //         console.log("User data:", user);
+    //         navigation.navigate("HouseholdAccount");
+    //       } else {
+    //         console.error("Authentication failed: Invalid password");
+    //       }
+    //     } else {
+    //       console.error("Authentication failed: User not found");
+    //     }
+    //   })
+    //   .catch((error) => {
+    //     console.error("Error while fetching users:", error);
+    //   });
   }
 
   return (

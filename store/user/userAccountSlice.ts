@@ -7,9 +7,9 @@ interface UserAccountState {
 
 export const initialState: UserAccountState = {
   user: {
-    id: "",
-    name: "",
-    username: "",
+    uid: "",
+    displayName: "",
+    email: "",
     password: "",
   },
 };
