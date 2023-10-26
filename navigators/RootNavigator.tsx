@@ -14,6 +14,8 @@ import TaskDetailScreen from "../screens/TaskDetailScreen";
 import CustomHeader from "../store/shared/CustomHeader";
 import { useAppSelector } from "../store/store";
 import TopTabNavigator from "./TopTabNavigator";
+import SplashScreen from "../screens/SplashScreen";
+import { loginUser } from "../store/user/userSlice";
 
 export type RootStackParamList = {
   SplashScreen: undefined;
@@ -36,11 +38,11 @@ export default function RootNavigator() {
   const userSlice = useAppSelector((state) => state.userAccount.user);
 
   useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        const uid = user.uid;
+    onAuthStateChanged(auth, (userSlice) => {
+      if (userSlice) {
+        const uid = userSlice.uid;
         console.log("USER IS LOGGED IN", uid);
-        // Dispatch user to redux
+        return loginUser(userSlice);
       } else {
         // User is signed out
         console.log("USER IS SIGNED OUT");
@@ -52,58 +54,66 @@ export default function RootNavigator() {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName={
-          isLoading ? "SplashScreen" : userSlice ? "Login" : "Login"
-          // om användaren är inloggad så visa husvyn
-          // om användaren har vald hus, så gå in dagsvyn
-        }
+      // initialRouteName={
+      //   // isLoading ? "SplashScreen" : userSlice ? "Login" : "HouseholdAccount"
+      //   // om användaren är inloggad så visa husvyn
+      //   // om användaren har vald hus, så gå in dagsvyn
+      // }
       >
         {/* <Stack.Screen name="SplashScreen" component={SplashScreen} /> */}
-
-        <Stack.Screen
-          name="Login"
-          component={SignInScreen}
-          options={{ presentation: "fullScreenModal" }}
-        />
-
-        <Stack.Screen name="Signup" component={CreateUserAccountScreen} />
-        <Stack.Screen
-          name="HouseholdAccount"
-          component={HouseholdAccountScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen name="ProfileAccount" component={ProfileAccountScreen} />
-        <Stack.Screen
-          name="HandleHousehold"
-          options={{ headerShown: false }}
-          component={HandleHouseholdScreen}
-        />
-        <Stack.Screen
-          name="CreateProfile"
-          component={CreateProfileScreen}
-          // initialParams={{ householdId: "fYHVLNiQvWEG9KNUGqBT" }}
-        />
-        <Stack.Screen name="HandleTask" component={CreateTaskScreen} />
-        <Stack.Screen
-          name="TaskDetail"
-          options={{ headerShown: false }}
-          component={TaskDetailScreen}
-        />
-        <Stack.Screen
-          name="Tab"
-          component={TopTabNavigator}
-          options={({ route, navigation }) => ({
-            header: () => (
-              <CustomHeader
-                title={
-                  (route.params as unknown as { name?: string })?.name ||
-                  "Custom Header"
-                }
-                navigation={navigation}
-              />
-            ),
-          })}
-        />
+        {userSlice ? (
+          <>
+            <Stack.Screen
+              name="HouseholdAccount"
+              component={HouseholdAccountScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="ProfileAccount"
+              component={ProfileAccountScreen}
+            />
+            <Stack.Screen
+              name="HandleHousehold"
+              options={{ headerShown: false }}
+              component={HandleHouseholdScreen}
+            />
+            <Stack.Screen
+              name="CreateProfile"
+              component={CreateProfileScreen}
+              // initialParams={{ householdId: "fYHVLNiQvWEG9KNUGqBT" }}
+            />
+            <Stack.Screen name="HandleTask" component={CreateTaskScreen} />
+            <Stack.Screen
+              name="TaskDetail"
+              options={{ headerShown: false }}
+              component={TaskDetailScreen}
+            />
+            <Stack.Screen
+              name="Tab"
+              component={TopTabNavigator}
+              options={({ route, navigation }) => ({
+                header: () => (
+                  <CustomHeader
+                    title={
+                      (route.params as unknown as { name?: string })?.name ||
+                      "Custom Header"
+                    }
+                    navigation={navigation}
+                  />
+                ),
+              })}
+            />
+          </>
+        ) : (
+          <>
+            <Stack.Screen
+              name="Login"
+              component={SignInScreen}
+              options={{ presentation: "fullScreenModal" }}
+            />
+            <Stack.Screen name="Signup" component={CreateUserAccountScreen} />
+          </>
+        )}
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -145,18 +155,7 @@ export default function RootNavigator() {
 //         />
 //       </>
 //     ) : (
-//       <>
-//         <Stack.Screen
-//           name="SignInScreen"
-//           component={SignInScreen}
-//           options={{ title: "Logga in" }}
-//         />
-//         <Stack.Screen
-//           name="CreateUserAccountScreen"
-//           component={CreateUserAccountScreen}
-//           options={{ title: "Skapa konto" }}
-//         />
-//       </>
+
 //     )}
 //   </Stack.Navigator>
 // </NavigationContainer>
