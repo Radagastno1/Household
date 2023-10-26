@@ -84,9 +84,7 @@ export default function HandleHouseholdScreen({
       <View>
         <View>
           <Appbar.Header style={{ height: 70, backgroundColor: "white" }}>
-            {loggedInUser && (
-              <Appbar.Content title={`Välkommen ${loggedInUser.username}!`} />
-            )}
+            {loggedInUser && <Appbar.Content title="Välkommen!" />}
           </Appbar.Header>
         </View>
 

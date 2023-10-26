@@ -1,8 +1,9 @@
 export interface User {
-  [x: string]: any;
-  id: string;
-  name: string;
-  username: string;
+  uid: string;
+}
+
+export interface UserCreate {
+  email: string;
   password: string;
 }
 

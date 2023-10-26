@@ -2,14 +2,14 @@ import "firebase/firestore";
 import {
   addDoc,
   collection,
+  doc,
   getDoc,
   getDocs,
   query,
   updateDoc,
   where,
-  doc
 } from "firebase/firestore";
-import { Profile } from "../types";
+import { Profile, User } from "../types";
 import { db } from "./config";
 
 export const addProfileToDB = async (profile: Profile) => {
@@ -43,7 +43,10 @@ export const addProfileToDB = async (profile: Profile) => {
   }
 };
 
-export const saveProfileNameToDatabase = async (profileId: string, newProfileName: string) => {
+export const saveProfileNameToDatabase = async (
+  profileId: string,
+  newProfileName: string,
+) => {
   const profileDocRef = doc(db, "profiles", profileId);
 
   try {
@@ -116,8 +119,10 @@ export const getAllProfilesByHouseholdId = async (householdId: string) => {
   }
 };
 
-export const getAllProfilesByUserId = async (userId: string) => {
+export const getAllProfilesByUserIdFromDb = async (userId: string) => {
   try {
+    console.log("Hämta profiler: ", userId);
+
     const profileCollectionRef = collection(db, "profiles");
 
     const q = query(profileCollectionRef, where("userId", "==", userId));

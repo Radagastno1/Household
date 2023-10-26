@@ -4,7 +4,7 @@ import {
   getTaskCompletionsFromDB,
 } from "../api/taskCompletion";
 import { TaskCompletion } from "../types";
-import {Profile} from "../types"
+import { Profile } from "../types";
 
 interface TaskCompletionState {
   completions: TaskCompletion[];
@@ -36,134 +36,129 @@ export const addCompletionAsync = createAsyncThunk<
   }
 });
 
+const taskCompletionSlice = createSlice({
+  name: "taskCompletion",
+  initialState,
+  reducers: {
+    setCompletions: (state, action) => {
+      state.completions = action.payload;
+    },
+    //taskt detail screen still using this function
+    findAllAvatarFortodayCompletionByTaskId: (
+      state,
+      action: PayloadAction<{ taskId: string; profiles: Profile[] }>,
+    ) => {
+      const { taskId } = action.payload;
+      const today = new Date().toISOString();
+      //filter the completions with the same taskId
+      const filteredCompletions = state.completions.filter(
+        (completion) =>
+          completion.completionDate.split("T")[0] === today.split("T")[0] &&
+          completion.taskId === taskId,
+      );
+      // get the unique profileIds
+      const uniqueProfileIds = [
+        ...new Set(
+          filteredCompletions?.map((completion) => completion.profileId),
+        ),
+      ];
+      console.log(uniqueProfileIds);
+      // profiles corresponding to the unique profileIds
+      const profilesForTask = action.payload.profiles.filter((profile) =>
+        uniqueProfileIds.includes(profile.id),
+      );
 
-    const taskCompletionSlice = createSlice({
-        name: "taskCompletion",
-        initialState,
-        reducers: {
-          setCompletions: (state, action) => {
-            state.completions = action.payload;
-          },
-          //taskt detail screen still using this function
-          findAllAvatarFortodayCompletionByTaskId: (
-            state,
-            action: PayloadAction<{ taskId: string, profiles:Profile[] }>,
-          ) => {
-            const { taskId } = action.payload;
-            const today = new Date().toISOString();
-            //filter the completions with the same taskId
-            const filteredCompletions = state.completions.filter(
-              (completion) =>
-                completion.completionDate.split("T")[0] === today.split("T")[0] &&
-                completion.taskId === taskId,
-            );
-            // get the unique profileIds
-            const uniqueProfileIds = [
-              ...new Set(
-                filteredCompletions?.map((completion) => completion.profileId),
-              ),
-            ];
-            console.log(uniqueProfileIds);
-            // profiles corresponding to the unique profileIds
-            const profilesForTask = action.payload.profiles.filter((profile) =>
-              uniqueProfileIds.includes(profile.id),
-            );
-      
-            const avatarList = profilesForTask.map((profile) => profile.avatar);
-            state.avatars = avatarList;
-          },
-      
-          findCompletionsByTaskId: (
-            state,
-            action: PayloadAction<{ taskId: string }>,
-          ) => {
-            const { taskId: id } = action.payload;
-            const foundCompletion = state.completions.find(
-              (completion) => completion.id === id,
-            );
-      
-            if (foundCompletion) {
-              state.completions = [foundCompletion];
-            } else {
-            }
-          },
-      
-          findCompletionsByTaskIdAndCompletionDate: (
-            state,
-            action: PayloadAction<{ taskId: string; completionDate: string }>,
-          ) => {
-            const { taskId, completionDate } = action.payload;
-      
-            const today = new Date().toISOString();
-            // Filter task completions for the given Task ID and today's date
-            const todaysCompletions = state.completions.filter(
-              (completion) =>
-                completion.completionDate.split("T")[0] === today.split("T")[0],
-            );
-      
-            if (todaysCompletions) {
-              console.log("in slice today completion", todaysCompletions);
-              state.completions = todaysCompletions;
-            } else {
-            }
-          },
-      
-          findCompletionsByTaskAndProfielId: (
-            state,
-            action: PayloadAction<{ taskId: string; profileId: string }>,
-          ) => {
-            const { taskId, profileId } = action.payload;
-            const foundCompletion = state.completions.find(
-              (completion) =>
-                completion.taskId === taskId && completion.profileId === profileId,
-            );
-            if (foundCompletion) {
-              state.completions = [foundCompletion];
-            } else {
-            }
-          },
-      
-          findAllAvatarInCompletionByTaskId: (
-            state,
-            action: PayloadAction<{ taskId: string, profiles:Profile[] }>,
-          ) => {
-            const { taskId } = action.payload;
-            //filter the completions with the same taskId
-            const filteredCompletions = state.completions.filter(
-              (completion) => completion.taskId === taskId,
-            );
-            // get the unique profileIds
-            const uniqueProfileIds = [
-              ...new Set(
-                filteredCompletions?.map((completion) => completion.profileId),
-              ),
-            ];
-      
-            // profiles corresponding to the unique profileIds
-            const profilesForTask = action.payload.profiles.filter((profile) =>
-              uniqueProfileIds.includes(profile.id),
-            );
-      
-            const avatarList = profilesForTask.map((profile) => profile.avatar);
-            state.avatars = avatarList;
-          },
-        },
-        extraReducers: (builder) => {
-          builder
-            .addCase(addCompletionAsync.fulfilled, (state, action) => {
-              if (action.payload) {
-                state.completions = [...state.completions, action.payload];
-              }
-            })
-            .addCase(addCompletionAsync.rejected, (state, action) => {
-              console.log("error vid add completion: ", action.payload);
-            });
-        },
+      const avatarList = profilesForTask.map((profile) => profile.avatar);
+      state.avatars = avatarList;
+    },
+
+    findCompletionsByTaskId: (
+      state,
+      action: PayloadAction<{ taskId: string }>,
+    ) => {
+      const { taskId: id } = action.payload;
+      const foundCompletion = state.completions.find(
+        (completion) => completion.id === id,
+      );
+
+      if (foundCompletion) {
+        state.completions = [foundCompletion];
+      } else {
+      }
+    },
+
+    findCompletionsByTaskIdAndCompletionDate: (
+      state,
+      action: PayloadAction<{ taskId: string; completionDate: string }>,
+    ) => {
+      const { taskId, completionDate } = action.payload;
+
+      const today = new Date().toISOString();
+      // Filter task completions for the given Task ID and today's date
+      const todaysCompletions = state.completions.filter(
+        (completion) =>
+          completion.completionDate.split("T")[0] === today.split("T")[0],
+      );
+
+      if (todaysCompletions) {
+        console.log("in slice today completion", todaysCompletions);
+        state.completions = todaysCompletions;
+      } else {
+      }
+    },
+
+    findCompletionsByTaskAndProfielId: (
+      state,
+      action: PayloadAction<{ taskId: string; profileId: string }>,
+    ) => {
+      const { taskId, profileId } = action.payload;
+      const foundCompletion = state.completions.find(
+        (completion) =>
+          completion.taskId === taskId && completion.profileId === profileId,
+      );
+      if (foundCompletion) {
+        state.completions = [foundCompletion];
+      } else {
+      }
+    },
+
+    findAllAvatarInCompletionByTaskId: (
+      state,
+      action: PayloadAction<{ taskId: string; profiles: Profile[] }>,
+    ) => {
+      const { taskId } = action.payload;
+      //filter the completions with the same taskId
+      const filteredCompletions = state.completions.filter(
+        (completion) => completion.taskId === taskId,
+      );
+      // get the unique profileIds
+      const uniqueProfileIds = [
+        ...new Set(
+          filteredCompletions?.map((completion) => completion.profileId),
+        ),
+      ];
+
+      // profiles corresponding to the unique profileIds
+      const profilesForTask = action.payload.profiles.filter((profile) =>
+        uniqueProfileIds.includes(profile.id),
+      );
+
+      const avatarList = profilesForTask.map((profile) => profile.avatar);
+      state.avatars = avatarList;
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(addCompletionAsync.fulfilled, (state, action) => {
+        if (action.payload) {
+          state.completions = [...state.completions, action.payload];
+        }
+      })
+      .addCase(addCompletionAsync.rejected, (state, action) => {
+        console.log("error vid add completion: ", action.payload);
       });
-      
-  
-  
-
+  },
+});
 
 export const {
   findCompletionsByTaskId,

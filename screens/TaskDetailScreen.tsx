@@ -67,17 +67,14 @@ export default function TaskDetailScreen({
     }
   }, [dispatch, taskId]);
 
-  const handleTaskCompletion = async (
-    taskId: string,
-    profileId: string,
-    householdId: string,
-  ) => {
-    if (taskId && profileId) {
+  const handleTaskCompletion = async (taskId: string, householdId: string) => {
+    console.log("aktivs", activeProfile);
+    if (taskId && activeProfile) {
       const newTaskCompletion: TaskCompletion = {
         id: "",
         taskId: taskId,
         householdId: householdId,
-        profileId: profileId,
+        profileId: activeProfile.id,
         completionDate: new Date().toISOString(),
       };
       dispatch(addCompletionAsync(newTaskCompletion));
@@ -222,11 +219,7 @@ export default function TaskDetailScreen({
           <Button
             mode="text"
             onPress={() => {
-              handleTaskCompletion(
-                taskId,
-                activeProfile?.id ?? "",
-                activeHousehold?.id ?? "",
-              );
+              handleTaskCompletion(taskId, activeHousehold?.id ?? "");
             }}
             style={[styles.klarButton, theme.button]}
           >

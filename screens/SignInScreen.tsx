@@ -4,18 +4,17 @@ import React, { useEffect, useRef, useState } from "react";
 import {
   Animated,
   Easing,
-  GestureResponderEvent,
   Keyboard,
+  KeyboardAvoidingView,
   StyleSheet,
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
 } from "react-native";
 import { Text, TextInput } from "react-native-paper";
-import { useDispatch } from "react-redux";
-import { getUsersFromDB } from "../api/user";
 import { useTheme } from "../contexts/themeContext";
 import { RootNavigationScreenProps } from "../navigators/navigationTypes";
+import { useAppDispatch } from "../store/store";
 import { loginUser } from "../store/user/userSlice";
 import { User } from "../types";
 
@@ -26,7 +25,8 @@ export const SignInScreen = ({ navigation }: SignInProps) => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const { theme } = useTheme();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
+  const [activeUserInternal, setActiveUserInternal] = useState<User>();
 
   const [] = useState<User[]>([]);
 
@@ -41,48 +41,50 @@ export const SignInScreen = ({ navigation }: SignInProps) => {
     }).start();
   }, []);
 
-  // So you don't have to write the password when logging in (remove this later)
-  function clearFieldsAndTogglePassword(event: GestureResponderEvent): void {
-    if (!showPassword) {
-      // You can call the getUsersFromDB function with the provided username
-      getUsersFromDB(username).then((users) => {
-        if (users && users.length > 0) {
-          const user = users[0];
-          // If the user exists in the database, show the password
-          setPassword(user.password);
-          setShowPassword(true);
-        } else {
-          console.error("User not found in the database.");
-        }
-      });
-    } else {
-      // If the password is already shown, clear it
-      setPassword("");
-      setShowPassword(false);
-    }
-  }
+  // // So you don't have to write the password when logging in (remove this later)
+  // function clearFieldsAndTogglePassword(event: GestureResponderEvent): void {
+  //   if (!showPassword) {
+  //     // You can call the getUsersFromDB function with the provided username
+  //     getUsersFromDB(username).then((users) => {
+  //       if (users && users.length > 0) {
+  //         const user = users[0];
+  //         // If the user exists in the database, show the password
+  //         setPassword(user.password);
+  //         setShowPassword(true);
+  //       } else {
+  //         console.error("User not found in the database.");
+  //       }
+  //     });
+  //   } else {
+  //     // If the password is already shown, clear it
+  //     setPassword("");
+  //     setShowPassword(false);
+  //   }
+  // }
 
-  function handleLogin() {
-    getUsersFromDB(username)
-      .then((users) => {
-        if (users && users.length > 0) {
-          const user = users[0];
+  async function handleLogin() {
+    dispatch(loginUser({ email: username, password: password }));
+    console.log("DONE");
+    // getUsersFromDB(username)
+    //   .then((users) => {
+    //     if (users && users.length > 0) {
+    //       const user = users[0];
 
-          if (user.password === password) {
-            dispatch(loginUser(user));
-            console.log("Authentication successful");
-            console.log("User data:", user);
-            navigation.navigate("HouseholdAccount");
-          } else {
-            console.error("Authentication failed: Invalid password");
-          }
-        } else {
-          console.error("Authentication failed: User not found");
-        }
-      })
-      .catch((error) => {
-        console.error("Error while fetching users:", error);
-      });
+    //       if (user.password === password) {
+    //         dispatch(loginUser(user));
+    //         console.log("Authentication successful");
+    //         console.log("User data:", user);
+    //         navigation.navigate("HouseholdAccount");
+    //       } else {
+    //         console.error("Authentication failed: Invalid password");
+    //       }
+    //     } else {
+    //       console.error("Authentication failed: User not found");
+    //     }
+    //   })
+    //   .catch((error) => {
+    //     console.error("Error while fetching users:", error);
+    //   });
   }
 
   return (
@@ -168,14 +170,14 @@ export const SignInScreen = ({ navigation }: SignInProps) => {
                 <Text style={theme.buttonText}>Skapa konto</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity
+              {/* <TouchableOpacity
                 style={theme.signupButton as any}
                 onPress={clearFieldsAndTogglePassword}
-              >
+                >
                 <Text style={theme.buttonText}>
                   {showPassword ? "Ta bort lösenord" : "Glömt lösenord?"}
-                </Text>
-              </TouchableOpacity>
+                  </Text>
+                </TouchableOpacity> */}
             </View>
           </View>
         </View>

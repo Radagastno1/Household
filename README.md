@@ -34,19 +34,19 @@ Kravlista (3)
 med produktägare, godkännas och dokumenteras.
 
 Hushåll (1)
-[] Ett hushåll ska ha ett namn och en genererad (enkel) kod så andra kan gå med i hushållet,
+[x] Ett hushåll ska ha ett namn och en genererad (enkel) kod så andra kan gå med i hushållet,
 namnet ska gå att ändra.
 
 Konto (3)
-[] En användare ska kunna registrera och logga in sig.
-[] En användare ska kunna skapa ett nytt hushåll.
-[] En användare ska kunna gå med i ett hushåll genom att ange hushållets kod.
+[x] En användare ska kunna registrera och logga in sig.
+[x] En användare ska kunna skapa ett nytt hushåll.
+[x] En användare ska kunna gå med i ett hushåll genom att ange hushållets kod.
 
 Profil (4)
 [x] En användare ska kunna ange sitt namn.
 [x] En användare ska kunna välja en avatar (emoji-djur + färg) från en fördefinierad lista.
 [x] Valda avatarer ska inte kunna väljas av andra användare i hushållet.
-[] Avataren ska användas i appen för att visa vad användaren har gjort.
+[x] Avataren ska användas i appen för att visa vad användaren har gjort.
 
 Sysslor (3)
 [x] En ägare ska kunna lägga till sysslor att göra i hemmet.
@@ -76,17 +76,17 @@ Kravlista (1)
 Hushåll (6)
 [x] Alla användare i ett hushåll ska kunna se vilka som tillhör ett hushåll.
 [] En ägare av ett hushåll ska kunna se förfrågningar om att gå med i hushållet.
-[] En ägare ska kunna acceptera eller neka förfrågningar.
-[] En ägare ska kunna göra andra till ägare.
+[?] En ägare ska kunna acceptera eller neka förfrågningar.
+[?] En ägare ska kunna göra andra till ägare.
 [] En ägare ska kunna pausa en användare och under pausade perioder ska användare inte
 tas med i statistiken.
 [] Om en använder har pausats under en del av en period i statistiken ska graferna
 normaliseras.
 
 Konto (2)
-[] När en användare har valt att gå med i ett hushåll behöver en ägare av hushållet först
+[?] När en användare har valt att gå med i ett hushåll behöver en ägare av hushållet först
 godkänna användaren.
-[] En användare ska kunna lämna ett hushåll.
+[?] En användare ska kunna lämna ett hushåll.
 
 Profil (2)
 [x] En användare ska kunna ställa in appens utseende (mörkt, ljust, auto).
@@ -97,13 +97,13 @@ Sysslor (3)
 [] En användare ska kunna lägga till en ljudinspelning och en bild för att beskriva sysslan
 ytterligare.
 [x] En ägare ska kunna ta bort en syssla.
-[] När en syssla tas bort ska användaren få en varning om att all statistik gällande sysslan
+[x] När en syssla tas bort ska användaren få en varning om att all statistik gällande sysslan
 också kommer att tas bort och få valet att arkivera sysslan istället.
 
 Statistik (3)
 [x] Det ska finnas en statistikvy över ”förra vecka”.
 [x] Det ska finnas en statistikvy över ”förra månaden”.
-[x] Om det inte finns statistik för en av vyerna ska den vyn inte visas.
+[?] Om det inte finns statistik för en av vyerna ska den vyn inte visas.
 
 Schemaläggning (3)
 [] En ägare ska kunna tilldela och ta bort sysslor från användare i hushållet.

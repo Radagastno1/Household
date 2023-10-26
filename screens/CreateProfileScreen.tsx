@@ -99,12 +99,12 @@ export default function CreateProfileScreen({
   const saveProfile = () => {
     console.log("hushållsid är", householdId);
 
-    if (selectedAvatar) {
+    if (selectedAvatar && activeUser) {
       const avatarsColor = AvatarColors[selectedAvatar as Avatars];
       const newProfile = {
         id: todaysDate.getUTCMilliseconds.toString().slice(-4),
         profileName: householdName,
-        userId: activeUser.id,
+        userId: activeUser.uid,
         householdId: householdId,
         avatar: selectedAvatar,
         avatarsColors: avatarsColor,
