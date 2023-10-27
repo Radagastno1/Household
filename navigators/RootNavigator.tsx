@@ -25,7 +25,7 @@ export type RootStackParamList = {
   HouseholdAccount: undefined;
   ProfileAccount: { householdId: string };
   HandleHousehold: undefined;
-  CreateProfile: { householdId: string, isOwner:boolean };
+  CreateProfile: { householdId: string; isOwner: boolean };
   Tab: undefined;
 };
 
@@ -63,7 +63,7 @@ export default function RootNavigator() {
       // }
       >
         {/* <Stack.Screen name="SplashScreen" component={SplashScreen} /> */}
-        {isLoggedIn ? (
+        {userSlice ? (
           <>
             <Stack.Screen
               name="HouseholdAccount"

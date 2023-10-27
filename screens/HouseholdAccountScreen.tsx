@@ -3,6 +3,7 @@ import { signOut } from "firebase/auth";
 import React, { useEffect, useRef, useState } from "react";
 import {
   Alert,
+  Image,
   Animated,
   PanResponder,
   ScrollView,
@@ -26,6 +27,7 @@ import {
 } from "../store/profile/profileSlice";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { Household } from "../types";
+import { AvatarUrls, Avatars } from "../data/avatars";
 
 type HouseholdProps = RootNavigationScreenProps<"HouseholdAccount">;
 
@@ -56,13 +58,19 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
     dispatch(getHouseholdsByHouseholdIdAsync(householdIds));
   }, [profilesLoaded]);
 
+  useEffect(() => {
+    if (activeProfile) {
+      navigation.navigate("ProfileAccount", {
+        householdId: activeProfile.householdId,
+      });
+    }
+  }, [activeProfile]);
+
   const handleEnterHousehold = async (household: Household) => {
     dispatch(sethouseholdActive(household));
     try {
+      dispatch(fetchAllProfilesByHousehold(household.id, activeUser!.uid));
       await dispatch(
-        fetchAllProfilesByHousehold(household.id, activeUser!.uid),
-      );
-      dispatch(
         setProfileByHouseholdAndUser({
           userId: activeUser!.uid,
           householdId: household.id,
@@ -70,11 +78,6 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
       );
       console.log("FRÅN HOUSEHOLDACCOUNT: ", activeProfile?.id);
       console.log("aktiva profilen: ", activeProfile);
-      if (activeProfile) {
-        navigation.navigate("ProfileAccount", {
-          householdId: household.id,
-        });
-      }
     } catch (error) {
       console.error("Error entering household:", error);
     }
@@ -160,21 +163,20 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
                 handleEnterHousehold(household);
               }}
             >
-              {/* <View style={{ flexDirection: "row", alignItems: "center" }}>
-                {profiles[index] && profiles[index]!.length > 0 && (
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                {profiles[index] ? (
                   <Image
                     key={0}
                     source={{
-                      uri: AvatarUrls[profiles[index]![0].avatar as Avatars],
+                      uri: AvatarUrls[profiles[index].avatar as Avatars],
                     }}
                     style={{ height: 20, width: 20 }}
                     alt={`Avatar ${index}`}
                   />
+                ) : (
+                  <View key={0} style={{ height: 20, width: 20 }} />
                 )}
-                {profiles[index] && profiles[index]!.length > 1 && (
-                  <Text>...</Text>
-                )}
-              </View> */}
+              </View>
 
               <View>
                 <Text style={theme.buttonText}>{household.name}</Text>
