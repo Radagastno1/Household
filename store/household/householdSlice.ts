@@ -1,5 +1,3 @@
-import { useNavigation } from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
   addHouseholdToDB,
@@ -7,7 +5,6 @@ import {
   editHouseholdToDB,
   getHouseholdsFromDB,
 } from "../../api/household";
-import { RootStackParamList } from "../../navigators/RootNavigator";
 import { Household } from "../../types";
 
 export interface HouseholdState {
@@ -29,14 +26,12 @@ export const getHouseholdsByHouseholdIdAsync = createAsyncThunk<
 >("households/getHouseholdByHouseholdId", async (householdIds, thunkAPI) => {
   try {
     const fetchedHouseholds: Household[] = [];
-
     for (const id of householdIds) {
       const household = await getHouseholdsFromDB(id);
       if (household) {
         fetchedHouseholds.push(household as Household);
       }
     }
-
     console.log("Hämtade hushåll: ", fetchedHouseholds);
     return fetchedHouseholds;
   } catch (error: any) {
@@ -60,18 +55,20 @@ export const handleJoinHousehold = async (joinCode: string) => {
   }
 };
 
-export const addHouseholdAsync = async (householdName: string) => {
-  if (householdName) {
-    // Dispatch the action and await its completion
-    const household = await addHouseholdToDB(householdName);
-    if (household) {
-      return household;
-    } else {
-      console.error("Failed to add the household. Try again later.");
-      return null;
-    }
+export const addHouseholdAsync = createAsyncThunk<
+  Household | null,
+  string,
+  { rejectValue: string }
+>("households/addHousehold", async (householdName, thunkAPI) => {
+  try {
+    const household = (await addHouseholdToDB(
+      householdName,
+    )) as Household | null;
+    return household;
+  } catch (error: any) {
+    return thunkAPI.rejectWithValue(error.message);
   }
-};
+});
 
 // Code generator function
 export const generateHouseholdCode = () => {
@@ -134,17 +131,6 @@ const householdSlice = createSlice({
       } else {
       }
     },
-    // getHouseholdsByHouseholdId: (
-    //   state,
-    //   action: PayloadAction<{ householdId: string }>,
-    // ) => {
-    //   const { householdId } = action.payload;
-    //   const households = getHouseholdsFromDB(householdId).then((household) => {
-    //     const uniqueHouseholds = new Set([...state.households, household]);
-    //     console.log("UNIKA HUSHÅLL: ", uniqueHouseholds);
-    //     return [...uniqueHouseholds];
-    //   });
-    // },
     editHouseHoldeName: (
       state,
       action: PayloadAction<{ householdId: string; newHouseholdName: string }>,
@@ -183,12 +169,19 @@ const householdSlice = createSlice({
       })
       .addCase(getHouseholdsByHouseholdIdAsync.rejected, (state, action) => {
         console.log("error vid get households: ", action.payload);
+      })
+      .addCase(addHouseholdAsync.fulfilled, (state, action) => {
+        if (action.payload) {
+          state.households = [...state.households, action.payload];
+        }
+      })
+      .addCase(addHouseholdAsync.rejected, (state, action) => {
+        console.log("error vid add household: ", action.payload);
       });
   },
 });
 
 export const {
-  addHousehold,
   findHouseholdById,
   setHouseholdByHouseholdId,
   editHouseHoldeName,

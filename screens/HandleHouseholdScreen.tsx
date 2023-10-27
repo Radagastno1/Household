@@ -1,9 +1,5 @@
 import {
-  addDoc,
-  collection,
-  doc,
-  getFirestore,
-  setDoc,
+  getFirestore
 } from "firebase/firestore";
 import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
@@ -12,10 +8,10 @@ import { app } from "../api/config";
 import { useTheme } from "../contexts/themeContext";
 import { RootNavigationScreenProps } from "../navigators/navigationTypes";
 import {
-  generateHouseholdCode,
-  handleJoinHousehold,
+  addHouseholdAsync,
+  handleJoinHousehold
 } from "../store/household/householdSlice";
-import { useAppSelector } from "../store/store";
+import { useAppDispatch, useAppSelector } from "../store/store";
 
 const db = getFirestore(app);
 
@@ -27,17 +23,23 @@ export default function HandleHouseholdScreen({
   const { theme } = useTheme();
   const [householdName, setHouseholdName] = useState("");
   const [joinCode, setJoinCode] = useState("");
+  const dispatch = useAppDispatch();
 
   const handleCreateHousehold = async () => {
 
-
     try {
- 
-
-      navigation.navigate("CreateProfile", {
-        householdId: householdId,
-        isOwner:true
+      dispatch(addHouseholdAsync(householdName)).then((action) => {
+        if (addHouseholdAsync.fulfilled.match(action)) {
+          const householdCreated = action.payload; 
+          if (householdCreated) {
+            navigation.navigate("CreateProfile", {
+              householdId: householdCreated.id,
+              isOwner: true,
+            });
+          }
+        }
       });
+      
     } catch (error) {
       console.error("Error creating household:", error);
     }
