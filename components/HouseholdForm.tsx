@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Text, TextInput, View } from 'react-native';
+import { View, Text, TextInput, Button } from 'react-native';
 
 interface HouseholdFormProps {
   onSubmit: (name: string) => void;
@@ -22,7 +22,7 @@ const HouseholdForm: React.FC<HouseholdFormProps> = ({ onSubmit }) => {
         value={householdName}
         onChangeText={(text) => setHouseholdName(text)}
       />
-  <Text style={{ fontSize: 18 }}>{buttonTitle}</Text>
+      <Button title={buttonTitle} onPress={handleFormSubmit} />
     </View>
   );
 };
