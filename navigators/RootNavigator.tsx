@@ -35,7 +35,6 @@ export default function RootNavigator() {
   const { isLoading } = useAppSelector((state) => state.app);
   const dispatch = useAppDispatch();
   const userSlice = useAppSelector((state) => state.user.user);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     onAuthStateChanged(auth, (userSlice) => {
@@ -43,11 +42,9 @@ export default function RootNavigator() {
         const uid = userSlice.uid;
         console.log("USER IS LOGGED IN", uid);
         dispatch(setActiveUser(uid));
-        setIsLoggedIn(true);
       } else {
         // User is signed out
         console.log("USER IS SIGNED OUT");
-        setIsLoggedIn(false);
         // Dispatch no user to redux
       }
     });
