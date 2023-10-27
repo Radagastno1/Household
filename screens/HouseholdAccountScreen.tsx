@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import {
   Alert,
   Animated,
+  Image,
   PanResponder,
   ScrollView,
   StyleSheet,
@@ -14,6 +15,7 @@ import {
 import { Appbar } from "react-native-paper";
 import { auth } from "../api/config";
 import { useTheme } from "../contexts/themeContext";
+import { AvatarUrls, Avatars } from "../data/avatars";
 import { RootNavigationScreenProps } from "../navigators/navigationTypes";
 import {
   getHouseholdsByHouseholdIdAsync,
@@ -25,6 +27,7 @@ import {
   setProfileByHouseholdAndUser,
 } from "../store/profile/profileSlice";
 import { useAppDispatch, useAppSelector } from "../store/store";
+import { logOutUser } from "../store/user/userSlice";
 import { Household } from "../types";
 
 type HouseholdProps = RootNavigationScreenProps<"HouseholdAccount">;
@@ -56,13 +59,19 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
     dispatch(getHouseholdsByHouseholdIdAsync(householdIds));
   }, [profilesLoaded]);
 
+  useEffect(() => {
+    if (activeProfile) {
+      navigation.navigate("ProfileAccount", {
+        householdId: activeProfile.householdId,
+      });
+    }
+  }, [activeProfile]);
+
   const handleEnterHousehold = async (household: Household) => {
     dispatch(sethouseholdActive(household));
     try {
+      dispatch(fetchAllProfilesByHousehold(household.id, activeUser!.uid));
       await dispatch(
-        fetchAllProfilesByHousehold(household.id, activeUser!.uid),
-      );
-      dispatch(
         setProfileByHouseholdAndUser({
           userId: activeUser!.uid,
           householdId: household.id,
@@ -70,11 +79,6 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
       );
       console.log("FRÅN HOUSEHOLDACCOUNT: ", activeProfile?.id);
       console.log("aktiva profilen: ", activeProfile);
-      if (activeProfile) {
-        navigation.navigate("ProfileAccount", {
-          householdId: household.id,
-        });
-      }
     } catch (error) {
       console.error("Error entering household:", error);
     }
@@ -84,6 +88,7 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
     signOut(auth)
       .then(() => {
         console.log("Användaren har loggats ut");
+        dispatch(logOutUser());
       })
       .catch((error) => {
         console.error("Fel vid utloggning:", error.message);
@@ -149,43 +154,45 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
             marginTop: 10,
           }}
         >
-          {households?.map((household: Household, index) => (
-            <TouchableOpacity
-              key={index}
-              style={[
-                theme.cardButton as any,
-                { flexDirection: "row", justifyContent: "space-between" },
-              ]}
-              onPress={() => {
-                handleEnterHousehold(household);
-              }}
-            >
-              {/* <View style={{ flexDirection: "row", alignItems: "center" }}>
-                {profiles[index] && profiles[index]!.length > 0 && (
+          {households?.map((household: Household, index) => {
+            const profile = profiles.find(
+              (profile) =>
+                profile.householdId === household.id &&
+                profile.userId === activeUser?.uid,
+            );
+            return (
+              <TouchableOpacity
+                key={index}
+                style={[
+                  theme.cardButton as any,
+                  { flexDirection: "row", justifyContent: "space-between" },
+                ]}
+                onPress={() => {
+                  handleEnterHousehold(household);
+                }}
+              >
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
                   <Image
                     key={0}
                     source={{
-                      uri: AvatarUrls[profiles[index]![0].avatar as Avatars],
+                      uri: AvatarUrls[profile?.avatar as Avatars],
                     }}
                     style={{ height: 20, width: 20 }}
                     alt={`Avatar ${index}`}
                   />
-                )}
-                {profiles[index] && profiles[index]!.length > 1 && (
-                  <Text>...</Text>
-                )}
-              </View> */}
+                </View>
 
-              <View>
-                <Text style={theme.buttonText}>{household.name}</Text>
-              </View>
+                <View>
+                  <Text style={theme.buttonText}>{household.name}</Text>
+                </View>
 
-              <View>
-                {/* if it is owner */}
-                <MaterialIcons name="edit" size={24} color="black" />
-              </View>
-            </TouchableOpacity>
-          ))}
+                <View>
+                  {/* if it is owner */}
+                  <MaterialIcons name="edit" size={24} color="black" />
+                </View>
+              </TouchableOpacity>
+            );
+          })}
         </ScrollView>
 
         <TouchableOpacity

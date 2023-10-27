@@ -15,6 +15,7 @@ import CustomHeader from "../store/shared/CustomHeader";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { setActiveUser } from "../store/user/userSlice";
 import TopTabNavigator from "./TopTabNavigator";
+import SplashScreen from "../screens/SplashScreen";
 
 export type RootStackParamList = {
   SplashScreen: undefined;
@@ -25,17 +26,17 @@ export type RootStackParamList = {
   HouseholdAccount: undefined;
   ProfileAccount: { householdId: string };
   HandleHousehold: undefined;
-  CreateProfile: { householdId: string, isOwner:boolean };
+  CreateProfile: { householdId: string; isOwner: boolean };
   Tab: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function RootNavigator() {
-  const { isLoading } = useAppSelector((state) => state.app);
+  const [isUserFetched, setUserFetched] = useState(false);
+  // const { isLoading } = useAppSelector((state) => state.app);
   const dispatch = useAppDispatch();
   const userSlice = useAppSelector((state) => state.user.user);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     onAuthStateChanged(auth, (userSlice) => {
@@ -43,13 +44,10 @@ export default function RootNavigator() {
         const uid = userSlice.uid;
         console.log("USER IS LOGGED IN", uid);
         dispatch(setActiveUser(uid));
-        setIsLoggedIn(true);
       } else {
-        // User is signed out
         console.log("USER IS SIGNED OUT");
-        setIsLoggedIn(false);
-        // Dispatch no user to redux
       }
+      setUserFetched(true);
     });
   }, []);
 
@@ -62,8 +60,9 @@ export default function RootNavigator() {
       //   // om användaren har vald hus, så gå in dagsvyn
       // }
       >
-        {/* <Stack.Screen name="SplashScreen" component={SplashScreen} /> */}
-        {isLoggedIn ? (
+        {!isUserFetched ? (
+          <Stack.Screen name="SplashScreen" component={SplashScreen} />
+        ) : userSlice ? (
           <>
             <Stack.Screen
               name="HouseholdAccount"
@@ -82,7 +81,6 @@ export default function RootNavigator() {
             <Stack.Screen
               name="CreateProfile"
               component={CreateProfileScreen}
-              // initialParams={{ householdId: "fYHVLNiQvWEG9KNUGqBT" }}
             />
             <Stack.Screen name="HandleTask" component={CreateTaskScreen} />
             <Stack.Screen
