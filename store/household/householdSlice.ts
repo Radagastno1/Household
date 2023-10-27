@@ -60,6 +60,19 @@ export const handleJoinHousehold = async (joinCode: string) => {
   }
 };
 
+export const addHouseholdAsync = async (householdName: string) => {
+  if (householdName) {
+    // Dispatch the action and await its completion
+    const household = await addHouseholdToDB(householdName);
+    if (household) {
+      return household;
+    } else {
+      console.error("Failed to add the household. Try again later.");
+      return null;
+    }
+  }
+};
+
 // Code generator function
 export const generateHouseholdCode = () => {
   const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -83,23 +96,20 @@ const householdSlice = createSlice({
     sethouseholdActive: (state, action: PayloadAction<Household>) => {
       state.activeHousehold = action.payload;
     },
-    addHousehold: (state, action: PayloadAction<Household>) => {
-      const navigation =
-        useNavigation<StackNavigationProp<RootStackParamList>>();
+    // addHousehold: (state, action: PayloadAction<Household>) => {
 
-      const code = generateHouseholdCode(); // Generate a unique code
-      const householdWithCode = { ...action.payload, code }; // Add the code to the household
-      addHouseholdToDB(householdWithCode)
-        .then((createdHousehold) => {
-          if (createdHousehold) {
-            state.households = [...state.households, createdHousehold];
-            console.log("Household added: ", createdHousehold);
-          }
-        })
-        .catch((error) => {
-          console.error("Error adding household:", error);
-        });
-    },
+    //   const householdWithCode = { ...action.payload, code }; // Add the code to the household
+    //   addHouseholdToDB(householdWithCode)
+    //     .then((createdHousehold) => {
+    //       if (createdHousehold) {
+    //         state.households = [...state.households, createdHousehold];
+    //         console.log("Household added: ", createdHousehold);
+    //       }
+    //     })
+    //     .catch((error) => {
+    //       console.error("Error adding household:", error);
+    //     });
+    // },
     setHouseholdByHouseholdId: (
       state,
       action: PayloadAction<{ householdId: string }>,

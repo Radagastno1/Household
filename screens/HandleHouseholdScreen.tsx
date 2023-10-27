@@ -29,24 +29,10 @@ export default function HandleHouseholdScreen({
   const [joinCode, setJoinCode] = useState("");
 
   const handleCreateHousehold = async () => {
-    const householdCollectionRef = collection(db, "households");
-    const randomCode = generateHouseholdCode();
+
 
     try {
-      const docRef = await addDoc(householdCollectionRef, {
-        name: householdName,
-        code: randomCode,
-      });
-
-      const householdId = docRef.id;
-
-      await setDoc(doc(db, "households", householdId), {
-        id: householdId,
-        name: householdName,
-        code: randomCode,
-      });
-
-      console.log("Household created with ID:", householdId);
+ 
 
       navigation.navigate("CreateProfile", {
         householdId: householdId,
