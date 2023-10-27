@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button } from 'react-native';
+import { Text, TextInput, View } from 'react-native';
 
 interface HouseholdFormProps {
   onSubmit: (name: string) => void;
@@ -7,8 +7,10 @@ interface HouseholdFormProps {
 
 const HouseholdForm: React.FC<HouseholdFormProps> = ({ onSubmit }) => {
   const [householdName, setHouseholdName] = useState('');
+  const [buttonTitle, setButtonTitle] = useState("SKAPA");
 
   const handleFormSubmit = () => {
+    setButtonTitle("SKAPAR HUSHÅLL");
     onSubmit(householdName);
   };
 
@@ -20,7 +22,7 @@ const HouseholdForm: React.FC<HouseholdFormProps> = ({ onSubmit }) => {
         value={householdName}
         onChangeText={(text) => setHouseholdName(text)}
       />
-      <Button title="Skapa Hushåll" onPress={handleFormSubmit} />
+  <Text style={{ fontSize: 18 }}>{buttonTitle}</Text>
     </View>
   );
 };
