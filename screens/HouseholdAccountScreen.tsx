@@ -102,28 +102,31 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
       setCurrentTheme(currentTheme === "dark" ? "light" : "dark");
     }
   };
-
-  const pan = useRef(new Animated.Value(0)).current;
+  const pan = useRef(new Animated.ValueXY()).current;
+  const minX = -50; // Minimum X position
+  const maxX = 50;  // Maximum X position
+  
   const panResponder = PanResponder.create({
     onStartShouldSetPanResponder: () => true,
-    onPanResponderMove: (e, gestureState) => {
-      pan.setValue(gestureState.dx);
-    },
+    onPanResponderMove: Animated.event([null, { dx: pan.x, dy: pan.y }], { useNativeDriver: false }),
     onPanResponderRelease: (e, gestureState) => {
       if (Math.abs(gestureState.dx) > 50) {
         handleToggleTheme();
       }
     },
   });
-
-  const translateX = pan.interpolate({
-    inputRange: [-50, 0, 50],
-    outputRange: [-50, 0, 50],
-    extrapolate: "clamp",
-  });
+  
+  
+  
+  
+//   const translateX = pan.interpolate({
+//     inputRange: [-50, 0, 50],
+//     outputRange: [-50, 0, 50],
+//     extrapolate: "clamp",
+//   });
 
   return (
-    <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
+    <View style={{ flex: 1, backgroundColor: theme.colors.background,justifyContent:"center" }}>
       <View>
         <Appbar.Header style={{ height: 70, backgroundColor: "white" }}>
           <Appbar.Content
@@ -201,35 +204,56 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
         >
           <Text style={theme.buttonText}>Logga ut</Text>
         </TouchableOpacity>
+       
 
-        <TouchableOpacity
+        {/* <View
           style={[
             styles.themeButtonContainer,
             {
               backgroundColor: theme.button.backgroundColor,
             },
           ]}
-          onPress={handleToggleTheme}
-        >
-          <View style={styles.themeButton}>
-            <View>
-              <Text style={styles.themeButtonText}>
-                {currentTheme === "dark" ? "dark" : "light"}
-              </Text>
-            </View>
+        //   onPress={handleToggleTheme}
+        > */}
+          {/* <View style={styles.themeButton}>
             <Animated.View
-              style={[styles.innerButton, { transform: [{ translateX }] }]}
+              style={[styles.innerButton, { transform: [{ translateX ,}] }]}
               {...panResponder.panHandlers}
             >
-              <Text style={styles.innerButtonText}>auto</Text>
+              <View style={styles.innerButton}/>
             </Animated.View>
-            <View>
-              <Text style={styles.themeButtonText}>
+            <View    pointerEvents="none" style={styles.texts}>
+            <Text style={styles.titleText}>
+                {currentTheme === "dark" ? "dark" : "light"}
+                dark
+              </Text>
+              <Text style={styles.titleText}>auto</Text>
+              <Text style={styles.titleText}>
                 {currentTheme === "light" ? "light" : "dark"}
+                light
               </Text>
             </View>
-          </View>
-        </TouchableOpacity>
+          </View> */}
+        {/* </View> */}
+      </View>
+      <View style={{margin:20}}>
+      <View style={styles.root}>
+      <Animated.View
+      style={{
+        transform: [
+          { translateX: pan.x }, // Only horizontal movement
+        ],
+      }}
+        {...panResponder.panHandlers}>
+        <View style={styles.box} />
+        
+      </Animated.View>
+      <View pointerEvents="none" style={styles.texts}>
+        <Text style={styles.titleText}>light</Text>
+                <Text style={styles.titleText}>auto</Text>
+                        <Text style={styles.titleText}>dark</Text>
+        </View>
+        </View>
       </View>
     </View>
   );
@@ -246,23 +270,20 @@ const styles = StyleSheet.create({
     marginTop: 20,
     position: "relative",
   },
-  themeButtonText: {
-    color: "black",
-    fontSize: 16,
-    margin: 10,
-  },
+
   themeButton: {
     justifyContent: "space-between",
     alignItems: "center",
-    position: "absolute",
+    
     flexDirection: "row",
+    position: 'relative',
+    backgroundColor: 'lightgrey',
   },
 
   innerButton: {
     backgroundColor: "white",
     borderRadius: 20,
     elevation: 2,
-    zIndex: 20,
     width: 70,
     alignItems: "center",
   },
@@ -273,6 +294,41 @@ const styles = StyleSheet.create({
   bottomContent: {
     marginBottom: 0,
     alignItems: "center",
+  },
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+   padding:10,
+    maxWidth:"90%",
+    height:70,
+marginBottom:10
+  },
+  root: {
+    position: 'relative',
+    backgroundColor: 'lightgrey',
+    width: '100%',
+    borderRadius: 10,
+    marginBottom:40
+  },
+  texts: {
+    position: 'absolute',
+    flexDirection: 'row',
+    width: '100%',
+    height: '100%',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+  },
+  titleText: {
+    fontSize: 14,
+    lineHeight: 24,
+    fontWeight: 'bold',
+  },
+  box: {
+    height: 60,
+    width: 60,
+    backgroundColor: 'yellow',
+    borderRadius: 10,
   },
 });
 function getAllProfilesByUserId(uid: string) {
