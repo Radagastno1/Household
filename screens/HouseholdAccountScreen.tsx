@@ -28,6 +28,7 @@ import {
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { Household } from "../types";
 import { AvatarUrls, Avatars } from "../data/avatars";
+import { logOutUser } from "../store/user/userSlice";
 
 type HouseholdProps = RootNavigationScreenProps<"HouseholdAccount">;
 
@@ -87,6 +88,7 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
     signOut(auth)
       .then(() => {
         console.log("Användaren har loggats ut");
+        dispatch(logOutUser());
       })
       .catch((error) => {
         console.error("Fel vid utloggning:", error.message);

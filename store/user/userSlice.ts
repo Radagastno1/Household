@@ -47,7 +47,7 @@ const userSlice = createSlice({
     },
 
     logOutUser: (state) => {
-      state.user = initialState.user;
+      state.user = undefined;
     },
     setActiveUser: (state, action) => {
       const activeUser: User = { uid: action.payload };
