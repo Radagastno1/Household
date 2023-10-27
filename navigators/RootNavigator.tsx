@@ -15,6 +15,7 @@ import CustomHeader from "../store/shared/CustomHeader";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { setActiveUser } from "../store/user/userSlice";
 import TopTabNavigator from "./TopTabNavigator";
+import SplashScreen from "../screens/SplashScreen";
 
 export type RootStackParamList = {
   SplashScreen: undefined;
@@ -32,7 +33,8 @@ export type RootStackParamList = {
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function RootNavigator() {
-  const { isLoading } = useAppSelector((state) => state.app);
+  const [isUserFetched, setUserFetched] = useState(false);
+  // const { isLoading } = useAppSelector((state) => state.app);
   const dispatch = useAppDispatch();
   const userSlice = useAppSelector((state) => state.user.user);
 
@@ -43,10 +45,9 @@ export default function RootNavigator() {
         console.log("USER IS LOGGED IN", uid);
         dispatch(setActiveUser(uid));
       } else {
-        // User is signed out
         console.log("USER IS SIGNED OUT");
-        // Dispatch no user to redux
       }
+      setUserFetched(true);
     });
   }, []);
 
@@ -59,8 +60,9 @@ export default function RootNavigator() {
       //   // om användaren har vald hus, så gå in dagsvyn
       // }
       >
-        {/* <Stack.Screen name="SplashScreen" component={SplashScreen} /> */}
-        {userSlice ? (
+        {!isUserFetched ? (
+          <Stack.Screen name="SplashScreen" component={SplashScreen} />
+        ) : userSlice ? (
           <>
             <Stack.Screen
               name="HouseholdAccount"
@@ -79,7 +81,6 @@ export default function RootNavigator() {
             <Stack.Screen
               name="CreateProfile"
               component={CreateProfileScreen}
-              // initialParams={{ householdId: "fYHVLNiQvWEG9KNUGqBT" }}
             />
             <Stack.Screen name="HandleTask" component={CreateTaskScreen} />
             <Stack.Screen
