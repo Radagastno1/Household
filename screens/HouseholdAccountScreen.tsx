@@ -3,8 +3,8 @@ import { signOut } from "firebase/auth";
 import React, { useEffect, useRef, useState } from "react";
 import {
   Alert,
-  Image,
   Animated,
+  Image,
   PanResponder,
   ScrollView,
   StyleSheet,
@@ -15,6 +15,7 @@ import {
 import { Appbar } from "react-native-paper";
 import { auth } from "../api/config";
 import { useTheme } from "../contexts/themeContext";
+import { AvatarUrls, Avatars } from "../data/avatars";
 import { RootNavigationScreenProps } from "../navigators/navigationTypes";
 import {
   getHouseholdsByHouseholdIdAsync,
@@ -26,9 +27,8 @@ import {
   setProfileByHouseholdAndUser,
 } from "../store/profile/profileSlice";
 import { useAppDispatch, useAppSelector } from "../store/store";
-import { Household } from "../types";
-import { AvatarUrls, Avatars } from "../data/avatars";
 import { logOutUser } from "../store/user/userSlice";
+import { Household } from "../types";
 
 type HouseholdProps = RootNavigationScreenProps<"HouseholdAccount">;
 
@@ -154,42 +154,45 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
             marginTop: 10,
           }}
         >
-          {households?.map((household: Household, index) => (
-            <TouchableOpacity
-              key={index}
-              style={[
-                theme.cardButton as any,
-                { flexDirection: "row", justifyContent: "space-between" },
-              ]}
-              onPress={() => {
-                handleEnterHousehold(household);
-              }}
-            >
-              <View style={{ flexDirection: "row", alignItems: "center" }}>
-                {profiles[index] ? (
+          {households?.map((household: Household, index) => {
+            const profile = profiles.find(
+              (profile) =>
+                profile.householdId === household.id &&
+                profile.userId === activeUser?.uid,
+            );
+            return (
+              <TouchableOpacity
+                key={index}
+                style={[
+                  theme.cardButton as any,
+                  { flexDirection: "row", justifyContent: "space-between" },
+                ]}
+                onPress={() => {
+                  handleEnterHousehold(household);
+                }}
+              >
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
                   <Image
                     key={0}
                     source={{
-                      uri: AvatarUrls[profiles[index].avatar as Avatars],
+                      uri: AvatarUrls[profile?.avatar as Avatars],
                     }}
                     style={{ height: 20, width: 20 }}
                     alt={`Avatar ${index}`}
                   />
-                ) : (
-                  <View key={0} style={{ height: 20, width: 20 }} />
-                )}
-              </View>
+                </View>
 
-              <View>
-                <Text style={theme.buttonText}>{household.name}</Text>
-              </View>
+                <View>
+                  <Text style={theme.buttonText}>{household.name}</Text>
+                </View>
 
-              <View>
-                {/* if it is owner */}
-                <MaterialIcons name="edit" size={24} color="black" />
-              </View>
-            </TouchableOpacity>
-          ))}
+                <View>
+                  {/* if it is owner */}
+                  <MaterialIcons name="edit" size={24} color="black" />
+                </View>
+              </TouchableOpacity>
+            );
+          })}
         </ScrollView>
 
         <TouchableOpacity
