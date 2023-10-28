@@ -9,7 +9,7 @@ import {
   updateDoc,
   where,
 } from "firebase/firestore";
-import { Profile, User } from "../types";
+import { HouseholdRequest, Profile } from "../types";
 import { db } from "./config";
 
 export const addProfileToDB = async (profile: Profile) => {
@@ -43,6 +43,48 @@ export const addProfileToDB = async (profile: Profile) => {
   }
 };
 
+export const addProfileWithRequestToDB = async (
+  profile: Profile,
+  request: HouseholdRequest,
+) => {
+  const profileCollectionRef = collection(db, "profiles");
+  const requestCollectionRef = collection(db, "requests");
+
+  try {
+    const docProfileRef = await addDoc(profileCollectionRef, {});
+
+    profile.id = docProfileRef.id;
+
+    console.log(
+      "Dokumentreferens id:",
+      docProfileRef.id,
+      " och profilens id:",
+      profile.id,
+    );
+
+    await updateDoc(docProfileRef, profile as Partial<Profile>);
+    const profileDoc = await getDoc(docProfileRef);
+    if (profileDoc.exists()) {
+      const profileData = profileDoc.data();
+      console.log("profilen som skapades i databasen: ", profileData);
+
+      const docRequestRef = await addDoc(requestCollectionRef, {});
+      request.id = docRequestRef.id;
+
+      await updateDoc(docRequestRef, request as Partial<HouseholdRequest>);
+      const requestDoc = await getDoc(docRequestRef);
+      console.log("förfrågan som skapades i databasen: ", requestDoc);
+      return requestDoc;
+    } else {
+      console.error("Uppgiftsdokumentet finns inte i databasen.");
+      return null;
+    }
+  } catch (error) {
+    console.error("Fel vid tillägg av profil:", error);
+    return null;
+  }
+};
+
 export const saveProfileNameToDatabase = async (
   profileId: string,
   newProfileName: string,
@@ -63,23 +105,24 @@ export const saveProfileNameToDatabase = async (
   }
 };
 
-export const getAllProfilesByHouseholdIdDb = async (
-  householdId: string,
-) => {
+export const getAllProfilesByHouseholdIdDb = async (householdId: string) => {
   const profileCollectionRef = collection(db, "profiles");
 
-    const q = query(profileCollectionRef, where("householdId", "==", householdId));
+  const q = query(
+    profileCollectionRef,
+    where("householdId", "==", householdId),
+  );
 
-    const querySnapshot = await getDocs(q);
+  const querySnapshot = await getDocs(q);
 
-    const profiles: Profile[] = [];
+  const profiles: Profile[] = [];
 
-    querySnapshot.forEach((doc) => {
-      profiles.push(doc.data() as Profile);
-    });
+  querySnapshot.forEach((doc) => {
+    profiles.push(doc.data() as Profile);
+  });
 
-    console.log("profiler hämtade från DB:", profiles);
-    return profiles;
+  console.log("profiler hämtade från DB:", profiles);
+  return profiles;
 };
 
 //DENNA BEHÖVS NOG INTE DÅ VI HÄMTAR ALLA EN GÅNG

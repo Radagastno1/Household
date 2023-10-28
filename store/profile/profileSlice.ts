@@ -1,11 +1,11 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { getHouseholdsFromDB } from "../../api/household";
 import {
   addProfileToDB,
+  addProfileWithRequestToDB,
   getAllProfilesByHouseholdId,
+  getAllProfilesByHouseholdIdDb,
   getAllProfilesByUserIdFromDb,
   saveProfileNameToDatabase,
-  getAllProfilesByHouseholdIdDb,
 } from "../../api/profile";
 import { HouseholdRequest, Profile } from "../../types";
 
