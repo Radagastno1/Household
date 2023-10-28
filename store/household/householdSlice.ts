@@ -39,6 +39,40 @@ export const getHouseholdsByHouseholdIdAsync = createAsyncThunk<
   }
 });
 
+// export const setActiveHouseholdAsync = createAsyncThunk<
+//   Household,
+//   string,
+//   { rejectValue: string }
+// >(
+//   "households/getHouseholdByHouseholdId",
+//   async (incomingHousehold: Household, thunkAPI) => {
+//     try {
+//       if (incomingHousehold) {
+//         activeHousehold = incomingHousehold;
+//       } else {
+//         console.error(
+//           "Failed to join the household. Please check the join code.");
+//     } catch (error: any) {
+//       return thunkAPI.rejectWithValue(error.message);
+//     }
+//   }
+// });
+
+export const setActiveHouseholdAsync = createAsyncThunk(
+  "households/setActiveHousehold",
+  async (incomingHousehold: Household, thunkAPI) => {
+    try {
+      if (incomingHousehold) {
+        sethouseholdActive(incomingHousehold);
+      } else {
+        return thunkAPI.rejectWithValue("Failed to add profile");
+      }
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error.message);
+    }
+  },
+);
+
 export const handleJoinHousehold = async (joinCode: string) => {
   if (joinCode) {
     // Dispatch the action and await its completion
