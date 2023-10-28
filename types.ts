@@ -80,6 +80,14 @@ export interface PieChart {
   serie: number;
 }
 
+export interface HouseholdRequest {
+  id: string;
+  profileId: string;
+  userMail: string;
+  householdId: string;
+  status: "pending" | "approved" | "rejected";
+}
+
 // Show how to make a day function work between task-data and taskCompletion-data
 // task created today 2023-10-12
 // interval : 3 days
