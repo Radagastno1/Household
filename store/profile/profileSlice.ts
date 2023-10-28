@@ -7,7 +7,7 @@ import {
   saveProfileNameToDatabase,
   getAllProfilesByHouseholdIdDb,
 } from "../../api/profile";
-import { Profile } from "../../types";
+import { HouseholdRequest, Profile } from "../../types";
 
 interface ProfileState {
   profiles: Profile[];
@@ -31,6 +31,48 @@ export const addProfileAsync = createAsyncThunk(
         return createdProfile;
       } else {
         return thunkAPI.rejectWithValue("Failed to add profile");
+      }
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error.message);
+    }
+  },
+);
+
+export const addProfileWithRequest = createAsyncThunk(
+  "profiles/addProfileWithRequest",
+  async (
+    { newProfile, userMail }: { newProfile: Profile; userMail: string },
+    thunkAPI,
+  ) => {
+    try {
+      //profil ska läggas till med tomt householdid och med en request fetch med
+      const profileWithoutHouseholdId: Profile = {
+        id: newProfile.id,
+        profileName: newProfile.profileName,
+        userId: newProfile.userId,
+        householdId: "",
+        avatar: newProfile.avatar,
+        isOwner: newProfile.isOwner,
+        isActive: true,
+      };
+
+      const request: HouseholdRequest = {
+        id: "",
+        profileId: newProfile.id,
+        userMail: userMail,
+        householdId: newProfile.householdId,
+        status: "pending",
+      };
+
+      const createdProfileWithRequest = await addProfileWithRequestToDB(
+        profileWithoutHouseholdId,
+        request,
+      );
+
+      if (createdProfileWithRequest) {
+        return createdProfileWithRequest;
+      } else {
+        return thunkAPI.rejectWithValue("Failed to add profile with request");
       }
     } catch (error: any) {
       return thunkAPI.rejectWithValue(error.message);
