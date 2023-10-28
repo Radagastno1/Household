@@ -7,6 +7,7 @@ import {
   getAllProfilesByUserIdFromDb,
   saveProfileNameToDatabase,
 } from "../../api/profile";
+import { getUserEmailByUid } from "../../api/user";
 import { HouseholdRequest, Profile } from "../../types";
 
 interface ProfileState {
@@ -45,36 +46,37 @@ export const addProfileWithRequest = createAsyncThunk(
     thunkAPI,
   ) => {
     try {
-      const userMail = await getUsersMail(uid);
+      const userMail = await getUserEmailByUid(uid);
 
-      //profil ska läggas till med tomt householdid och med en request fetch med
-      const profileWithoutHouseholdId: Profile = {
-        id: newProfile.id,
-        profileName: newProfile.profileName,
-        userId: newProfile.userId,
-        householdId: "",
-        avatar: newProfile.avatar,
-        isOwner: newProfile.isOwner,
-        isActive: true,
-      };
+      if (userMail) {
+        //profil ska läggas till med tomt householdid och med en request fetch med
+        const profileWithoutHouseholdId: Profile = {
+          id: newProfile.id,
+          profileName: newProfile.profileName,
+          userId: newProfile.userId,
+          householdId: "",
+          avatar: newProfile.avatar,
+          isOwner: newProfile.isOwner,
+          isActive: true,
+        };
+        const request: HouseholdRequest = {
+          id: "",
+          profileId: newProfile.id,
+          userMail: userMail,
+          householdId: newProfile.householdId,
+          status: "pending",
+        };
 
-      const request: HouseholdRequest = {
-        id: "",
-        profileId: newProfile.id,
-        userMail: userMail,
-        householdId: newProfile.householdId,
-        status: "pending",
-      };
+        const createdProfileWithRequest = await addProfileWithRequestToDB(
+          profileWithoutHouseholdId,
+          request,
+        );
 
-      const createdProfileWithRequest = await addProfileWithRequestToDB(
-        profileWithoutHouseholdId,
-        request,
-      );
-
-      if (createdProfileWithRequest) {
-        return createdProfileWithRequest;
-      } else {
-        return thunkAPI.rejectWithValue("Failed to add profile with request");
+        if (createdProfileWithRequest) {
+          return createdProfileWithRequest;
+        } else {
+          return thunkAPI.rejectWithValue("Failed to add profile with request");
+        }
       }
     } catch (error: any) {
       return thunkAPI.rejectWithValue(error.message);

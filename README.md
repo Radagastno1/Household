@@ -89,7 +89,7 @@ godkänna användaren.
 [?] En användare ska kunna lämna ett hushåll.
 
 Profil (2)
-[x] En användare ska kunna ställa in appens utseende (mörkt, ljust, auto).
+[/] En användare ska kunna ställa in appens utseende (mörkt, ljust, auto).
 [x] Om en användare tillhör två eller fler hushåll ska denne kunna välja att byta mellan de
 olika hushållen.
 

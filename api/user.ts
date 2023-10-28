@@ -28,16 +28,23 @@ export const addUserToDB = async (createUser: UserCreate) => {
     } satisfies User;
   } catch (error: any) {
     console.error(error);
-    const errorCode = error.code;
-    const errorMessage = error.message;
   }
 };
 
 export const getUserEmailByUid = async (uid: string) => {
   try {
-    const userRecord = await auth.getUser(uid);
-    console.log("User email:", userRecord.email);
-    return userRecord.email;
+    const usersCollectionRef = collection(db, "users");
+    const userQuery = query(usersCollectionRef, where("UID", "==", uid));
+    const querySnapshot = await getDocs(userQuery);
+
+    if (querySnapshot.size === 0) {
+      console.error("User not found with UID:", uid);
+      return null;
+    }
+
+    const userData = querySnapshot.docs[0].data() as UserCreate;
+    console.log("User data retrieved:", userData);
+    return userData.email;
   } catch (error) {
     console.error("Error fetching user data:", error);
     return null;
@@ -57,8 +64,6 @@ export const signInWithAPI = async (createUser: UserCreate) => {
     } satisfies User;
   } catch (error: any) {
     console.error(error);
-    const errorCode = error.code;
-    const errorMessage = error.message;
   }
 };
 

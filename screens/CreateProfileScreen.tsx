@@ -131,7 +131,7 @@ export default function CreateProfileScreen({
           isOwner: false,
           isActive: false,
         };
-        dispatch(addProfileWithRequest(newProfile));
+        dispatch(addProfileWithRequest({newProfile:newProfile, uid:activeUser.uid}));
       }
       navigation.navigate("HouseholdAccount");
     }
