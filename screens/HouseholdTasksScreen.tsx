@@ -230,21 +230,10 @@ export default function HouseholdTasksScreen({
               </View>
             </Card>
           ))}
-
-          <Card style={styles.card}>
-            <View style={styles.taskItem}>
-              <View>
-                <Text variant="titleLarge">test</Text>
-              </View>
-              <View>
-                <Text variant="bodyMedium">avatarer1</Text>
-              </View>
-            </View>
-          </Card>
         </ScrollView>
 
         <View style={styles.buttonContainer}>
-          {isOwner && (
+          {isOwner === true && (
             <Button
               icon={() => (
                 <AntDesign name="pluscircleo" size={20} color="black" />
