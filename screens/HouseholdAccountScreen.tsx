@@ -19,6 +19,7 @@ import { AvatarUrls, Avatars } from "../data/avatars";
 import { RootNavigationScreenProps } from "../navigators/navigationTypes";
 import {
   getHouseholdsByHouseholdIdAsync,
+  getRequestByHouseholdIdsAsync,
   sethouseholdActive,
 } from "../store/household/householdSlice";
 import {
@@ -29,6 +30,7 @@ import {
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { logOutUser } from "../store/user/userSlice";
 import { Household } from "../types";
+import { State } from "react-native-gesture-handler";
 
 type HouseholdProps = RootNavigationScreenProps<"HouseholdAccount">;
 
@@ -39,7 +41,10 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
     (state) => state.profile.profilesToUser,
   );
   const households = useAppSelector((state) => state.household.households);
+  const requests = useAppSelector((state) => state.household.requests);
+  
   const [profilesLoaded, setProfilesLoaded] = useState(false);
+  const [requestsLoaded, setRequestsLoaded] = useState(false);
   const activeProfile = useAppSelector((state) => state.profile.activeProfile);
   let householdIds: string[] = [];
   console.log("Nu är användaren ", activeUser, "inloggad");
@@ -58,6 +63,12 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
   useEffect(() => {
     dispatch(getHouseholdsByHouseholdIdAsync(householdIds));
   }, [profilesLoaded]);
+
+  useEffect(() => {
+    dispatch(getRequestByHouseholdIdsAsync(householdIds)).then(() => {
+      setRequestsLoaded(true);
+    });
+  }, [!requestsLoaded]);
 
   useEffect(() => {
     if (activeProfile) {
