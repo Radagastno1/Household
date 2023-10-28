@@ -36,14 +36,13 @@ export default function RootNavigator() {
   const [isUserFetched, setUserFetched] = useState(false);
   // const { isLoading } = useAppSelector((state) => state.app);
   const dispatch = useAppDispatch();
-  const userSlice = useAppSelector((state) => state.user.user);
+  const user = useAppSelector((state) => state.user.user);
 
   useEffect(() => {
-    onAuthStateChanged(auth, (userSlice) => {
-      if (userSlice) {
-        const uid = userSlice.uid;
-        console.log("USER IS LOGGED IN", uid);
-        dispatch(setActiveUser(uid));
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        console.log("USER IS LOGGED IN", user);
+        dispatch(setActiveUser(user));
       } else {
         console.log("USER IS SIGNED OUT");
       }
@@ -62,7 +61,7 @@ export default function RootNavigator() {
       >
         {!isUserFetched ? (
           <Stack.Screen name="SplashScreen" component={SplashScreen} />
-        ) : userSlice ? (
+        ) : user ? (
           <>
             <Stack.Screen
               name="HouseholdAccount"

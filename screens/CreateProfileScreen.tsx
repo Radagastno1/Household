@@ -121,10 +121,11 @@ export default function CreateProfileScreen({
         if(activeUser.email){
           const avatarsColor = AvatarColors[selectedAvatar as Avatars];
           const newProfile = {
-            id: todaysDate.getUTCMilliseconds.toString().slice(-4),
+            //tog bort millisekunderna som id
+            id: "",
             profileName: householdName,
             userId: activeUser.uid,
-            householdId: householdId,
+            householdId: "",
             avatar: selectedAvatar,
             avatarsColors: avatarsColor,
             isOwner: false,

@@ -1,6 +1,4 @@
 import {
-  getAuth,
-  getAdditionalUserInfo,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
@@ -26,7 +24,7 @@ export const addUserToDB = async (createUser: UserCreate) => {
     console.log(userCredential.user);
     return {
       uid: userCredential.user.uid,
-      email: userCredential.user.email ?? null
+      email: userCredential.user.email ?? null,
     } satisfies User;
   } catch (error: any) {
     console.error(error);
@@ -40,11 +38,11 @@ export const signInWithAPI = async (createUser: UserCreate) => {
       createUser.email,
       createUser.password,
     );
-    console.log(userCredential.user);
+    console.log("UUUSER UID : ", userCredential.user.uid);
     return {
       uid: userCredential.user.uid,
-      email: userCredential.user.email ?? null
-    } satisfies User;
+      email: createUser.email,
+    } as User;
   } catch (error: any) {
     console.error(error);
   }
