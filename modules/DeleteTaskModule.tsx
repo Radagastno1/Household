@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Button, Text } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Modal } from "react-native-paper";
+import { useTheme } from "../contexts/themeContext";
 import { Task } from "../types";
 
 interface Props {
@@ -12,6 +13,7 @@ interface Props {
 
 export default function DeleteTaskModule(props: Props) {
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const  { theme }  = useTheme();
 
   const handleArchiveTask = () => {
     const editedTask: Task = {
@@ -44,31 +46,58 @@ export default function DeleteTaskModule(props: Props) {
   };
 
   return (
-    <Modal visible={isModalVisible}>
-      <Text>Vill du arkivera sysslan?</Text>
-      <Text>
+    <Modal visible={isModalVisible} style={[styles.modalContainer, { backgroundColor: theme.colors.background }]}>
+      <View style={styles.textView}>
+      <Text style={styles.text}>Vill du arkivera sysslan?</Text>
+      <Text style={styles.smallerText}>
         Om du väljer att radera sysslan permanent, då kommer all statistik
         gällande sysslan också att tas bort.
       </Text>
-      <Button
-        title="Ja, arkivera sysslan"
+      </View>
+      <View style={styles.buttonView}>
+      <TouchableOpacity
+        style={theme.button as any}
         onPress={() => handleArchiveTask()}
-      />
-      <Button
-        title="Nej, radera sysslan permanent"
+      >
+        <Text>Ja, arkivera sysslan</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+  style={theme.button as any}
         onPress={() => handleDeleteTask()}
-      />
-      <Button title="Avbryt" onPress={closeModal} />
+      >
+        <Text>Nej, radera sysslan permanent</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={theme.button as any}  onPress={closeModal}>
+     <Text>Avbryt</Text>
+      </TouchableOpacity>
+      </View>
     </Modal>
   );
 }
 
-// const styles = StyleSheet.create({
-//   moduleContainer: {
-//     flexDirection: "row",
-//     alignItems: "center",
-//     marginVertical: 10,
-//     flex: 1,
-//     backgroundColor: "red",
-//   },
-// });
+const styles = StyleSheet.create({
+  modalContainer: {
+    flex:1,
+    alignItems:"center",
+    height:"100%",
+    justifyContent: "center",
+  },
+  text: {
+    fontSize:20,
+  },
+  textView:{
+    flex:1,
+    padding:10,
+    justifyContent:"center",
+    alignItems:"center",
+  },
+  buttonView:{
+    flex:1,
+    padding:10,
+  },
+  smallerText:{
+    fontSize:16,
+    paddingVertical:10
+  }
+});
