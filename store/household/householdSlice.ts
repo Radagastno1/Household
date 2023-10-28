@@ -39,6 +39,40 @@ export const getHouseholdsByHouseholdIdAsync = createAsyncThunk<
   }
 });
 
+// export const setActiveHouseholdAsync = createAsyncThunk<
+//   Household,
+//   string,
+//   { rejectValue: string }
+// >(
+//   "households/getHouseholdByHouseholdId",
+//   async (incomingHousehold: Household, thunkAPI) => {
+//     try {
+//       if (incomingHousehold) {
+//         activeHousehold = incomingHousehold;
+//       } else {
+//         console.error(
+//           "Failed to join the household. Please check the join code.");
+//     } catch (error: any) {
+//       return thunkAPI.rejectWithValue(error.message);
+//     }
+//   }
+// });
+
+export const setActiveHouseholdAsync = createAsyncThunk(
+  "households/setActiveHousehold",
+  async (incomingHousehold: Household, thunkAPI) => {
+    try {
+      if (incomingHousehold) {
+        sethouseholdActive(incomingHousehold);
+      } else {
+        return thunkAPI.rejectWithValue("Failed to add profile");
+      }
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error.message);
+    }
+  },
+);
+
 export const handleJoinHousehold = async (joinCode: string) => {
   if (joinCode) {
     // Dispatch the action and await its completion
@@ -71,17 +105,17 @@ export const addHouseholdAsync = createAsyncThunk<
 });
 
 // Code generator function
-export const generateHouseholdCode = () => {
-  const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-  const numbers = "0123456789";
-  const code =
-    getRandomElement(letters) +
-    getRandomElement(letters) +
-    getRandomElement(letters) +
-    getRandomElement(numbers) +
-    getRandomElement(numbers);
-  return code;
-};
+// export const generateHouseholdCode = () => {
+//   const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+//   const numbers = "0123456789";
+//   const code =
+//     getRandomElement(letters) +
+//     getRandomElement(letters) +
+//     getRandomElement(letters) +
+//     getRandomElement(numbers) +
+//     getRandomElement(numbers);
+//   return code;
+// };
 
 const householdSlice = createSlice({
   name: "household",
@@ -198,11 +232,11 @@ const setActiveHousehold = (household: Household) => {
   };
 };
 
-// Helper function to get a random element from a string
-const getRandomElement = (array: string) => {
-  const index = Math.floor(Math.random() * array.length);
-  return array[index];
-};
+// // Helper function to get a random element from a string
+// const getRandomElement = (array: string) => {
+//   const index = Math.floor(Math.random() * array.length);
+//   return array[index];
+// };
 function dispatch(arg0: any) {
   throw new Error("Function not implemented.");
 }

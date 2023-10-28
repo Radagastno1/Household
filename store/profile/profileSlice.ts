@@ -5,20 +5,38 @@ import {
   getAllProfilesByHouseholdId,
   getAllProfilesByUserIdFromDb,
   saveProfileNameToDatabase,
-  getAllProfilesByHouseholdIdDb
+  getAllProfilesByHouseholdIdDb,
 } from "../../api/profile";
 import { Profile } from "../../types";
-
 
 interface ProfileState {
   profiles: Profile[];
   activeProfile: Profile | null;
+  profilesToUser: Profile[];
 }
 
 export const initialState: ProfileState = {
   profiles: [],
   activeProfile: null,
+  profilesToUser: [],
 };
+
+export const addProfileAsync = createAsyncThunk(
+  "profiles/addProfile",
+  async (newProfile: Profile, thunkAPI) => {
+    try {
+      const createdProfile = await addProfileToDB(newProfile);
+
+      if (createdProfile) {
+        return createdProfile;
+      } else {
+        return thunkAPI.rejectWithValue("Failed to add profile");
+      }
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error.message);
+    }
+  },
+);
 
 export const getProfilesByUserIdAsync = createAsyncThunk<
   Profile[],
@@ -48,7 +66,10 @@ export const getProfilesByHouseholdIdAsync = createAsyncThunk<
   try {
     const fetchedProfiles = await getAllProfilesByHouseholdIdDb(householdId);
     if (fetchedProfiles) {
-      console.log("inne i try i thunken, profiles är för hurhållet är: ", fetchedProfiles);
+      console.log(
+        "inne i try i thunken, profiles är för hurhållet är: ",
+        fetchedProfiles,
+      );
       return fetchedProfiles;
     } else {
       return thunkAPI.rejectWithValue("failed to get profi.es");
@@ -146,9 +167,14 @@ const profileSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(addProfileAsync.fulfilled, (state, action) => {
+        if (action.payload) {
+          state.profilesToUser.push(action.payload);
+        }
+      })
       .addCase(getProfilesByUserIdAsync.fulfilled, (state, action) => {
         if (action.payload) {
-          state.profiles = action.payload;
+          state.profilesToUser = action.payload;
         }
       })
       .addCase(getProfilesByUserIdAsync.rejected, (state, action) => {

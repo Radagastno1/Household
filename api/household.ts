@@ -11,7 +11,6 @@ import {
   updateDoc,
   where,
 } from "firebase/firestore";
-import { generateHouseholdCode } from "../store/household/householdSlice";
 import { Household } from "../types";
 import { app } from "./config";
 
@@ -142,6 +141,24 @@ export const checkHouseholdWithCode = async (joinCode: string) => {
     console.log("Household does not exist");
     return null;
   }
+};
+
+const generateHouseholdCode = () => {
+  const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  const numbers = "0123456789";
+  const code =
+    getRandomElement(letters) +
+    getRandomElement(letters) +
+    getRandomElement(letters) +
+    getRandomElement(numbers) +
+    getRandomElement(numbers);
+  return code;
+};
+
+// Helper function to get a random element from a string
+const getRandomElement = (array: string) => {
+  const index = Math.floor(Math.random() * array.length);
+  return array[index];
 };
 
 // import { addDoc, collection, getFirestore } from "firebase/firestore";
