@@ -5,16 +5,18 @@ import {
   editHouseholdToDB,
   getHouseholdsFromDB,
 } from "../../api/household";
-import { Household } from "../../types";
+import { Household, HouseholdRequest } from "../../types";
 
 export interface HouseholdState {
   households: Household[];
+  requests: HouseholdRequest[];
   selectedHousehold: Household | null;
   activeHousehold: Household | null;
 }
 
 export const initialState: HouseholdState = {
   households: [],
+  requests: [],
   selectedHousehold: null,
   activeHousehold: null,
 };
@@ -38,25 +40,6 @@ export const getHouseholdsByHouseholdIdAsync = createAsyncThunk<
     return thunkAPI.rejectWithValue(error.message);
   }
 });
-
-// export const setActiveHouseholdAsync = createAsyncThunk<
-//   Household,
-//   string,
-//   { rejectValue: string }
-// >(
-//   "households/getHouseholdByHouseholdId",
-//   async (incomingHousehold: Household, thunkAPI) => {
-//     try {
-//       if (incomingHousehold) {
-//         activeHousehold = incomingHousehold;
-//       } else {
-//         console.error(
-//           "Failed to join the household. Please check the join code.");
-//     } catch (error: any) {
-//       return thunkAPI.rejectWithValue(error.message);
-//     }
-//   }
-// });
 
 export const setActiveHouseholdAsync = createAsyncThunk(
   "households/setActiveHousehold",

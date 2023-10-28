@@ -34,8 +34,6 @@ type HouseholdProps = RootNavigationScreenProps<"HouseholdAccount">;
 
 export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
   const activeUser = useAppSelector((state) => state.user.user);
-  // const [households, setHouseholds] = useState<Household[] | undefined>([]);
-  // const [profiles, setProfiles] = useState<(Profile[] | undefined)[]>([]);
   const dispatch = useAppDispatch();
   const profilesToUser = useAppSelector(
     (state) => state.profile.profilesToUser,
@@ -162,6 +160,7 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
                 profile.householdId === household.id &&
                 profile.userId === activeUser?.uid,
             );
+            // const requests = 
             return (
               <TouchableOpacity
                 key={index}

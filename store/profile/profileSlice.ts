@@ -101,7 +101,7 @@ export const getRequestByHouseholdIdAsync = createAsyncThunk(
       if (requests) {
         return requests;
       } else {
-        return null;
+        return [];
       }
     } catch (error: any) {
       return thunkAPI.rejectWithValue(error.message);
