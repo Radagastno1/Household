@@ -55,7 +55,6 @@ export const addTaskToDB = async (task: Task) => {
 };
 
 export const editTaskToDB = async (task: Task) => {
-  task.householdId = "fYHVLNiQvWEG9KNUGqBT";
   const taskCollectionRef = collection(db, "tasks");
 
   try {

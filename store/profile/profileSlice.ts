@@ -1,4 +1,5 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { collection, getDocs, query, where } from "firebase/firestore";
 import {
   acceptProfileToHousehold,
   addProfileToDB,
@@ -8,7 +9,8 @@ import {
   getAllProfilesByUserIdFromDb,
   saveProfileNameToDatabase,
 } from "../../api/profile";
-import { HouseholdRequest, Profile } from "../../types";
+import { db } from "../../firebaseConfig";
+import { HouseholdRequest, Profile, Task } from "../../types";
 
 interface ProfileState {
   profiles: Profile[];
@@ -96,13 +98,22 @@ export const getRequestByHouseholdIdAsync = createAsyncThunk(
   "profiles/getRequestByHouseholdId",
   async (householdId: string, thunkAPI) => {
     try {
-      const requestsForHousehold = await getRequestByHouseholdId(householdId);
+      const requestCollectionRef = collection(db, "requests");
 
-      if (requestsForHousehold) {
-        return requestsForHousehold as HouseholdRequest[];
-      } else {
-        return null;
-      }
+      const q = query(
+        requestCollectionRef,
+        where("householdId", "==", householdId),
+      );
+
+      const querySnapshot = await getDocs(q);
+
+      const requests: HouseholdRequest[] = [];
+
+      querySnapshot.forEach((doc) => {
+        requests.push(doc.data() as HouseholdRequest);
+      });
+
+      console.log("Förfrågningar hämtade:", requests);
     } catch (error: any) {
       return thunkAPI.rejectWithValue(error.message);
     }
