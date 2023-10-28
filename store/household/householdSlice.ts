@@ -104,19 +104,6 @@ export const addHouseholdAsync = createAsyncThunk<
   }
 });
 
-// Code generator function
-// export const generateHouseholdCode = () => {
-//   const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-//   const numbers = "0123456789";
-//   const code =
-//     getRandomElement(letters) +
-//     getRandomElement(letters) +
-//     getRandomElement(letters) +
-//     getRandomElement(numbers) +
-//     getRandomElement(numbers);
-//   return code;
-// };
-
 const householdSlice = createSlice({
   name: "household",
   initialState,

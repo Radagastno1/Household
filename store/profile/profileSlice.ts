@@ -1,5 +1,6 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import {
+  acceptProfileToHousehold,
   addProfileToDB,
   addProfileWithRequestToDB,
   getAllProfilesByHouseholdId,
@@ -66,6 +67,22 @@ export const addProfileWithRequest = createAsyncThunk(
         } else {
           return thunkAPI.rejectWithValue("Failed to add profile with request");
         }
+      }
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error.message);
+    }
+  },
+);
+
+export const acceptProfileToHouseholdAsync = createAsyncThunk(
+  "profiles/acceptProfileToHousehold",
+  async (
+    { requestId, householdId }: { requestId: string; householdId: string },
+    thunkAPI,
+  ) => {
+    try {
+      if (requestId && householdId) {
+        await acceptProfileToHousehold(requestId, householdId);
       }
     } catch (error: any) {
       return thunkAPI.rejectWithValue(error.message);
