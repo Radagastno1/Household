@@ -82,7 +82,7 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
     dispatch(sethouseholdActive(household));
     try {
       dispatch(fetchAllProfilesByHousehold(household.id, activeUser!.uid));
-      await dispatch(
+       dispatch(
         setProfileByHouseholdAndUser({
           userId: activeUser!.uid,
           householdId: household.id,
