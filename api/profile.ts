@@ -70,6 +70,7 @@ export const addProfileWithRequestToDB = async (
 
       const docRequestRef = await addDoc(requestCollectionRef, {});
       request.id = docRequestRef.id;
+      request.profileId = profile.id;
 
       await updateDoc(docRequestRef, request as Partial<HouseholdRequest>);
       const requestDoc = await getDoc(docRequestRef);

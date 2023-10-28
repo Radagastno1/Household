@@ -47,25 +47,17 @@ export const addProfileWithRequest = createAsyncThunk(
     try {
       if (userMail) {
         //profil ska läggas till med tomt householdid och med en request fetch med
-        const profileWithoutHouseholdId: Profile = {
-          id: newProfile.id,
-          profileName: newProfile.profileName,
-          userId: newProfile.userId,
-          householdId: "",
-          avatar: newProfile.avatar,
-          isOwner: newProfile.isOwner,
-          isActive: true,
-        };
+        //profil id finns ju inte här än, den läggs till i fetch anropet när profilen har skapats
         const request: HouseholdRequest = {
           id: "",
-          profileId: newProfile.id,
+          profileId: "",
           userMail: userMail,
           householdId: newProfile.householdId,
           status: "pending",
         };
 
         const createdProfileWithRequest = await addProfileWithRequestToDB(
-          profileWithoutHouseholdId,
+          newProfile,
           request,
         );
 
