@@ -94,23 +94,12 @@ const householdSlice = createSlice({
     sethousehold: (state, action: PayloadAction<Household>) => {
       state.households = [...state.households, action.payload];
     },
+    setRequests: (state, action: PayloadAction<HouseholdRequest[]>) => {
+      state.requests = action.payload;
+    },
     sethouseholdActive: (state, action: PayloadAction<Household>) => {
       state.activeHousehold = action.payload;
     },
-    // addHousehold: (state, action: PayloadAction<Household>) => {
-
-    //   const householdWithCode = { ...action.payload, code }; // Add the code to the household
-    //   addHouseholdToDB(householdWithCode)
-    //     .then((createdHousehold) => {
-    //       if (createdHousehold) {
-    //         state.households = [...state.households, createdHousehold];
-    //         console.log("Household added: ", createdHousehold);
-    //       }
-    //     })
-    //     .catch((error) => {
-    //       console.error("Error adding household:", error);
-    //     });
-    // },
     setHouseholdByHouseholdId: (
       state,
       action: PayloadAction<{ householdId: string }>,

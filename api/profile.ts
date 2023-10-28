@@ -86,7 +86,7 @@ export const addProfileWithRequestToDB = async (
   }
 };
 
-export const getRequestByHouseholdId = async (householdId: string) => {
+export const getRequestByHouseholdIdFromDb = async (householdId: string) => {
   try {
     const requestCollectionRef = collection(db, "requests");
 
@@ -104,9 +104,10 @@ export const getRequestByHouseholdId = async (householdId: string) => {
     });
 
     console.log("Förfrågningar hämtade:", requests);
+    return requests as HouseholdRequest[];
   } catch (error) {
     console.error("Fel vid uppdatering av hushållsidt i databasen:", error);
-    return { success: false, error };
+    return [];
   }
 };
 

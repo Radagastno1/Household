@@ -6,7 +6,7 @@ import {
   getAllProfilesByHouseholdId,
   getAllProfilesByHouseholdIdDb,
   getAllProfilesByUserIdFromDb,
-  getRequestByHouseholdId,
+  getRequestByHouseholdIdFromDb,
   saveProfileNameToDatabase,
 } from "../../api/profile";
 import { HouseholdRequest, Profile } from "../../types";
@@ -93,16 +93,21 @@ export const acceptProfileToHouseholdAsync = createAsyncThunk(
   },
 );
 
-export const getRequestByHouseholdIdAsync = createAsyncThunk(
-  "profiles/getRequestByHouseholdId",
-  async (householdId: string, thunkAPI) => {
+export const getRequestByHouseholdIdsAsync = createAsyncThunk(
+  "profiles/getRequestByHouseholdIds",
+  async (householdIds: string[], thunkAPI) => {
     try {
-      const requests = await getRequestByHouseholdId(householdId);
-      if (requests) {
-        return requests;
-      } else {
-        return [];
-      }
+      const fetchedRequests: HouseholdRequest[] = [];
+
+      await Promise.all(
+        householdIds.map(async (householdId) => {
+          const requests = await getRequestByHouseholdIdFromDb(householdId);
+          if (requests) {
+            fetchedRequests.push(...requests);
+          }
+        }),
+      );
+      return fetchedRequests;
     } catch (error: any) {
       return thunkAPI.rejectWithValue(error.message);
     }
