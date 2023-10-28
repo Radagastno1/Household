@@ -86,19 +86,24 @@ export const addProfileWithRequestToDB = async (
   }
 };
 
-export const getRequestByHouseholdId = async (
-  householdId: string,
-) => {
-  const requestDocRef = doc(db, "requests");
-
+export const getRequestByHouseholdId = async (householdId: string) => {
   try {
-    //uppdaterar hushållsidt
-    await updateDoc(requestDocRef, {
-      householdId: householdId,
+    const requestCollectionRef = collection(db, "requests");
+
+    const q = query(
+      requestCollectionRef,
+      where("householdId", "==", householdId),
+    );
+
+    const querySnapshot = await getDocs(q);
+
+    const requests: HouseholdRequest[] = [];
+
+    querySnapshot.forEach((doc) => {
+      requests.push(doc.data() as HouseholdRequest);
     });
 
-    console.log("hushållsidt har uppdaterats i databasen.");
-    return { success: true };
+    console.log("Förfrågningar hämtade:", requests);
   } catch (error) {
     console.error("Fel vid uppdatering av hushållsidt i databasen:", error);
     return { success: false, error };
