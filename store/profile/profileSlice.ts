@@ -39,6 +39,8 @@ export const addProfileAsync = createAsyncThunk(
   },
 );
 
+//dessa i en request slice
+
 export const addProfileWithRequest = createAsyncThunk(
   "profiles/addProfileWithRequest",
   async (
@@ -83,6 +85,23 @@ export const acceptProfileToHouseholdAsync = createAsyncThunk(
     try {
       if (requestId && householdId) {
         await acceptProfileToHousehold(requestId, householdId);
+      }
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error.message);
+    }
+  },
+);
+
+export const getRequestByHouseholdIdAsync = createAsyncThunk(
+  "profiles/getRequestByHouseholdId",
+  async (householdId: string, thunkAPI) => {
+    try {
+      const requestsForHousehold = await getRequestByHouseholdId(householdId);
+
+      if (requestsForHousehold) {
+        return requestsForHousehold as HouseholdRequest[];
+      } else {
+        return null;
       }
     } catch (error: any) {
       return thunkAPI.rejectWithValue(error.message);
