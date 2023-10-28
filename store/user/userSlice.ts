@@ -50,7 +50,7 @@ const userSlice = createSlice({
       state.user = undefined;
     },
     setActiveUser: (state, action) => {
-      const activeUser: User = { uid: action.payload };
+      const activeUser: User = { uid: action.payload.uid, email: action.payload.email };
       state.user = activeUser;
     },
   },

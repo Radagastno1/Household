@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Image } from "react-native";
+import { Image, useColorScheme } from "react-native";
 import { Button } from "react-native-paper";
-import { useAppDispatch, useAppSelector } from "../store/store";
-import { useColorScheme } from "react-native";
 import { AvatarColors, AvatarUrls, Avatars } from "../data/avatars";
+import { useAppDispatch, useAppSelector } from "../store/store";
 
 import {
   StyleSheet,
@@ -15,10 +14,9 @@ import {
 import { useTheme } from "../contexts/themeContext";
 import { RootNavigationScreenProps } from "../navigators/navigationTypes";
 import {
-  addProfile,
   addProfileAsync,
   addProfileWithRequest,
-  getProfilesByHouseholdIdAsync,
+  getProfilesByHouseholdIdAsync
 } from "../store/profile/profileSlice";
 
 type CreateProfileProps = RootNavigationScreenProps<"CreateProfile">;
@@ -120,18 +118,21 @@ export default function CreateProfileScreen({
         };
         dispatch(addProfileAsync(newProfile));
       }else{
-        const avatarsColor = AvatarColors[selectedAvatar as Avatars];
-        const newProfile = {
-          id: todaysDate.getUTCMilliseconds.toString().slice(-4),
-          profileName: householdName,
-          userId: activeUser.uid,
-          householdId: householdId,
-          avatar: selectedAvatar,
-          avatarsColors: avatarsColor,
-          isOwner: false,
-          isActive: false,
-        };
-        dispatch(addProfileWithRequest({newProfile:newProfile, uid:activeUser.uid}));
+        if(activeUser.email){
+          const avatarsColor = AvatarColors[selectedAvatar as Avatars];
+          const newProfile = {
+            id: todaysDate.getUTCMilliseconds.toString().slice(-4),
+            profileName: householdName,
+            userId: activeUser.uid,
+            householdId: householdId,
+            avatar: selectedAvatar,
+            avatarsColors: avatarsColor,
+            isOwner: false,
+            isActive: false,
+          };
+          dispatch(addProfileWithRequest({newProfile:newProfile, userMail:activeUser.email}));
+        }
+
       }
       navigation.navigate("HouseholdAccount");
     }

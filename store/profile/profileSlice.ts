@@ -7,7 +7,6 @@ import {
   getAllProfilesByUserIdFromDb,
   saveProfileNameToDatabase,
 } from "../../api/profile";
-import { getUserEmailByUid } from "../../api/user";
 import { HouseholdRequest, Profile } from "../../types";
 
 interface ProfileState {
@@ -42,12 +41,10 @@ export const addProfileAsync = createAsyncThunk(
 export const addProfileWithRequest = createAsyncThunk(
   "profiles/addProfileWithRequest",
   async (
-    { newProfile, uid }: { newProfile: Profile; uid: string },
+    { newProfile, userMail }: { newProfile: Profile; userMail: string },
     thunkAPI,
   ) => {
     try {
-      const userMail = await getUserEmailByUid(uid);
-
       if (userMail) {
         //profil ska läggas till med tomt householdid och med en request fetch med
         const profileWithoutHouseholdId: Profile = {
