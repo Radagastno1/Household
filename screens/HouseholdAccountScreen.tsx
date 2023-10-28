@@ -29,10 +29,12 @@ import {
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { logOutUser } from "../store/user/userSlice";
 import { Household } from "../types";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 type HouseholdProps = RootNavigationScreenProps<"HouseholdAccount">;
 
 export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
+  const [isRequest, setIsRequest] = useState(false);
   const activeUser = useAppSelector((state) => state.user.user);
   // const [households, setHouseholds] = useState<Household[] | undefined>([]);
   // const [profiles, setProfiles] = useState<(Profile[] | undefined)[]>([]);
@@ -173,7 +175,12 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
                   handleEnterHousehold(household);
                 }}
               >
-                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                  }}
+                >
                   <Image
                     key={0}
                     source={{
@@ -188,9 +195,21 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
                   <Text style={theme.buttonText}>{household.name}</Text>
                 </View>
 
-                <View>
-                  {/* if it is owner */}
-                  <MaterialIcons name="edit" size={24} color="black" />
+                <View style={{ flexDirection: "row", gap: 5 }}>
+                  {!isRequest && profile?.isOwner === true ? (
+                    <MaterialCommunityIcons
+                      name="bell-alert-outline"
+                      size={24}
+                      color="black"
+                    />
+                  ) : (
+                    <View style={{ width: 24 }}></View>
+                  )}
+                  {profile?.isOwner === true ? (
+                    <MaterialIcons name="edit" size={24} color="black" />
+                  ) : (
+                    <View style={{ width: 24 }}></View>
+                  )}
                 </View>
               </TouchableOpacity>
             );
