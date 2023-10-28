@@ -1,14 +1,15 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import {
-  acceptProfileToHousehold,
   addProfileToDB,
-  addProfileWithRequestToDB,
   getAllProfilesByHouseholdId,
   getAllProfilesByHouseholdIdDb,
   getAllProfilesByUserIdFromDb,
-  getRequestByHouseholdIdFromDb,
   saveProfileNameToDatabase,
 } from "../../api/profile";
+import {
+  acceptProfileToHousehold,
+  addProfileWithRequestToDB,
+} from "../../api/request";
 import { HouseholdRequest, Profile } from "../../types";
 
 interface ProfileState {
@@ -45,7 +46,11 @@ export const addProfileAsync = createAsyncThunk(
 export const addProfileWithRequest = createAsyncThunk(
   "profiles/addProfileWithRequest",
   async (
-    { newProfile, userMail }: { newProfile: Profile; userMail: string },
+    {
+      newProfile,
+      userMail,
+      householdId,
+    }: { newProfile: Profile; userMail: string; householdId: string },
     thunkAPI,
   ) => {
     try {
@@ -56,7 +61,7 @@ export const addProfileWithRequest = createAsyncThunk(
           id: "",
           profileId: "",
           userMail: userMail,
-          householdId: newProfile.householdId,
+          householdId: householdId,
           status: "pending",
         };
 
@@ -79,13 +84,10 @@ export const addProfileWithRequest = createAsyncThunk(
 
 export const acceptProfileToHouseholdAsync = createAsyncThunk(
   "profiles/acceptProfileToHousehold",
-  async (
-    { requestId, householdId }: { requestId: string; householdId: string },
-    thunkAPI,
-  ) => {
+  async ({ requestId }: { requestId: string }, thunkAPI) => {
     try {
-      if (requestId && householdId) {
-        await acceptProfileToHousehold(requestId, householdId);
+      if (requestId) {
+        await acceptProfileToHousehold(requestId);
       }
     } catch (error: any) {
       return thunkAPI.rejectWithValue(error.message);

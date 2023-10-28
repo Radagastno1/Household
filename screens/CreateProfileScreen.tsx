@@ -131,7 +131,7 @@ export default function CreateProfileScreen({
             isOwner: false,
             isActive: false,
           };
-          dispatch(addProfileWithRequest({newProfile:newProfile, userMail:activeUser.email}));
+          dispatch(addProfileWithRequest({newProfile:newProfile, userMail:activeUser.email, householdId:householdId}));
         }
 
       }

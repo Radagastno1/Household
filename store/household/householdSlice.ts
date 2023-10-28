@@ -5,7 +5,7 @@ import {
   editHouseholdToDB,
   getHouseholdsFromDB,
 } from "../../api/household";
-import { getRequestByHouseholdIdFromDb } from "../../api/profile";
+import { getRequestByHouseholdIdFromDb } from "../../api/request";
 import { Household, HouseholdRequest } from "../../types";
 
 export interface HouseholdState {
@@ -100,6 +100,7 @@ export const getRequestByHouseholdIdsAsync = createAsyncThunk(
           if (requests) {
             fetchedRequests.push(...requests);
           }
+          console.log("alla requests: ", requests);
         }),
       );
       return fetchedRequests;

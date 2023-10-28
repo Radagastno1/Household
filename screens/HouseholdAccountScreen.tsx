@@ -171,7 +171,11 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
                 profile.householdId === household.id &&
                 profile.userId === activeUser?.uid,
             );
-            // const requests = 
+            const request = requests.find(
+              (request) =>
+                request.householdId === household.id,
+            );
+
             return (
               <TouchableOpacity
                 key={index}
@@ -192,6 +196,7 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
                     style={{ height: 20, width: 20 }}
                     alt={`Avatar ${index}`}
                   />
+                  <Text>{request?.status}</Text>
                 </View>
 
                 <View>
@@ -199,7 +204,6 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
                 </View>
 
                 <View>
-                  {/* if it is owner */}
                   <MaterialIcons name="edit" size={24} color="black" />
                 </View>
               </TouchableOpacity>
