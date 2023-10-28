@@ -8,7 +8,7 @@ import {
   getTasksFromDB,
 } from "../../api/task";
 import { deleteAllTaskCompletionsByTaskId } from "../../api/taskCompletion";
-import { fetchCompletions } from "../taskCompletionSlice";
+import { fetchCompletions } from "../taskCompletion/taskCompletionSlice";
 
 interface TaskState {
   tasks: Task[];
