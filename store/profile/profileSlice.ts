@@ -93,27 +93,6 @@ export const acceptProfileToHouseholdAsync = createAsyncThunk(
   },
 );
 
-export const getRequestByHouseholdIdsAsync = createAsyncThunk(
-  "profiles/getRequestByHouseholdIds",
-  async (householdIds: string[], thunkAPI) => {
-    try {
-      const fetchedRequests: HouseholdRequest[] = [];
-
-      await Promise.all(
-        householdIds.map(async (householdId) => {
-          const requests = await getRequestByHouseholdIdFromDb(householdId);
-          if (requests) {
-            fetchedRequests.push(...requests);
-          }
-        }),
-      );
-      return fetchedRequests;
-    } catch (error: any) {
-      return thunkAPI.rejectWithValue(error.message);
-    }
-  },
-);
-
 export const getProfilesByUserIdAsync = createAsyncThunk<
   Profile[],
   string,
@@ -190,18 +169,6 @@ const profileSlice = createSlice({
           console.error("Fel vid tillägg av profil:", error);
         });
     },
-
-    // editProfileName: (
-    //   state,
-    //   action: PayloadAction<{ profileId: string; newProfileName: string }>,
-    // ) => {
-    //   const profileToEdit = state.profiles.find(
-    //     (profile) => profile.id === action.payload.profileId,
-    //   );
-    //   if (profileToEdit) {
-    //     profileToEdit.profileName = action.payload.newProfileName;
-    //   }
-    // },
     editProfileName: (
       state,
       action: PayloadAction<{ profileId: string; newProfileName: string }>,
