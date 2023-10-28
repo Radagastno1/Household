@@ -30,9 +30,7 @@ export default function SplashScreen() {
           easing: Easing.out(Easing.ease),
           useNativeDriver: false,
         }).start(() => {
-          setTimeout(() => {
-            navigation.replace("Login");
-          }, 1000); // start 1 seconds earlier
+          setTimeout(() => {}, 1000); // start 1 seconds earlier
         });
       });
     }
