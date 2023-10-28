@@ -71,17 +71,17 @@ export const addHouseholdAsync = createAsyncThunk<
 });
 
 // Code generator function
-export const generateHouseholdCode = () => {
-  const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-  const numbers = "0123456789";
-  const code =
-    getRandomElement(letters) +
-    getRandomElement(letters) +
-    getRandomElement(letters) +
-    getRandomElement(numbers) +
-    getRandomElement(numbers);
-  return code;
-};
+// export const generateHouseholdCode = () => {
+//   const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+//   const numbers = "0123456789";
+//   const code =
+//     getRandomElement(letters) +
+//     getRandomElement(letters) +
+//     getRandomElement(letters) +
+//     getRandomElement(numbers) +
+//     getRandomElement(numbers);
+//   return code;
+// };
 
 const householdSlice = createSlice({
   name: "household",
@@ -198,11 +198,11 @@ const setActiveHousehold = (household: Household) => {
   };
 };
 
-// Helper function to get a random element from a string
-const getRandomElement = (array: string) => {
-  const index = Math.floor(Math.random() * array.length);
-  return array[index];
-};
+// // Helper function to get a random element from a string
+// const getRandomElement = (array: string) => {
+//   const index = Math.floor(Math.random() * array.length);
+//   return array[index];
+// };
 function dispatch(arg0: any) {
   throw new Error("Function not implemented.");
 }

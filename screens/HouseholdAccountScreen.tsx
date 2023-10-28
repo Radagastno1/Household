@@ -37,7 +37,9 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
   // const [households, setHouseholds] = useState<Household[] | undefined>([]);
   // const [profiles, setProfiles] = useState<(Profile[] | undefined)[]>([]);
   const dispatch = useAppDispatch();
-  const profiles = useAppSelector((state) => state.profile.profiles);
+  const profilesToUser = useAppSelector(
+    (state) => state.profile.profilesToUser,
+  );
   const households = useAppSelector((state) => state.household.households);
   const [profilesLoaded, setProfilesLoaded] = useState(false);
   const activeProfile = useAppSelector((state) => state.profile.activeProfile);
@@ -51,8 +53,8 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
     dispatch(getProfilesByUserIdAsync(activeUser?.uid ?? "hej")).then(() => {
       setProfilesLoaded(true);
     });
-    console.log("nu kollar den efter profiler", profiles);
-    householdIds = profiles.map((p) => p.householdId);
+    console.log("nu kollar den efter profiler", profilesToUser);
+    householdIds = profilesToUser.map((p) => p.householdId);
   }, [!profilesLoaded]);
 
   useEffect(() => {
@@ -155,7 +157,7 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
           }}
         >
           {households?.map((household: Household, index) => {
-            const profile = profiles.find(
+            const profile = profilesToUser.find(
               (profile) =>
                 profile.householdId === household.id &&
                 profile.userId === activeUser?.uid,

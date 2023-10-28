@@ -16,6 +16,7 @@ import { useTheme } from "../contexts/themeContext";
 import { RootNavigationScreenProps } from "../navigators/navigationTypes";
 import {
   addProfile,
+  addProfileAsync,
   getProfilesByHouseholdIdAsync,
 } from "../store/profile/profileSlice";
 
@@ -91,7 +92,9 @@ export default function CreateProfileScreen({
   //     return false;
   //   }
   // };
-  const [lastSelectedAvatar, setLastSelectedAvatar] = useState<string | null>(null);
+  const [lastSelectedAvatar, setLastSelectedAvatar] = useState<string | null>(
+    null,
+  );
   const isAvatarOccupied = (avatarId: string) => {
     if (profiles) {
       return profiles.some((profile) => profile.avatar === avatarId);
@@ -113,7 +116,7 @@ export default function CreateProfileScreen({
         isOwner: false,
         isActive: false,
       };
-      dispatch(addProfile(newProfile));
+      dispatch(addProfileAsync(newProfile));
       navigation.navigate("HouseholdAccount");
     }
   };
@@ -171,21 +174,23 @@ export default function CreateProfileScreen({
           {isOwner ? (
             <View>
               <TouchableOpacity
-        key={Avatars.Bee}
-        style={[
-          styles.avatar,
-          // selectedBee ? styles.selectedAvatar : null
-          selectedAvatar === Avatars.Bee ? { backgroundColor: "lightgray" } : null         
-        ]}
-        onPress={() => {
-          setSelectedAvatar(Avatars.Bee);
-        }}
-      >
-        <Image
-          source={{ uri: AvatarUrls[Avatars.Bee] }}
-          style={styles.avatarImage}
-        />
-      </TouchableOpacity>
+                key={Avatars.Bee}
+                style={[
+                  styles.avatar,
+                  // selectedBee ? styles.selectedAvatar : null
+                  selectedAvatar === Avatars.Bee
+                    ? { backgroundColor: "lightgray" }
+                    : null,
+                ]}
+                onPress={() => {
+                  setSelectedAvatar(Avatars.Bee);
+                }}
+              >
+                <Image
+                  source={{ uri: AvatarUrls[Avatars.Bee] }}
+                  style={styles.avatarImage}
+                />
+              </TouchableOpacity>
             </View>
           ) : (
             <View style={styles.avatarsContainer}>
@@ -195,14 +200,13 @@ export default function CreateProfileScreen({
 
                 const avatarStyles = [
                   styles.avatar,
-                 
+
                   isOccupied ? styles.occupiedAvatar : undefined,
                   isAvatarOccupied(avatar.id)
                     ? styles.occupiedAvatar
                     : undefined,
                   // isSelected ? styles.selectedAvatar : undefined,
                   isSelected ? { backgroundColor: "lightgray" } : undefined,
-          
                 ];
 
                 return (
