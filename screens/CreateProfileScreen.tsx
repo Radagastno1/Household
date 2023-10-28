@@ -17,6 +17,7 @@ import { RootNavigationScreenProps } from "../navigators/navigationTypes";
 import {
   addProfile,
   addProfileAsync,
+  addProfileWithRequest,
   getProfilesByHouseholdIdAsync,
 } from "../store/profile/profileSlice";
 
@@ -105,18 +106,33 @@ export default function CreateProfileScreen({
     console.log("hushållsid är", householdId);
 
     if (selectedAvatar && activeUser) {
-      const avatarsColor = AvatarColors[selectedAvatar as Avatars];
-      const newProfile = {
-        id: todaysDate.getUTCMilliseconds.toString().slice(-4),
-        profileName: householdName,
-        userId: activeUser.uid,
-        householdId: householdId,
-        avatar: selectedAvatar,
-        avatarsColors: avatarsColor,
-        isOwner: false,
-        isActive: false,
-      };
-      dispatch(addProfileAsync(newProfile));
+      if(isOwner){
+        const avatarsColor = AvatarColors[selectedAvatar as Avatars];
+        const newProfile = {
+          id: todaysDate.getUTCMilliseconds.toString().slice(-4),
+          profileName: householdName,
+          userId: activeUser.uid,
+          householdId: householdId,
+          avatar: selectedAvatar,
+          avatarsColors: avatarsColor,
+          isOwner: false,
+          isActive: false,
+        };
+        dispatch(addProfileAsync(newProfile));
+      }else{
+        const avatarsColor = AvatarColors[selectedAvatar as Avatars];
+        const newProfile = {
+          id: todaysDate.getUTCMilliseconds.toString().slice(-4),
+          profileName: householdName,
+          userId: activeUser.uid,
+          householdId: householdId,
+          avatar: selectedAvatar,
+          avatarsColors: avatarsColor,
+          isOwner: false,
+          isActive: false,
+        };
+        dispatch(addProfileWithRequest(newProfile));
+      }
       navigation.navigate("HouseholdAccount");
     }
   };

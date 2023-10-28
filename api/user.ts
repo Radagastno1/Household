@@ -32,6 +32,18 @@ export const addUserToDB = async (createUser: UserCreate) => {
     const errorMessage = error.message;
   }
 };
+
+export const getUserEmailByUid = async (uid: string) => {
+  try {
+    const userRecord = await auth.getUser(uid);
+    console.log("User email:", userRecord.email);
+    return userRecord.email;
+  } catch (error) {
+    console.error("Error fetching user data:", error);
+    return null;
+  }
+};
+
 export const signInWithAPI = async (createUser: UserCreate) => {
   try {
     const userCredential = await signInWithEmailAndPassword(
@@ -126,6 +138,7 @@ export const deleteUserFromDB = async (userId: string) => {
     console.error("Fel vid borttagning av usern:", error);
   }
 };
+
 export const getUserByUserId = async (userId: string) => {
   try {
     const userCollectionRef = collection(db, "users");

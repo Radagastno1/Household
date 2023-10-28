@@ -41,10 +41,12 @@ export const addProfileAsync = createAsyncThunk(
 export const addProfileWithRequest = createAsyncThunk(
   "profiles/addProfileWithRequest",
   async (
-    { newProfile, userMail }: { newProfile: Profile; userMail: string },
+    { newProfile, uid }: { newProfile: Profile; uid: string },
     thunkAPI,
   ) => {
     try {
+      const userMail = await getUsersMail(uid);
+
       //profil ska läggas till med tomt householdid och med en request fetch med
       const profileWithoutHouseholdId: Profile = {
         id: newProfile.id,
