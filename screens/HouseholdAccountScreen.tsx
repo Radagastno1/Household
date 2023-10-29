@@ -1,7 +1,7 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import { signOut } from "firebase/auth";
 import React, { useEffect, useRef, useState } from "react";
-import { Appearance } from 'react-native'; 
+import { Appearance } from "react-native";
 import {
   Alert,
   Animated,
@@ -45,7 +45,7 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
   );
   const households = useAppSelector((state) => state.household.households);
   const requests = useAppSelector((state) => state.household.requests);
-  
+
   const [profilesLoaded, setProfilesLoaded] = useState(false);
   const [requestsLoaded, setRequestsLoaded] = useState(false);
   const activeProfile = useAppSelector((state) => state.profile.activeProfile);
@@ -83,10 +83,10 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
 
   const handleEnterHousehold = async (household: Household) => {
     dispatch(sethouseholdActive(household));
-    console.log("HHOUSEHOLDID ÄR: ", household.id)
+    console.log("HHOUSEHOLDID ÄR: ", household.id);
     try {
       dispatch(fetchAllProfilesByHousehold(household.id, activeUser!.uid));
-       dispatch(
+      dispatch(
         setProfileByHouseholdAndUser({
           userId: activeUser!.uid,
           householdId: household.id,
@@ -115,25 +115,27 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
   }
 
   const { theme, setColorScheme } = useTheme();
-  const [currentTheme, setCurrentTheme] = useState("auto");
+  const [currentTheme, setCurrentTheme] = useState("automatic");
   const handleToggleTheme = () => {
     if (setColorScheme) {
       setColorScheme(currentTheme === "dark" ? "light" : "dark");
       setCurrentTheme(currentTheme === "dark" ? "light" : "dark");
     }
   };
-
   const handleToggleSystemTheme = () => {
     const systemColorScheme = Appearance.getColorScheme();
     console.log('System Theme Detected:', systemColorScheme);
     
-    if (systemColorScheme === 'light') {
-      setCurrentTheme('light'); 
-    } else if (systemColorScheme === 'dark') {
-      setCurrentTheme('dark'); 
+    if (systemColorScheme) {
+      if (systemColorScheme === 'light' && currentTheme === 'dark') {
+        setCurrentTheme('light');
+        setColorScheme('light');
+      } else if (systemColorScheme === 'dark' && currentTheme === 'light') {
+        setCurrentTheme('dark');
+        setColorScheme('dark');
+      }
     }
   };
-  
   
 
   const pan = useRef(new Animated.Value(0)).current;
@@ -189,8 +191,7 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
                 profile.userId === activeUser?.uid,
             );
             const request = requests.find(
-              (request) =>
-                request.householdId === household.id,
+              (request) => request.householdId === household.id,
             );
 
             return (
@@ -270,19 +271,23 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
             </View>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity
-  style={[
-    styles.themeButtonContainer,
-    {
-      backgroundColor: theme.button.backgroundColor,
-    },
-  ]}
-  onPress={handleToggleSystemTheme}
->
-  <Text style={styles.themeButtonText}>System Theme</Text>
-</TouchableOpacity>
 
-      </View>
+     
+        <TouchableOpacity
+          style={[
+            styles.themeButtonContainer,
+            {
+              backgroundColor: theme.button.backgroundColor,
+            },
+          ]}
+          onPress={handleToggleSystemTheme}
+        >
+            <View style={styles.themeButton}>
+          <Text style={styles.themeButtonText}>System Theme</Text>
+          </View>
+        </TouchableOpacity>
+        </View>
+    
     </View>
   );
 }
