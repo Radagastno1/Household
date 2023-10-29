@@ -15,7 +15,6 @@ const store = configureStore({
     taskCompletion: taskCompletionReducer,
     app: appReducer,
     household: householdReducer,
-    //LA TILL DENNA
     user: userReducer,
     request: requestReducer,
   },
