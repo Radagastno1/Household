@@ -41,7 +41,10 @@ const userSlice = createSlice({
       console.log("Vi kommer hit");
       signInWithAPI(action.payload).then((user) => {
         if (user) {
-          state.user = user;
+          state.user = {
+            uid: user.uid,
+            email: user.email,
+          };
         }
       });
     },

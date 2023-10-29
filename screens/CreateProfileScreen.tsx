@@ -15,9 +15,9 @@ import { useTheme } from "../contexts/themeContext";
 import { RootNavigationScreenProps } from "../navigators/navigationTypes";
 import {
   addProfileAsync,
-  addProfileWithRequest,
   getProfilesByHouseholdIdAsync
 } from "../store/profile/profileSlice";
+import { addProfileWithRequest } from "../store/request/requestSlice";
 
 type CreateProfileProps = RootNavigationScreenProps<"CreateProfile">;
 

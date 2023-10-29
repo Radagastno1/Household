@@ -6,6 +6,7 @@ import { profileReducer } from "./profile/profileSlice";
 import { taskCompletionReducer } from "./taskCompletion/taskCompletionSlice";
 import { taskReducer } from "./tasks/taskSlice";
 import { userReducer } from "./user/userSlice";
+import { requestReducer } from "./request/requestSlice";
 
 const store = configureStore({
   reducer: {
@@ -16,6 +17,7 @@ const store = configureStore({
     household: householdReducer,
     //LA TILL DENNA
     user: userReducer,
+    request: requestReducer,
   },
 });
 

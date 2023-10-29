@@ -10,14 +10,12 @@ import { Household, HouseholdRequest } from "../../types";
 
 export interface HouseholdState {
   households: Household[];
-  requests: HouseholdRequest[];
   selectedHousehold: Household | null;
   activeHousehold: Household | null;
 }
 
 export const initialState: HouseholdState = {
   households: [],
-  requests: [],
   selectedHousehold: null,
   activeHousehold: null,
 };
@@ -88,37 +86,12 @@ export const addHouseholdAsync = createAsyncThunk<
   }
 });
 
-export const getRequestByHouseholdIdsAsync = createAsyncThunk(
-  "profiles/getRequestByHouseholdIds",
-  async (householdIds: string[], thunkAPI) => {
-    try {
-      const fetchedRequests: HouseholdRequest[] = [];
-
-      await Promise.all(
-        householdIds.map(async (householdId) => {
-          const requests = await getRequestByHouseholdIdFromDb(householdId);
-          if (requests) {
-            fetchedRequests.push(...requests);
-          }
-          console.log("alla requests: ", requests);
-        }),
-      );
-      return fetchedRequests;
-    } catch (error: any) {
-      return thunkAPI.rejectWithValue(error.message);
-    }
-  },
-);
-
 const householdSlice = createSlice({
   name: "household",
   initialState,
   reducers: {
     sethousehold: (state, action: PayloadAction<Household>) => {
       state.households = [...state.households, action.payload];
-    },
-    setRequests: (state, action: PayloadAction<HouseholdRequest[]>) => {
-      state.requests = action.payload;
     },
     sethouseholdActive: (state, action: PayloadAction<Household>) => {
       state.activeHousehold = action.payload;
@@ -193,14 +166,6 @@ const householdSlice = createSlice({
       })
       .addCase(addHouseholdAsync.rejected, (state, action) => {
         console.log("error vid add household: ", action.payload);
-      })
-      .addCase(getRequestByHouseholdIdsAsync.fulfilled, (state, action) => {
-        if (action.payload) {
-          state.requests = action.payload;
-        }
-      })
-      .addCase(getRequestByHouseholdIdsAsync.rejected, (state, action) => {
-        console.log("error vid get requests: ", action.payload);
       });
   },
 });
