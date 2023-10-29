@@ -122,7 +122,6 @@ export const getAllProfilesByHouseholdId = async (householdId: string) => {
     const q = query(
       profileCollectionRef,
       where("householdId", "==", householdId),
-      where("status", "==", "pending"),
     );
 
     const querySnapshot = await getDocs(q);

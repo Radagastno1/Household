@@ -80,6 +80,7 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
 
   const handleEnterHousehold = async (household: Household) => {
     dispatch(sethouseholdActive(household));
+    console.log("HHOUSEHOLDID ÄR: ", household.id)
     try {
       dispatch(fetchAllProfilesByHousehold(household.id, activeUser!.uid));
        dispatch(
