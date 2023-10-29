@@ -208,13 +208,6 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
                   />
                 ) : (
                   <Text
-                    style={[
-                      styles.profileTitle,
-                      {
-                        color:
-                          colorScheme === "dark" ? "white" : theme.colors.text,
-                      },
-                    ]}
                   >
                     {activeProfile?.profileName}
                   </Text>
@@ -248,13 +241,6 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
                   />
                 ) : (
                   <Text
-                    style={[
-                      styles.profileTitle,
-                      {
-                        color:
-                          colorScheme === "dark" ? "white" : theme.colors.text,
-                      },
-                    ]}
                   >
                     {activeHousehold?.name}
                   </Text>

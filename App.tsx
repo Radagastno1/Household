@@ -7,12 +7,14 @@ import { Provider } from "react-redux";
 import ThemeProvider from "./contexts/themeContext";
 import store from "./store/store";
 import RootNavigator from "./navigators/RootNavigator";
+import { StatusBar } from "expo-status-bar";
 
 export default function App() {
   return (
     <Provider store={store}>
       <PaperProvider>
         <SafeAreaProvider>
+        <StatusBar style="auto" />
           <ThemeProvider>
             <RootNavigator />
           </ThemeProvider>

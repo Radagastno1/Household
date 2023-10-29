@@ -1,11 +1,13 @@
-
-import React, { createContext, useContext, ReactNode, PropsWithChildren, useState } from 'react';
+import React, { createContext, useContext, ReactNode, PropsWithChildren, useEffect, useState } from 'react';
+import { ColorSchemeName } from 'react-native';
+import { PaperProvider } from 'react-native-paper';
+import { Appearance } from 'react-native';
+import { AppDarkTheme, AppLightTheme } from '../data/theme';
 import { Theme } from '../data/theme';
-import { useColorScheme } from "react-native";
-import { PaperProvider } from "react-native-paper";
-import { AppDarkTheme, AppLightTheme } from "../data/theme";
+import { useColorScheme } from 'react-native';
 
-type ColorScheme = "light" | "dark" | "auto";
+
+type ColorScheme = ColorSchemeName;
 
 type ThemeContextValue = {
   theme: Theme;
@@ -25,21 +27,44 @@ export const useTheme = () => {
 export default function ThemeProvider({
   children,
 }: PropsWithChildren) {
-  const [colorScheme, setColorScheme] = useState<ColorScheme>("auto");
+  const [isAuto, setIsAuto] = useState<boolean>(true);
+  const [currentTheme, setCurrentTheme] = useState<ColorScheme>('light'); // Använd ditt önskade standardtema här
+
+  useEffect(() => {
+    // Lyssna på ändringar i currentTheme och applicera temat
+    if (isAuto) {
+      const systemColorScheme = Appearance.getColorScheme();
+      if (systemColorScheme === 'dark') {
+        setCurrentTheme('dark');
+      } else {
+        setCurrentTheme('light');
+      }
+    }
+  }, [isAuto]);
 
   const toggleColorScheme = () => {
-    setColorScheme((prevColorScheme: ColorScheme) => {
-      if (prevColorScheme === 'light') {
-        return 'dark';
+    if (!isAuto) {
+      setIsAuto(true); 
+      const systemColorScheme = Appearance.getColorScheme();
+      if (systemColorScheme === 'dark') {
+        setCurrentTheme('dark');
       } else {
-        return 'light';
+        setCurrentTheme('light');
       }
-    });
+    } else {
+      setIsAuto(false); 
+      setCurrentTheme((prevColorScheme: ColorScheme) => {
+        if (prevColorScheme === 'light') {
+          return 'dark';
+        } else {
+          return 'light';
+        }
+      });
+    }
   };
 
   const operatingSystemScheme = useColorScheme();
-  const selectedScheme =
-    colorScheme === 'auto' ? operatingSystemScheme : colorScheme;
+  const selectedScheme = isAuto ? operatingSystemScheme : currentTheme;
 
   const theme: Theme =
     selectedScheme === 'dark'
@@ -54,6 +79,17 @@ export default function ThemeProvider({
     </ThemeContext.Provider>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
