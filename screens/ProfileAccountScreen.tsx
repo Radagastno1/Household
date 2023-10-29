@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, View, Image } from "react-native";
+import { StyleSheet, View, Image, Modal } from "react-native";
 import { Button, Card, IconButton, Text, TextInput } from "react-native-paper";
 import { useTheme } from "../contexts/themeContext";
 import HouseholdProfileModal from "../modules/HouseholdMemberModal";
@@ -15,6 +15,8 @@ import { fetchTasks } from "../store/tasks/taskSlice";
 import { RootNavigationScreenProps } from "../navigators/navigationTypes";
 import { setStatusBarBackgroundColor } from "expo-status-bar";
 import { AvatarUrls, Avatars } from "../data/avatars";
+import { hide } from "expo-splash-screen";
+import RequestModule from "../modules/RequestModule";
 // import { getProfileByHouseholdAndUser } from "../store/profile/profileSlice";
 
 type ProfileProps = RootNavigationScreenProps<"ProfileAccount">;
@@ -28,6 +30,7 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
   // const userId = "5NCx5MKcUu6UYKjFqRkg";
 
   const [selectedAvatar] = useState<string>("");
+  const [isRequestPending, setRequestPending] = useState(false);
 
   //  -------------- det aktiva hushållet är rätt här men viewn hinner renderas innan denna körs liksom -----------------------------
   const activeHousehold = useAppSelector(
@@ -63,6 +66,7 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
   const activeProfile = useAppSelector((state) => state.profile.activeProfile);
 
   const [isEditing, setIsEditing] = useState(false);
+  const [isViewingRequest, setIsViewingRequest] = useState(false);
 
   const [updatedProfileName, setUpdatedProfilename] = useState(
     activeProfile?.profileName,
@@ -126,6 +130,11 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
       console.log("NYA PROFILNAMNET", { updatedHouseholdName });
     }
   };
+
+  function handleRequest() {
+    setIsViewingRequest(!isViewingRequest);
+    console.log(isViewingRequest);
+  }
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
@@ -219,13 +228,20 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
               {/* <Text variant="titleLarge">{headerTitle}</Text>
               </View>  */}
 
-              <IconButton
+              {/* <IconButton
                 icon="pencil"
                 size={20}
                 onPress={() => {
                   setIsEditing(true);
                 }}
-              />
+              /> */}
+              {!isRequestPending && (
+                <IconButton
+                  icon="bell-alert-outline"
+                  size={24}
+                  onPress={handleRequest}
+                />
+              )}
 
               {/* <IconButton icon="pencil" size={20} onPress={() => {}} /> */}
             </View>
@@ -275,6 +291,13 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
             householdName={activeHousehold?.name || "Laddar..."}
             profiles={activeProfiles}
             selectedAvatar={selectedAvatar}
+          />
+          <RequestModule
+            visible={isViewingRequest}
+            onDismiss={() => setIsViewingRequest(false)}
+            householdName={activeHousehold?.name || "Laddar..."}
+            selectedAvatar="Frog"
+            email="test@mail.com"
           />
         </View>
       </View>

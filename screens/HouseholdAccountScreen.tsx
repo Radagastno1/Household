@@ -31,12 +31,17 @@ import {
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { logOutUser } from "../store/user/userSlice";
 import { Household } from "../types";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { State } from "react-native-gesture-handler";
 
 type HouseholdProps = RootNavigationScreenProps<"HouseholdAccount">;
 
 export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
+
   const [systemTheme, setSystemTheme] = useState(Appearance.getColorScheme());
+
+
+  const [isRequest, setIsRequest] = useState(false);
 
   const activeUser = useAppSelector((state) => state.user.user);
   const dispatch = useAppDispatch();
@@ -205,7 +210,12 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
                   handleEnterHousehold(household);
                 }}
               >
-                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                  }}
+                >
                   <Image
                     key={0}
                     source={{
@@ -221,8 +231,21 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
                   <Text style={theme.buttonText}>{household.name}</Text>
                 </View>
 
-                <View>
-                  <MaterialIcons name="edit" size={24} color="black" />
+                <View style={{ flexDirection: "row", gap: 5 }}>
+                  {!isRequest && profile?.isOwner === true ? (
+                    <MaterialCommunityIcons
+                      name="bell-alert-outline"
+                      size={24}
+                      color="black"
+                    />
+                  ) : (
+                    <View style={{ width: 24 }}></View>
+                  )}
+                  {profile?.isOwner === true ? (
+                    <MaterialIcons name="edit" size={24} color="black" />
+                  ) : (
+                    <View style={{ width: 24 }}></View>
+                  )}
                 </View>
               </TouchableOpacity>
             );
