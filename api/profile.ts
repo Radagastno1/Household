@@ -9,7 +9,7 @@ import {
   updateDoc,
   where,
 } from "firebase/firestore";
-import { HouseholdRequest, Profile } from "../types";
+import { Profile } from "../types";
 import { db } from "./config";
 
 export const addProfileToDB = async (profile: Profile) => {
@@ -159,6 +159,28 @@ export const getAllProfilesByUserIdFromDb = async (userId: string) => {
     return profiles;
   } catch (error) {
     console.error("Fel vid hämtning av uppgifter:", error);
+  }
+};
+export const deactivateProfileInDB = async (profileId: string) => {
+  const profileDocRef = doc(db, "profiles", profileId);
+
+  try {
+    await updateDoc(profileDocRef, {
+      isActive: false,
+    });
+
+    console.log("Profile's isActive property updated in Firestore.");
+    return { success: true };
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error("Error updating profile in Firestore:", error);
+      return { success: false, error: error.message };
+    } else {
+      console.error(
+        "Unknown error occurred while updating profile in Firestore.",
+      );
+      return { success: false, error: "Unknown error" };
+    }
   }
 };
 

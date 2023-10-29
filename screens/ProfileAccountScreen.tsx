@@ -1,20 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, View, Image } from "react-native";
+import { Image, StyleSheet, View, useColorScheme } from "react-native";
 import { Button, Card, IconButton, Text, TextInput } from "react-native-paper";
 import { useTheme } from "../contexts/themeContext";
 import HouseholdProfileModal from "../modules/HouseholdMemberModal";
-import { useColorScheme } from "react-native";
 import {
+  deactivateProfileAsync,
   editProfileName,
-  setProfileByHouseholdAndUser,
 } from "../store/profile/profileSlice";
 
-import { useAppDispatch, useAppSelector } from "../store/store";
-import { editHouseHoldeName } from "../store/household/householdSlice";
-import { fetchTasks } from "../store/tasks/taskSlice";
-import { RootNavigationScreenProps } from "../navigators/navigationTypes";
-import { setStatusBarBackgroundColor } from "expo-status-bar";
 import { AvatarUrls, Avatars } from "../data/avatars";
+import { RootNavigationScreenProps } from "../navigators/navigationTypes";
+import { editHouseHoldeName } from "../store/household/householdSlice";
+import { useAppDispatch, useAppSelector } from "../store/store";
+import { fetchTasks } from "../store/tasks/taskSlice";
 // import { getProfileByHouseholdAndUser } from "../store/profile/profileSlice";
 
 type ProfileProps = RootNavigationScreenProps<"ProfileAccount">;
@@ -124,6 +122,27 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
       );
       setIsEditing(false);
       console.log("NYA PROFILNAMNET", { updatedHouseholdName });
+    }
+  };
+  const handleLeaveHouseholdClick = () => {
+    if (activeProfile) {
+      const householdId = activeProfile.householdId;
+      const userId = activeProfile.userId;
+      const profileName = activeProfile.profileName;
+
+      // Dispatch the deactivateProfile action to update the profile in the database.
+      dispatch(deactivateProfileAsync(activeProfile.id)).then((action) => {
+        if (deactivateProfileAsync.fulfilled.match(action)) {
+          // After deactivation, log the userId, householdId, profileName, and navigate to "HouseholdAccount."
+          console.log(
+            `UserId: ${userId} has now left the household with householdId: ${householdId}. Profile Name: ${profileName}`,
+          );
+          navigation.navigate("HouseholdAccount");
+        } else {
+          // Handle the case where deactivation was not successful, e.g., show an error message.
+          console.error("Failed to deactivate profile.");
+        }
+      });
     }
   };
 
@@ -275,9 +294,10 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
           >
             Mina hushåll
           </Button>
+
           <Button
             mode="contained"
-            onPress={() => navigation.navigate("HouseholdAccount")}
+            onPress={handleLeaveHouseholdClick}
             style={styles.buttonColor}
             labelStyle={theme.buttonText}
           >
