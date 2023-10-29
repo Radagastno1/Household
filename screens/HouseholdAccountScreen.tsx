@@ -20,7 +20,6 @@ import { AvatarUrls, Avatars } from "../data/avatars";
 import { RootNavigationScreenProps } from "../navigators/navigationTypes";
 import {
   getHouseholdsByHouseholdIdAsync,
-  getRequestByHouseholdIdsAsync,
   sethouseholdActive,
 } from "../store/household/householdSlice";
 import {
@@ -28,6 +27,7 @@ import {
   getProfilesByUserIdAsync,
   setProfileByHouseholdAndUser,
 } from "../store/profile/profileSlice";
+import { getRequestByHouseholdIdsAsync } from "../store/request/requestSlice";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { logOutUser } from "../store/user/userSlice";
 import { Household } from "../types";
@@ -49,7 +49,9 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
     (state) => state.profile.profilesToUser,
   );
   const households = useAppSelector((state) => state.household.households);
-  const requests = useAppSelector((state) => state.household.requests);
+
+  const requests = useAppSelector((state) => state.request.requests);
+  
 
   const [profilesLoaded, setProfilesLoaded] = useState(false);
   const [requestsLoaded, setRequestsLoaded] = useState(false);
@@ -76,7 +78,7 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
     dispatch(getRequestByHouseholdIdsAsync(householdIds)).then(() => {
       setRequestsLoaded(true);
     });
-  }, [!requestsLoaded]);
+  }, [!requestsLoaded, profilesLoaded]);
 
   useEffect(() => {
     if (activeProfile) {

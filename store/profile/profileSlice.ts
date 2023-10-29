@@ -42,60 +42,6 @@ export const addProfileAsync = createAsyncThunk(
   },
 );
 
-//dessa i en request slice
-
-export const addProfileWithRequest = createAsyncThunk(
-  "profiles/addProfileWithRequest",
-  async (
-    {
-      newProfile,
-      userMail,
-      householdId,
-    }: { newProfile: Profile; userMail: string; householdId: string },
-    thunkAPI,
-  ) => {
-    try {
-      if (userMail) {
-        //profil ska läggas till med tomt householdid och med en request fetch med
-        //profil id finns ju inte här än, den läggs till i fetch anropet när profilen har skapats
-        const request: HouseholdRequest = {
-          id: "",
-          profileId: "",
-          userMail: userMail,
-          householdId: householdId,
-          status: "pending",
-        };
-
-        const createdProfileWithRequest = await addProfileWithRequestToDB(
-          newProfile,
-          request,
-        );
-
-        if (createdProfileWithRequest) {
-          return createdProfileWithRequest;
-        } else {
-          return thunkAPI.rejectWithValue("Failed to add profile with request");
-        }
-      }
-    } catch (error: any) {
-      return thunkAPI.rejectWithValue(error.message);
-    }
-  },
-);
-
-export const acceptProfileToHouseholdAsync = createAsyncThunk(
-  "profiles/acceptProfileToHousehold",
-  async ({ requestId }: { requestId: string }, thunkAPI) => {
-    try {
-      if (requestId) {
-        await acceptProfileToHousehold(requestId);
-      }
-    } catch (error: any) {
-      return thunkAPI.rejectWithValue(error.message);
-    }
-  },
-);
-
 export const getProfilesByUserIdAsync = createAsyncThunk<
   Profile[],
   string,
