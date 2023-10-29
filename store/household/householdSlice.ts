@@ -88,27 +88,27 @@ export const addHouseholdAsync = createAsyncThunk<
   }
 });
 
-export const getRequestByHouseholdIdsAsync = createAsyncThunk(
-  "profiles/getRequestByHouseholdIds",
-  async (householdIds: string[], thunkAPI) => {
-    try {
-      const fetchedRequests: HouseholdRequest[] = [];
+// export const getRequestByHouseholdIdsAsync = createAsyncThunk(
+//   "profiles/getRequestByHouseholdIds",
+//   async (householdIds: string[], thunkAPI) => {
+//     try {
+//       const fetchedRequests: HouseholdRequest[] = [];
 
-      await Promise.all(
-        householdIds.map(async (householdId) => {
-          const requests = await getRequestByHouseholdIdFromDb(householdId);
-          if (requests) {
-            fetchedRequests.push(...requests);
-          }
-          console.log("alla requests: ", requests);
-        }),
-      );
-      return fetchedRequests;
-    } catch (error: any) {
-      return thunkAPI.rejectWithValue(error.message);
-    }
-  },
-);
+//       await Promise.all(
+//         householdIds.map(async (householdId) => {
+//           const requests = await getRequestByHouseholdIdFromDb(householdId);
+//           if (requests) {
+//             fetchedRequests.push(...requests);
+//           }
+//           console.log("alla requests: ", requests);
+//         }),
+//       );
+//       return fetchedRequests;
+//     } catch (error: any) {
+//       return thunkAPI.rejectWithValue(error.message);
+//     }
+//   },
+// );
 
 const householdSlice = createSlice({
   name: "household",
@@ -193,15 +193,15 @@ const householdSlice = createSlice({
       })
       .addCase(addHouseholdAsync.rejected, (state, action) => {
         console.log("error vid add household: ", action.payload);
-      })
-      .addCase(getRequestByHouseholdIdsAsync.fulfilled, (state, action) => {
-        if (action.payload) {
-          state.requests = action.payload;
-        }
-      })
-      .addCase(getRequestByHouseholdIdsAsync.rejected, (state, action) => {
-        console.log("error vid get requests: ", action.payload);
       });
+    // .addCase(getRequestByHouseholdIdsAsync.fulfilled, (state, action) => {
+    //   if (action.payload) {
+    //     state.requests = action.payload;
+    //   }
+    // })
+    // .addCase(getRequestByHouseholdIdsAsync.rejected, (state, action) => {
+    //   console.log("error vid get requests: ", action.payload);
+    // });
   },
 });
 
