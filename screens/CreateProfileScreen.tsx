@@ -113,7 +113,7 @@ export default function CreateProfileScreen({
           householdId: householdId,
           avatar: selectedAvatar,
           avatarsColors: avatarsColor,
-          isOwner: false,
+          isOwner: true,
           isActive: false,
         };
         dispatch(addProfileAsync(newProfile));
