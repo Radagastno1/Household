@@ -113,8 +113,8 @@ export default function CreateProfileScreen({
           householdId: householdId,
           avatar: selectedAvatar,
           avatarsColors: avatarsColor,
-          isOwner: false,
-          isActive: false,
+          isOwner: true,
+          isActive: true,
         };
         dispatch(addProfileAsync(newProfile));
       }else{
@@ -129,7 +129,7 @@ export default function CreateProfileScreen({
             avatar: selectedAvatar,
             avatarsColors: avatarsColor,
             isOwner: false,
-            isActive: false,
+            isActive: true,
           };
           dispatch(addProfileWithRequest({newProfile:newProfile, userMail:activeUser.email, householdId:householdId}));
         }

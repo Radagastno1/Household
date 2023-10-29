@@ -1,6 +1,7 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import {
   addProfileToDB,
+  deactivateProfileInDB,
   getAllProfilesByHouseholdId,
   getAllProfilesByHouseholdIdDb,
   getAllProfilesByUserIdFromDb,
@@ -200,6 +201,21 @@ export const fetchAllProfilesByHousehold =
       }
     }
   };
+export const deactivateProfileAsync = createAsyncThunk(
+  "profiles/deactivateProfile",
+  async (profileId: string, thunkAPI) => {
+    try {
+      const response = await deactivateProfileInDB(profileId);
+      if (response.success) {
+        return true;
+      } else {
+        return thunkAPI.rejectWithValue(response.error);
+      }
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error.message);
+    }
+  },
+);
 
 export const { setProfiles } = profileSlice.actions;
 export const { addProfile } = profileSlice.actions;
