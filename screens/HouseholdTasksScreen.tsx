@@ -52,25 +52,27 @@ export default function HouseholdTasksScreen({
   // Use useSelector to access the profiles
   const activeProfile = useAppSelector((state) => state.profile.activeProfile);
   // const household = households.find((h) => h.id === activeProfile?.householdId);
-  const taskSlice = useAppSelector((state) => state.task);
+  const filteredTasks = useAppSelector((state) => state.task.filteredTasks);
   const taskCompletionSlice = useAppSelector((state) => state.taskCompletion);
   const dispatch = useAppDispatch();
 
   const isOwner = activeProfile?.isOwner;
+  const fetchedTasks : Task[] = [];
 
   useFocusEffect(
     useCallback(() => {
       if (activeProfile && activeHousehold) {
-        dispatch(
-          filterTaskListByHouseId({
-            household_Id: activeHousehold?.id,
-          }),
+        dispatch(fetchTasks(activeProfile.householdId)).then(
+          () => {
+            dispatch(
+              filterTaskListByHouseId({
+                household_Id: activeHousehold?.id,
+              })
+            );
+          }
         );
-        //TINA HERE: THIS DISPATCH MUST HAPPEND EVERY TIME WE GO TO THIS SCREEN
-        //this one fetches the tasks from the database and put it in the state "tasks"
-        dispatch(fetchTasks(activeProfile.householdId));
       }
-    }, [dispatch]),
+    }, [])
   );
 
   const handleTaskPress = (taskId: string) => {
@@ -151,7 +153,7 @@ export default function HouseholdTasksScreen({
               : styles.scrollContainerNonOwner
           }
         >
-          {taskSlice.filteredTasks.map((task) => (
+          {filteredTasks.map((task) => (
             <Card
               key={task.id}
               style={[
