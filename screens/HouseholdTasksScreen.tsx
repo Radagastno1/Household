@@ -57,7 +57,6 @@ export default function HouseholdTasksScreen({
   const dispatch = useAppDispatch();
 
   const isOwner = activeProfile?.isOwner;
-  const fetchedTasks : Task[] = [];
 
   useFocusEffect(
     useCallback(() => {
