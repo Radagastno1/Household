@@ -19,7 +19,6 @@ import { AvatarUrls, Avatars } from "../data/avatars";
 import { RootNavigationScreenProps } from "../navigators/navigationTypes";
 import {
   getHouseholdsByHouseholdIdAsync,
-  getRequestByHouseholdIdsAsync,
   sethouseholdActive,
 } from "../store/household/householdSlice";
 import {
@@ -30,7 +29,7 @@ import {
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { logOutUser } from "../store/user/userSlice";
 import { Household } from "../types";
-import { State } from "react-native-gesture-handler";
+import { getRequestByHouseholdIdsAsync } from "../store/request/requestSlice";
 
 type HouseholdProps = RootNavigationScreenProps<"HouseholdAccount">;
 
@@ -42,7 +41,7 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
   );
   const households = useAppSelector((state) => state.household.households);
   const requests = useAppSelector((state) => state.household.requests);
-  
+
   const [profilesLoaded, setProfilesLoaded] = useState(false);
   const [requestsLoaded, setRequestsLoaded] = useState(false);
   const activeProfile = useAppSelector((state) => state.profile.activeProfile);
@@ -80,10 +79,10 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
 
   const handleEnterHousehold = async (household: Household) => {
     dispatch(sethouseholdActive(household));
-    console.log("HHOUSEHOLDID ÄR: ", household.id)
+    console.log("HHOUSEHOLDID ÄR: ", household.id);
     try {
       dispatch(fetchAllProfilesByHousehold(household.id, activeUser!.uid));
-       dispatch(
+      dispatch(
         setProfileByHouseholdAndUser({
           userId: activeUser!.uid,
           householdId: household.id,
@@ -173,8 +172,7 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
                 profile.userId === activeUser?.uid,
             );
             const request = requests.find(
-              (request) =>
-                request.householdId === household.id,
+              (request) => request.householdId === household.id,
             );
 
             return (

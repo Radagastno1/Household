@@ -7,9 +7,9 @@ import {
 } from "../../api/request";
 
 interface RequestState {
-  request: Request | null;
+  request: HouseholdRequest | null;
   requests: HouseholdRequest[];
-  requestByHouseholdId: Request[];
+  requestByHouseholdId: HouseholdRequest[];
 }
 
 export const initialState: RequestState = {
@@ -81,24 +81,27 @@ export const addProfileWithRequest = createAsyncThunk(
   },
 );
 
-export const acceptProfileToHouseholdAsync = createAsyncThunk(
-  "profiles/acceptProfileToHousehold",
-  async ({ requestId }: { requestId: string }, thunkAPI) => {
-    try {
-      if (requestId) {
-        await acceptProfileToHousehold(requestId);
-      }
-    } catch (error: any) {
-      return thunkAPI.rejectWithValue(error.message);
-    }
-  },
-);
+// export const acceptProfileToHouseholdAsync = createAsyncThunk(
+//   "profiles/acceptProfileToHousehold",
+//   async ({ requestId }: { requestId: string }, thunkAPI) => {
+//     try {
+//       if (requestId) {
+//         await acceptProfileToHousehold(requestId);
+//       }
+//     } catch (error: any) {
+//       return thunkAPI.rejectWithValue(error.message);
+//     }
+//   },
+// );
 
 const requestSlice = createSlice({
   name: "request",
   initialState,
   reducers: {
-    setProfiles: (state, action: PayloadAction<Profile[] | undefined>) => {},
+    setProfiles: (
+      state,
+      action: PayloadAction<HouseholdRequest[] | undefined>,
+    ) => {},
   },
   extraReducers: (builder) => {
     builder

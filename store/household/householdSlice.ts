@@ -5,7 +5,6 @@ import {
   editHouseholdToDB,
   getHouseholdsFromDB,
 } from "../../api/household";
-import { getRequestByHouseholdIdFromDb } from "../../api/request";
 import { Household, HouseholdRequest } from "../../types";
 
 export interface HouseholdState {
@@ -227,10 +226,3 @@ const setActiveHousehold = (household: Household) => {
 //   const index = Math.floor(Math.random() * array.length);
 //   return array[index];
 // };
-function dispatch(arg0: any) {
-  throw new Error("Function not implemented.");
-}
-
-function joinHouseholdByCode(joinCode: string) {
-  throw new Error("Function not implemented.");
-}
