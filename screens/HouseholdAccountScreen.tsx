@@ -262,7 +262,7 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
               style={[styles.innerButton, { transform: [{ translateX }] }]}
               {...panResponder.panHandlers}
             >
-              <Text style={styles.innerButtonText}>auto</Text>
+              <Text style={styles.innerButtonText}>switch</Text>
             </Animated.View>
             <View>
               <Text style={styles.themeButtonText}>
