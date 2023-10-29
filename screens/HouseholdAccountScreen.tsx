@@ -82,10 +82,10 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
 
   const handleEnterHousehold = async (household: Household) => {
     dispatch(sethouseholdActive(household));
-    console.log("HHOUSEHOLDID ÄR: ", household.id)
+    console.log("HHOUSEHOLDID ÄR: ", household.id);
     try {
       dispatch(fetchAllProfilesByHousehold(household.id, activeUser!.uid));
-       dispatch(
+      dispatch(
         setProfileByHouseholdAndUser({
           userId: activeUser!.uid,
           householdId: household.id,
@@ -175,8 +175,7 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
                 profile.userId === activeUser?.uid,
             );
             const request = requests.find(
-              (request) =>
-                request.householdId === household.id,
+              (request) => request.householdId === household.id,
             );
 
             return (

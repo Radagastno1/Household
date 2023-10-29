@@ -5,8 +5,7 @@ import {
   editHouseholdToDB,
   getHouseholdsFromDB,
 } from "../../api/household";
-import { getRequestByHouseholdIdFromDb } from "../../api/request";
-import { Household, HouseholdRequest } from "../../types";
+import { Household } from "../../types";
 
 export interface HouseholdState {
   households: Household[];
@@ -167,6 +166,14 @@ const householdSlice = createSlice({
       .addCase(addHouseholdAsync.rejected, (state, action) => {
         console.log("error vid add household: ", action.payload);
       });
+    // .addCase(getRequestByHouseholdIdsAsync.fulfilled, (state, action) => {
+    //   if (action.payload) {
+    //     state.requests = action.payload;
+    //   }
+    // })
+    // .addCase(getRequestByHouseholdIdsAsync.rejected, (state, action) => {
+    //   console.log("error vid get requests: ", action.payload);
+    // });
   },
 });
 
@@ -192,10 +199,3 @@ const setActiveHousehold = (household: Household) => {
 //   const index = Math.floor(Math.random() * array.length);
 //   return array[index];
 // };
-function dispatch(arg0: any) {
-  throw new Error("Function not implemented.");
-}
-
-function joinHouseholdByCode(joinCode: string) {
-  throw new Error("Function not implemented.");
-}

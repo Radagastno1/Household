@@ -1,21 +1,45 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { HouseholdRequest, Profile } from "../../types";
 import {
   acceptProfileToHousehold,
   addProfileWithRequestToDB,
   getRequestByHouseholdIdFromDb,
 } from "../../api/request";
-import { HouseholdRequest, Profile } from "../../types";
 
 interface RequestState {
+  request: HouseholdRequest | null;
   requests: HouseholdRequest[];
 }
 
-const initialState: RequestState = {
+export const initialState: RequestState = {
+  request: null,
   requests: [],
 };
 
+export const getRequestByHouseholdIdsAsync = createAsyncThunk(
+  "profiles/getRequestByHouseholdIds",
+  async (householdIds: string[], thunkAPI) => {
+    try {
+      const fetchedRequests: HouseholdRequest[] = [];
+
+      await Promise.all(
+        householdIds.map(async (householdId) => {
+          const requests = await getRequestByHouseholdIdFromDb(householdId);
+          if (requests) {
+            fetchedRequests.push(...requests);
+          }
+          console.log("alla requests: ", requests);
+        }),
+      );
+      return fetchedRequests;
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error.message);
+    }
+  },
+);
+
 export const addProfileWithRequest = createAsyncThunk(
-  "request/addProfileWithRequest",
+  "profiles/addProfileWithRequest",
   async (
     {
       newProfile,
@@ -58,28 +82,6 @@ export const acceptProfileToHouseholdAsync = createAsyncThunk(
       if (requestId) {
         await acceptProfileToHousehold(requestId);
       }
-    } catch (error: any) {
-      return thunkAPI.rejectWithValue(error.message);
-    }
-  },
-);
-
-export const getRequestByHouseholdIdsAsync = createAsyncThunk(
-  "request/getRequestByHouseholdIds",
-  async (householdIds: string[], thunkAPI) => {
-    try {
-      const fetchedRequests: HouseholdRequest[] = [];
-
-      await Promise.all(
-        householdIds.map(async (householdId) => {
-          const requests = await getRequestByHouseholdIdFromDb(householdId);
-          if (requests) {
-            fetchedRequests.push(...requests);
-          }
-          console.log("alla requests: ", requests);
-        }),
-      );
-      return fetchedRequests;
     } catch (error: any) {
       return thunkAPI.rejectWithValue(error.message);
     }
