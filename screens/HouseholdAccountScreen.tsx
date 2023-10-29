@@ -1,6 +1,7 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import { signOut } from "firebase/auth";
 import React, { useEffect, useRef, useState } from "react";
+import { Appearance } from 'react-native'; 
 import {
   Alert,
   Animated,
@@ -35,6 +36,8 @@ import { State } from "react-native-gesture-handler";
 type HouseholdProps = RootNavigationScreenProps<"HouseholdAccount">;
 
 export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
+  const [systemTheme, setSystemTheme] = useState(Appearance.getColorScheme());
+
   const activeUser = useAppSelector((state) => state.user.user);
   const dispatch = useAppDispatch();
   const profilesToUser = useAppSelector(
@@ -119,6 +122,19 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
       setCurrentTheme(currentTheme === "dark" ? "light" : "dark");
     }
   };
+
+  const handleToggleSystemTheme = () => {
+    const systemColorScheme = Appearance.getColorScheme();
+    console.log('System Theme Detected:', systemColorScheme);
+    
+    if (systemColorScheme === 'light') {
+      setCurrentTheme('light'); 
+    } else if (systemColorScheme === 'dark') {
+      setCurrentTheme('dark'); 
+    }
+  };
+  
+  
 
   const pan = useRef(new Animated.Value(0)).current;
   const panResponder = PanResponder.create({
@@ -254,6 +270,18 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
             </View>
           </View>
         </TouchableOpacity>
+        <TouchableOpacity
+  style={[
+    styles.themeButtonContainer,
+    {
+      backgroundColor: theme.button.backgroundColor,
+    },
+  ]}
+  onPress={handleToggleSystemTheme}
+>
+  <Text style={styles.themeButtonText}>System Theme</Text>
+</TouchableOpacity>
+
       </View>
     </View>
   );
