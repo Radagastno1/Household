@@ -1,13 +1,16 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { getHouseholdsFromDB } from "../../api/household";
 import {
   addProfileToDB,
   getAllProfilesByHouseholdId,
+  getAllProfilesByHouseholdIdDb,
   getAllProfilesByUserIdFromDb,
   saveProfileNameToDatabase,
-  getAllProfilesByHouseholdIdDb,
 } from "../../api/profile";
-import { Profile } from "../../types";
+import {
+  acceptProfileToHousehold,
+  addProfileWithRequestToDB,
+} from "../../api/request";
+import { HouseholdRequest, Profile } from "../../types";
 
 interface ProfileState {
   profiles: Profile[];
@@ -31,6 +34,60 @@ export const addProfileAsync = createAsyncThunk(
         return createdProfile;
       } else {
         return thunkAPI.rejectWithValue("Failed to add profile");
+      }
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error.message);
+    }
+  },
+);
+
+//dessa i en request slice
+
+export const addProfileWithRequest = createAsyncThunk(
+  "profiles/addProfileWithRequest",
+  async (
+    {
+      newProfile,
+      userMail,
+      householdId,
+    }: { newProfile: Profile; userMail: string; householdId: string },
+    thunkAPI,
+  ) => {
+    try {
+      if (userMail) {
+        //profil ska läggas till med tomt householdid och med en request fetch med
+        //profil id finns ju inte här än, den läggs till i fetch anropet när profilen har skapats
+        const request: HouseholdRequest = {
+          id: "",
+          profileId: "",
+          userMail: userMail,
+          householdId: householdId,
+          status: "pending",
+        };
+
+        const createdProfileWithRequest = await addProfileWithRequestToDB(
+          newProfile,
+          request,
+        );
+
+        if (createdProfileWithRequest) {
+          return createdProfileWithRequest;
+        } else {
+          return thunkAPI.rejectWithValue("Failed to add profile with request");
+        }
+      }
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error.message);
+    }
+  },
+);
+
+export const acceptProfileToHouseholdAsync = createAsyncThunk(
+  "profiles/acceptProfileToHousehold",
+  async ({ requestId }: { requestId: string }, thunkAPI) => {
+    try {
+      if (requestId) {
+        await acceptProfileToHousehold(requestId);
       }
     } catch (error: any) {
       return thunkAPI.rejectWithValue(error.message);
@@ -114,18 +171,6 @@ const profileSlice = createSlice({
           console.error("Fel vid tillägg av profil:", error);
         });
     },
-
-    // editProfileName: (
-    //   state,
-    //   action: PayloadAction<{ profileId: string; newProfileName: string }>,
-    // ) => {
-    //   const profileToEdit = state.profiles.find(
-    //     (profile) => profile.id === action.payload.profileId,
-    //   );
-    //   if (profileToEdit) {
-    //     profileToEdit.profileName = action.payload.newProfileName;
-    //   }
-    // },
     editProfileName: (
       state,
       action: PayloadAction<{ profileId: string; newProfileName: string }>,

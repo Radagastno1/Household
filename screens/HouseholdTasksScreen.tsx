@@ -1,16 +1,14 @@
 import { AntDesign } from "@expo/vector-icons";
 import { useFocusEffect } from "@react-navigation/native";
-import React, { useCallback, useEffect } from "react";
-import { ScrollView, StyleSheet, View, Image } from "react-native";
+import React, { useCallback } from "react";
+import { Image, ScrollView, StyleSheet, View, useColorScheme } from "react-native";
 import { Button, Card, Text } from "react-native-paper";
-import { useAppDispatch, useAppSelector } from "../store/store";
-import { fetchCompletions } from "../store/taskCompletionSlice";
-import { fetchTasks, filterTaskListByHouseId } from "../store/tasks/taskSlice";
-import { Profile, Task } from "../types";
 import { useTheme } from "../contexts/themeContext";
 import { AvatarUrls, Avatars } from "../data/avatars";
 import { TopTabScreenProps } from "../navigators/navigationTypes";
-import { useColorScheme } from "react-native";
+import { useAppDispatch, useAppSelector } from "../store/store";
+import { fetchTasks, filterTaskListByHouseId } from "../store/tasks/taskSlice";
+import { Profile, Task } from "../types";
 
 type HouseholdTasksProps = TopTabScreenProps<"HouseholdTasks">;
 

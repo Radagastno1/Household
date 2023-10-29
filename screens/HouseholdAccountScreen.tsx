@@ -19,6 +19,7 @@ import { AvatarUrls, Avatars } from "../data/avatars";
 import { RootNavigationScreenProps } from "../navigators/navigationTypes";
 import {
   getHouseholdsByHouseholdIdAsync,
+  getRequestByHouseholdIdsAsync,
   sethouseholdActive,
 } from "../store/household/householdSlice";
 import {
@@ -30,20 +31,22 @@ import { useAppDispatch, useAppSelector } from "../store/store";
 import { logOutUser } from "../store/user/userSlice";
 import { Household } from "../types";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { State } from "react-native-gesture-handler";
 
 type HouseholdProps = RootNavigationScreenProps<"HouseholdAccount">;
 
 export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
   const [isRequest, setIsRequest] = useState(false);
   const activeUser = useAppSelector((state) => state.user.user);
-  // const [households, setHouseholds] = useState<Household[] | undefined>([]);
-  // const [profiles, setProfiles] = useState<(Profile[] | undefined)[]>([]);
   const dispatch = useAppDispatch();
   const profilesToUser = useAppSelector(
     (state) => state.profile.profilesToUser,
   );
   const households = useAppSelector((state) => state.household.households);
+  const requests = useAppSelector((state) => state.household.requests);
+  
   const [profilesLoaded, setProfilesLoaded] = useState(false);
+  const [requestsLoaded, setRequestsLoaded] = useState(false);
   const activeProfile = useAppSelector((state) => state.profile.activeProfile);
   let householdIds: string[] = [];
   console.log("Nu är användaren ", activeUser, "inloggad");
@@ -64,6 +67,12 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
   }, [profilesLoaded]);
 
   useEffect(() => {
+    dispatch(getRequestByHouseholdIdsAsync(householdIds)).then(() => {
+      setRequestsLoaded(true);
+    });
+  }, [!requestsLoaded]);
+
+  useEffect(() => {
     if (activeProfile) {
       navigation.navigate("ProfileAccount", {
         householdId: activeProfile.householdId,
@@ -75,7 +84,7 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
     dispatch(sethouseholdActive(household));
     try {
       dispatch(fetchAllProfilesByHousehold(household.id, activeUser!.uid));
-      await dispatch(
+       dispatch(
         setProfileByHouseholdAndUser({
           userId: activeUser!.uid,
           householdId: household.id,
@@ -164,6 +173,11 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
                 profile.householdId === household.id &&
                 profile.userId === activeUser?.uid,
             );
+            const request = requests.find(
+              (request) =>
+                request.householdId === household.id,
+            );
+
             return (
               <TouchableOpacity
                 key={index}
@@ -189,6 +203,7 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
                     style={{ height: 20, width: 20 }}
                     alt={`Avatar ${index}`}
                   />
+                  <Text>{request?.status}</Text>
                 </View>
 
                 <View>

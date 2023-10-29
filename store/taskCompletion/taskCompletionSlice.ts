@@ -2,9 +2,8 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
   addTaskCompletionToDB,
   getTaskCompletionsFromDB,
-} from "../api/taskCompletion";
-import { TaskCompletion } from "../types";
-import { Profile } from "../types";
+} from "../../api/taskCompletion";
+import { Profile, TaskCompletion } from "../../types";
 
 interface TaskCompletionState {
   completions: TaskCompletion[];

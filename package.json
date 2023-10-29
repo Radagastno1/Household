@@ -27,6 +27,7 @@
     "expo-splash-screen": "~0.20.5",
     "expo-status-bar": "~1.6.0",
     "firebase": "^10.5.0",
+    "firebase-admin": "^11.11.0",
     "lottie-react-native": "5.1.6",
     "prettier": "^3.0.3",
     "react": "^18.2.0",
