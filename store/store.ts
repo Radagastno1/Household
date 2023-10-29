@@ -1,10 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import appReducer from "./appSlice";
-import { profileReducer } from "./profile/profileSlice";
-import { taskCompletionReducer } from "./taskCompletionSlice";
-import { taskReducer } from "./tasks/taskSlice";
 import { householdReducer } from "./household/householdSlice";
+import { profileReducer } from "./profile/profileSlice";
+import { taskCompletionReducer } from "./taskCompletion/taskCompletionSlice";
+import { taskReducer } from "./tasks/taskSlice";
 import { userReducer } from "./user/userSlice";
 
 const store = configureStore({

@@ -9,7 +9,7 @@ import {
   updateDoc,
   where,
 } from "firebase/firestore";
-import { Profile, User } from "../types";
+import { HouseholdRequest, Profile } from "../types";
 import { db } from "./config";
 
 export const addProfileToDB = async (profile: Profile) => {
@@ -63,23 +63,24 @@ export const saveProfileNameToDatabase = async (
   }
 };
 
-export const getAllProfilesByHouseholdIdDb = async (
-  householdId: string,
-) => {
+export const getAllProfilesByHouseholdIdDb = async (householdId: string) => {
   const profileCollectionRef = collection(db, "profiles");
 
-    const q = query(profileCollectionRef, where("householdId", "==", householdId));
+  const q = query(
+    profileCollectionRef,
+    where("householdId", "==", householdId),
+  );
 
-    const querySnapshot = await getDocs(q);
+  const querySnapshot = await getDocs(q);
 
-    const profiles: Profile[] = [];
+  const profiles: Profile[] = [];
 
-    querySnapshot.forEach((doc) => {
-      profiles.push(doc.data() as Profile);
-    });
+  querySnapshot.forEach((doc) => {
+    profiles.push(doc.data() as Profile);
+  });
 
-    console.log("profiler hämtade från DB:", profiles);
-    return profiles;
+  console.log("profiler hämtade från DB:", profiles);
+  return profiles;
 };
 
 //DENNA BEHÖVS NOG INTE DÅ VI HÄMTAR ALLA EN GÅNG
@@ -121,6 +122,7 @@ export const getAllProfilesByHouseholdId = async (householdId: string) => {
     const q = query(
       profileCollectionRef,
       where("householdId", "==", householdId),
+      where("status", "==", "pending"),
     );
 
     const querySnapshot = await getDocs(q);

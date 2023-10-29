@@ -6,7 +6,7 @@ import { useTheme } from "../contexts/themeContext";
 import { AvatarUrls, Avatars } from "../data/avatars";
 import { RootNavigationScreenProps } from "../navigators/navigationTypes";
 import { useAppDispatch, useAppSelector } from "../store/store";
-import { addCompletionAsync } from "../store/taskCompletionSlice";
+import { addCompletionAsync } from "../store/taskCompletion/taskCompletionSlice";
 import { findTaskById } from "../store/tasks/taskSlice";
 import { TaskCompletion } from "../types";
 
