@@ -5,7 +5,8 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon2.png",
-    "userInterfaceStyle": "light",
+   
+    "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/splash2.png",
       "resizeMode": "contain",
@@ -27,5 +28,7 @@
     "web": {
       "favicon": "./assets/beeicon.png"
     }
+    
+    
   }
 }
