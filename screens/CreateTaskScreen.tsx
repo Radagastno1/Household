@@ -19,9 +19,9 @@ import { RootNavigationScreenProps } from "../navigators/navigationTypes";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import {
   addTaskAsync,
-  deleteTask,
+  deleteTaskAsync,
   editTaskAsync,
-  filterTaskListByHouseId,
+  filterTaskListByHouseId
 } from "../store/tasks/taskSlice";
 import { Task } from "../types";
 
@@ -98,7 +98,13 @@ export default function CreateTaskScreen({
   };
 
   const deleteFunctionToModule = (taskId: string) => {
-    dispatch(deleteTask(taskId));
+    dispatch(deleteTaskAsync(taskId)).then(
+      () => {
+        if(activeHousehold?.id){
+          dispatch(filterTaskListByHouseId({ household_Id: activeHousehold.id }));
+        }}
+    );
+    
     setDeleteTaskModalVisible(false);
     navigation.navigate("Tab");
   };
@@ -122,8 +128,12 @@ export default function CreateTaskScreen({
           isActive: true,
         };
         console.log("den nya tasken innan dispatch:", newTask);
-        dispatch(addTaskAsync(newTask));
-        dispatch(filterTaskListByHouseId({ household_Id: householdId }));
+        dispatch(addTaskAsync(newTask)).then(
+          () => {
+            if(activeHousehold?.id){
+              dispatch(filterTaskListByHouseId({ household_Id: activeHousehold.id }));
+            }}
+        );
       }
     } else {
       if (taskToEdit && householdId) {
