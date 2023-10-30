@@ -145,8 +145,8 @@ export default function CreateProfileScreen({
               styles.rectContainer,
               {
                 backgroundColor:
-                  colorScheme === "dark"
-                    ? "white"
+                  colorScheme === theme.colors.background
+                    ? ""
                     : theme.cardButton.backgroundColor,
               },
             ]}
@@ -156,7 +156,7 @@ export default function CreateProfileScreen({
                 styles.rectText,
                 {
                   backgroundColor:
-                    colorScheme === "dark"
+                    colorScheme === theme.colors.background
                       ? "white"
                       : theme.cardButton.backgroundColor,
                 },
@@ -178,7 +178,7 @@ export default function CreateProfileScreen({
             styles.input,
             {
               backgroundColor:
-                colorScheme === "dark"
+                colorScheme === theme.colors.background
                   ? "white"
                   : theme.cardButton.backgroundColor,
             },
@@ -252,6 +252,13 @@ export default function CreateProfileScreen({
         >
           <Text style={theme.buttonText}>Skapa</Text>
         </Button>
+        <Button
+          style={theme.button as any}
+          onPress={() => navigation.navigate("HandleHousehold")}
+          disabled={!selectedAvatar}
+        >
+          <Text style={theme.buttonText}>Tillbaka</Text>
+        </Button>
       </View>
     </View>
   );
@@ -268,7 +275,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   rectContainer: {
-    backgroundColor: "white",
+    // backgroundColor: "white",
     padding: 10,
     borderRadius: 5,
     width: 370,
