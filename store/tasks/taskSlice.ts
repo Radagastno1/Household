@@ -9,6 +9,7 @@ import {
 } from "../../api/task";
 import { deleteAllTaskCompletionsByTaskId } from "../../api/taskCompletion";
 import { fetchCompletions } from "../taskCompletion/taskCompletionSlice";
+import { setActiveUser } from "../user/userSlice";
 
 interface TaskState {
   tasks: Task[];
@@ -100,6 +101,13 @@ const taskSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(setActiveUser, (state, action) => {
+        if (!action.payload) {
+          state.filteredTasks = [];
+          state.selectedTask = null;
+          state.tasks = [];
+        }
+      })
       .addCase(addTaskAsync.fulfilled, (state, action) => {
         if (action.payload) {
           state.tasks.push(action.payload);
