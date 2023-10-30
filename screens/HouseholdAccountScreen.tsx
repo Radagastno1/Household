@@ -4,6 +4,8 @@ import React, { useEffect, useRef, useState } from "react";
 import {
   Alert,
   Animated,
+  FlatList,
+  Modal,
   PanResponder,
   ScrollView,
   StyleSheet,
@@ -11,7 +13,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { Appbar } from "react-native-paper";
+import { Button, Appbar } from "react-native-paper";
 import { auth } from "../api/config";
 import { useTheme } from "../contexts/themeContext";
 import { RootNavigationScreenProps } from "../navigators/navigationTypes";
@@ -24,6 +26,7 @@ import {
   getProfilesByUserIdAsync,
   setProfileByHouseholdAndUser,
 } from "../store/profile/profileSlice";
+import { AntDesign } from "@expo/vector-icons";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { Household } from "../types";
 import { useSharedValue } from "react-native-reanimated";
@@ -103,30 +106,27 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
       setCurrentTheme(currentTheme === "dark" ? "light" : "dark");
     }
   };
-  const pan = useRef(new Animated.ValueXY()).current;
-  const minX = 0; // Minimum X position
-  const maxX = 600; // Maximum X position, adjust to your container width
-  const containerWidth = 300; // Maximum X position
 
-  const panResponder = PanResponder.create({
-    onStartShouldSetPanResponder: () => true,
-    onPanResponderMove: Animated.event([null, { dx: pan.x, dy: pan.y }], { useNativeDriver: false }),
-    onPanResponderRelease: (e, gestureState) => {
-      if (Math.abs(gestureState.dx) > 50) {
-        handleToggleTheme();
-      }
-    },
-  });
-  
-  
-  const translateX = pan.x.interpolate({
-    inputRange: [minX, 0, maxX],
-    outputRange: [minX, 0, maxX],
-    extrapolate: 'clamp', // This will restrict the output value to stay within the specified range
-  });
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<string | null>(null);
+  const modes = ["light", "auto", "dark"];
+
+  const handleSelect = (item: string) => {
+    setSelectedItem(item);
+    setShowDropdown(false);
+  };
+  const handleClose = () => {
+    setShowDropdown(false);
+  };
 
   return (
-    <View style={{ flex: 1, backgroundColor: theme.colors.background,justifyContent:"center" }}>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: theme.colors.background,
+        justifyContent: "center",
+      }}
+    >
       <View>
         <Appbar.Header style={{ height: 70, backgroundColor: "white" }}>
           <Appbar.Content
@@ -163,22 +163,6 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
                 handleEnterHousehold(household);
               }}
             >
-              {/* <View style={{ flexDirection: "row", alignItems: "center" }}>
-                {profiles[index] && profiles[index]!.length > 0 && (
-                  <Image
-                    key={0}
-                    source={{
-                      uri: AvatarUrls[profiles[index]![0].avatar as Avatars],
-                    }}
-                    style={{ height: 20, width: 20 }}
-                    alt={`Avatar ${index}`}
-                  />
-                )}
-                {profiles[index] && profiles[index]!.length > 1 && (
-                  <Text>...</Text>
-                )}
-              </View> */}
-
               <View>
                 <Text style={theme.buttonText}>{household.name}</Text>
               </View>
@@ -204,55 +188,33 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
         >
           <Text style={theme.buttonText}>Logga ut</Text>
         </TouchableOpacity>
-       
+        <View style={styles.root}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => setShowDropdown(!showDropdown)}
+          >
+            <Text>Choose Mode</Text>
+          </TouchableOpacity>
 
-        {/* <View
-          style={[
-            styles.themeButtonContainer,
-            {
-              backgroundColor: theme.button.backgroundColor,
-            },
-          ]}
-        //   onPress={handleToggleTheme}
-        > */}
-          {/* <View style={styles.themeButton}>
-            <Animated.View
-              style={[styles.innerButton, { transform: [{ translateX ,}] }]}
-              {...panResponder.panHandlers}
-            >
-              <View style={styles.innerButton}/>
-            </Animated.View>
-            <View    pointerEvents="none" style={styles.texts}>
-            <Text style={styles.titleText}>
-                {currentTheme === "dark" ? "dark" : "light"}
-                dark
-              </Text>
-              <Text style={styles.titleText}>auto</Text>
-              <Text style={styles.titleText}>
-                {currentTheme === "light" ? "light" : "dark"}
-                light
-              </Text>
+          {showDropdown && (
+            <View style={styles.dropdownContainer}>
+              <View style={styles.closeButtonContainer}>
+                <Button onPress={handleClose}>
+                  <AntDesign name="close" size={12} color="black" />
+                </Button>
+              </View>
+              <FlatList
+                data={modes}
+                keyExtractor={(item) => item}
+                renderItem={({ item }) => (
+                  <TouchableOpacity onPress={() => handleSelect(item)}>
+                    <Text style={styles.dropdownItem}>{item}</Text>
+                  </TouchableOpacity>
+                )}
+              />
             </View>
-          </View> */}
-        {/* </View> */}
-      </View>
-      <View style={{margin:20}}>
-      <View style={styles.root}>
-      <Animated.View
-      style={{
-        transform: [
-          { translateX: pan.x }, // Only horizontal movement
-        ],
-      }}
-        {...panResponder.panHandlers}>
-        <View style={styles.box} />
-        
-      </Animated.View>
-      <View pointerEvents="none" style={styles.texts}>
-        <Text style={styles.titleText}>light</Text>
-                <Text style={styles.titleText}>auto</Text>
-                        <Text style={styles.titleText}>dark</Text>
-        </View>
+          )}
+          <Text>Selected Mode: {selectedItem}</Text>
         </View>
       </View>
     </View>
@@ -274,10 +236,10 @@ const styles = StyleSheet.create({
   themeButton: {
     justifyContent: "space-between",
     alignItems: "center",
-    
+
     flexDirection: "row",
-    position: 'relative',
-    backgroundColor: 'lightgrey',
+    position: "relative",
+    backgroundColor: "lightgrey",
   },
 
   innerButton: {
@@ -297,38 +259,40 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-   padding:10,
-    maxWidth:"90%",
-    height:70,
-marginBottom:10
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 10,
+    maxWidth: "90%",
+    height: 70,
+    marginBottom: 10,
   },
+
   root: {
-    position: 'relative',
-    backgroundColor: 'lightgrey',
-    width: '100%',
-    borderRadius: 10,
-    marginBottom:40
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
-  texts: {
-    position: 'absolute',
-    flexDirection: 'row',
-    width: '100%',
-    height: '100%',
-    justifyContent: 'space-around',
-    alignItems: 'center',
+  button: {
+    padding: 16,
+    backgroundColor: "lightgray",
+    borderRadius: 8,
   },
-  titleText: {
-    fontSize: 14,
-    lineHeight: 24,
-    fontWeight: 'bold',
-  },
-  box: {
-    height: 60,
+  dropdownContainer: {
+    position: "absolute",
+    top: -10,
+    left: 150,
+    backgroundColor: "white",
+    borderColor: "gray",
+    borderRadius: 4,
+    zIndex: 1,
     width: 60,
-    backgroundColor: 'yellow',
-    borderRadius: 10,
+  },
+  dropdownItem: {
+    padding: 4,
+  },
+  closeButtonContainer: {
+    alignItems: "flex-end",
+    padding: 4,
   },
 });
 function getAllProfilesByUserId(uid: string) {
