@@ -170,7 +170,7 @@ export const AppDarkTheme: Theme = {
     backgroundColor: "gray", // Uppdatera till ljusgrå för cardButton
     padding: 16,
     alignItems: "center",
-    margin: 16,
+    margin: 10,
     borderRadius: 8,
     width: 360,    
     shadowColor: "#000",

@@ -99,6 +99,7 @@ export const SignInScreen = ({ navigation }: SignInProps) => {
   }
 
   return (
+
     <KeyboardAvoidingView // Wrap your content in KeyboardAvoidingView
       behavior="padding" // You can set different behaviors as needed
       style={{ flex: 1, backgroundColor: theme.colors.background }}
@@ -196,6 +197,7 @@ export const SignInScreen = ({ navigation }: SignInProps) => {
               </View>
             </View>
           </View>
+
         </TouchableWithoutFeedback>
 
         {errorPopup && error ? (

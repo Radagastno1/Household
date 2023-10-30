@@ -4,6 +4,7 @@ import { Image, View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Appbar } from "react-native-paper";
 import { useSelector } from "react-redux";
 import { RootState, useAppSelector } from "../../store/store";
+import { useTheme } from "../../contexts/themeContext";
 
 
 interface CustomHeaderProps {
@@ -17,6 +18,7 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({ title, navigation }) => {
   const activeProfile = useAppSelector((state) => state.profile.activeProfile);
   const households  = useAppSelector((state) => state.household.households);
   const household = households.find((h) => h.id === activeProfile?.householdId);
+  const {theme} = useTheme();
   useEffect(() => {
     if (isFocused) {
       if (household) {
@@ -25,6 +27,7 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({ title, navigation }) => {
     }
   }, [isFocused]);
   return (
+    <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
     <View style={styles.header}>
       <View style={styles.headerTextContainer}>
         <Text style={styles.headerText}>{houseTitle}</Text>
@@ -40,6 +43,7 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({ title, navigation }) => {
         />
       </TouchableOpacity>
     </View>
+    </View>
   );
 };
 
@@ -49,7 +53,7 @@ const styles = StyleSheet.create({
     height: 80,
     justifyContent: "space-between",
     alignItems: "center",
-    backgroundColor: "white",
+    // backgroundColor: "white",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
