@@ -9,11 +9,13 @@ import { setActiveUser } from "../user/userSlice";
 interface TaskCompletionState {
   completions: TaskCompletion[];
   avatars: string[];
+  error: string | null;
 }
 
 const initialState: TaskCompletionState = {
   completions: [],
   avatars: [],
+  error: null,
 };
 
 //createEntityAdapter - setAll   (householdId och inte varje task - id ELLER alla taskidn)
@@ -28,10 +30,10 @@ export const addCompletionAsync = createAsyncThunk<
     if (addedCompletion) {
       return addedCompletion;
     } else {
-      return thunkAPI.rejectWithValue("failed to add completion");
+      throw new Error("Något gick fel. Försök igen senare.");
     }
-  } catch (error: any) {
-    return thunkAPI.rejectWithValue(error.message);
+  } catch (error) {
+    throw new Error("Något gick fel. Försök igen senare.");
   }
 });
 
@@ -61,12 +63,10 @@ const taskCompletionSlice = createSlice({
           filteredCompletions?.map((completion) => completion.profileId),
         ),
       ];
-      console.log(uniqueProfileIds);
-      // profiles corresponding to the unique profileIds
+
       const profilesForTask = action.payload.profiles.filter((profile) =>
         uniqueProfileIds.includes(profile.id),
       );
-
       const avatarList = profilesForTask.map((profile) => profile.avatar);
       state.avatars = avatarList;
     },
@@ -147,20 +147,22 @@ const taskCompletionSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
+    builder.addCase(setActiveUser, (state, action) => {
+      if (!action.payload) {
+        state.avatars = [];
+        state.completions = [];
+      }
+    });
     builder
-      .addCase(setActiveUser, (state, action) => {
-        if (!action.payload) {
-          state.avatars = [];
-          state.completions = [];
-        }
-      })
       .addCase(addCompletionAsync.fulfilled, (state, action) => {
         if (action.payload) {
           state.completions = [...state.completions, action.payload];
+          state.error = null;
         }
       })
       .addCase(addCompletionAsync.rejected, (state, action) => {
-        console.log("error vid add completion: ", action.payload);
+        console.log("INNE I CATCH", action.error.message);
+        state.error = "Något gick fel. Prova igen senare.";
       });
   },
 });
