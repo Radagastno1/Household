@@ -97,7 +97,7 @@ export default function CreateProfileScreen({
   };
 
   const saveProfile = () => {
-    console.log("hushållsid är", householdId);
+    console.log("skapad profil med hushållsid", householdId);
 
     if (selectedAvatar && activeUser) {
       if(isOwner){
@@ -112,7 +112,11 @@ export default function CreateProfileScreen({
           isOwner: true,
           isActive: true,
         };
-        dispatch(addProfileAsync(newProfile));
+        dispatch(addProfileAsync(newProfile)).then(
+          () => {
+            navigation.navigate("HouseholdAccount");
+          }
+        );
       }else{
         if(activeUser.email){
           const avatarsColor = AvatarColors[selectedAvatar as Avatars];
@@ -245,13 +249,13 @@ export default function CreateProfileScreen({
           )}
         </View>
 
-        <Button
-          style={theme.button as any}
+        <TouchableOpacity
+           style={theme.button as any}
           onPress={saveProfile}
           disabled={!selectedAvatar}
         >
           <Text style={theme.buttonText}>Skapa</Text>
-        </Button>
+        </TouchableOpacity>
         <Button
           style={theme.button as any}
           onPress={() => navigation.navigate("HandleHousehold")}

@@ -2,7 +2,7 @@ import {
   getFirestore
 } from "firebase/firestore";
 import React, { useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, TouchableOpacity } from "react-native";
 import { Appbar, Button, Text, TextInput } from "react-native-paper";
 import { app } from "../api/config";
 import { useTheme } from "../contexts/themeContext";
@@ -89,16 +89,12 @@ export default function HandleHouseholdScreen({
             />
           </View>
 
-          <Button
+          <TouchableOpacity
             style={theme.button as any}
-            labelStyle={{
-              color: "black",
-              fontSize: 16,
-            }}
             onPress={handleCreateHousehold}
           >
-            Skapa
-          </Button>
+           <Text style={{fontSize:18}}>Skapa</Text> 
+          </TouchableOpacity>
 
           <View style={styles.verticalSpace} />
 
@@ -120,28 +116,20 @@ export default function HandleHouseholdScreen({
             />
           </View>
 
-          <Button
+          <TouchableOpacity
             style={theme.button as any}
-            labelStyle={{
-              color: "black",
-              fontSize: 16,
-            }}
             onPress={() => handleJoin()}
           >
-            Gå med
-          </Button>
+            <Text style={{fontSize:18}}>Gå med</Text>
+          </TouchableOpacity>
 
           <View style={styles.verticalSpace} />
-          <Button
-           style={theme.button as any}
-            labelStyle={{
-              color: "black",
-              fontSize: 16,
-            }}
+          <TouchableOpacity
+            style={theme.button as any}
             onPress={() => navigation.navigate("HouseholdAccount")}
           >
-            Tillbaka
-          </Button>
+            <Text style={{fontSize:18}}>Tillbaka</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </View>
