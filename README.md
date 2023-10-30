@@ -5,11 +5,11 @@
 - native navigation
 - native screens
 - stack navigation
+- firebase/firestore
+- async storage
 
 - es lint
 - prettier
-
-jag skriver lite här fö ratt testa och se om workflow körs eller ej
 
 ## 2023-10-12
 
@@ -77,7 +77,7 @@ Hushåll (6)
 [x] Alla användare i ett hushåll ska kunna se vilka som tillhör ett hushåll.
 [x] En ägare av ett hushåll ska kunna se förfrågningar om att gå med i hushållet.
 [x] En ägare ska kunna acceptera eller neka förfrågningar.
-[ ] En ägare ska kunna göra andra till ägare.
+[] En ägare ska kunna göra andra till ägare.
 [] En ägare ska kunna pausa en användare och under pausade perioder ska användare inte
 tas med i statistiken.
 [] Om en använder har pausats under en del av en period i statistiken ska graferna
@@ -89,7 +89,7 @@ godkänna användaren.
 [x] En användare ska kunna lämna ett hushåll.
 
 Profil (2)
-[/] En användare ska kunna ställa in appens utseende (mörkt, ljust, auto).
+[x] En användare ska kunna ställa in appens utseende (mörkt, ljust, auto).
 [x] Om en användare tillhör två eller fler hushåll ska denne kunna välja att byta mellan de
 olika hushållen.
 
@@ -103,7 +103,7 @@ också kommer att tas bort och få valet att arkivera sysslan istället.
 Statistik (3)
 [x] Det ska finnas en statistikvy över ”förra vecka”.
 [x] Det ska finnas en statistikvy över ”förra månaden”.
-[?] Om det inte finns statistik för en av vyerna ska den vyn inte visas.
+[x] Om det inte finns statistik för en av vyerna ska den vyn inte visas.
 
 Schemaläggning (3)
 [] En ägare ska kunna tilldela och ta bort sysslor från användare i hushållet.
