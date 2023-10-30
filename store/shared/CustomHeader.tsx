@@ -4,7 +4,7 @@ import { Image, View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Appbar } from "react-native-paper";
 import { useSelector } from "react-redux";
 import { RootState, useAppSelector } from "../../store/store";
-
+import { AntDesign } from "@expo/vector-icons";
 
 interface CustomHeaderProps {
   title: string;
@@ -26,6 +26,11 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({ title, navigation }) => {
   }, [isFocused]);
   return (
     <View style={styles.header}>
+        <TouchableOpacity
+        onPress={()=>navigation.navigate("ProfileAccount")}
+      >
+        <AntDesign name="arrowleft" size={24} color="black" />
+      </TouchableOpacity>
       <View style={styles.headerTextContainer}>
         <Text style={styles.headerText}>{houseTitle}</Text>
       </View>
