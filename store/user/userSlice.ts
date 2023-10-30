@@ -35,7 +35,6 @@ export const addUserAsync = createAsyncThunk<
   }
 });
 
-
 export const logInUserAsync = createAsyncThunk<
   User,
   UserCreate,
@@ -45,11 +44,9 @@ export const logInUserAsync = createAsyncThunk<
     const response = await signInWithAPI(user);
     return response;
   } catch (error) {
-    console.log("INNE I CATCH", error);
     throw new Error("Användarnamn eller lösenord var felaktigt.");
   }
 });
-
 
 const userSlice = createSlice({
   name: "user",
@@ -78,9 +75,7 @@ const userSlice = createSlice({
         state.error = "Användarnamn eller lösenord är felaktigt.";
       });
   },
-})
-  
-
+});
 
 // export const fetchUsers =
 //   (activeHouseholdId: string) => async (dispatch: any, _getState: any) => {

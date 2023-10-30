@@ -17,20 +17,12 @@ import { db } from "./config";
 const taskCompletionCollectionRef = collection(db, "taskCompletions");
 
 export const addTaskCompletionToDB = async (taskCompletion: TaskCompletion) => {
-  console.log("taskcompletion: ", taskCompletion);
   try {
     const taskCompletionWithTimestamp =
       addTimestampToTaskCompletion(taskCompletion);
     const docRef = await addDoc(taskCompletionCollectionRef, {});
 
     taskCompletionWithTimestamp.id = docRef.id;
-
-    console.log(
-      "Dokumentreferens id:",
-      docRef.id,
-      " och task completions id:",
-      taskCompletionWithTimestamp.id,
-    );
 
     await updateDoc(
       docRef,
@@ -40,14 +32,23 @@ export const addTaskCompletionToDB = async (taskCompletion: TaskCompletion) => {
     const taskDoc = await getDoc(docRef);
     if (taskDoc.exists()) {
       const taskData = taskDoc.data();
-      return taskData as TaskCompletion;
+
+      const taskCompletionWithoutTimestamp: Omit<
+        TaskCompletion,
+        "completedTimestamp"
+      > = {
+        id: taskData.id,
+        householdId: taskData.householdId,
+        taskId: taskData.taskId,
+        profileId: taskData.profileId,
+        completionDate: taskData.completionDate,
+      };
+      return taskCompletionWithoutTimestamp as TaskCompletion;
     } else {
-      console.error("Uppgiftsdokumentet finns inte i databasen.");
       return null;
     }
   } catch (error) {
-    console.error("Fel vid tillägg av taskcompletion:", error);
-    return null;
+    throw error;
   }
 };
 
@@ -86,13 +87,11 @@ export const getTaskCompletionsFromDB = async (householdId: string) => {
         completionDate: docData.completionDate,
       };
       taskCompletions.push(taskCompletionWithoutTimestamp);
+      console.log("taskCOMLETIONS------------------------", taskCompletions);
     });
-
-    console.log("Antal Task completions hämtade:", taskCompletions.length);
-    console.log("Task completions hämtade:", taskCompletions);
     return taskCompletions;
   } catch (error) {
-    console.error("Fel vid hämtning av task completions:", error);
+    throw error;
   }
 };
 
