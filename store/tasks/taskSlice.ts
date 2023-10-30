@@ -15,12 +15,14 @@ interface TaskState {
   tasks: Task[];
   filteredTasks: Task[];
   selectedTask: Task | null;
+  error: string | null;
 }
 
 export const initialState: TaskState = {
   tasks: [],
   filteredTasks: [],
   selectedTask: null,
+  error: null,
 };
 
 export const deleteTaskAsync = createAsyncThunk<
@@ -49,8 +51,8 @@ export const addTaskAsync = createAsyncThunk<
     } else {
       return thunkAPI.rejectWithValue("failed to create task");
     }
-  } catch (error: any) {
-    return thunkAPI.rejectWithValue(error.message);
+  } catch (error) {
+    throw new Error("Något gick fel vid .");
   }
 });
 

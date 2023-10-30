@@ -19,8 +19,6 @@ import { db } from "./config";
 //sen add - det dokument id blir id i fältet
 
 export const addTaskToDB = async (task: Task) => {
-  // task.householdId = "fYHVLNiQvWEG9KNUGqBT";
-
   const taskCollectionRef = collection(db, "tasks");
 
   try {
@@ -42,15 +40,10 @@ export const addTaskToDB = async (task: Task) => {
       const taskData = taskDoc.data();
       return taskData as Task;
     } else {
-      console.error("Uppgiftsdokumentet finns inte i databasen.");
       return null;
     }
   } catch (error: any) {
-    if (error) {
-      console.error("Firestore Error Code:", error.code);
-    }
-    console.error("Fel vid tillägg av uppgift:", error);
-    return null;
+    throw error;
   }
 };
 
