@@ -5,6 +5,8 @@ import { Appbar } from "react-native-paper";
 import { useSelector } from "react-redux";
 import { RootState, useAppSelector } from "../../store/store";
 import { AntDesign } from "@expo/vector-icons";
+import { useTheme } from "../../contexts/themeContext";
+
 
 interface CustomHeaderProps {
   title: string;
@@ -17,6 +19,7 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({ title, navigation }) => {
   const activeProfile = useAppSelector((state) => state.profile.activeProfile);
   const households  = useAppSelector((state) => state.household.households);
   const household = households.find((h) => h.id === activeProfile?.householdId);
+  const {theme} = useTheme();
   useEffect(() => {
     if (isFocused) {
       if (household) {
@@ -25,6 +28,7 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({ title, navigation }) => {
     }
   }, [isFocused]);
   return (
+    <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
     <View style={styles.header}>
         <TouchableOpacity
         onPress={()=>navigation.navigate("ProfileAccount")}
@@ -45,6 +49,7 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({ title, navigation }) => {
         />
       </TouchableOpacity>
     </View>
+    </View>
   );
 };
 
@@ -54,7 +59,7 @@ const styles = StyleSheet.create({
     height: 80,
     justifyContent: "space-between",
     alignItems: "center",
-    backgroundColor: "white",
+    // backgroundColor: "white",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,

@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import {
+  KeyboardAvoidingView,
+  Platform,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -49,87 +51,94 @@ export default function CreateUserAccountScreen({
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
-      <View style={styles.container}>
-        <View style={theme.button as any}>
-          <Text style={styles.headerText}>Skapa konto</Text>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"} // Set the behavior as per your requirements
+      style={{ flex: 1, backgroundColor: theme.colors.background }}
+    >
+      <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
+        <View style={styles.container}>
+          <View style={theme.button as any}>
+            <Text style={styles.headerText}>Skapa konto</Text>
+          </View>
+
+          <TextInput
+            label={
+              !newEmail && missingFieldsWarning ? (
+                <Text
+                  style={{ color: colorScheme === "dark" ? "black" : "red" }}
+                >
+                  <Text style={{ color: "red" }}>Email</Text>
+                  Email"
+                </Text>
+              ) : (
+                "Email"
+              )
+            }
+            style={styles.input}
+            value={newEmail}
+            onChangeText={setNewEmail}
+          />
+          <TextInput
+            label={
+              !newPassword && missingFieldsWarning ? (
+                <Text style={{ color: "red" }}>Lösenord*</Text>
+              ) : (
+                "Lösenord"
+              )
+            }
+            style={styles.input}
+            secureTextEntry={!passwordVisible}
+            value={newPassword}
+            onChangeText={setNewPassword}
+            right={
+              <TextInput.Icon
+                icon={passwordVisible ? "eye" : "eye-off"}
+                onPress={() => setPasswordVisible(!passwordVisible)}
+              />
+            }
+          />
+
+          <TextInput
+            label={
+              !confirmationPasswordInput && missingFieldsWarning ? (
+                <Text style={{ color: "red" }}>Bekräfta lösenord*</Text>
+              ) : (
+                "Bekräfta lösenord"
+              )
+            }
+            style={styles.input}
+            secureTextEntry={!confirmationPasswordVisible}
+            value={confirmationPasswordInput}
+            onChangeText={setConfirmationPasswordInput}
+            right={
+              <TextInput.Icon
+                icon={confirmationPasswordVisible ? "eye" : "eye-off"}
+                onPress={() =>
+                  setConfirmationPasswordVisible(!confirmationPasswordVisible)
+                }
+              />
+            }
+          />
+
+          {passwordMismatchWarning ? (
+            <Text style={styles.warning}>{passwordMismatchWarning}</Text>
+          ) : null}
+
+          <TouchableOpacity
+            style={theme.button as any}
+            onPress={handleCreateAccount}
+          >
+            <Text style={theme.buttonText}>Skapa konto</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={theme.button as any}
+            onPress={() => navigation.navigate("Login")}
+          >
+            <Text style={styles.loginButtonText}>Tillbaka</Text>
+          </TouchableOpacity>
         </View>
-
-        <TextInput
-          label={
-            !newEmail && missingFieldsWarning ? (
-              <Text style={{ color: colorScheme === "dark" ? "black" : "red" }}>
-                <Text style={{ color: "red" }}>Email</Text>
-                Email"
-              </Text>
-            ) : (
-              "Email"
-            )
-          }
-          style={styles.input}
-          value={newEmail}
-          onChangeText={setNewEmail}
-        />
-        <TextInput
-          label={
-            !newPassword && missingFieldsWarning ? (
-              <Text style={{ color: "red" }}>Lösenord*</Text>
-            ) : (
-              "Lösenord"
-            )
-          }
-          style={styles.input}
-          secureTextEntry={!passwordVisible}
-          value={newPassword}
-          onChangeText={setNewPassword}
-          right={
-            <TextInput.Icon
-              icon={passwordVisible ? "eye" : "eye-off"}
-              onPress={() => setPasswordVisible(!passwordVisible)}
-            />
-          }
-        />
-
-        <TextInput
-          label={
-            !confirmationPasswordInput && missingFieldsWarning ? (
-              <Text style={{ color: "red" }}>Bekräfta lösenord*</Text>
-            ) : (
-              "Bekräfta lösenord"
-            )
-          }
-          style={styles.input}
-          secureTextEntry={!confirmationPasswordVisible}
-          value={confirmationPasswordInput}
-          onChangeText={setConfirmationPasswordInput}
-          right={
-            <TextInput.Icon
-              icon={confirmationPasswordVisible ? "eye" : "eye-off"}
-              onPress={() =>
-                setConfirmationPasswordVisible(!confirmationPasswordVisible)
-              }
-            />
-          }
-        />
-
-        {passwordMismatchWarning ? (
-          <Text style={styles.warning}>{passwordMismatchWarning}</Text>
-        ) : null}
-
-        <TouchableOpacity
-          style={theme.button as any}
-          onPress={handleCreateAccount}
-        >
-          <Text style={theme.buttonText}>Skapa konto</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={theme.button as any}
-          onPress={() => navigation.navigate("Login")}
-        >
-          <Text style={styles.loginButtonText}>Tillbaka</Text>
-        </TouchableOpacity>
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 
