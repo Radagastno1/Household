@@ -8,7 +8,8 @@ import {
   getTasksFromDB,
 } from "../../api/task";
 import { deleteAllTaskCompletionsByTaskId } from "../../api/taskCompletion";
-import { fetchCompletions } from "../taskCompletionSlice";
+import { fetchCompletions } from "../taskCompletion/taskCompletionSlice";
+import { setActiveUser } from "../user/userSlice";
 
 interface TaskState {
   tasks: Task[];
@@ -21,6 +22,20 @@ export const initialState: TaskState = {
   filteredTasks: [],
   selectedTask: null,
 };
+
+export const deleteTaskAsync = createAsyncThunk<
+  string,
+  string,
+  { rejectValue: string }
+>("tasks/deleteTask", async (taskIdToDelete, thunkAPI) => {
+  try {
+    await deleteAllTaskCompletionsByTaskId(taskIdToDelete);
+    await deleteTaskFromDB(taskIdToDelete);
+    return taskIdToDelete;
+  } catch (error: any) {
+    return thunkAPI.rejectWithValue(error.message);
+  }
+});
 
 export const addTaskAsync = createAsyncThunk<
   Task,
@@ -64,42 +79,38 @@ const taskSlice = createSlice({
       state.tasks = action.payload;
       console.log("antal tasks:", state.tasks.length);
     },
-    //denna ska också vara en thunk tror jag?
-    deleteTask: (state, action: PayloadAction<string>) => {
-      const taskIdToDelete = action.payload;
-      deleteTaskFromDB(taskIdToDelete);
-      deleteAllTaskCompletionsByTaskId(taskIdToDelete);
-      state.tasks = state.tasks.filter((task) => task.id !== taskIdToDelete);
-    },
     filterTaskListByHouseId: (
       state,
       action: PayloadAction<{ household_Id: string }>,
     ) => {
       const { household_Id } = action.payload;
-
-      // Filtrera uppgifter baserat på householdId
       state.filteredTasks = state.tasks.filter(
         //added isactive check also, so all archived tasks wont show here :)
         (task) => task.householdId === household_Id && task.isActive,
+        console.log("NU ÄR FILTRERADE TASKS"),
       );
     },
-
     findTaskById: (state, action: PayloadAction<{ taskId: string }>) => {
       const { taskId } = action.payload;
       const foundTask = state.tasks.find((task) => task.id === taskId);
       console.log("finding id", taskId);
       if (foundTask) {
-        state.selectedTask = foundTask; // Update state.tasks with the found task
-      } else {
-        // Task with the given id not found, you can handle this case accordingly
+        state.selectedTask = foundTask;
       }
     },
   },
   extraReducers: (builder) => {
     builder
+      .addCase(setActiveUser, (state, action) => {
+        if (!action.payload) {
+          state.filteredTasks = [];
+          state.selectedTask = null;
+          state.tasks = [];
+        }
+      })
       .addCase(addTaskAsync.fulfilled, (state, action) => {
         if (action.payload) {
-          state.tasks = [...state.tasks, action.payload];
+          state.tasks.push(action.payload);
         }
       })
       .addCase(addTaskAsync.rejected, (state, action) => {
@@ -117,12 +128,18 @@ const taskSlice = createSlice({
       })
       .addCase(editTaskAsync.rejected, (state, action) => {
         console.log("error vid edit task: ", action.payload);
+      })
+      .addCase(deleteTaskAsync.fulfilled, (state, action) => {
+        if (action.payload) {
+          state.tasks = state.tasks.filter(
+            (task) => task.id !== action.payload,
+          );
+        }
       });
   },
 });
 
-export const { deleteTask, filterTaskListByHouseId, findTaskById } =
-  taskSlice.actions;
+export const { filterTaskListByHouseId, findTaskById } = taskSlice.actions;
 
 //denna ska anropas där vi behöver få in tasken från databasen och sättas som state = tasks
 // Asynct Thunk Actiion (Redux Core)

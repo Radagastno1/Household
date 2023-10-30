@@ -4,10 +4,10 @@ import {
   collection,
   deleteDoc,
   doc,
-  getDoc,
   getDocs,
   getFirestore,
   query,
+  setDoc,
   updateDoc,
   where,
 } from "firebase/firestore";
@@ -16,24 +16,28 @@ import { app } from "./config";
 
 const db = getFirestore(app);
 
-export const addHouseholdToDB = async (household: Household) => {
+export const addHouseholdToDB = async (householdName: string) => {
   const householdCollectionRef = collection(db, "households");
+  const randomCode = generateHouseholdCode();
 
   try {
-    const docRef = await addDoc(householdCollectionRef, {});
+    const docRef = await addDoc(householdCollectionRef, {
+      name: householdName,
+      code: randomCode,
+    });
 
-    household.id = docRef.id;
+    const householdId = docRef.id;
 
-    await updateDoc(docRef, household as Partial<Household>);
+    const createdHousehold = {
+      id: householdId,
+      name: householdName,
+      code: randomCode,
+    };
 
-    const householdDoc = await getDoc(docRef);
-    if (householdDoc.exists()) {
-      const householdData = householdDoc.data();
-      return householdData as Household;
-    } else {
-      console.error("Household document does not exist in the database.");
-      return null;
-    }
+    await setDoc(doc(db, "households", householdId), createdHousehold);
+
+    console.log("Household created with ID:", householdId);
+    return createdHousehold;
   } catch (error) {
     console.error("Error adding household:", error);
     return null;
@@ -41,7 +45,7 @@ export const addHouseholdToDB = async (household: Household) => {
 };
 
 export const editHouseholdToDB = async (household: Household) => {
-  console.log("hushåll som kommer in i edit: ", household)
+  console.log("hushåll som kommer in i edit: ", household);
   const householdCollectionRef = collection(db, "households");
 
   try {
@@ -139,6 +143,23 @@ export const checkHouseholdWithCode = async (joinCode: string) => {
   }
 };
 
+const generateHouseholdCode = () => {
+  const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  const numbers = "0123456789";
+  const code =
+    getRandomElement(letters) +
+    getRandomElement(letters) +
+    getRandomElement(letters) +
+    getRandomElement(numbers) +
+    getRandomElement(numbers);
+  return code;
+};
+
+// Helper function to get a random element from a string
+const getRandomElement = (array: string) => {
+  const index = Math.floor(Math.random() * array.length);
+  return array[index];
+};
 
 // import { addDoc, collection, getFirestore } from "firebase/firestore";
 // import { app } from "./config";

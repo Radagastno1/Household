@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import HouseholdTasksScreen from "../screens/HouseholdTasksScreen";
 import StatisticScreen from "../screens/StatisticScreen";
@@ -9,6 +9,8 @@ import {
   getLastMonthDates,
   getLastWeekDates,
 } from "../utils/DateHandler";
+import { useAppSelector } from "../store/store";
+import { sortTaskCompletionsByDate } from "../utils/statisticHandler";
 
 export type TopTabParamList = {
   HouseholdTasks: undefined;
@@ -25,6 +27,27 @@ const { startOfLastWeek, endOfLastWeek } = getLastWeekDates();
 const { startOfLastMonth, endOfLastMonth } = getLastMonthDates();
 
 export default function TopTabNavigator() {
+  const completions = useAppSelector(
+    (state) => state.taskCompletion.completions,
+  );
+
+  const lastWeek = sortTaskCompletionsByDate(
+    startOfLastWeek,
+    endOfLastWeek,
+    completions,
+  );
+
+  const lastMonth = sortTaskCompletionsByDate(
+    startOfLastMonth,
+    endOfLastMonth,
+    completions,
+  );
+
+  useEffect(() => {
+    if (lastWeek) {
+      console.log("LAST WEEK: ", lastWeek);
+    }
+  }, [completions, startOfCurrentWeek, startOfLastWeek, startOfLastMonth]);
   return (
     <TopTab.Navigator tabBar={CustomTabBar}>
       <TopTab.Screen

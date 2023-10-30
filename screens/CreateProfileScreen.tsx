@@ -1,10 +1,8 @@
-import React, { useState } from "react";
-import { Image } from "react-native";
+import React, { useEffect, useState } from "react";
+import { Image, useColorScheme } from "react-native";
 import { Button } from "react-native-paper";
-import { useDispatch } from "react-redux";
-
-import { useColorScheme } from "react-native";
 import { AvatarColors, AvatarUrls, Avatars } from "../data/avatars";
+import { useAppDispatch, useAppSelector } from "../store/store";
 
 import {
   StyleSheet,
@@ -16,10 +14,10 @@ import {
 import { useTheme } from "../contexts/themeContext";
 import { RootNavigationScreenProps } from "../navigators/navigationTypes";
 import {
-  addProfile,
-  getProfilesByHouseholdId,
+  addProfileAsync,
+  getProfilesByHouseholdIdAsync
 } from "../store/profile/profileSlice";
-import { useAppSelector } from "../store/store";
+import { addProfileWithRequest } from "../store/request/requestSlice";
 
 type CreateProfileProps = RootNavigationScreenProps<"CreateProfile">;
 
@@ -44,12 +42,16 @@ export default function CreateProfileScreen({
 }: CreateProfileProps) {
   const [householdName, setHouseholdName] = useState("");
   const [selectedAvatar, setSelectedAvatar] = useState<string | null>(null);
-  const { householdId } = route.params;
+  const [selectedBee, setSelectedBee] = useState(false);
+  const householdId = route.params.householdId;
+  const isOwner = route.params.isOwner;
   // const household = households.find((h) => h.id === householdId);
   const { theme } = useTheme();
   const colorScheme = useColorScheme();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const todaysDate = new Date();
+  //här hämtas alla profiler för det hushållet det gäller
+  const profiles = useAppSelector((state) => state.profile.profiles);
 
   const activeHousehold = useAppSelector(
     (state) => state.household.activeHousehold,
@@ -63,17 +65,15 @@ export default function CreateProfileScreen({
   //UTKOMMENTERAR DENNA SÅLÄNGE FÖR FINNS INGET STATE FÖR EN AKTIV USER ÄN
   const activeUser = useAppSelector((state) => state.user.user);
 
-  const activeProfiles = useAppSelector((state) =>
-    state.profile.profiles.filter(
-      (profile) => profile.householdId === householdId,
-    ),
-  );
-
   const selectedHousehold = useAppSelector((state) =>
     state.household.households.find(
       (household) => household.id === householdId,
     ),
   );
+
+  useEffect(() => {
+    dispatch(getProfilesByHouseholdIdAsync(householdId));
+  }, []);
 
   //     // Lite slarvigt kanske en stund här men funkar sålänge
   // const hasActiveProfiles = activeProfiles.length > 0;
@@ -83,35 +83,58 @@ export default function CreateProfileScreen({
   //   return activeProfiles.some((profile) => profile.avatar === avatarId);
   // };
 
-  const householdHasOwner = () => {
-    const profiles = dispatch(getProfilesByHouseholdId(householdId));
-    if (profiles) {
-      return true;
-    } else {
-      return false;
-    }
-  };
-
+  // const householdHasOwner = () => {
+  //   console.log("antal profiler för hushållet: ", profilesForHousehold.payload.length)
+  //   if (profilesForHousehold.payload) {
+  //     return true;
+  //   } else {
+  //     return false;
+  //   }
+  // };
+  const [lastSelectedAvatar, setLastSelectedAvatar] = useState<string | null>(
+    null,
+  );
   const isAvatarOccupied = (avatarId: string) => {
-    return activeProfiles.some((profile) => profile.avatar === avatarId);
+    if (profiles) {
+      return profiles.some((profile) => profile.avatar === avatarId);
+    }
   };
 
   const saveProfile = () => {
     console.log("hushållsid är", householdId);
 
     if (selectedAvatar && activeUser) {
-      const avatarsColor = AvatarColors[selectedAvatar as Avatars];
-      const newProfile = {
-        id: todaysDate.getUTCMilliseconds.toString().slice(-4),
-        profileName: householdName,
-        userId: activeUser.uid,
-        householdId: householdId,
-        avatar: selectedAvatar,
-        avatarsColors: avatarsColor,
-        isOwner: false,
-        isActive: false,
-      };
-      dispatch(addProfile(newProfile));
+      if(isOwner){
+        const avatarsColor = AvatarColors[selectedAvatar as Avatars];
+        const newProfile = {
+          id: todaysDate.getUTCMilliseconds.toString().slice(-4),
+          profileName: householdName,
+          userId: activeUser.uid,
+          householdId: householdId,
+          avatar: selectedAvatar,
+          avatarsColors: avatarsColor,
+          isOwner: true,
+          isActive: true,
+        };
+        dispatch(addProfileAsync(newProfile));
+      }else{
+        if(activeUser.email){
+          const avatarsColor = AvatarColors[selectedAvatar as Avatars];
+          const newProfile = {
+            //tog bort millisekunderna som id
+            id: "",
+            profileName: householdName,
+            userId: activeUser.uid,
+            householdId: "",
+            avatar: selectedAvatar,
+            avatarsColors: avatarsColor,
+            isOwner: false,
+            isActive: true,
+          };
+          dispatch(addProfileWithRequest({newProfile:newProfile, userMail:activeUser.email, householdId:householdId}));
+        }
+
+      }
       navigation.navigate("HouseholdAccount");
     }
   };
@@ -165,40 +188,66 @@ export default function CreateProfileScreen({
           ]}
           onChangeText={(text) => setHouseholdName(text)}
         />
-        <View style={styles.avatarsContainer}>
-          {avatars.map((avatar) => {
-            const isOccupied =
-              !householdHasOwner() && avatar.id !== Avatars.Bee;
-
-            householdHasOwner() && isAvatarOccupied(avatar.id);
-            const isSelected = selectedAvatar === avatar.id;
-
-            const avatarStyles = [
-              styles.avatar,
-              isOccupied ? styles.occupiedAvatar : undefined,
-              isAvatarOccupied(avatar.id) ? styles.occupiedAvatar : undefined,
-              isSelected ? styles.selectedAvatar : undefined,
-              { backgroundColor: AvatarColors[avatar.id as Avatars] },
-            ];
-
-            return (
+        <View>
+          {isOwner ? (
+            <View>
               <TouchableOpacity
-                key={avatar.id}
-                style={avatarStyles}
+                key={Avatars.Bee}
+                style={[
+                  styles.avatar,
+                  // selectedBee ? styles.selectedAvatar : null
+                  selectedAvatar === Avatars.Bee
+                    ? { backgroundColor: "lightgray" }
+                    : null,
+                ]}
                 onPress={() => {
-                  if (!isAvatarOccupied(avatar.id)) {
-                    setSelectedAvatar(avatar.id as Avatars);
-                  }
+                  setSelectedAvatar(Avatars.Bee);
                 }}
               >
                 <Image
-                  source={{ uri: AvatarUrls[avatar.id as Avatars] }}
+                  source={{ uri: AvatarUrls[Avatars.Bee] }}
                   style={styles.avatarImage}
                 />
               </TouchableOpacity>
-            );
-          })}
+            </View>
+          ) : (
+            <View style={styles.avatarsContainer}>
+              {avatars.map((avatar) => {
+                const isOccupied = isAvatarOccupied(avatar.id);
+                const isSelected = selectedAvatar === avatar.id;
+
+                const avatarStyles = [
+                  styles.avatar,
+
+                  isOccupied ? styles.occupiedAvatar : undefined,
+                  isAvatarOccupied(avatar.id)
+                    ? styles.occupiedAvatar
+                    : undefined,
+                  // isSelected ? styles.selectedAvatar : undefined,
+                  isSelected ? { backgroundColor: "lightgray" } : undefined,
+                ];
+
+                return (
+                  <TouchableOpacity
+                    key={avatar.id}
+                    style={avatarStyles}
+                    onPress={() => {
+                      if (!isAvatarOccupied(avatar.id)) {
+                        setSelectedAvatar(avatar.id as Avatars);
+                      }
+                    }}
+                  >
+                    <Image
+                      source={{ uri: AvatarUrls[avatar.id as Avatars] }}
+                      style={styles.avatarImage}
+                    />
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
+          )}
         </View>
+
         <Button
           style={theme.button as any}
           onPress={saveProfile}

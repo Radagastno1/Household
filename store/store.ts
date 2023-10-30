@@ -1,11 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import appReducer from "./appSlice";
-import { profileReducer } from "./profile/profileSlice";
-import { taskCompletionReducer } from "./taskCompletionSlice";
-import { taskReducer } from "./tasks/taskSlice";
 import { householdReducer } from "./household/householdSlice";
+import { profileReducer } from "./profile/profileSlice";
+import { taskCompletionReducer } from "./taskCompletion/taskCompletionSlice";
+import { taskReducer } from "./tasks/taskSlice";
 import { userReducer } from "./user/userSlice";
+import { requestReducer } from "./request/requestSlice";
 
 const store = configureStore({
   reducer: {
@@ -14,8 +15,8 @@ const store = configureStore({
     taskCompletion: taskCompletionReducer,
     app: appReducer,
     household: householdReducer,
-    //LA TILL DENNA
     user: userReducer,
+    request: requestReducer,
   },
 });
 

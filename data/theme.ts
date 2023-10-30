@@ -107,7 +107,7 @@ export const AppLightTheme: Theme = {
     backgroundColor: "white", 
     padding: 16,
     alignItems: "center",
-    margin: 16,
+    margin: 10,
     borderRadius: 8,
     width: 360,    
     shadowColor: "#000",

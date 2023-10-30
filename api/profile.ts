@@ -9,7 +9,7 @@ import {
   updateDoc,
   where,
 } from "firebase/firestore";
-import { Profile, User } from "../types";
+import { Profile } from "../types";
 import { db } from "./config";
 
 export const addProfileToDB = async (profile: Profile) => {
@@ -61,6 +61,26 @@ export const saveProfileNameToDatabase = async (
     console.error("Fel vid uppdatering av profilnamnet i databasen:", error);
     return { success: false, error };
   }
+};
+
+export const getAllProfilesByHouseholdIdDb = async (householdId: string) => {
+  const profileCollectionRef = collection(db, "profiles");
+
+  const q = query(
+    profileCollectionRef,
+    where("householdId", "==", householdId),
+  );
+
+  const querySnapshot = await getDocs(q);
+
+  const profiles: Profile[] = [];
+
+  querySnapshot.forEach((doc) => {
+    profiles.push(doc.data() as Profile);
+  });
+
+  console.log("profiler hämtade från DB:", profiles);
+  return profiles;
 };
 
 //DENNA BEHÖVS NOG INTE DÅ VI HÄMTAR ALLA EN GÅNG
@@ -139,6 +159,28 @@ export const getAllProfilesByUserIdFromDb = async (userId: string) => {
     return profiles;
   } catch (error) {
     console.error("Fel vid hämtning av uppgifter:", error);
+  }
+};
+export const deactivateProfileInDB = async (profileId: string) => {
+  const profileDocRef = doc(db, "profiles", profileId);
+
+  try {
+    await updateDoc(profileDocRef, {
+      isActive: false,
+    });
+
+    console.log("Profile's isActive property updated in Firestore.");
+    return { success: true };
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error("Error updating profile in Firestore:", error);
+      return { success: false, error: error.message };
+    } else {
+      console.error(
+        "Unknown error occurred while updating profile in Firestore.",
+      );
+      return { success: false, error: "Unknown error" };
+    }
   }
 };
 

@@ -1,5 +1,3 @@
-import { useNavigation } from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
   addHouseholdToDB,
@@ -7,8 +5,8 @@ import {
   editHouseholdToDB,
   getHouseholdsFromDB,
 } from "../../api/household";
-import { RootStackParamList } from "../../navigators/RootNavigator";
 import { Household } from "../../types";
+import { setActiveUser } from "../user/userSlice";
 
 export interface HouseholdState {
   households: Household[];
@@ -29,20 +27,33 @@ export const getHouseholdsByHouseholdIdAsync = createAsyncThunk<
 >("households/getHouseholdByHouseholdId", async (householdIds, thunkAPI) => {
   try {
     const fetchedHouseholds: Household[] = [];
-
     for (const id of householdIds) {
       const household = await getHouseholdsFromDB(id);
       if (household) {
         fetchedHouseholds.push(household as Household);
       }
     }
-
     console.log("Hämtade hushåll: ", fetchedHouseholds);
     return fetchedHouseholds;
   } catch (error: any) {
     return thunkAPI.rejectWithValue(error.message);
   }
 });
+
+export const setActiveHouseholdAsync = createAsyncThunk(
+  "households/setActiveHousehold",
+  async (incomingHousehold: Household, thunkAPI) => {
+    try {
+      if (incomingHousehold) {
+        sethouseholdActive(incomingHousehold);
+      } else {
+        return thunkAPI.rejectWithValue("Failed to add profile");
+      }
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error.message);
+    }
+  },
+);
 
 export const handleJoinHousehold = async (joinCode: string) => {
   if (joinCode) {
@@ -60,18 +71,20 @@ export const handleJoinHousehold = async (joinCode: string) => {
   }
 };
 
-// Code generator function
-export const generateHouseholdCode = () => {
-  const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-  const numbers = "0123456789";
-  const code =
-    getRandomElement(letters) +
-    getRandomElement(letters) +
-    getRandomElement(letters) +
-    getRandomElement(numbers) +
-    getRandomElement(numbers);
-  return code;
-};
+export const addHouseholdAsync = createAsyncThunk<
+  Household | null,
+  string,
+  { rejectValue: string }
+>("households/addHousehold", async (householdName, thunkAPI) => {
+  try {
+    const household = (await addHouseholdToDB(
+      householdName,
+    )) as Household | null;
+    return household;
+  } catch (error: any) {
+    return thunkAPI.rejectWithValue(error.message);
+  }
+});
 
 const householdSlice = createSlice({
   name: "household",
@@ -82,23 +95,6 @@ const householdSlice = createSlice({
     },
     sethouseholdActive: (state, action: PayloadAction<Household>) => {
       state.activeHousehold = action.payload;
-    },
-    addHousehold: (state, action: PayloadAction<Household>) => {
-      const navigation =
-        useNavigation<StackNavigationProp<RootStackParamList>>();
-
-      const code = generateHouseholdCode(); // Generate a unique code
-      const householdWithCode = { ...action.payload, code }; // Add the code to the household
-      addHouseholdToDB(householdWithCode)
-        .then((createdHousehold) => {
-          if (createdHousehold) {
-            state.households = [...state.households, createdHousehold];
-            console.log("Household added: ", createdHousehold);
-          }
-        })
-        .catch((error) => {
-          console.error("Error adding household:", error);
-        });
     },
     setHouseholdByHouseholdId: (
       state,
@@ -124,17 +120,6 @@ const householdSlice = createSlice({
       } else {
       }
     },
-    // getHouseholdsByHouseholdId: (
-    //   state,
-    //   action: PayloadAction<{ householdId: string }>,
-    // ) => {
-    //   const { householdId } = action.payload;
-    //   const households = getHouseholdsFromDB(householdId).then((household) => {
-    //     const uniqueHouseholds = new Set([...state.households, household]);
-    //     console.log("UNIKA HUSHÅLL: ", uniqueHouseholds);
-    //     return [...uniqueHouseholds];
-    //   });
-    // },
     editHouseHoldeName: (
       state,
       action: PayloadAction<{ householdId: string; newHouseholdName: string }>,
@@ -166,6 +151,13 @@ const householdSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(setActiveUser, (state, action) => {
+        if (!action.payload) {
+          state.selectedHousehold = null;
+          state.activeHousehold = null;
+          state.households = [];
+        }
+      })
       .addCase(getHouseholdsByHouseholdIdAsync.fulfilled, (state, action) => {
         if (action.payload) {
           state.households = action.payload;
@@ -173,12 +165,27 @@ const householdSlice = createSlice({
       })
       .addCase(getHouseholdsByHouseholdIdAsync.rejected, (state, action) => {
         console.log("error vid get households: ", action.payload);
+      })
+      .addCase(addHouseholdAsync.fulfilled, (state, action) => {
+        if (action.payload) {
+          state.households = [...state.households, action.payload];
+        }
+      })
+      .addCase(addHouseholdAsync.rejected, (state, action) => {
+        console.log("error vid add household: ", action.payload);
       });
+    // .addCase(getRequestByHouseholdIdsAsync.fulfilled, (state, action) => {
+    //   if (action.payload) {
+    //     state.requests = action.payload;
+    //   }
+    // })
+    // .addCase(getRequestByHouseholdIdsAsync.rejected, (state, action) => {
+    //   console.log("error vid get requests: ", action.payload);
+    // });
   },
 });
 
 export const {
-  addHousehold,
   findHouseholdById,
   setHouseholdByHouseholdId,
   editHouseHoldeName,
@@ -195,15 +202,8 @@ const setActiveHousehold = (household: Household) => {
   };
 };
 
-// Helper function to get a random element from a string
-const getRandomElement = (array: string) => {
-  const index = Math.floor(Math.random() * array.length);
-  return array[index];
-};
-function dispatch(arg0: any) {
-  throw new Error("Function not implemented.");
-}
-
-function joinHouseholdByCode(joinCode: string) {
-  throw new Error("Function not implemented.");
-}
+// // Helper function to get a random element from a string
+// const getRandomElement = (array: string) => {
+//   const index = Math.floor(Math.random() * array.length);
+//   return array[index];
+// };

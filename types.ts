@@ -1,5 +1,6 @@
 export interface User {
   uid: string;
+  email: string | null;
 }
 
 export interface UserCreate {
@@ -78,6 +79,14 @@ export interface StatData {
 export interface PieChart {
   color: string;
   serie: number;
+}
+
+export interface HouseholdRequest {
+  id: string;
+  profileId: string;
+  userMail: string;
+  householdId: string;
+  status: "pending" | "approved" | "rejected";
 }
 
 // Show how to make a day function work between task-data and taskCompletion-data

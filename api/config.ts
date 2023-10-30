@@ -1,6 +1,10 @@
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
+import { getAuth, getReactNativePersistence } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
+import { initializeAuth } from "firebase/auth";
+import ReactNativeAsyncStorage, {
+  AsyncStorageStatic,
+} from "@react-native-async-storage/async-storage";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBTGhNRoh6qXIoJ88wIijJ42QwVJPN2BhA",
@@ -14,10 +18,12 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-const auth = getAuth(app);
+// const auth = getAuth(app);
+const auth = initializeAuth(app, {
+  persistence: getReactNativePersistence(ReactNativeAsyncStorage),
+});
 
 export { app, db, auth };
-
 // const firebaseConfig = {
 //   apiKey: "API-nyckel",
 //   authDomain: "inget-authentication-krävs",

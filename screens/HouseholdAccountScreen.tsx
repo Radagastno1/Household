@@ -1,11 +1,13 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import { signOut } from "firebase/auth";
 import React, { useEffect, useRef, useState } from "react";
+import { Appearance } from "react-native";
 import {
   Alert,
   Animated,
   FlatList,
   Modal,
+  Image,
   PanResponder,
   ScrollView,
   StyleSheet,
@@ -16,6 +18,7 @@ import {
 import { Button, Appbar } from "react-native-paper";
 import { auth } from "../api/config";
 import { useTheme } from "../contexts/themeContext";
+import { AvatarUrls, Avatars } from "../data/avatars";
 import { RootNavigationScreenProps } from "../navigators/navigationTypes";
 import {
   getHouseholdsByHouseholdIdAsync,
@@ -27,20 +30,35 @@ import {
   setProfileByHouseholdAndUser,
 } from "../store/profile/profileSlice";
 import { AntDesign } from "@expo/vector-icons";
+import { getRequestByHouseholdIdsAsync } from "../store/request/requestSlice";
 import { useAppDispatch, useAppSelector } from "../store/store";
+import { logOutUser } from "../store/user/userSlice";
 import { Household } from "../types";
 import { useSharedValue } from "react-native-reanimated";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { State } from "react-native-gesture-handler";
 
 type HouseholdProps = RootNavigationScreenProps<"HouseholdAccount">;
 
 export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
+
+  const [systemTheme, setSystemTheme] = useState(Appearance.getColorScheme());
+
+
+  const [isRequest, setIsRequest] = useState(false);
+
   const activeUser = useAppSelector((state) => state.user.user);
-  // const [households, setHouseholds] = useState<Household[] | undefined>([]);
-  // const [profiles, setProfiles] = useState<(Profile[] | undefined)[]>([]);
   const dispatch = useAppDispatch();
-  const profiles = useAppSelector((state) => state.profile.profiles);
+  const profilesToUser = useAppSelector(
+    (state) => state.profile.profilesToUser,
+  );
   const households = useAppSelector((state) => state.household.households);
+
+  const requests = useAppSelector((state) => state.request.requests);
+  
+
   const [profilesLoaded, setProfilesLoaded] = useState(false);
+  const [requestsLoaded, setRequestsLoaded] = useState(false);
   const activeProfile = useAppSelector((state) => state.profile.activeProfile);
   let householdIds: string[] = [];
   console.log("Nu är användaren ", activeUser, "inloggad");
@@ -52,20 +70,33 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
     dispatch(getProfilesByUserIdAsync(activeUser?.uid ?? "hej")).then(() => {
       setProfilesLoaded(true);
     });
-    console.log("nu kollar den efter profiler", profiles);
-    householdIds = profiles.map((p) => p.householdId);
+    console.log("nu kollar den efter profiler", profilesToUser);
+    householdIds = profilesToUser.map((p) => p.householdId);
   }, [!profilesLoaded]);
 
   useEffect(() => {
     dispatch(getHouseholdsByHouseholdIdAsync(householdIds));
   }, [profilesLoaded]);
 
+  useEffect(() => {
+    dispatch(getRequestByHouseholdIdsAsync(householdIds)).then(() => {
+      setRequestsLoaded(true);
+    });
+  }, [!requestsLoaded, profilesLoaded]);
+
+  useEffect(() => {
+    if (activeProfile) {
+      navigation.navigate("ProfileAccount", {
+        householdId: activeProfile.householdId,
+      });
+    }
+  }, [activeProfile]);
+
   const handleEnterHousehold = async (household: Household) => {
     dispatch(sethouseholdActive(household));
+    console.log("HHOUSEHOLDID ÄR: ", household.id);
     try {
-      await dispatch(
-        fetchAllProfilesByHousehold(household.id, activeUser!.uid),
-      );
+      dispatch(fetchAllProfilesByHousehold(household.id, activeUser!.uid));
       dispatch(
         setProfileByHouseholdAndUser({
           userId: activeUser!.uid,
@@ -74,11 +105,6 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
       );
       console.log("FRÅN HOUSEHOLDACCOUNT: ", activeProfile?.id);
       console.log("aktiva profilen: ", activeProfile);
-      if (activeProfile) {
-        navigation.navigate("ProfileAccount", {
-          householdId: household.id,
-        });
-      }
     } catch (error) {
       console.error("Error entering household:", error);
     }
@@ -88,6 +114,7 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
     signOut(auth)
       .then(() => {
         console.log("Användaren har loggats ut");
+        dispatch(logOutUser());
       })
       .catch((error) => {
         console.error("Fel vid utloggning:", error.message);
@@ -99,13 +126,28 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
   }
 
   const { theme, setColorScheme } = useTheme();
-  const [currentTheme, setCurrentTheme] = useState("auto");
+  const [currentTheme, setCurrentTheme] = useState("automatic");
   const handleToggleTheme = () => {
     if (setColorScheme) {
       setColorScheme(currentTheme === "dark" ? "light" : "dark");
       setCurrentTheme(currentTheme === "dark" ? "light" : "dark");
     }
   };
+  const handleToggleSystemTheme = () => {
+    const systemColorScheme = Appearance.getColorScheme();
+    console.log('System Theme Detected:', systemColorScheme);
+    
+    if (systemColorScheme) {
+      if (systemColorScheme === 'light' && currentTheme === 'dark') {
+        setCurrentTheme('light');
+        setColorScheme('light');
+      } else if (systemColorScheme === 'dark' && currentTheme === 'light') {
+        setCurrentTheme('dark');
+        setColorScheme('dark');
+      }
+    }
+  };
+  
 
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedItem, setSelectedItem] = useState<string | null>(null);
@@ -152,27 +194,67 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
             marginTop: 10,
           }}
         >
-          {households?.map((household: Household, index) => (
-            <TouchableOpacity
-              key={index}
-              style={[
-                theme.cardButton as any,
-                { flexDirection: "row", justifyContent: "space-between" },
-              ]}
-              onPress={() => {
-                handleEnterHousehold(household);
-              }}
-            >
-              <View>
-                <Text style={theme.buttonText}>{household.name}</Text>
-              </View>
+          {households?.map((household: Household, index) => {
+            const profile = profilesToUser.find(
+              (profile) =>
+                profile.householdId === household.id &&
+                profile.userId === activeUser?.uid,
+            );
+            const request = requests.find(
+              (request) => request.householdId === household.id,
+            );
 
-              <View>
-                {/* if it is owner */}
-                <MaterialIcons name="edit" size={24} color="black" />
-              </View>
-            </TouchableOpacity>
-          ))}
+            return (
+              <TouchableOpacity
+                key={index}
+                style={[
+                  theme.cardButton as any,
+                  { flexDirection: "row", justifyContent: "space-between" },
+                ]}
+                onPress={() => {
+                  handleEnterHousehold(household);
+                }}
+              >
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                  }}
+                >
+                  <Image
+                    key={0}
+                    source={{
+                      uri: AvatarUrls[profile?.avatar as Avatars],
+                    }}
+                    style={{ height: 20, width: 20 }}
+                    alt={`Avatar ${index}`}
+                  />
+                  <Text>{request?.status}</Text>
+                </View>
+
+                <View>
+                  <Text style={theme.buttonText}>{household.name}</Text>
+                </View>
+
+                <View style={{ flexDirection: "row", gap: 5 }}>
+                  {!isRequest && profile?.isOwner === true ? (
+                    <MaterialCommunityIcons
+                      name="bell-alert-outline"
+                      size={24}
+                      color="black"
+                    />
+                  ) : (
+                    <View style={{ width: 24 }}></View>
+                  )}
+                  {profile?.isOwner === true ? (
+                    <MaterialIcons name="edit" size={24} color="black" />
+                  ) : (
+                    <View style={{ width: 24 }}></View>
+                  )}
+                </View>
+              </TouchableOpacity>
+            );
+          })}
         </ScrollView>
 
         <TouchableOpacity

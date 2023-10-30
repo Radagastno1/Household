@@ -1,22 +1,44 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { getHouseholdsFromDB } from "../../api/household";
 import {
   addProfileToDB,
+  deactivateProfileInDB,
   getAllProfilesByHouseholdId,
+  getAllProfilesByHouseholdIdDb,
   getAllProfilesByUserIdFromDb,
   saveProfileNameToDatabase,
 } from "../../api/profile";
 import { Profile } from "../../types";
+import { AppDispatch, RootState } from "../store";
+import { setActiveUser } from "../user/userSlice";
 
 interface ProfileState {
   profiles: Profile[];
   activeProfile: Profile | null;
+  profilesToUser: Profile[];
 }
 
 export const initialState: ProfileState = {
   profiles: [],
   activeProfile: null,
+  profilesToUser: [],
 };
+
+export const addProfileAsync = createAsyncThunk(
+  "profiles/addProfile",
+  async (newProfile: Profile, thunkAPI) => {
+    try {
+      const createdProfile = await addProfileToDB(newProfile);
+
+      if (createdProfile) {
+        return createdProfile;
+      } else {
+        return thunkAPI.rejectWithValue("Failed to add profile");
+      }
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error.message);
+    }
+  },
+);
 
 export const getProfilesByUserIdAsync = createAsyncThunk<
   Profile[],
@@ -38,6 +60,27 @@ export const getProfilesByUserIdAsync = createAsyncThunk<
   }
 });
 
+export const getProfilesByHouseholdIdAsync = createAsyncThunk<
+  Profile[],
+  string,
+  { rejectValue: string }
+>("profiles/getProfilesByHouseholdId", async (householdId, thunkAPI) => {
+  try {
+    const fetchedProfiles = await getAllProfilesByHouseholdIdDb(householdId);
+    if (fetchedProfiles) {
+      console.log(
+        "inne i try i thunken, profiles är för hurhållet är: ",
+        fetchedProfiles,
+      );
+      return fetchedProfiles;
+    } else {
+      return thunkAPI.rejectWithValue("failed to get profi.es");
+    }
+  } catch (error: any) {
+    return thunkAPI.rejectWithValue(error.message);
+  }
+});
+
 const profileSlice = createSlice({
   name: "profile",
   initialState,
@@ -52,18 +95,6 @@ const profileSlice = createSlice({
     setActiveProfile: (state, action: PayloadAction<Profile>) => {
       state.activeProfile = action.payload;
     },
-    getProfilesByHouseholdId: (state, action: PayloadAction<string>) => {
-      getAllProfilesByHouseholdId(action.payload).then((profiles) => {
-        if (profiles) {
-          return profiles;
-        } else {
-          return null;
-        }
-      });
-    },
-    // editProfileName: (state, action: PayloadAction<Profile>) => {
-    //   state.profiles = [...state.profiles, action.payload];
-    // },
     addProfile: (state, action: PayloadAction<Profile>) => {
       const profileToAdd = action.payload;
       getAllProfilesByHouseholdId(action.payload.householdId)
@@ -85,18 +116,6 @@ const profileSlice = createSlice({
           console.error("Fel vid tillägg av profil:", error);
         });
     },
-
-    // editProfileName: (
-    //   state,
-    //   action: PayloadAction<{ profileId: string; newProfileName: string }>,
-    // ) => {
-    //   const profileToEdit = state.profiles.find(
-    //     (profile) => profile.id === action.payload.profileId,
-    //   );
-    //   if (profileToEdit) {
-    //     profileToEdit.profileName = action.payload.newProfileName;
-    //   }
-    // },
     editProfileName: (
       state,
       action: PayloadAction<{ profileId: string; newProfileName: string }>,
@@ -138,12 +157,32 @@ const profileSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(setActiveUser, (state, action) => {
+        if (!action.payload) {
+          state.activeProfile = null;
+          state.profiles = [];
+          state.profilesToUser = [];
+        }
+      })
+      .addCase(addProfileAsync.fulfilled, (state, action) => {
+        if (action.payload) {
+          state.profilesToUser.push(action.payload);
+        }
+      })
       .addCase(getProfilesByUserIdAsync.fulfilled, (state, action) => {
+        if (action.payload) {
+          state.profilesToUser = action.payload;
+        }
+      })
+      .addCase(getProfilesByUserIdAsync.rejected, (state, action) => {
+        console.log("error vid get profiles: ", action.payload);
+      })
+      .addCase(getProfilesByHouseholdIdAsync.fulfilled, (state, action) => {
         if (action.payload) {
           state.profiles = action.payload;
         }
       })
-      .addCase(getProfilesByUserIdAsync.rejected, (state, action) => {
+      .addCase(getProfilesByHouseholdIdAsync.rejected, (state, action) => {
         console.log("error vid get profiles: ", action.payload);
       });
   },
@@ -151,7 +190,7 @@ const profileSlice = createSlice({
 
 export const fetchAllProfilesByHousehold =
   (activeHouseholdId: string, userId: string) =>
-  async (dispatch: any, getState: any) => {
+  async (dispatch: AppDispatch, getState: () => RootState) => {
     console.log("FETCH ALL PROFILE KÖRS!!!!");
     const profiles = await getAllProfilesByHouseholdId(activeHouseholdId);
     console.log("antal profiler för hushållet:", profiles?.length);
@@ -167,11 +206,25 @@ export const fetchAllProfilesByHousehold =
       }
     }
   };
+export const deactivateProfileAsync = createAsyncThunk(
+  "profiles/deactivateProfile",
+  async (profileId: string, thunkAPI) => {
+    try {
+      const response = await deactivateProfileInDB(profileId);
+      if (response.success) {
+        return true;
+      } else {
+        return thunkAPI.rejectWithValue(response.error);
+      }
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error.message);
+    }
+  },
+);
 
 export const { setProfiles } = profileSlice.actions;
 export const { addProfile } = profileSlice.actions;
 export const { editProfileName } = profileSlice.actions;
 export const { setProfileByHouseholdAndUser } = profileSlice.actions;
-export const { getProfilesByHouseholdId } = profileSlice.actions;
 
 export const profileReducer = profileSlice.reducer;

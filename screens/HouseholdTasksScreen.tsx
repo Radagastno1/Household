@@ -1,23 +1,21 @@
 import { AntDesign } from "@expo/vector-icons";
 import { useFocusEffect } from "@react-navigation/native";
-import React, { useCallback, useEffect } from "react";
-import { ScrollView, StyleSheet, View, Image } from "react-native";
+import React, { useCallback } from "react";
+import { Image, ScrollView, StyleSheet, View, useColorScheme } from "react-native";
 import { Button, Card, Text } from "react-native-paper";
-import { useAppDispatch, useAppSelector } from "../store/store";
-import { fetchCompletions } from "../store/taskCompletionSlice";
-import { fetchTasks, filterTaskListByHouseId } from "../store/tasks/taskSlice";
-import { Profile, Task } from "../types";
 import { useTheme } from "../contexts/themeContext";
 import { AvatarUrls, Avatars } from "../data/avatars";
 import { TopTabScreenProps } from "../navigators/navigationTypes";
-import { useColorScheme } from "react-native";
+import { useAppDispatch, useAppSelector } from "../store/store";
+import { fetchTasks, filterTaskListByHouseId } from "../store/tasks/taskSlice";
+import { Profile, Task } from "../types";
 
 type HouseholdTasksProps = TopTabScreenProps<"HouseholdTasks">;
 
 export default function HouseholdTasksScreen({
   navigation,
 }: HouseholdTasksProps) {
-    const profiles = useAppSelector((state) => state.profile.profiles);
+  const profiles = useAppSelector((state) => state.profile.profiles);
   // function resetAvatars(dispatch: Dispatch) {
   //     // Clear the avatars data, set it to an empty array or an initial value
   //     // For example:
@@ -54,7 +52,7 @@ export default function HouseholdTasksScreen({
   // Use useSelector to access the profiles
   const activeProfile = useAppSelector((state) => state.profile.activeProfile);
   // const household = households.find((h) => h.id === activeProfile?.householdId);
-  const taskSlice = useAppSelector((state) => state.task);
+  const filteredTasks = useAppSelector((state) => state.task.filteredTasks);
   const taskCompletionSlice = useAppSelector((state) => state.taskCompletion);
   const dispatch = useAppDispatch();
 
@@ -63,24 +61,27 @@ export default function HouseholdTasksScreen({
   useFocusEffect(
     useCallback(() => {
       if (activeProfile && activeHousehold) {
-        dispatch(
-          filterTaskListByHouseId({
-            household_Id: activeHousehold?.id,
-          }),
+        dispatch(fetchTasks(activeProfile.householdId)).then(
+          () => {
+            dispatch(
+              filterTaskListByHouseId({
+                household_Id: activeHousehold?.id,
+              })
+            );
+          }
         );
-        //TINA HERE: THIS DISPATCH MUST HAPPEND EVERY TIME WE GO TO THIS SCREEN
-        //this one fetches the tasks from the database and put it in the state "tasks"
-        dispatch(fetchTasks(activeProfile.householdId));
-        
       }
-    }, [dispatch]),
+    }, [])
   );
 
   const handleTaskPress = (taskId: string) => {
     navigation.navigate("TaskDetail", { taskId });
   };
 
-  function findAllAvatarFortodayCompletionByTaskId(taskId: string,activeProfile:Profile) {
+  function findAllAvatarFortodayCompletionByTaskId(
+    taskId: string,
+    activeProfile: Profile,
+  ) {
     const today = new Date().toISOString();
     //filter the completions with the same taskId---------can be moved out and share with getdays function
     const filteredTodaysCompletionsForTask =
@@ -151,7 +152,7 @@ export default function HouseholdTasksScreen({
               : styles.scrollContainerNonOwner
           }
         >
-          {taskSlice.filteredTasks.map((task) => (
+          {filteredTasks.map((task) => (
             <Card
               key={task.id}
               style={[
@@ -190,16 +191,17 @@ export default function HouseholdTasksScreen({
                 <Text variant="titleLarge">{task.title}</Text>
               </View> */}
 
-                {findAllAvatarFortodayCompletionByTaskId(task.id,activeProfile!!).map(
-                  (avatar, index) => (
-                    <View key={index}>
-                      <Image
-                        source={{ uri: AvatarUrls[avatar as Avatars] }}
-                        style={{ height: 20, width: 20 }}
-                      />
-                    </View>
-                  ),
-                )}
+                {findAllAvatarFortodayCompletionByTaskId(
+                  task.id,
+                  activeProfile!!,
+                ).map((avatar, index) => (
+                  <View key={index}>
+                    <Image
+                      source={{ uri: AvatarUrls[avatar as Avatars] }}
+                      style={{ height: 20, width: 20 }}
+                    />
+                  </View>
+                ))}
 
                 {getDaysSinceLastCompletion(task) > 0 && (
                   <View
@@ -227,23 +229,12 @@ export default function HouseholdTasksScreen({
               </View>
             </Card>
           ))}
-
-          <Card style={styles.card}>
-            <View style={styles.taskItem}>
-              <View>
-                <Text variant="titleLarge">test</Text>
-              </View>
-              <View>
-                <Text variant="bodyMedium">avatarer1</Text>
-              </View>
-            </View>
-          </Card>
         </ScrollView>
 
         <View style={styles.buttonContainer}>
-          {isOwner && (
+          {isOwner === true && (
             <Button
-              icon={({ size, color }) => (
+              icon={() => (
                 <AntDesign name="pluscircleo" size={20} color="black" />
               )}
               mode="outlined"
@@ -343,11 +334,20 @@ const styles = StyleSheet.create({
     bottom: 0,
     right: 0,
     margin: 16,
+    borderRadius: 20,
+    shadowColor: "black",
+    shadowOffset: { width: 1, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 3,
   },
   button: {
-    height: 40,
-    width: 120,
-    borderColor: "black",
+    paddingLeft: 3,
+    borderRadius: 20,
+    height: 45,
+    width: 130,
     backgroundColor: "white",
+    justifyContent: "center",
+    fontWeight: "bold",
   },
 });

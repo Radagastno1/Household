@@ -13,17 +13,17 @@ import {
 } from "react-native";
 import { Card, Paragraph, Title } from "react-native-paper";
 import CircleComponent from "../components/CircleComponent";
+import { useTheme } from "../contexts/themeContext";
 import DeleteTaskModule from "../modules/DeleteTaskModule";
 import { RootNavigationScreenProps } from "../navigators/navigationTypes";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import {
   addTaskAsync,
-  deleteTask,
+  deleteTaskAsync,
   editTaskAsync,
-  filterTaskListByHouseId,
+  filterTaskListByHouseId
 } from "../store/tasks/taskSlice";
 import { Task } from "../types";
-import { useTheme } from "../contexts/themeContext";
 
 type HandleTaskProps = RootNavigationScreenProps<"HandleTask">;
 
@@ -92,20 +92,26 @@ export default function CreateTaskScreen({
   const energyData: number[] = [1, 2, 4, 6, 8];
 
   const handleDeleteTask = () => {
-    //stänga modulen när man gjort något där inne? eller?
     if (taskToEdit) {
       setDeleteTaskModalVisible(true);
     }
-    // navigation.navigate("Tab");
   };
 
   const deleteFunctionToModule = (taskId: string) => {
-    dispatch(deleteTask(taskId));
+    dispatch(deleteTaskAsync(taskId)).then(
+      () => {
+        if(activeHousehold?.id){
+          dispatch(filterTaskListByHouseId({ household_Id: activeHousehold.id }));
+        }}
+    );
+    
     setDeleteTaskModalVisible(false);
+    navigation.navigate("Tab");
   };
 
   const editFunctionToModule = (editedTask: Task) => {
     dispatch(editTaskAsync(editedTask));
+    navigation.navigate("Tab");
   };
 
   const handleTask = () => {
@@ -122,8 +128,12 @@ export default function CreateTaskScreen({
           isActive: true,
         };
         console.log("den nya tasken innan dispatch:", newTask);
-        dispatch(addTaskAsync(newTask));
-        dispatch(filterTaskListByHouseId({ household_Id: householdId }));
+        dispatch(addTaskAsync(newTask)).then(
+          () => {
+            if(activeHousehold?.id){
+              dispatch(filterTaskListByHouseId({ household_Id: activeHousehold.id }));
+            }}
+        );
       }
     } else {
       if (taskToEdit && householdId) {
@@ -158,14 +168,12 @@ export default function CreateTaskScreen({
             contentContainerStyle={styles.scrollViewContainer}
             keyboardShouldPersistTaps="always"
           >
-            <View style={styles.container}>
               <DeleteTaskModule
                 task={taskToEdit}
                 onDeleteTask={deleteFunctionToModule}
                 onEditTask={editFunctionToModule}
                 onClose={hideDeleteTaskModal}
-              />
-            </View>
+              />      
           </ScrollView>
         ) : (
           <ScrollView
@@ -334,7 +342,7 @@ export default function CreateTaskScreen({
                 </Card.Content>
               </Card>
               {isCreateMode ? null : (
-                <TouchableOpacity onPress={() => handleDeleteTask()}>
+                <TouchableOpacity onPress={() => handleDeleteTask()} style={styles.removeButton}>
                   <Text
                     style={[
                       styles.removeText,
@@ -346,10 +354,6 @@ export default function CreateTaskScreen({
                     Ta bort
                   </Text>
                 </TouchableOpacity>
-
-                // <TouchableOpacity onPress={() => handleDeleteTask()}>
-                //   <Text style={styles.removeText}>Ta bort</Text>
-                // </TouchableOpacity>
               )}
             </View>
 
@@ -360,7 +364,7 @@ export default function CreateTaskScreen({
                   handleTask();
                 }}
               >
-                <Feather name="plus-circle" size={24} color="black" />
+                <Feather name="plus-circle" size={24} color="black" style={{paddingHorizontal:5}} />
                 <Text style={theme.buttonText}>Spara</Text>
               </TouchableOpacity>
 
@@ -370,7 +374,7 @@ export default function CreateTaskScreen({
                   navigation.navigate("Tab");
                 }}
               >
-                <AntDesign name="closecircleo" size={24} color="black" />
+                <AntDesign name="closecircleo" size={24} color="black" style={{paddingHorizontal:5}}/>
                 <Text style={theme.buttonText}>Stäng</Text>
               </TouchableOpacity>
             </View>
@@ -386,13 +390,12 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   container: {
-    marginTop: 80,
     flex: 1,
     padding: 10,
+    marginTop:80
   },
   scrollViewContainer: {
     flexDirection: "column",
-    justifyContent: "space-between",
     flex: 1,
   },
   input: {
@@ -442,4 +445,10 @@ const styles = StyleSheet.create({
     padding: 10,
     fontSize: 20,
   },
+  removeButton:{
+      backgroundColor: "orange",
+      width: 200,
+      marginVertical:20,
+      alignItems:"center"
+  }
 });

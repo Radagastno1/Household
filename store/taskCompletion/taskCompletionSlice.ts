@@ -2,9 +2,9 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
   addTaskCompletionToDB,
   getTaskCompletionsFromDB,
-} from "../api/taskCompletion";
-import { TaskCompletion } from "../types";
-import { Profile } from "../types";
+} from "../../api/taskCompletion";
+import { Profile, TaskCompletion } from "../../types";
+import { setActiveUser } from "../user/userSlice";
 
 interface TaskCompletionState {
   completions: TaskCompletion[];
@@ -12,7 +12,6 @@ interface TaskCompletionState {
 }
 
 const initialState: TaskCompletionState = {
-  //ändrat här så vi inte går efter mockade datan nu när den ska kolla mot db
   completions: [],
   avatars: [],
 };
@@ -149,6 +148,12 @@ const taskCompletionSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(setActiveUser, (state, action) => {
+        if (!action.payload) {
+          state.avatars = [];
+          state.completions = [];
+        }
+      })
       .addCase(addCompletionAsync.fulfilled, (state, action) => {
         if (action.payload) {
           state.completions = [...state.completions, action.payload];

@@ -6,12 +6,14 @@ interface UserState {
   user: User | undefined;
   filteredUsers: User[];
   selectedUser: User | null;
+  error: string | null;
 }
 
 export const initialState: UserState = {
   filteredUsers: [],
   selectedUser: null,
   user: undefined,
+  error: null,
 };
 
 export const addUserAsync = createAsyncThunk<
@@ -33,28 +35,52 @@ export const addUserAsync = createAsyncThunk<
   }
 });
 
+
+export const logInUserAsync = createAsyncThunk<
+  User,
+  UserCreate,
+  { rejectValue: string }
+>("user/logInUser", async (user, thunkAPI) => {
+  try {
+    const response = await signInWithAPI(user);
+    return response;
+  } catch (error) {
+    console.log("INNE I CATCH", error);
+    throw new Error("Användarnamn eller lösenord var felaktigt.");
+  }
+});
+
+
 const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    loginUser: (state, action: PayloadAction<UserCreate>) => {
-      console.log("Vi kommer hit");
-      signInWithAPI(action.payload).then((user) => {
-        if (user) {
-          state.user = user;
-        }
-      });
-    },
-
     logOutUser: (state) => {
-      state.user = initialState.user;
+      state.user = undefined;
     },
-    setActiveUser: (state, action) => {
-      const activeUser: User = { uid: action.payload };
-      state.user = activeUser;
+    setActiveUser: (state, action: PayloadAction<User | undefined>) => {
+      state.user = action.payload;
     },
   },
-});
+  extraReducers: (builder) => {
+    builder
+      .addCase(logInUserAsync.fulfilled, (state, action) => {
+        if (action.payload) {
+          state.user = {
+            uid: action.payload.uid,
+            email: action.payload.email,
+          };
+          state.error = null;
+        }
+      })
+      .addCase(logInUserAsync.rejected, (state, action) => {
+        console.log("INNE I CATCH", action.error.message);
+        state.error = "Användarnamn eller lösenord är felaktigt.";
+      });
+  },
+})
+  
+
 
 // export const fetchUsers =
 //   (activeHouseholdId: string) => async (dispatch: any, _getState: any) => {
@@ -63,4 +89,4 @@ const userSlice = createSlice({
 //   };
 
 export const userReducer = userSlice.reducer;
-export const { loginUser, logOutUser, setActiveUser } = userSlice.actions;
+export const { logOutUser, setActiveUser } = userSlice.actions;

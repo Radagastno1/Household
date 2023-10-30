@@ -75,7 +75,7 @@ Kravlista (1)
 
 Hushåll (6)
 [x] Alla användare i ett hushåll ska kunna se vilka som tillhör ett hushåll.
-[] En ägare av ett hushåll ska kunna se förfrågningar om att gå med i hushållet.
+[?] En ägare av ett hushåll ska kunna se förfrågningar om att gå med i hushållet.
 [?] En ägare ska kunna acceptera eller neka förfrågningar.
 [?] En ägare ska kunna göra andra till ägare.
 [] En ägare ska kunna pausa en användare och under pausade perioder ska användare inte
@@ -89,7 +89,7 @@ godkänna användaren.
 [?] En användare ska kunna lämna ett hushåll.
 
 Profil (2)
-[x] En användare ska kunna ställa in appens utseende (mörkt, ljust, auto).
+[/] En användare ska kunna ställa in appens utseende (mörkt, ljust, auto).
 [x] Om en användare tillhör två eller fler hushåll ska denne kunna välja att byta mellan de
 olika hushållen.
 

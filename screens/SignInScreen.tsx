@@ -5,17 +5,17 @@ import {
   Animated,
   Easing,
   Keyboard,
-  KeyboardAvoidingView,
   StyleSheet,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  View,
+  View
 } from "react-native";
 import { Text, TextInput } from "react-native-paper";
-import { useTheme } from "../contexts/themeContext";
+import ThemeProvider, { useTheme } from "../contexts/themeContext";
+import ErrorModule from "../modules/errorModule";
 import { RootNavigationScreenProps } from "../navigators/navigationTypes";
-import { useAppDispatch } from "../store/store";
-import { loginUser } from "../store/user/userSlice";
+import { useAppDispatch, useAppSelector } from "../store/store";
+import { logInUserAsync } from "../store/user/userSlice";
 import { User } from "../types";
 
 type SignInProps = RootNavigationScreenProps<"Login">;
@@ -24,9 +24,10 @@ export const SignInScreen = ({ navigation }: SignInProps) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const error = useAppSelector((state) => state.user.error);
+  const [errorPopup, setErrorPopup] = useState(false);
   const { theme } = useTheme();
   const dispatch = useAppDispatch();
-  const [activeUserInternal, setActiveUserInternal] = useState<User>();
 
   const [] = useState<User[]>([]);
 
@@ -63,8 +64,18 @@ export const SignInScreen = ({ navigation }: SignInProps) => {
   // }
 
   async function handleLogin() {
-    dispatch(loginUser({ email: username, password: password }));
-    console.log("DONE");
+     dispatch(logInUserAsync({ email: username, password: password }))
+     .then(
+      () => {
+        if(error){
+          setErrorPopup(true);
+          setUsername("");
+          setPassword("");
+        }else{
+          return;
+        }
+      }
+     );
     // getUsersFromDB(username)
     //   .then((users) => {
     //     if (users && users.length > 0) {
@@ -140,7 +151,7 @@ export const SignInScreen = ({ navigation }: SignInProps) => {
               </Text>
 
               <TextInput
-                placeholder="Användarnamn"
+                placeholder="Email"
                 onChangeText={(text) => setUsername(text)}
                 value={username}
                 style={theme.buttonText}
@@ -182,6 +193,11 @@ export const SignInScreen = ({ navigation }: SignInProps) => {
           </View>
         </View>
       </TouchableWithoutFeedback>
+
+      {errorPopup && error ? (
+        <ErrorModule errorMessage={error} buttonMessage="Försök igen" onClose={() => setErrorPopup(false)} />
+      ) : null}
+
     </Animated.View>
   );
 };
