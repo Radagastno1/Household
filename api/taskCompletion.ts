@@ -76,13 +76,11 @@ export const getTaskCompletionsFromDB = async (householdId: string) => {
         completionDate: docData.completionDate,
       };
       taskCompletions.push(taskCompletionWithoutTimestamp);
+      console.log("taskCOMLETIONS------------------------", taskCompletions);
     });
-
-    console.log("Antal Task completions hämtade:", taskCompletions.length);
-    console.log("Task completions hämtade:", taskCompletions);
     return taskCompletions;
   } catch (error) {
-    console.error("Fel vid hämtning av task completions:", error);
+    throw error;
   }
 };
 

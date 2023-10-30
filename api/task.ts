@@ -1,6 +1,6 @@
-import { FirebaseError } from "firebase/app";
 import "firebase/firestore";
 import {
+  Timestamp,
   addDoc,
   collection,
   deleteDoc,
@@ -11,7 +11,8 @@ import {
   updateDoc,
   where,
 } from "firebase/firestore";
-import { Task } from "../types";
+import { Task, TaskCompletion } from "../types";
+import { getCurrentDate, getLastMonthDates } from "../utils/DateHandler";
 import { db } from "./config";
 
 //doc först  - skapa dokumentet för idt först
