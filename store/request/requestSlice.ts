@@ -52,7 +52,7 @@ export const addProfileWithRequest = createAsyncThunk(
     try {
       if (userMail) {
         const request: HouseholdRequest = {
-          id: "", // Du kan inkludera detta ID i payload
+          id: "", 
           profileId: "",
           userMail: userMail,
           householdId: householdId,

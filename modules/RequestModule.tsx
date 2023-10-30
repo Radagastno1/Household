@@ -13,6 +13,7 @@ interface RequestProps {
   visible: boolean;
   onDismiss: () => void;
   householdName: string;
+  handleReuest: (requestId:string) => void;
   // selectedAvatar: string;
   // email: string;
   requests:HouseholdRequest[]
@@ -24,12 +25,14 @@ export default function RequestModule({
    householdName,
   // selectedAvatar,
   // email,
+  handleReuest,
   requests
 }: RequestProps) {
   const theme = useTheme();
 
-  function approveFollowRequest() {
+  function approveFollowRequest(requestId:string) {
     console.log("NU GODKÄNNS ANVÄNDAREN");
+    handleReuest(requestId);
     onDismiss();
   }
 
@@ -68,7 +71,7 @@ export default function RequestModule({
               </Text>
             </View>
             <View style={styles.buttonsContainer}>
-              <TouchableOpacity style={styles.button} onPress={approveFollowRequest}>
+              <TouchableOpacity style={styles.button} onPress={() => approveFollowRequest(request.id)}>
                 <Feather name="plus-circle" size={30} color="black" />
                 <Text style={styles.buttonText}>Ja</Text>
               </TouchableOpacity>

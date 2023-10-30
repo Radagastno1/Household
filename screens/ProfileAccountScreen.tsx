@@ -18,6 +18,7 @@ import { fetchTasks } from "../store/tasks/taskSlice";
 import { setStatusBarBackgroundColor } from "expo-status-bar";
 import { hide } from "expo-splash-screen";
 import RequestModule from "../modules/RequestModule";
+import { acceptProfileToHouseholdAsync } from "../store/request/requestSlice";
 
 // import { getProfileByHouseholdAndUser } from "../store/profile/profileSlice";
 
@@ -122,6 +123,10 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
       console.log("NYA PROFILNAMNET", { updatedProfileName });
     }
   };
+
+  const handleRequestToModule = (requestId:string) => {
+    dispatch(acceptProfileToHouseholdAsync({requestId:requestId}));
+  }
 
   const handleHouseholdSaveClick = async () => {
     if (activeHousehold) {
@@ -333,6 +338,7 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
             householdName={activeHousehold?.name || "Laddar..."}
             // selectedAvatar="Frog"
             // email="test@mail.com"
+            handleReuest={handleRequestToModule}
             requests={requestsForThisHousehold}
           />
         </View>
