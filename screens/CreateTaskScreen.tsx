@@ -127,7 +127,6 @@ export default function CreateTaskScreen({
           householdId: householdId,
           isActive: true,
         };
-        console.log("den nya tasken innan dispatch:", newTask);
         dispatch(addTaskAsync(newTask)).then(
           () => {
             if(activeHousehold?.id){
@@ -147,7 +146,6 @@ export default function CreateTaskScreen({
           householdId: householdId,
           isActive: taskToEdit.isActive,
         };
-        console.log("den redigerade tasken innan dispatch:", editedTask);
         dispatch(editTaskAsync(editedTask));
         dispatch(filterTaskListByHouseId({ household_Id: householdId }));
       }

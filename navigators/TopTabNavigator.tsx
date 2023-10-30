@@ -53,9 +53,12 @@ export default function TopTabNavigator() {
       <TopTab.Screen
         name="HouseholdTasks"
         component={HouseholdTasksScreen}
-        options={({ route }) => ({
-          title: (route.params as unknown as { name?: string })?.name || "Idag",
-        })}
+        options={() => ({
+            tabBarLabel: "Idag", 
+          })}
+        // options={({ route }) => ({
+        //   title: (route.params as unknown as { name?: string })?.name || "Idag",
+        // })}
       />
       <TopTab.Screen
         name="StatisticsCurrentWeek"
@@ -64,24 +67,26 @@ export default function TopTabNavigator() {
           startDate: startOfCurrentWeek,
           endDate: endOfCurrentWeek,
         }}
+        options={() => ({
+            tabBarLabel: "Denna Vecka", 
+          })}
       />
-      {lastWeek.length > 0 && (
-        <TopTab.Screen
-          name={"StatisticsLastWeek"}
-          component={StatisticScreen}
-          initialParams={{ startDate: startOfLastWeek, endDate: endOfLastWeek }}
-        />
-      )}
-      {lastMonth.length > 0 && (
-        <TopTab.Screen
-          name={"LastMonth"}
-          component={StatisticScreen}
-          initialParams={{
-            startDate: startOfLastMonth,
-            endDate: endOfLastMonth,
-          }}
-        />
-      )}
+      <TopTab.Screen
+        name={"StatisticsLastWeek"}
+        component={StatisticScreen}
+        initialParams={{ startDate: startOfLastWeek, endDate: endOfLastWeek }}
+        options={() => ({
+            tabBarLabel: "Förra Vecka", 
+          })}
+      />
+      <TopTab.Screen
+        name={"LastMonth"}
+        component={StatisticScreen}
+        initialParams={{ startDate: startOfLastMonth, endDate: endOfLastMonth }}
+        options={() => ({
+            tabBarLabel: "Förra månaden", 
+          })}
+      />
       <TopTab.Screen name={"TestaDatum"} component={TESTDATUMSCREEN} />
     </TopTab.Navigator>
   );

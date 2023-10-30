@@ -5,6 +5,8 @@ import { Appearance } from "react-native";
 import {
   Alert,
   Animated,
+  FlatList,
+  Modal,
   Image,
   PanResponder,
   ScrollView,
@@ -13,7 +15,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { Appbar } from "react-native-paper";
+import { Button, Appbar } from "react-native-paper";
 import { auth } from "../api/config";
 import { useTheme } from "../contexts/themeContext";
 import { AvatarUrls, Avatars } from "../data/avatars";
@@ -27,10 +29,12 @@ import {
   getProfilesByUserIdAsync,
   setProfileByHouseholdAndUser,
 } from "../store/profile/profileSlice";
+import { AntDesign } from "@expo/vector-icons";
 import { getRequestByHouseholdIdsAsync } from "../store/request/requestSlice";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { logOutUser } from "../store/user/userSlice";
 import { Household } from "../types";
+import { useSharedValue } from "react-native-reanimated";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { State } from "react-native-gesture-handler";
 
@@ -145,27 +149,26 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
   };
   
 
-  const pan = useRef(new Animated.Value(0)).current;
-  const panResponder = PanResponder.create({
-    onStartShouldSetPanResponder: () => true,
-    onPanResponderMove: (e, gestureState) => {
-      pan.setValue(gestureState.dx);
-    },
-    onPanResponderRelease: (e, gestureState) => {
-      if (Math.abs(gestureState.dx) > 50) {
-        handleToggleTheme();
-      }
-    },
-  });
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<string | null>(null);
+  const modes = ["light", "auto", "dark"];
 
-  const translateX = pan.interpolate({
-    inputRange: [-50, 0, 50],
-    outputRange: [-50, 0, 50],
-    extrapolate: "clamp",
-  });
+  const handleSelect = (item: string) => {
+    setSelectedItem(item);
+    setShowDropdown(false);
+  };
+  const handleClose = () => {
+    setShowDropdown(false);
+  };
 
   return (
-    <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: theme.colors.background,
+        justifyContent: "center",
+      }}
+    >
       <View>
         <Appbar.Header style={{ height: 70, backgroundColor: theme.colors.background }}>
           <Appbar.Content
@@ -267,52 +270,35 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
         >
           <Text style={theme.buttonText}>Logga ut</Text>
         </TouchableOpacity>
+        <View style={styles.root}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => setShowDropdown(!showDropdown)}
+          >
+            <Text>Choose Mode</Text>
+          </TouchableOpacity>
 
-        <TouchableOpacity
-          style={[
-            styles.themeButtonContainer,
-            {
-              backgroundColor: theme.button.backgroundColor,
-            },
-          ]}
-          onPress={handleToggleTheme}
-        >
-          <View style={styles.themeButton}>
-            <View>
-              <Text style={styles.themeButtonText}>
-                {currentTheme === "dark" ? "dark" : "light"}
-              </Text>
+          {showDropdown && (
+            <View style={styles.dropdownContainer}>
+              <View style={styles.closeButtonContainer}>
+                <Button onPress={handleClose}>
+                  <AntDesign name="close" size={12} color="black" />
+                </Button>
+              </View>
+              <FlatList
+                data={modes}
+                keyExtractor={(item) => item}
+                renderItem={({ item }) => (
+                  <TouchableOpacity onPress={() => handleSelect(item)}>
+                    <Text style={styles.dropdownItem}>{item}</Text>
+                  </TouchableOpacity>
+                )}
+              />
             </View>
-            <Animated.View
-              style={[styles.innerButton, { transform: [{ translateX }] }]}
-              {...panResponder.panHandlers}
-            >
-              <Text style={styles.innerButtonText}>switch</Text>
-            </Animated.View>
-            <View>
-              <Text style={styles.themeButtonText}>
-                {currentTheme === "light" ? "light" : "dark"}
-              </Text>
-            </View>
-          </View>
-        </TouchableOpacity>
-
-     
-        <TouchableOpacity
-          style={[
-            styles.themeButtonContainer,
-            {
-              backgroundColor: theme.button.backgroundColor,
-            },
-          ]}
-          onPress={handleToggleSystemTheme}
-        >
-            <View style={styles.themeButton}>
-          <Text style={styles.themeButtonText}>System Theme</Text>
-          </View>
-        </TouchableOpacity>
+          )}
+          <Text>Selected Mode: {selectedItem}</Text>
         </View>
-    
+      </View>
     </View>
   );
 }
@@ -328,23 +314,20 @@ const styles = StyleSheet.create({
     marginTop: 20,
     position: "relative",
   },
-  themeButtonText: {
-    color: "black",
-    fontSize: 16,
-    margin: 10,
-  },
+
   themeButton: {
     justifyContent: "space-between",
     alignItems: "center",
-    position: "absolute",
+
     flexDirection: "row",
+    position: "relative",
+    backgroundColor: "lightgrey",
   },
 
   innerButton: {
     backgroundColor: "white",
     borderRadius: 20,
     elevation: 2,
-    zIndex: 20,
     width: 70,
     alignItems: "center",
   },
@@ -355,6 +338,43 @@ const styles = StyleSheet.create({
   bottomContent: {
     marginBottom: 0,
     alignItems: "center",
+  },
+  container: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 10,
+    maxWidth: "90%",
+    height: 70,
+    marginBottom: 10,
+  },
+
+  root: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  button: {
+    padding: 16,
+    backgroundColor: "lightgray",
+    borderRadius: 8,
+  },
+  dropdownContainer: {
+    position: "absolute",
+    top: -5,
+    left: 150,
+    backgroundColor: "white",
+    borderColor: "gray",
+    borderRadius: 4,
+    zIndex: 1,
+    width: 60,
+  },
+  dropdownItem: {
+    padding: 4,
+  },
+  closeButtonContainer: {
+    alignItems: "flex-end",
+    padding: 4,
   },
 });
 function getAllProfilesByUserId(uid: string) {

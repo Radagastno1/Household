@@ -1,6 +1,7 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { onAuthStateChanged } from "firebase/auth";
+import { User } from "../types";
 import React, { useEffect, useState } from "react";
 import { auth } from "../api/config";
 import CreateProfileScreen from "../screens/CreateProfileScreen";
@@ -10,12 +11,12 @@ import HandleHouseholdScreen from "../screens/HandleHouseholdScreen";
 import HouseholdAccountScreen from "../screens/HouseholdAccountScreen";
 import ProfileAccountScreen from "../screens/ProfileAccountScreen";
 import SignInScreen from "../screens/SignInScreen";
+import SplashScreen from "../screens/SplashScreen";
 import TaskDetailScreen from "../screens/TaskDetailScreen";
 import CustomHeader from "../store/shared/CustomHeader";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { setActiveUser } from "../store/user/userSlice";
 import TopTabNavigator from "./TopTabNavigator";
-import SplashScreen from "../screens/SplashScreen";
 
 export type RootStackParamList = {
   SplashScreen: undefined;
@@ -39,15 +40,21 @@ export default function RootNavigator() {
   const user = useAppSelector((state) => state.user.user);
 
   useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        console.log("USER IS LOGGED IN", user);
-        dispatch(setActiveUser(user));
+    const unsubscribe = onAuthStateChanged(auth, (response) => {
+      if (response) {
+        const fetchedUser : User = {
+          uid: response.uid,
+          email: response.email
+        }
+        console.log("USER IS LOGGED IN", fetchedUser);
+        dispatch(setActiveUser(fetchedUser));
       } else {
+        dispatch(setActiveUser(undefined));
         console.log("USER IS SIGNED OUT");
       }
       setUserFetched(true);
     });
+    return unsubscribe;
   }, []);
 
   return (

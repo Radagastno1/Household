@@ -14,7 +14,7 @@ interface CustomHeaderProps {
 
 const CustomHeader: React.FC<CustomHeaderProps> = ({ title, navigation }) => {
   const isFocused = useIsFocused();
-  const [houseTitle, setHouseTitle] = useState<string>("TinaHouse");
+  const [houseTitle, setHouseTitle] = useState<string>("");
   const activeProfile = useAppSelector((state) => state.profile.activeProfile);
   const households  = useAppSelector((state) => state.household.households);
   const household = households.find((h) => h.id === activeProfile?.householdId);

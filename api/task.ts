@@ -1,6 +1,6 @@
-import { FirebaseError } from "firebase/app";
 import "firebase/firestore";
 import {
+  Timestamp,
   addDoc,
   collection,
   deleteDoc,
@@ -11,7 +11,8 @@ import {
   updateDoc,
   where,
 } from "firebase/firestore";
-import { Task } from "../types";
+import { Task, TaskCompletion } from "../types";
+import { getCurrentDate, getLastMonthDates } from "../utils/DateHandler";
 import { db } from "./config";
 
 //doc först  - skapa dokumentet för idt först
@@ -19,8 +20,6 @@ import { db } from "./config";
 //sen add - det dokument id blir id i fältet
 
 export const addTaskToDB = async (task: Task) => {
-  // task.householdId = "fYHVLNiQvWEG9KNUGqBT";
-
   const taskCollectionRef = collection(db, "tasks");
 
   try {
@@ -42,15 +41,10 @@ export const addTaskToDB = async (task: Task) => {
       const taskData = taskDoc.data();
       return taskData as Task;
     } else {
-      console.error("Uppgiftsdokumentet finns inte i databasen.");
       return null;
     }
   } catch (error: any) {
-    if (error) {
-      console.error("Firestore Error Code:", error.code);
-    }
-    console.error("Fel vid tillägg av uppgift:", error);
-    return null;
+    throw error;
   }
 };
 

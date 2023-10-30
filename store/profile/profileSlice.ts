@@ -7,11 +7,9 @@ import {
   getAllProfilesByUserIdFromDb,
   saveProfileNameToDatabase,
 } from "../../api/profile";
-import {
-  acceptProfileToHousehold,
-  addProfileWithRequestToDB,
-} from "../../api/request";
-import { HouseholdRequest, Profile } from "../../types";
+import { Profile } from "../../types";
+import { AppDispatch, RootState } from "../store";
+import { setActiveUser } from "../user/userSlice";
 
 interface ProfileState {
   profiles: Profile[];
@@ -159,6 +157,13 @@ const profileSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(setActiveUser, (state, action) => {
+        if (!action.payload) {
+          state.activeProfile = null;
+          state.profiles = [];
+          state.profilesToUser = [];
+        }
+      })
       .addCase(addProfileAsync.fulfilled, (state, action) => {
         if (action.payload) {
           state.profilesToUser.push(action.payload);
@@ -185,7 +190,7 @@ const profileSlice = createSlice({
 
 export const fetchAllProfilesByHousehold =
   (activeHouseholdId: string, userId: string) =>
-  async (dispatch: any, getState: any) => {
+  async (dispatch: AppDispatch, getState: () => RootState) => {
     console.log("FETCH ALL PROFILE KÖRS!!!!");
     const profiles = await getAllProfilesByHouseholdId(activeHouseholdId);
     console.log("antal profiler för hushållet:", profiles?.length);
