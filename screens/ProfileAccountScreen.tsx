@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {useColorScheme } from "react-native";
-import { StyleSheet, View, Image, Modal } from "react-native";
+import { Image, StyleSheet, View, useColorScheme } from "react-native";
 import { Button, Card, IconButton, Text, TextInput } from "react-native-paper";
 import { useTheme } from "../contexts/themeContext";
 import HouseholdProfileModal from "../modules/HouseholdMemberModal";
@@ -15,8 +14,6 @@ import { editHouseHoldeName } from "../store/household/householdSlice";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { fetchTasks } from "../store/tasks/taskSlice";
 
-import { setStatusBarBackgroundColor } from "expo-status-bar";
-import { hide } from "expo-splash-screen";
 import RequestModule from "../modules/RequestModule";
 
 // import { getProfileByHouseholdAndUser } from "../store/profile/profileSlice";
@@ -67,7 +64,8 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
   const activeProfiles = useAppSelector((state) => state.profile.profiles);
   const activeProfile = useAppSelector((state) => state.profile.activeProfile);
 
-  const [isEditing, setIsEditing] = useState(false);
+  const [isProfileNameEditing, setIsProfileNameEditing] = useState(false);
+  const [isHousehouldNameEditing, setIsHousehouldNameEditing] = useState(false);
   const [isViewingRequest, setIsViewingRequest] = useState(false);
 
   const [updatedProfileName, setUpdatedProfilename] = useState(
@@ -115,7 +113,7 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
           newProfileName: updatedProfileName ?? activeProfile.profileName,
         }),
       );
-      setIsEditing(false);
+      setIsProfileNameEditing(false);
       console.log("NYA PROFILNAMNET", { updatedProfileName });
     }
   };
@@ -128,7 +126,7 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
           newHouseholdName: updatedHouseholdName ?? activeHousehold.name,
         }),
       );
-      setIsEditing(false);
+      setIsHousehouldNameEditing(false);
       console.log("NYA PROFILNAMNET", { updatedHouseholdName });
     }
   };
@@ -168,7 +166,6 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
             { backgroundColor: activeProfile?.avatar },
           ]}
         >
-          {/* <Text style={styles.profileTitle}>{}</Text> */}
           <Text
             style={{
               fontSize: 25,
@@ -196,7 +193,7 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
           <Card style={styles.card}>
             <View style={styles.taskItem}>
               <View style={styles.nameContainer}>
-                {isEditing ? (
+                {isProfileNameEditing ? (
                   <TextInput
                     placeholder={activeProfile?.profileName}
                     onChangeText={(text) => {
@@ -207,10 +204,7 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
                     }}
                   />
                 ) : (
-                  <Text
-                  >
-                    {activeProfile?.profileName}
-                  </Text>
+                  <Text>{activeProfile?.profileName}</Text>
                 )}
               </View>
 
@@ -218,18 +212,20 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
                 icon="pencil"
                 size={20}
                 onPress={() => {
-                  setIsEditing(true);
+                  setIsProfileNameEditing(true);
                 }}
               />
             </View>
           </Card>
 
-          {isEditing ? <Button onPress={handleSaveClick}>Spara</Button> : null}
+          {isProfileNameEditing ? (
+            <Button onPress={handleSaveClick}>Spara</Button>
+          ) : null}
 
           <Card style={styles.card}>
             <View style={styles.taskItem}>
               <View style={styles.nameContainer}>
-                {isEditing ? (
+                {isHousehouldNameEditing ? (
                   <TextInput
                     placeholder={activeHousehold?.name}
                     onChangeText={(text) => {
@@ -240,10 +236,7 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
                     }}
                   />
                 ) : (
-                  <Text
-                  >
-                    {activeHousehold?.name}
-                  </Text>
+                  <Text>{activeHousehold?.name}</Text>
                 )}
               </View>
               {/* <View style={styles.nameContainer}>
@@ -251,26 +244,17 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
               {/* <Text variant="titleLarge">{headerTitle}</Text>
               </View>  */}
 
-              {/* <IconButton
+              <IconButton
                 icon="pencil"
                 size={20}
                 onPress={() => {
-                  setIsEditing(true);
+                  setIsHousehouldNameEditing(true);
                 }}
-              /> */}
-              {!isRequestPending && (
-                <IconButton
-                  icon="bell-alert-outline"
-                  size={24}
-                  onPress={handleRequest}
-                />
-              )}
-
-              {/* <IconButton icon="pencil" size={20} onPress={() => {}} /> */}
+              />
             </View>
           </Card>
 
-          {isEditing ? (
+          {isHousehouldNameEditing ? (
             <Button onPress={handleHouseholdSaveClick}>Spara</Button>
           ) : null}
 
