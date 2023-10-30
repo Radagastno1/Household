@@ -35,7 +35,6 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function RootNavigator() {
   const [isUserFetched, setUserFetched] = useState(false);
-  // const { isLoading } = useAppSelector((state) => state.app);
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.user.user);
 
@@ -60,11 +59,6 @@ export default function RootNavigator() {
   return (
     <NavigationContainer>
       <Stack.Navigator
-      // initialRouteName={
-      //   // isLoading ? "SplashScreen" : userSlice ? "Login" : "HouseholdAccount"
-      //   // om användaren är inloggad så visa husvyn
-      //   // om användaren har vald hus, så gå in dagsvyn
-      // }
       >
         {!isUserFetched ? (
           <Stack.Screen name="SplashScreen" component={SplashScreen}   options={{ headerShown: false }} />

@@ -113,6 +113,7 @@ export const getAllProfilesByHouseholdId = async (householdId: string) => {
     const q = query(
       profileCollectionRef,
       where("householdId", "==", householdId),
+      where("isActive", "==", true),
     );
 
     const querySnapshot = await getDocs(q);
@@ -136,7 +137,11 @@ export const getAllProfilesByUserIdFromDb = async (userId: string) => {
 
     const profileCollectionRef = collection(db, "profiles");
 
-    const q = query(profileCollectionRef, where("userId", "==", userId));
+    const q = query(
+      profileCollectionRef,
+      where("userId", "==", userId),
+      where("isActive", "==", true),
+    );
 
     const querySnapshot = await getDocs(q);
 

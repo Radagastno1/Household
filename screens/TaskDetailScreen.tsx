@@ -35,14 +35,14 @@ export default function TaskDetailScreen({
 
   function findAllAvatarFortodayCompletionByTaskId(taskId: string) {
     const today = new Date().toISOString();
-    //filter the completions with the same taskId---------can be moved out and share with getdays function
+
     const filteredTodaysCompletionsForTask =
       taskCompletionSlice.completions.filter(
         (completion: any) =>
           completion.completionDate.split("T")[0] === today.split("T")[0] &&
           completion.taskId === taskId,
       );
-    // get the unique profileIds
+
     const uniqueProfileIds = [
       ...new Set(
         filteredTodaysCompletionsForTask?.map(

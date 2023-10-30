@@ -83,7 +83,7 @@ export default function CreateTaskScreen({
         setSelectedEnergy(taskToEdit.energyWeight);
         console.log("task to edit interval:", taskToEdit.interval);
       } else {
-        //navigera tillbaka?
+        navigation.navigate("Tab");
       }
     }
   }, []);
@@ -213,7 +213,6 @@ export default function CreateTaskScreen({
               ></TextInput>
               <TextInput
                 placeholder="Beskrivning"
-                // style={styles.input}
                 style={[
                   styles.input,
                   {
@@ -255,7 +254,7 @@ export default function CreateTaskScreen({
                           fontWeight: "bold",
                           backgroundColor:
                             colorScheme === "dark" ? "gray" : "transparent",
-                          color: colorScheme === "dark" ? "white" : "black", // Vit text i mörkt läge
+                          color: colorScheme === "dark" ? "white" : "black", 
                         }}
                       >
                         Återkommer:
@@ -271,8 +270,8 @@ export default function CreateTaskScreen({
                           number={selectedInterval}
                           backgroundColor={
                             colorScheme === "dark" ? "white" : "red"
-                          } // Vit bakgrundsfärg i mörkt läge
-                          color={colorScheme === "dark" ? "black" : "white"} // Svart text i mörkt läge
+                          } 
+                          color={colorScheme === "dark" ? "black" : "white"} 
                         />
                       </TouchableOpacity>
                       <Title> dag</Title>
@@ -299,6 +298,7 @@ export default function CreateTaskScreen({
                               number={number}
                               backgroundColor={
                                 colorScheme === "dark" ? "gray" : "lightgrey"
+
                               }
                               color={colorScheme === "dark" ? "white" : "black"}
                             />
