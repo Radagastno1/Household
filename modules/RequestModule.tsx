@@ -15,8 +15,6 @@ interface RequestProps {
   householdName: string;
   acceptRequest: (requestId:string) => void;
   denyRequest: (requestId:string) => void;
-  // selectedAvatar: string;
-  // email: string;
   requests:HouseholdRequest[]
 }
 
@@ -24,8 +22,6 @@ export default function RequestModule({
   visible,
   onDismiss,
    householdName,
-  // selectedAvatar,
-  // email,
   acceptRequest,
   denyRequest,
   requests
@@ -44,22 +40,6 @@ export default function RequestModule({
     onDismiss();
   }
 
-  // const viewAvatar = () => {
-  //   return (
-  //     <View>
-  //       <Image
-  //         source={{
-  //           uri: AvatarUrls[selectedAvatar as Avatars],
-  //         }}
-  //         style={{
-  //           height: 20,
-  //           width: 20,
-  //         }}
-  //         alt={selectedAvatar}
-  //       />
-  //     </View>
-  //   );
-  // };
   return (
     <Portal>
     <Modal visible={visible} onDismiss={onDismiss}>
