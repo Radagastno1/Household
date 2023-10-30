@@ -131,10 +131,8 @@ export default function HandleHouseholdScreen({
             Gå med
           </Button>
 
-          <View style={styles.verticalSpace} />
-
           <Button
-            style={styles.centeredButton}
+           style={theme.button as any}
             labelStyle={{
               color: "black",
               fontSize: 16,
