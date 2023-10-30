@@ -79,7 +79,6 @@ const taskSlice = createSlice({
   reducers: {
     setTasks: (state, action) => {
       state.tasks = action.payload;
-      console.log("antal tasks:", state.tasks.length);
     },
     filterTaskListByHouseId: (
       state,
@@ -87,15 +86,12 @@ const taskSlice = createSlice({
     ) => {
       const { household_Id } = action.payload;
       state.filteredTasks = state.tasks.filter(
-        //added isactive check also, so all archived tasks wont show here :)
         (task) => task.householdId === household_Id && task.isActive,
-        console.log("NU ÄR FILTRERADE TASKS"),
       );
     },
     findTaskById: (state, action: PayloadAction<{ taskId: string }>) => {
       const { taskId } = action.payload;
       const foundTask = state.tasks.find((task) => task.id === taskId);
-      console.log("finding id", taskId);
       if (foundTask) {
         state.selectedTask = foundTask;
       }
@@ -113,10 +109,12 @@ const taskSlice = createSlice({
       .addCase(addTaskAsync.fulfilled, (state, action) => {
         if (action.payload) {
           state.tasks.push(action.payload);
+          state.error = null;
         }
       })
       .addCase(addTaskAsync.rejected, (state, action) => {
-        console.log("error vid add task: ", action.payload);
+        state.error =
+          "Något gick fel när sysslan skapades. Försök igen senare.";
       })
       .addCase(editTaskAsync.fulfilled, (state, action) => {
         if (action.payload) {
@@ -125,11 +123,13 @@ const taskSlice = createSlice({
           );
           if (action.payload.id) {
             state.tasks[editedTaskIndex] = action.payload as Task;
+            state.error = null;
           }
         }
       })
       .addCase(editTaskAsync.rejected, (state, action) => {
-        console.log("error vid edit task: ", action.payload);
+        state.error =
+          "Något gick fel vid redigering av sysslan. Försök igen senare.";
       })
       .addCase(deleteTaskAsync.fulfilled, (state, action) => {
         if (action.payload) {
@@ -143,8 +143,6 @@ const taskSlice = createSlice({
 
 export const { filterTaskListByHouseId, findTaskById } = taskSlice.actions;
 
-//denna ska anropas där vi behöver få in tasken från databasen och sättas som state = tasks
-// Asynct Thunk Actiion (Redux Core)
 export const fetchTasks =
   (activeHouseholdId: string) => async (dispatch: any, getState: any) => {
     const tasks = await getTasksFromDB(activeHouseholdId);
