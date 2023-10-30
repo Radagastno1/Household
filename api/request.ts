@@ -2,6 +2,7 @@ import "firebase/firestore";
 import {
   addDoc,
   collection,
+  deleteDoc,
   doc,
   getDoc,
   getDocs,
@@ -39,6 +40,41 @@ export const addProfileWithRequestToDB = async (
       return requestDoc;
     } else {
       return null;
+    }
+  } catch (error) {
+    return null;
+  }
+};
+
+export const deleteProfileWithRequestToDB = async (requestId: string) => {
+  const profileCollectionRef = collection(db, "profiles");
+  const requestCollectionRef = collection(db, "requests");
+
+  try {
+    const requestQuery = query(
+      requestCollectionRef,
+      where("id", "==", requestId),
+    );
+    const requestSnapshot = await getDocs(requestQuery);
+
+    if (requestSnapshot.size === 0) {
+      return null;
+    } else {
+      const requestData = requestSnapshot.docs[0].data() as HouseholdRequest;
+
+      await deleteDoc(doc(requestCollectionRef, requestData.id));
+
+      const profileQuery = query(
+        profileCollectionRef,
+        where("id", "==", requestData.profileId),
+      );
+      const profileSnapshot = await getDocs(profileQuery);
+
+      if (profileSnapshot.size === 0) {
+        return null;
+      } else {
+        await deleteDoc(doc(profileCollectionRef, requestData.profileId));
+      }
     }
   } catch (error) {
     return null;

@@ -1,21 +1,15 @@
-import { MaterialIcons } from "@expo/vector-icons";
+import { AntDesign, MaterialCommunityIcons } from "@expo/vector-icons";
+import { useFocusEffect } from "@react-navigation/native";
 import { signOut } from "firebase/auth";
-import React, { useEffect, useRef, useState } from "react";
-import { Appearance } from "react-native";
+import React, { useCallback, useEffect, useState } from "react";
 import {
-  Alert,
-  Animated,
-  FlatList,
-  Modal,
-  Image,
-  PanResponder,
-  ScrollView,
+  Alert, Appearance, FlatList, Image, ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
-  View,
+  View
 } from "react-native";
-import { Button, Appbar } from "react-native-paper";
+import { Appbar, Button } from "react-native-paper";
 import { auth } from "../api/config";
 import { useTheme } from "../contexts/themeContext";
 import { AvatarUrls, Avatars } from "../data/avatars";
@@ -29,21 +23,16 @@ import {
   getProfilesByUserIdAsync,
   setProfileByHouseholdAndUser,
 } from "../store/profile/profileSlice";
-import { AntDesign } from "@expo/vector-icons";
 import { getRequestByHouseholdIdsAsync } from "../store/request/requestSlice";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { logOutUser } from "../store/user/userSlice";
 import { Household } from "../types";
-import { useSharedValue } from "react-native-reanimated";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { State } from "react-native-gesture-handler";
 
 type HouseholdProps = RootNavigationScreenProps<"HouseholdAccount">;
 
 export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
 
   const [systemTheme, setSystemTheme] = useState(Appearance.getColorScheme());
-
 
   const [isRequest, setIsRequest] = useState(false);
 
@@ -56,7 +45,6 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
 
   const requests = useAppSelector((state) => state.request.requests);
   
-
   const [profilesLoaded, setProfilesLoaded] = useState(false);
   const [requestsLoaded, setRequestsLoaded] = useState(false);
   const activeProfile = useAppSelector((state) => state.profile.activeProfile);
@@ -78,11 +66,14 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
     dispatch(getHouseholdsByHouseholdIdAsync(householdIds));
   }, [profilesLoaded]);
 
-  useEffect(() => {
-    dispatch(getRequestByHouseholdIdsAsync(householdIds)).then(() => {
-      setRequestsLoaded(true);
-    });
-  }, [!requestsLoaded, profilesLoaded]);
+  useFocusEffect(
+    useCallback(() => {
+      console.log("hämtar förfrågningar")
+      dispatch(getRequestByHouseholdIdsAsync(householdIds)).then(() => {
+             setRequestsLoaded(true);
+           });
+    }, [profilesLoaded, !requestsLoaded])
+  );
 
   useEffect(() => {
     if (activeProfile) {
@@ -244,7 +235,6 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
                     style={{ height: 20, width: 20 }}
                     alt={`Avatar ${index}`}
                   />
-                  <Text>{request?.status}</Text>
                 </View>
 
                 <View>
@@ -252,17 +242,12 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
                 </View>
 
                 <View style={{ flexDirection: "row", gap: 5 }}>
-                  {!isRequest && profile?.isOwner === true ? (
+                  {request && profile?.isOwner === true ? (
                     <MaterialCommunityIcons
                       name="bell-alert-outline"
                       size={24}
                       color="black"
                     />
-                  ) : (
-                    <View style={{ width: 24 }}></View>
-                  )}
-                  {profile?.isOwner === true ? (
-                    <MaterialIcons name="edit" size={24} color="black" />
                   ) : (
                     <View style={{ width: 24 }}></View>
                   )}
