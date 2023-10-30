@@ -24,14 +24,13 @@ export interface Household {
   code: string;
 }
 
-//fråga david
 export interface Task {
   id: string;
   title: string;
   description: string;
   energyWeight: number;
-  creatingDate: string; //default blir dagens datum
-  interval: number; //dagar emellan?
+  creatingDate: string;
+  interval: number;
   householdId: string;
   isActive: boolean;
 }
