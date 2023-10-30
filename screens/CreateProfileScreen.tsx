@@ -255,6 +255,13 @@ export default function CreateProfileScreen({
         >
           <Text style={theme.buttonText}>Skapa</Text>
         </Button>
+        <Button
+          style={theme.button as any}
+          onPress={() => navigation.navigate("HandleHousehold")}
+          disabled={!selectedAvatar}
+        >
+          <Text style={theme.buttonText}>Tillbaka</Text>
+        </Button>
       </View>
     </View>
   );
