@@ -15,7 +15,10 @@ import { useAppDispatch, useAppSelector } from "../store/store";
 import { fetchTasks } from "../store/tasks/taskSlice";
 import { useFocusEffect } from "@react-navigation/native";
 import RequestModule from "../modules/RequestModule";
-import { acceptProfileToHouseholdAsync, denyProfileToHouseholdAsync } from "../store/request/requestSlice";
+import {
+  acceptProfileToHouseholdAsync,
+  denyProfileToHouseholdAsync,
+} from "../store/request/requestSlice";
 import { HouseholdRequest } from "../types";
 
 // import { getProfileByHouseholdAndUser } from "../store/profile/profileSlice";
@@ -25,7 +28,9 @@ type ProfileProps = RootNavigationScreenProps<"ProfileAccount">;
 export default function ProfileAccountScreen({ navigation }: ProfileProps) {
   const [selectedAvatar] = useState<string>("");
   const [isRequestPending, setRequestPending] = useState(false);
-  const [householdRequests, setHouseholdRequests] = useState<HouseholdRequest[]>([]);
+  const [householdRequests, setHouseholdRequests] = useState<
+    HouseholdRequest[]
+  >([]);
 
   const activeHousehold = useAppSelector(
     (state) => state.household.activeHousehold,
@@ -72,13 +77,15 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
 
   useFocusEffect(
     useCallback(() => {
-        if (requests) {
-          const requestsForThisHousehold = requests.filter((request) => request.householdId === activeHousehold?.id);
-          if (requestsForThisHousehold) {
-            setHouseholdRequests(requestsForThisHousehold);
-          }
+      if (requests) {
+        const requestsForThisHousehold = requests.filter(
+          (request) => request.householdId === activeHousehold?.id,
+        );
+        if (requestsForThisHousehold) {
+          setHouseholdRequests(requestsForThisHousehold);
         }
-    }, [])
+      }
+    }, []),
   );
 
   useEffect(() => {
@@ -101,13 +108,13 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
     }
   };
 
-  const acceptRequest = (requestId:string) => {
-    dispatch(acceptProfileToHouseholdAsync({requestId:requestId}));
-  }
+  const acceptRequest = (requestId: string) => {
+    dispatch(acceptProfileToHouseholdAsync({ requestId: requestId }));
+  };
 
-  const denyRequest = (requestId:string) => {
-    dispatch(denyProfileToHouseholdAsync({requestId:requestId}));
-  }
+  const denyRequest = (requestId: string) => {
+    dispatch(denyProfileToHouseholdAsync({ requestId: requestId }));
+  };
 
   const handleHouseholdSaveClick = async () => {
     if (activeHousehold) {
@@ -241,8 +248,7 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
                 onPress={() => {
                   setIsHousehouldNameEditing(true);
                 }}
-              /> */}
-
+              />
 
               {/* <IconButton icon="pencil" size={20} onPress={() => {}} /> */}
             </View>
@@ -279,28 +285,34 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
             Mina hushåll
           </Button>
 
-          <View style={{flexDirection:"row", justifyContent:"space-around", alignItems:"center",  width: 360}}>
-          <Button
-            mode="contained"
-            onPress={handleLeaveHouseholdClick}
-            style={styles.buttonColor}
-            labelStyle={theme.buttonText}
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-around",
+              alignItems: "center",
+              width: 360,
+            }}
           >
-            Gå ur hushåll
-          </Button>
+            <Button
+              mode="contained"
+              onPress={handleLeaveHouseholdClick}
+              style={styles.buttonColor}
+              labelStyle={theme.buttonText}
+            >
+              Gå ur hushåll
+            </Button>
 
-          {householdRequests.length > 0 && activeProfile?.isOwner && (
-            <View style={styles.bell}>
+            {householdRequests.length > 0 && activeProfile?.isOwner && (
+              <View style={styles.bell}>
                 <IconButton
                   icon="bell-alert-outline"
                   size={32}
                   onPress={handleRequest}
                 />
-                </View>
-              )}
+              </View>
+            )}
           </View>
 
-    
           <HouseholdProfileModal
             visible={isModalVisible}
             onDismiss={() => setModalVisible(false)}
@@ -370,8 +382,8 @@ const styles = StyleSheet.create({
     marginTop: 70,
     width: 200,
   },
-  bell:{
+  bell: {
     marginTop: 70,
-    alignItems:"flex-end"
-  }
+    alignItems: "flex-end",
+  },
 });
