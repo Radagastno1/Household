@@ -44,7 +44,7 @@ export const signInWithAPI = async (createUser: UserCreate) => {
       email: createUser.email,
     } as User;
   } catch (error: any) {
-    console.error(error);
+    throw error;
   }
 };
 
