@@ -12,6 +12,7 @@ import { useAppDispatch, useAppSelector } from "../store/store";
 import { User } from "../types";
 import ModeThemeButton from "../components/ModeThemeButton";
 import LogoutButton from "../components/LogoutButton";
+import HouseholdList from "../components/HouseholdList";
 
 type HouseholdProps = RootNavigationScreenProps<"HouseholdAccount">;
 
