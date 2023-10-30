@@ -56,7 +56,12 @@ const userSlice = createSlice({
       state.user = undefined;
     },
     setActiveUser: (state, action: PayloadAction<User | undefined>) => {
-      state.user = action.payload;
+      if (action.payload) {
+        state.user = {
+          uid: action.payload.uid,
+          email: action.payload.email,
+        };
+      }
     },
   },
   extraReducers: (builder) => {

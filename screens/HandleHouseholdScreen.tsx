@@ -126,10 +126,11 @@ export default function HandleHouseholdScreen({
               color: "black",
               fontSize: 16,
             }}
-            onPress={handleJoin}
+            onPress={() => handleJoin()}
           >
             Gå med
           </Button>
+
 
           <View style={styles.verticalSpace} />
 

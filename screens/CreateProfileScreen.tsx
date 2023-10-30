@@ -59,10 +59,6 @@ export default function CreateProfileScreen({
 
   const householdSlice = useAppSelector((state) => state.household);
 
-  //MOCKAR ETT ID SÅLÄNGE FÖR USERN
-  // const mockedUserId = "5NCx5MKcUu6UYKjFqRkg";
-
-  //UTKOMMENTERAR DENNA SÅLÄNGE FÖR FINNS INGET STATE FÖR EN AKTIV USER ÄN
   const activeUser = useAppSelector((state) => state.user.user);
 
   const selectedHousehold = useAppSelector((state) =>
@@ -121,7 +117,6 @@ export default function CreateProfileScreen({
         if(activeUser.email){
           const avatarsColor = AvatarColors[selectedAvatar as Avatars];
           const newProfile = {
-            //tog bort millisekunderna som id
             id: "",
             profileName: householdName,
             userId: activeUser.uid,
@@ -131,11 +126,13 @@ export default function CreateProfileScreen({
             isOwner: false,
             isActive: true,
           };
-          dispatch(addProfileWithRequest({newProfile:newProfile, userMail:activeUser.email, householdId:householdId}));
+          dispatch(addProfileWithRequest({newProfile:newProfile, userMail:activeUser.email, householdId:householdId})).then(
+            () => {
+              navigation.navigate("HouseholdAccount");
+            }
+          );
         }
-
       }
-      navigation.navigate("HouseholdAccount");
     }
   };
 

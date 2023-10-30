@@ -9,11 +9,13 @@ import {
 interface RequestState {
   request: HouseholdRequest | null;
   requests: HouseholdRequest[];
+  error: string | null;
 }
 
 export const initialState: RequestState = {
   request: null,
   requests: [],
+  error: null,
 };
 
 export const getRequestByHouseholdIdsAsync = createAsyncThunk(
@@ -28,7 +30,6 @@ export const getRequestByHouseholdIdsAsync = createAsyncThunk(
           if (requests) {
             fetchedRequests.push(...requests);
           }
-          console.log("alla requests: ", requests);
         }),
       );
       return fetchedRequests;
@@ -51,7 +52,7 @@ export const addProfileWithRequest = createAsyncThunk(
     try {
       if (userMail) {
         const request: HouseholdRequest = {
-          id: "",
+          id: "", // Du kan inkludera detta ID i payload
           profileId: "",
           userMail: userMail,
           householdId: householdId,
@@ -64,13 +65,13 @@ export const addProfileWithRequest = createAsyncThunk(
         );
 
         if (createdProfileWithRequest) {
-          return createdProfileWithRequest;
+          return createdProfileWithRequest.id;
         } else {
-          return thunkAPI.rejectWithValue("Failed to add profile with request");
+          throw new Error("Något gick fel med att skicka en förfrågan.");
         }
       }
     } catch (error: any) {
-      return thunkAPI.rejectWithValue(error.message);
+      throw new Error("Något gick fel med att skicka en förfrågan.");
     }
   },
 );
@@ -104,7 +105,7 @@ const requestSlice = createSlice({
         }
       })
       .addCase(getRequestByHouseholdIdsAsync.rejected, (state, action) => {
-        console.log("error vid get requests: ", action.payload);
+        state.error = "Något gick fel vid gå med i hushåll.";
       });
   },
 });

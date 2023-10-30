@@ -24,13 +24,6 @@ export const addProfileWithRequestToDB = async (
 
     profile.id = docProfileRef.id;
 
-    console.log(
-      "Dokumentreferens id:",
-      docProfileRef.id,
-      " och profilens id:",
-      profile.id,
-    );
-
     await updateDoc(docProfileRef, profile as Partial<Profile>);
     const profileDoc = await getDoc(docProfileRef);
     if (profileDoc.exists()) {
@@ -43,14 +36,11 @@ export const addProfileWithRequestToDB = async (
 
       await updateDoc(docRequestRef, request as Partial<HouseholdRequest>);
       const requestDoc = await getDoc(docRequestRef);
-      console.log("förfrågan som skapades i databasen: ", requestDoc);
       return requestDoc;
     } else {
-      console.error("Uppgiftsdokumentet finns inte i databasen.");
       return null;
     }
   } catch (error) {
-    console.error("Fel vid tillägg av profil:", error);
     return null;
   }
 };
