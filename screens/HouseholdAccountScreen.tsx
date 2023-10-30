@@ -361,7 +361,7 @@ const styles = StyleSheet.create({
   },
   dropdownContainer: {
     position: "absolute",
-    top: -10,
+    top: -5,
     left: 150,
     backgroundColor: "white",
     borderColor: "gray",
