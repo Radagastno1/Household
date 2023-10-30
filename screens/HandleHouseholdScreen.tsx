@@ -93,7 +93,7 @@ export default function HandleHouseholdScreen({
             style={theme.button as any}
             onPress={handleCreateHousehold}
           >
-           <Text style={{fontSize:18}}>Skapa</Text> 
+           <Text style={{fontSize:20}}>Skapa</Text> 
           </TouchableOpacity>
 
           <View style={styles.verticalSpace} />
@@ -120,7 +120,7 @@ export default function HandleHouseholdScreen({
             style={theme.button as any}
             onPress={() => handleJoin()}
           >
-            <Text style={{fontSize:18}}>Gå med</Text>
+            <Text style={{fontSize:20}}>Gå med</Text>
           </TouchableOpacity>
 
           <View style={styles.verticalSpace} />
@@ -128,7 +128,7 @@ export default function HandleHouseholdScreen({
             style={theme.button as any}
             onPress={() => navigation.navigate("HouseholdAccount")}
           >
-            <Text style={{fontSize:18}}>Tillbaka</Text>
+            <Text style={{fontSize:20}}>Tillbaka</Text>
           </TouchableOpacity>
         </View>
       </View>

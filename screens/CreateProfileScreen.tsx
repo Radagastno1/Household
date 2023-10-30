@@ -45,6 +45,7 @@ export default function CreateProfileScreen({
   const [selectedBee, setSelectedBee] = useState(false);
   const householdId = route.params.householdId;
   const isOwner = route.params.isOwner;
+  const [createIsDisabled, setCreateIsDisabled] = useState(false);
   // const household = households.find((h) => h.id === householdId);
   const { theme } = useTheme();
   const colorScheme = useColorScheme();
@@ -98,6 +99,8 @@ export default function CreateProfileScreen({
 
   const saveProfile = () => {
     console.log("skapad profil med hushållsid", householdId);
+
+    setCreateIsDisabled(true);
 
     if (selectedAvatar && activeUser) {
       if(isOwner){
@@ -251,10 +254,11 @@ export default function CreateProfileScreen({
 
         <TouchableOpacity
            style={theme.button as any}
-          onPress={saveProfile}
-          disabled={!selectedAvatar}
+          onPress={() => saveProfile()}
+          disabled={!selectedAvatar || createIsDisabled}
         >
-          <Text style={theme.buttonText}>Skapa</Text>
+    <Text style={[theme.buttonText, { fontSize: 20 }]}>SKAPA</Text>
+
         </TouchableOpacity>
         <Button
           style={theme.button as any}
