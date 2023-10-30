@@ -12,7 +12,6 @@ interface TaskCompletionState {
 }
 
 const initialState: TaskCompletionState = {
-  //ändrat här så vi inte går efter mockade datan nu när den ska kolla mot db
   completions: [],
   avatars: [],
 };
