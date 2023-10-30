@@ -32,7 +32,18 @@ export const addTaskCompletionToDB = async (taskCompletion: TaskCompletion) => {
     const taskDoc = await getDoc(docRef);
     if (taskDoc.exists()) {
       const taskData = taskDoc.data();
-      return taskData as TaskCompletion;
+
+      const taskCompletionWithoutTimestamp: Omit<
+        TaskCompletion,
+        "completedTimestamp"
+      > = {
+        id: taskData.id,
+        householdId: taskData.householdId,
+        taskId: taskData.taskId,
+        profileId: taskData.profileId,
+        completionDate: taskData.completionDate,
+      };
+      return taskCompletionWithoutTimestamp as TaskCompletion;
     } else {
       return null;
     }

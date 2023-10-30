@@ -28,6 +28,7 @@ export const addCompletionAsync = createAsyncThunk<
   try {
     const addedCompletion = await addTaskCompletionToDB(completion);
     if (addedCompletion) {
+      console.log("DEEEEN TILLLLAGDA COMPLETIONNNNENNNNNN: ", addedCompletion);
       return addedCompletion;
     } else {
       throw new Error("Något gick fel. Försök igen senare.");
@@ -44,7 +45,6 @@ const taskCompletionSlice = createSlice({
     setCompletions: (state, action) => {
       state.completions = action.payload;
     },
-    //taskt detail screen still using this function
     findAllAvatarFortodayCompletionByTaskId: (
       state,
       action: PayloadAction<{ taskId: string; profiles: Profile[] }>,
