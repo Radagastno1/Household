@@ -26,6 +26,7 @@ import {
 } from "../store/profile/profileSlice";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { Household } from "../types";
+import { useSharedValue } from "react-native-reanimated";
 
 type HouseholdProps = RootNavigationScreenProps<"HouseholdAccount">;
 
@@ -103,9 +104,10 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
     }
   };
   const pan = useRef(new Animated.ValueXY()).current;
-  const minX = -50; // Minimum X position
-  const maxX = 50;  // Maximum X position
-  
+  const minX = 0; // Minimum X position
+  const maxX = 600; // Maximum X position, adjust to your container width
+  const containerWidth = 300; // Maximum X position
+
   const panResponder = PanResponder.create({
     onStartShouldSetPanResponder: () => true,
     onPanResponderMove: Animated.event([null, { dx: pan.x, dy: pan.y }], { useNativeDriver: false }),
@@ -117,13 +119,11 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
   });
   
   
-  
-  
-//   const translateX = pan.interpolate({
-//     inputRange: [-50, 0, 50],
-//     outputRange: [-50, 0, 50],
-//     extrapolate: "clamp",
-//   });
+  const translateX = pan.x.interpolate({
+    inputRange: [minX, 0, maxX],
+    outputRange: [minX, 0, maxX],
+    extrapolate: 'clamp', // This will restrict the output value to stay within the specified range
+  });
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.background,justifyContent:"center" }}>
