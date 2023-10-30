@@ -148,8 +148,8 @@ export default function CreateProfileScreen({
               styles.rectContainer,
               {
                 backgroundColor:
-                  colorScheme === "dark"
-                    ? "white"
+                  colorScheme === theme.colors.background
+                    ? ""
                     : theme.cardButton.backgroundColor,
               },
             ]}
@@ -159,7 +159,7 @@ export default function CreateProfileScreen({
                 styles.rectText,
                 {
                   backgroundColor:
-                    colorScheme === "dark"
+                    colorScheme === theme.colors.background
                       ? "white"
                       : theme.cardButton.backgroundColor,
                 },
@@ -181,7 +181,7 @@ export default function CreateProfileScreen({
             styles.input,
             {
               backgroundColor:
-                colorScheme === "dark"
+                colorScheme === theme.colors.background
                   ? "white"
                   : theme.cardButton.backgroundColor,
             },
@@ -271,7 +271,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   rectContainer: {
-    backgroundColor: "white",
+    // backgroundColor: "white",
     padding: 10,
     borderRadius: 5,
     width: 370,

@@ -87,6 +87,7 @@ export const SignInScreen = ({ navigation }: SignInProps) => {
   }
 
   return (
+    <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
     <Animated.View
       style={[
         styles.container,
@@ -106,7 +107,7 @@ export const SignInScreen = ({ navigation }: SignInProps) => {
         <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
           <StatusBar backgroundColor="#FFD700" />
 
-          <View style={{ backgroundColor: theme.colors.background }}>
+          <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
             <View style={styles.container}>
               <View style={theme.button as any}>
                 <Text style={styles.headerText}>Logga in</Text>
@@ -182,6 +183,7 @@ export const SignInScreen = ({ navigation }: SignInProps) => {
         </View>
       </TouchableWithoutFeedback>
     </Animated.View>
+    </View>
   );
 };
 

@@ -167,7 +167,7 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
       <View>
-        <Appbar.Header style={{ height: 70, backgroundColor: "white" }}>
+        <Appbar.Header style={{ height: 70, backgroundColor: theme.colors.background }}>
           <Appbar.Content
             style={{
               alignItems: "center",
