@@ -21,7 +21,7 @@ import {
   addTaskAsync,
   deleteTaskAsync,
   editTaskAsync,
-  filterTaskListByHouseId
+  filterTaskListByHouseId,
 } from "../store/tasks/taskSlice";
 import { Task } from "../types";
 
@@ -98,13 +98,12 @@ export default function CreateTaskScreen({
   };
 
   const deleteFunctionToModule = (taskId: string) => {
-    dispatch(deleteTaskAsync(taskId)).then(
-      () => {
-        if(activeHousehold?.id){
-          dispatch(filterTaskListByHouseId({ household_Id: activeHousehold.id }));
-        }}
-    );
-    
+    dispatch(deleteTaskAsync(taskId)).then(() => {
+      if (activeHousehold?.id) {
+        dispatch(filterTaskListByHouseId({ household_Id: activeHousehold.id }));
+      }
+    });
+
     setDeleteTaskModalVisible(false);
     navigation.navigate("Tab");
   };
@@ -127,12 +126,13 @@ export default function CreateTaskScreen({
           householdId: householdId,
           isActive: true,
         };
-        dispatch(addTaskAsync(newTask)).then(
-          () => {
-            if(activeHousehold?.id){
-              dispatch(filterTaskListByHouseId({ household_Id: activeHousehold.id }));
-            }}
-        );
+        dispatch(addTaskAsync(newTask)).then(() => {
+          if (activeHousehold?.id) {
+            dispatch(
+              filterTaskListByHouseId({ household_Id: activeHousehold.id }),
+            );
+          }
+        });
       }
     } else {
       if (taskToEdit && householdId) {
@@ -153,6 +153,21 @@ export default function CreateTaskScreen({
 
     navigation.navigate("Tab");
   };
+  const getEnergyCircleBackgroundColor = (energyWeight: number | undefined) => {
+    if (energyWeight === undefined) {
+      return "lightgrey";
+    }
+
+    const energyToGreyMapping: { [key: string]: string } = {
+      "1": "#F0F0F0",
+      "2": "#E0E0E0",
+      "4": "#D0D0D0",
+      "6": "#C0C0C0",
+      "8": "#B0B0B0",
+    };
+
+    return energyToGreyMapping[energyWeight.toString()] || "lightgrey";
+  };
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
@@ -166,12 +181,12 @@ export default function CreateTaskScreen({
             contentContainerStyle={styles.scrollViewContainer}
             keyboardShouldPersistTaps="always"
           >
-              <DeleteTaskModule
-                task={taskToEdit}
-                onDeleteTask={deleteFunctionToModule}
-                onEditTask={editFunctionToModule}
-                onClose={hideDeleteTaskModal}
-              />      
+            <DeleteTaskModule
+              task={taskToEdit}
+              onDeleteTask={deleteFunctionToModule}
+              onEditTask={editFunctionToModule}
+              onClose={hideDeleteTaskModal}
+            />
           </ScrollView>
         ) : (
           <ScrollView
@@ -267,25 +282,30 @@ export default function CreateTaskScreen({
                   <View
                     style={{ flexDirection: "row", justifyContent: "center" }}
                   >
-                    {intervalDataPressed
-                      ? intervalData.map((number) => (
+                    {intervalDataPressed ? (
+                      <ScrollView
+                        horizontal
+                        contentContainerStyle={styles.intervalContainer}
+                      >
+                        {intervalData.map((number) => (
                           <TouchableOpacity
                             key={number.toString()}
                             onPress={() => {
-                              setSelectedInterval(number),
-                                setIntervalDataPressed(false);
+                              setSelectedInterval(number);
+                              setIntervalDataPressed(false);
                             }}
                           >
                             <CircleComponent
                               number={number}
                               backgroundColor={
                                 colorScheme === "dark" ? "gray" : "lightgrey"
-                              } // Grå bakgrund i mörkt läge
-                              color={colorScheme === "dark" ? "white" : "black"} // Vit text i mörkt läge
+                              }
+                              color={colorScheme === "dark" ? "white" : "black"}
                             />
                           </TouchableOpacity>
-                        ))
-                      : null}
+                        ))}
+                      </ScrollView>
+                    ) : null}
                   </View>
                 </Card.Content>
               </Card>
@@ -305,13 +325,13 @@ export default function CreateTaskScreen({
 
                     <View style={{ justifyContent: "center" }}>
                       <TouchableOpacity
-                        onPress={() => {
-                          setEnergyDataPressed(true);
-                        }}
+                        onPress={() => setEnergyDataPressed(true)}
                       >
                         <CircleComponent
                           number={selectedEnergy}
-                          backgroundColor="lightgrey"
+                          backgroundColor={getEnergyCircleBackgroundColor(
+                            selectedEnergy,
+                          )}
                           color="black"
                         />
                       </TouchableOpacity>
@@ -330,7 +350,9 @@ export default function CreateTaskScreen({
                           >
                             <CircleComponent
                               number={number}
-                              backgroundColor="lightgrey"
+                              backgroundColor={getEnergyCircleBackgroundColor(
+                                number,
+                              )}
                               color="black"
                             />
                           </TouchableOpacity>
@@ -340,7 +362,10 @@ export default function CreateTaskScreen({
                 </Card.Content>
               </Card>
               {isCreateMode ? null : (
-                <TouchableOpacity onPress={() => handleDeleteTask()} style={styles.removeButton}>
+                <TouchableOpacity
+                  onPress={() => handleDeleteTask()}
+                  style={styles.removeButton}
+                >
                   <Text
                     style={[
                       styles.removeText,
@@ -362,7 +387,12 @@ export default function CreateTaskScreen({
                   handleTask();
                 }}
               >
-                <Feather name="plus-circle" size={24} color="black" style={{paddingHorizontal:5}} />
+                <Feather
+                  name="plus-circle"
+                  size={24}
+                  color="black"
+                  style={{ paddingHorizontal: 5 }}
+                />
                 <Text style={theme.buttonText}>Spara</Text>
               </TouchableOpacity>
 
@@ -372,7 +402,12 @@ export default function CreateTaskScreen({
                   navigation.navigate("Tab");
                 }}
               >
-                <AntDesign name="closecircleo" size={24} color="black" style={{paddingHorizontal:5}}/>
+                <AntDesign
+                  name="closecircleo"
+                  size={24}
+                  color="black"
+                  style={{ paddingHorizontal: 5 }}
+                />
                 <Text style={theme.buttonText}>Stäng</Text>
               </TouchableOpacity>
             </View>
@@ -390,7 +425,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
-    marginTop:80
+    marginTop: 80,
   },
   scrollViewContainer: {
     flexDirection: "column",
@@ -406,6 +441,11 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     elevation: 5,
     marginVertical: 10,
+  },
+  intervalContainer: {
+    flexDirection: "row",
+    marginVertical: 10,
+    paddingLeft: 10, // Add some padding to the left to avoid being too close to the screen edge
   },
   shadowProp: {
     shadowColor: "#171717",
@@ -443,10 +483,10 @@ const styles = StyleSheet.create({
     padding: 10,
     fontSize: 20,
   },
-  removeButton:{
-      backgroundColor: "orange",
-      width: 200,
-      marginVertical:20,
-      alignItems:"center"
-  }
+  removeButton: {
+    backgroundColor: "orange",
+    width: 200,
+    marginVertical: 20,
+    alignItems: "center",
+  },
 });
