@@ -98,13 +98,15 @@ const CustomTabBar: React.FC<CustomTabBarProps> = (props) => {
     }
   };
 
+  const isHouseholdTaskScreen = activeRoute.name === "HouseholdTasks";
+
   return (
     <View style={styles.container}>
-      <TouchableOpacity
-        onPress={goBack}
-      >
-        <AntDesign name="arrowleft" size={24} color="black" />
-      </TouchableOpacity>
+       {!isHouseholdTaskScreen && (
+        <TouchableOpacity onPress={goBack}>
+          <AntDesign name="arrowleft" size={24} color="black" />
+        </TouchableOpacity>
+      )}
       <View style={[styles.tab, styles.activeTab]}>
         <Text style={styles.tabText}>{tabLabel}</Text>
       </View>
