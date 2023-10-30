@@ -258,13 +258,7 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
                   setIsEditing(true);
                 }}
               /> */}
-              {!isRequestPending && (
-                <IconButton
-                  icon="bell-alert-outline"
-                  size={24}
-                  onPress={handleRequest}
-                />
-              )}
+
 
               {/* <IconButton icon="pencil" size={20} onPress={() => {}} /> */}
             </View>
@@ -301,6 +295,7 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
             Mina hushåll
           </Button>
 
+          <View style={{flexDirection:"row", justifyContent:"space-around", alignItems:"center",  width: 360}}>
           <Button
             mode="contained"
             onPress={handleLeaveHouseholdClick}
@@ -309,6 +304,19 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
           >
             Gå ur hushåll
           </Button>
+
+          {!isRequestPending && (
+            <View style={styles.bell}>
+                <IconButton
+                  icon="bell-alert-outline"
+                  size={32}
+                  onPress={handleRequest}
+                />
+                </View>
+              )}
+          </View>
+
+    
           <HouseholdProfileModal
             visible={isModalVisible}
             onDismiss={() => setModalVisible(false)}
@@ -375,4 +383,8 @@ const styles = StyleSheet.create({
     marginTop: 70,
     width: 200,
   },
+  bell:{
+    marginTop: 70,
+    alignItems:"flex-end"
+  }
 });
