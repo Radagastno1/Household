@@ -3,6 +3,7 @@ import { HouseholdRequest, Profile } from "../../types";
 import {
   acceptProfileToHousehold,
   addProfileWithRequestToDB,
+  deleteProfileWithRequestToDB,
   getRequestByHouseholdIdFromDb,
 } from "../../api/request";
 
@@ -88,6 +89,19 @@ export const acceptProfileToHouseholdAsync = createAsyncThunk(
     }
   },
 );
+
+export const denyProfileToHouseholdAsync = createAsyncThunk(
+    "request/denyProfileToHousehold",
+    async ({ requestId }: { requestId: string }, thunkAPI) => {
+      try {
+        if (requestId) {
+          await deleteProfileWithRequestToDB(requestId);
+        }
+      } catch (error: any) {
+        return thunkAPI.rejectWithValue(error.message);
+      }
+    },
+  );
 
 const requestSlice = createSlice({
   name: "request",

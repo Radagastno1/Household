@@ -18,7 +18,7 @@ import { fetchTasks } from "../store/tasks/taskSlice";
 import { setStatusBarBackgroundColor } from "expo-status-bar";
 import { hide } from "expo-splash-screen";
 import RequestModule from "../modules/RequestModule";
-import { acceptProfileToHouseholdAsync } from "../store/request/requestSlice";
+import { acceptProfileToHouseholdAsync, denyProfileToHouseholdAsync } from "../store/request/requestSlice";
 
 // import { getProfileByHouseholdAndUser } from "../store/profile/profileSlice";
 
@@ -124,8 +124,12 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
     }
   };
 
-  const handleRequestToModule = (requestId:string) => {
+  const acceptRequest = (requestId:string) => {
     dispatch(acceptProfileToHouseholdAsync({requestId:requestId}));
+  }
+
+  const denyRequest = (requestId:string) => {
+    dispatch(denyProfileToHouseholdAsync({requestId:requestId}));
   }
 
   const handleHouseholdSaveClick = async () => {
@@ -338,7 +342,8 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
             householdName={activeHousehold?.name || "Laddar..."}
             // selectedAvatar="Frog"
             // email="test@mail.com"
-            handleReuest={handleRequestToModule}
+            acceptRequest={acceptRequest}
+            denyRequest={denyRequest}
             requests={requestsForThisHousehold}
           />
         </View>

@@ -13,7 +13,8 @@ interface RequestProps {
   visible: boolean;
   onDismiss: () => void;
   householdName: string;
-  handleReuest: (requestId:string) => void;
+  acceptRequest: (requestId:string) => void;
+  denyRequest: (requestId:string) => void;
   // selectedAvatar: string;
   // email: string;
   requests:HouseholdRequest[]
@@ -25,19 +26,21 @@ export default function RequestModule({
    householdName,
   // selectedAvatar,
   // email,
-  handleReuest,
+  acceptRequest,
+  denyRequest,
   requests
 }: RequestProps) {
   const theme = useTheme();
 
   function approveFollowRequest(requestId:string) {
     console.log("NU GODKÄNNS ANVÄNDAREN");
-    handleReuest(requestId);
+    acceptRequest(requestId);
     onDismiss();
   }
 
-  function declineFollowRequest() {
+  function declineFollowRequest(requestId:string) {
     console.log("NU NEKAS ANVÄNDAREN");
+    denyRequest(requestId);
     onDismiss();
   }
 
@@ -76,7 +79,7 @@ export default function RequestModule({
                 <Text style={styles.buttonText}>Ja</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity style={styles.button} onPress={declineFollowRequest}>
+              <TouchableOpacity style={styles.button} onPress={() => {declineFollowRequest(request.id) }}>
                 <AntDesign name="closecircleo" size={28} color="black" />
                 <Text style={styles.buttonText}>Nej</Text>
               </TouchableOpacity>
