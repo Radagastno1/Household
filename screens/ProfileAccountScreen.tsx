@@ -139,7 +139,7 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
         if (deactivateProfileAsync.fulfilled.match(action)) {
           // After deactivation, log the userId, householdId, profileName, and navigate to "HouseholdAccount."
           console.log(
-            `UserId: ${userId} has now left the household with householdId: ${householdId}. Profile Name: ${profileName}`,
+            `UserId: ${userId} has now left the household with householdId: ${householdId}. Is active: ${activeProfile.isActive}`,
           );
           navigation.navigate("HouseholdAccount");
         } else {

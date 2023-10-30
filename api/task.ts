@@ -1,6 +1,5 @@
 import "firebase/firestore";
 import {
-  Timestamp,
   addDoc,
   collection,
   deleteDoc,
@@ -11,13 +10,8 @@ import {
   updateDoc,
   where,
 } from "firebase/firestore";
-import { Task, TaskCompletion } from "../types";
-import { getCurrentDate, getLastMonthDates } from "../utils/DateHandler";
+import { Task } from "../types";
 import { db } from "./config";
-
-//doc först  - skapa dokumentet för idt först
-//sen i docRef.id får man idt
-//sen add - det dokument id blir id i fältet
 
 export const addTaskToDB = async (task: Task) => {
   const taskCollectionRef = collection(db, "tasks");
@@ -26,13 +20,6 @@ export const addTaskToDB = async (task: Task) => {
     const docRef = await addDoc(taskCollectionRef, {});
 
     task.id = docRef.id;
-
-    console.log(
-      "Dokumentreferens id:",
-      docRef.id,
-      " och uppgiftens id:",
-      task.id,
-    );
 
     await updateDoc(docRef, task as Partial<Task>);
 
@@ -69,7 +56,6 @@ export const editTaskToDB = async (task: Task) => {
 
     return task;
   } catch (error) {
-    console.error("Fel vid redigering av uppgift:", error);
     return null;
   }
 };
@@ -88,21 +74,17 @@ export const getTasksFromDB = async (householdId: string) => {
       tasks.push(doc.data() as Task);
     });
 
-    console.log("Uppgifter hämtade:", tasks);
     return tasks;
   } catch (error) {
-    console.error("Fel vid hämtning av uppgifter:", error);
+    throw error;
   }
 };
 
 export const deleteTaskFromDB = async (taskId: string) => {
-  //sen ska jag ta bort taskcompletions med??
   try {
     const taskDocRef = doc(db, "tasks", taskId);
     await deleteDoc(taskDocRef);
-
-    console.log("Task borttagen med Id:", taskId);
   } catch (error) {
-    console.error("Fel vid borttagning av tasken:", error);
+    throw error;
   }
 };
