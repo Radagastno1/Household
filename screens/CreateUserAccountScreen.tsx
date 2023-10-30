@@ -56,7 +56,6 @@ export default function CreateUserAccountScreen({
         password: newPassword,
       };
       dispatch(addUserAsync(newUser));
-      navigation.navigate("Login");
     }
   };
 

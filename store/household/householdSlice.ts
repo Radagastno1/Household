@@ -6,6 +6,7 @@ import {
   getHouseholdsFromDB,
 } from "../../api/household";
 import { Household } from "../../types";
+import { setActiveUser } from "../user/userSlice";
 
 export interface HouseholdState {
   households: Household[];
@@ -150,6 +151,13 @@ const householdSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(setActiveUser, (state, action) => {
+        if (!action.payload) {
+          state.selectedHousehold = null;
+          state.activeHousehold = null;
+          state.households = [];
+        }
+      })
       .addCase(getHouseholdsByHouseholdIdAsync.fulfilled, (state, action) => {
         if (action.payload) {
           state.households = action.payload;

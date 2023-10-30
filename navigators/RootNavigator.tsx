@@ -10,12 +10,12 @@ import HandleHouseholdScreen from "../screens/HandleHouseholdScreen";
 import HouseholdAccountScreen from "../screens/HouseholdAccountScreen";
 import ProfileAccountScreen from "../screens/ProfileAccountScreen";
 import SignInScreen from "../screens/SignInScreen";
+import SplashScreen from "../screens/SplashScreen";
 import TaskDetailScreen from "../screens/TaskDetailScreen";
 import CustomHeader from "../store/shared/CustomHeader";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { setActiveUser } from "../store/user/userSlice";
 import TopTabNavigator from "./TopTabNavigator";
-import SplashScreen from "../screens/SplashScreen";
 
 export type RootStackParamList = {
   SplashScreen: undefined;
@@ -39,15 +39,17 @@ export default function RootNavigator() {
   const user = useAppSelector((state) => state.user.user);
 
   useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         console.log("USER IS LOGGED IN", user);
         dispatch(setActiveUser(user));
       } else {
+        dispatch(setActiveUser(undefined));
         console.log("USER IS SIGNED OUT");
       }
       setUserFetched(true);
     });
+    return unsubscribe;
   }, []);
 
   return (
