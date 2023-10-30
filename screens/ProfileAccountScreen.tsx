@@ -179,7 +179,7 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
           source={{ uri: AvatarUrls[activeProfile?.avatar as Avatars] }}
           style={{ height: 20, width: 20 }}
         />
-        <View style={{ marginTop: 50 }}>
+        <View>
           <Button
             mode="contained"
             onPress={() => navigation.navigate("Tab")}
@@ -289,8 +289,9 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
             style={{
               flexDirection: "row",
               justifyContent: "space-around",
-              alignItems: "center",
-              width: 360,
+              alignItems:"center",
+              position: "relative",
+              marginTop: 50
             }}
           >
             <Button
@@ -342,11 +343,12 @@ const styles = StyleSheet.create({
     // backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
+
   },
   profileTitleContainer: {
-    padding: 20,
+    padding: 10,
     borderRadius: 5,
-    marginBottom: 10,
+    // marginBottom: 10,
     width: 390,
   },
   profileTitle: {
@@ -379,11 +381,15 @@ const styles = StyleSheet.create({
   },
   buttonColor: {
     backgroundColor: "orange",
-    marginTop: 70,
+    marginTop: 20,
     width: 200,
+    position: "absolute",
+    left: 10 
   },
   bell: {
-    marginTop: 70,
+    marginTop: 20,
     alignItems: "flex-end",
+    position: "absolute",
+    right: 10
   },
 });
