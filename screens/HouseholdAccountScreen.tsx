@@ -1,21 +1,15 @@
-import { MaterialIcons } from "@expo/vector-icons";
+import { AntDesign, MaterialCommunityIcons } from "@expo/vector-icons";
+import { useFocusEffect } from "@react-navigation/native";
 import { signOut } from "firebase/auth";
-import React, { useEffect, useRef, useState } from "react";
-import { Appearance } from "react-native";
+import React, { useCallback, useEffect, useState } from "react";
 import {
-  Alert,
-  Animated,
-  FlatList,
-  Modal,
-  Image,
-  PanResponder,
-  ScrollView,
+  Alert, Appearance, FlatList, Image, ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
-  View,
+  View
 } from "react-native";
-import { Button, Appbar } from "react-native-paper";
+import { Appbar, Button } from "react-native-paper";
 import { auth } from "../api/config";
 import { useTheme } from "../contexts/themeContext";
 import { AvatarUrls, Avatars } from "../data/avatars";
@@ -29,21 +23,16 @@ import {
   getProfilesByUserIdAsync,
   setProfileByHouseholdAndUser,
 } from "../store/profile/profileSlice";
-import { AntDesign } from "@expo/vector-icons";
 import { getRequestByHouseholdIdsAsync } from "../store/request/requestSlice";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { logOutUser } from "../store/user/userSlice";
 import { Household } from "../types";
-import { useSharedValue } from "react-native-reanimated";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { State } from "react-native-gesture-handler";
 
 type HouseholdProps = RootNavigationScreenProps<"HouseholdAccount">;
 
 export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
 
   const [systemTheme, setSystemTheme] = useState(Appearance.getColorScheme());
-
 
   const [isRequest, setIsRequest] = useState(false);
 
@@ -56,7 +45,6 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
 
   const requests = useAppSelector((state) => state.request.requests);
   
-
   const [profilesLoaded, setProfilesLoaded] = useState(false);
   const [requestsLoaded, setRequestsLoaded] = useState(false);
   const activeProfile = useAppSelector((state) => state.profile.activeProfile);
@@ -78,11 +66,14 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
     dispatch(getHouseholdsByHouseholdIdAsync(householdIds));
   }, [profilesLoaded]);
 
-  useEffect(() => {
-    dispatch(getRequestByHouseholdIdsAsync(householdIds)).then(() => {
-      setRequestsLoaded(true);
-    });
-  }, [!requestsLoaded, profilesLoaded]);
+  useFocusEffect(
+    useCallback(() => {
+      console.log("hämtar förfrågningar")
+      dispatch(getRequestByHouseholdIdsAsync(householdIds)).then(() => {
+             setRequestsLoaded(true);
+           });
+    }, [profilesLoaded, !requestsLoaded])
+  );
 
   useEffect(() => {
     if (activeProfile) {
@@ -154,12 +145,27 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
   const modes = ["light", "auto", "dark"];
 
   const handleSelect = (item: string) => {
+    if (item === 'light' || item === 'dark') {
+      // For 'light' and 'dark' modes, use handleToggleTheme
+      handleToggleTheme();
+    } else {
+      // For 'automatic' mode, use handleToggleSystemTheme
+      handleToggleSystemTheme();
+    }
     setSelectedItem(item);
     setShowDropdown(false);
   };
-  const handleClose = () => {
+    const handleClose = () => {
     setShowDropdown(false);
   };
+
+  // const handleSelect = (item: string) => {
+  //   setSelectedItem(item);
+  //   setShowDropdown(false);
+  // };
+  // const handleClose = () => {
+  //   setShowDropdown(false);
+  // };
 
   return (
     <View
@@ -170,7 +176,7 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
       }}
     >
       <View>
-        <Appbar.Header style={{ height: 70, backgroundColor: "white" }}>
+        <Appbar.Header style={{ height: 70, backgroundColor: theme.colors.background }}>
           <Appbar.Content
             style={{
               alignItems: "center",
@@ -229,7 +235,6 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
                     style={{ height: 20, width: 20 }}
                     alt={`Avatar ${index}`}
                   />
-                  <Text>{request?.status}</Text>
                 </View>
 
                 <View>
@@ -237,17 +242,12 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
                 </View>
 
                 <View style={{ flexDirection: "row", gap: 5 }}>
-                  {!isRequest && profile?.isOwner === true ? (
+                  {request && profile?.isOwner === true ? (
                     <MaterialCommunityIcons
                       name="bell-alert-outline"
                       size={24}
                       color="black"
                     />
-                  ) : (
-                    <View style={{ width: 24 }}></View>
-                  )}
-                  {profile?.isOwner === true ? (
-                    <MaterialIcons name="edit" size={24} color="black" />
                   ) : (
                     <View style={{ width: 24 }}></View>
                   )}
@@ -272,31 +272,31 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
         </TouchableOpacity>
         <View style={styles.root}>
           <TouchableOpacity
-            style={styles.button}
+            style={theme.button as any}
             onPress={() => setShowDropdown(!showDropdown)}
           >
             <Text>Choose Mode</Text>
           </TouchableOpacity>
 
           {showDropdown && (
-            <View style={styles.dropdownContainer}>
-              <View style={styles.closeButtonContainer}>
-                <Button onPress={handleClose}>
-                  <AntDesign name="close" size={12} color="black" />
-                </Button>
-              </View>
-              <FlatList
-                data={modes}
-                keyExtractor={(item) => item}
-                renderItem={({ item }) => (
-                  <TouchableOpacity onPress={() => handleSelect(item)}>
-                    <Text style={styles.dropdownItem}>{item}</Text>
-                  </TouchableOpacity>
-                )}
-              />
-            </View>
+          <View style={theme.button as any}>
+          {/* Övrig innehåll i din View */}
+          <Button onPress={handleClose}>
+            <AntDesign name="close" size={24} color="black" />
+          </Button>
+          <FlatList
+            data={modes}
+            keyExtractor={(item) => item}
+            renderItem={({ item }) => (
+              <TouchableOpacity onPress={() => handleSelect(item)}>
+                <Text style={styles.dropdownItem}>{item}</Text>
+              </TouchableOpacity>
+            )}
+          />
+        </View>
+          
           )}
-          <Text>Selected Mode: {selectedItem}</Text>
+          <Text style={theme.buttonText}>Selected Mode: {selectedItem}</Text>
         </View>
       </View>
     </View>
@@ -361,20 +361,21 @@ const styles = StyleSheet.create({
   },
   dropdownContainer: {
     position: "absolute",
-    top: -5,
-    left: 150,
+    // top: -5,
+    // left: 150,
+    // flexDirection: "row",
     backgroundColor: "white",
     borderColor: "gray",
     borderRadius: 4,
-    zIndex: 1,
-    width: 60,
+    // zIndex: 1,
+    // width: 60,
   },
   dropdownItem: {
-    padding: 4,
+    padding: 5,
   },
   closeButtonContainer: {
     alignItems: "flex-end",
-    padding: 4,
+    // padding: 4,
   },
 });
 function getAllProfilesByUserId(uid: string) {

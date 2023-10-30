@@ -3,17 +3,20 @@ import { HouseholdRequest, Profile } from "../../types";
 import {
   acceptProfileToHousehold,
   addProfileWithRequestToDB,
+  deleteProfileWithRequestToDB,
   getRequestByHouseholdIdFromDb,
 } from "../../api/request";
 
 interface RequestState {
   request: HouseholdRequest | null;
   requests: HouseholdRequest[];
+  error: string | null;
 }
 
 export const initialState: RequestState = {
   request: null,
   requests: [],
+  error: null,
 };
 
 export const getRequestByHouseholdIdsAsync = createAsyncThunk(
@@ -28,7 +31,6 @@ export const getRequestByHouseholdIdsAsync = createAsyncThunk(
           if (requests) {
             fetchedRequests.push(...requests);
           }
-          console.log("alla requests: ", requests);
         }),
       );
       return fetchedRequests;
@@ -51,7 +53,7 @@ export const addProfileWithRequest = createAsyncThunk(
     try {
       if (userMail) {
         const request: HouseholdRequest = {
-          id: "",
+          id: "", 
           profileId: "",
           userMail: userMail,
           householdId: householdId,
@@ -64,13 +66,13 @@ export const addProfileWithRequest = createAsyncThunk(
         );
 
         if (createdProfileWithRequest) {
-          return createdProfileWithRequest;
+          return createdProfileWithRequest.id;
         } else {
-          return thunkAPI.rejectWithValue("Failed to add profile with request");
+          throw new Error("Något gick fel med att skicka en förfrågan.");
         }
       }
     } catch (error: any) {
-      return thunkAPI.rejectWithValue(error.message);
+      throw new Error("Något gick fel med att skicka en förfrågan.");
     }
   },
 );
@@ -88,6 +90,19 @@ export const acceptProfileToHouseholdAsync = createAsyncThunk(
   },
 );
 
+export const denyProfileToHouseholdAsync = createAsyncThunk(
+    "request/denyProfileToHousehold",
+    async ({ requestId }: { requestId: string }, thunkAPI) => {
+      try {
+        if (requestId) {
+          await deleteProfileWithRequestToDB(requestId);
+        }
+      } catch (error: any) {
+        return thunkAPI.rejectWithValue(error.message);
+      }
+    },
+  );
+
 const requestSlice = createSlice({
   name: "request",
   initialState,
@@ -104,7 +119,7 @@ const requestSlice = createSlice({
         }
       })
       .addCase(getRequestByHouseholdIdsAsync.rejected, (state, action) => {
-        console.log("error vid get requests: ", action.payload);
+        state.error = "Något gick fel vid gå med i hushåll.";
       });
   },
 });

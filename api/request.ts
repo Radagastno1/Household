@@ -2,6 +2,7 @@ import "firebase/firestore";
 import {
   addDoc,
   collection,
+  deleteDoc,
   doc,
   getDoc,
   getDocs,
@@ -24,13 +25,6 @@ export const addProfileWithRequestToDB = async (
 
     profile.id = docProfileRef.id;
 
-    console.log(
-      "Dokumentreferens id:",
-      docProfileRef.id,
-      " och profilens id:",
-      profile.id,
-    );
-
     await updateDoc(docProfileRef, profile as Partial<Profile>);
     const profileDoc = await getDoc(docProfileRef);
     if (profileDoc.exists()) {
@@ -43,14 +37,46 @@ export const addProfileWithRequestToDB = async (
 
       await updateDoc(docRequestRef, request as Partial<HouseholdRequest>);
       const requestDoc = await getDoc(docRequestRef);
-      console.log("förfrågan som skapades i databasen: ", requestDoc);
       return requestDoc;
     } else {
-      console.error("Uppgiftsdokumentet finns inte i databasen.");
       return null;
     }
   } catch (error) {
-    console.error("Fel vid tillägg av profil:", error);
+    return null;
+  }
+};
+
+export const deleteProfileWithRequestToDB = async (requestId: string) => {
+  const profileCollectionRef = collection(db, "profiles");
+  const requestCollectionRef = collection(db, "requests");
+
+  try {
+    const requestQuery = query(
+      requestCollectionRef,
+      where("id", "==", requestId),
+    );
+    const requestSnapshot = await getDocs(requestQuery);
+
+    if (requestSnapshot.size === 0) {
+      return null;
+    } else {
+      const requestData = requestSnapshot.docs[0].data() as HouseholdRequest;
+
+      await deleteDoc(doc(requestCollectionRef, requestData.id));
+
+      const profileQuery = query(
+        profileCollectionRef,
+        where("id", "==", requestData.profileId),
+      );
+      const profileSnapshot = await getDocs(profileQuery);
+
+      if (profileSnapshot.size === 0) {
+        return null;
+      } else {
+        await deleteDoc(doc(profileCollectionRef, requestData.profileId));
+      }
+    }
+  } catch (error) {
     return null;
   }
 };

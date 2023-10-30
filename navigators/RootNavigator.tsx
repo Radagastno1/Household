@@ -67,7 +67,7 @@ export default function RootNavigator() {
       // }
       >
         {!isUserFetched ? (
-          <Stack.Screen name="SplashScreen" component={SplashScreen} />
+          <Stack.Screen name="SplashScreen" component={SplashScreen}   options={{ headerShown: false }} />
         ) : user ? (
           <>
             <Stack.Screen
@@ -77,6 +77,7 @@ export default function RootNavigator() {
             />
             <Stack.Screen
               name="ProfileAccount"
+              options={{ headerShown: false }}
               component={ProfileAccountScreen}
             />
             <Stack.Screen
@@ -86,6 +87,7 @@ export default function RootNavigator() {
             />
             <Stack.Screen
               name="CreateProfile"
+              options={{ headerShown: false }}
               component={CreateProfileScreen}
             />
             <Stack.Screen name="HandleTask" component={CreateTaskScreen} />
@@ -115,7 +117,8 @@ export default function RootNavigator() {
             <Stack.Screen
               name="Login"
               component={SignInScreen}
-              options={{ presentation: "fullScreenModal" }}
+              // options={{ presentation: "fullScreenModal" }}
+              options={{ headerShown: false }}
             />
             <Stack.Screen name="Signup" component={CreateUserAccountScreen} />
           </>

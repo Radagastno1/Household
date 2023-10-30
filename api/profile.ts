@@ -20,13 +20,6 @@ export const addProfileToDB = async (profile: Profile) => {
 
     profile.id = docRef.id;
 
-    console.log(
-      "Dokumentreferens id:",
-      docRef.id,
-      " och profilens id:",
-      profile.id,
-    );
-
     await updateDoc(docRef, profile as Partial<Profile>);
 
     const profileDoc = await getDoc(docRef);
@@ -34,12 +27,10 @@ export const addProfileToDB = async (profile: Profile) => {
       const profileData = profileDoc.data();
       return profileData as Profile;
     } else {
-      console.error("Uppgiftsdokumentet finns inte i databasen.");
       return null;
     }
   } catch (error) {
-    console.error("Fel vid tillägg av profil:", error);
-    return null;
+    throw error;
   }
 };
 

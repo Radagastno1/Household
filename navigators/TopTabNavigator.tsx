@@ -3,7 +3,6 @@ import { createMaterialTopTabNavigator } from "@react-navigation/material-top-ta
 import HouseholdTasksScreen from "../screens/HouseholdTasksScreen";
 import StatisticScreen from "../screens/StatisticScreen";
 import CustomTabBar from "../store/shared/CustomTabBar";
-import TESTDATUMSCREEN from "../screens/TESTDATUMSCREEN";
 import {
   getCurrentWeekDates,
   getLastMonthDates,
@@ -18,7 +17,6 @@ export type TopTabParamList = {
   StatisticsCurrentWeek: { startDate: string; endDate: string };
   StatisticsLastWeek: { startDate: string; endDate: string };
   LastMonth: { startDate: string; endDate: string };
-  TestaDatum: undefined;
 };
 
 const TopTab = createMaterialTopTabNavigator<TopTabParamList>();
@@ -54,8 +52,8 @@ export default function TopTabNavigator() {
         name="HouseholdTasks"
         component={HouseholdTasksScreen}
         options={() => ({
-            tabBarLabel: "Idag", 
-          })}
+          tabBarLabel: "Idag",
+        })}
         // options={({ route }) => ({
         //   title: (route.params as unknown as { name?: string })?.name || "Idag",
         // })}
@@ -68,26 +66,25 @@ export default function TopTabNavigator() {
           endDate: endOfCurrentWeek,
         }}
         options={() => ({
-            tabBarLabel: "Denna Vecka", 
-          })}
+          tabBarLabel: "Denna Vecka",
+        })}
       />
       <TopTab.Screen
         name={"StatisticsLastWeek"}
         component={StatisticScreen}
         initialParams={{ startDate: startOfLastWeek, endDate: endOfLastWeek }}
         options={() => ({
-            tabBarLabel: "Förra Vecka", 
-          })}
+          tabBarLabel: "Förra Vecka",
+        })}
       />
       <TopTab.Screen
         name={"LastMonth"}
         component={StatisticScreen}
         initialParams={{ startDate: startOfLastMonth, endDate: endOfLastMonth }}
         options={() => ({
-            tabBarLabel: "Förra månaden", 
-          })}
+          tabBarLabel: "Förra månaden",
+        })}
       />
-      <TopTab.Screen name={"TestaDatum"} component={TESTDATUMSCREEN} />
     </TopTab.Navigator>
   );
 }

@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
-import {useColorScheme } from "react-native";
-import { StyleSheet, View, Image, Modal } from "react-native";
+import React, { useCallback, useEffect, useState } from "react";
+import { Image, StyleSheet, View, useColorScheme } from "react-native";
 import { Button, Card, IconButton, Text, TextInput } from "react-native-paper";
 import { useTheme } from "../contexts/themeContext";
 import HouseholdProfileModal from "../modules/HouseholdMemberModal";
@@ -14,60 +13,38 @@ import { RootNavigationScreenProps } from "../navigators/navigationTypes";
 import { editHouseHoldeName } from "../store/household/householdSlice";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { fetchTasks } from "../store/tasks/taskSlice";
-
-import { setStatusBarBackgroundColor } from "expo-status-bar";
-import { hide } from "expo-splash-screen";
+import { useFocusEffect } from "@react-navigation/native";
 import RequestModule from "../modules/RequestModule";
+import {
+  acceptProfileToHouseholdAsync,
+  denyProfileToHouseholdAsync,
+} from "../store/request/requestSlice";
+import { HouseholdRequest } from "../types";
 
 // import { getProfileByHouseholdAndUser } from "../store/profile/profileSlice";
 
 type ProfileProps = RootNavigationScreenProps<"ProfileAccount">;
 
 export default function ProfileAccountScreen({ navigation }: ProfileProps) {
-  //du måste kolla getActiveHousehold från householdreducern
-  //då har du ett household som du är inne på
-  //då hämtar du getProfileForHousehold(userId, householdId);
-  //dessa får komma in när det finns att hämta i reducerns state
-  //UTKOMMENTERAR DENNA:
-  // const userId = "5NCx5MKcUu6UYKjFqRkg";
-
   const [selectedAvatar] = useState<string>("");
   const [isRequestPending, setRequestPending] = useState(false);
+  const [householdRequests, setHouseholdRequests] = useState<
+    HouseholdRequest[]
+  >([]);
 
-  //  -------------- det aktiva hushållet är rätt här men viewn hinner renderas innan denna körs liksom -----------------------------
   const activeHousehold = useAppSelector(
     (state) => state.household.activeHousehold,
   );
-  console.log("aktiva hushållet: ", activeHousehold);
-
-  // const householdId = "fYHVLNiQvWEG9KNUGqBT"; // kommenterade ut denna, bara denna som jag inte satt tillbaka
 
   const dispatch = useAppDispatch();
   const activeHouseholdCode = activeHousehold?.code || "Ingen kod tillgänglig";
 
-  //UTKOMMENTERAR DENNA:
-  // useEffect(() => {
-  //   if (activeHousehold) {
-  //     dispatch(
-  //       setProfileByHouseholdAndUser({
-  //         userId: userId,
-  //         householdId: activeHousehold?.id,
-  //       }),
-  //     );
-  //   }
-  // }, [activeHousehold]);
-
-  //UTKOMMENTERAR DENNA:
-  // const activeProfiles = useAppSelector((state) =>
-  //   state.profile.profiles.filter(
-  //     (profile) => profile.householdId === activeHousehold?.id,
-  //   ),
-  // );
-
   const activeProfiles = useAppSelector((state) => state.profile.profiles);
   const activeProfile = useAppSelector((state) => state.profile.activeProfile);
+  const requests = useAppSelector((state) => state.request.requests);
 
-  const [isEditing, setIsEditing] = useState(false);
+  const [isProfileNameEditing, setIsProfileNameEditing] = useState(false);
+  const [isHousehouldNameEditing, setIsHousehouldNameEditing] = useState(false);
   const [isViewingRequest, setIsViewingRequest] = useState(false);
 
   const [updatedProfileName, setUpdatedProfilename] = useState(
@@ -94,11 +71,22 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
       if (household) {
         setHeaderTitle(household.name);
       }
-      console.log("aktiva hushållsid:", activeHousehold.id);
-      console.log("aktiva profilid:", activeProfile.id);
       dispatch(fetchTasks(activeHousehold?.id));
     }
   }, [activeProfile]);
+
+  useFocusEffect(
+    useCallback(() => {
+      if (requests) {
+        const requestsForThisHousehold = requests.filter(
+          (request) => request.householdId === activeHousehold?.id,
+        );
+        if (requestsForThisHousehold) {
+          setHouseholdRequests(requestsForThisHousehold);
+        }
+      }
+    }, []),
+  );
 
   useEffect(() => {
     if (activeProfile) {
@@ -115,9 +103,17 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
           newProfileName: updatedProfileName ?? activeProfile.profileName,
         }),
       );
-      setIsEditing(false);
+      setIsProfileNameEditing(false);
       console.log("NYA PROFILNAMNET", { updatedProfileName });
     }
+  };
+
+  const acceptRequest = (requestId: string) => {
+    dispatch(acceptProfileToHouseholdAsync({ requestId: requestId }));
+  };
+
+  const denyRequest = (requestId: string) => {
+    dispatch(denyProfileToHouseholdAsync({ requestId: requestId }));
   };
 
   const handleHouseholdSaveClick = async () => {
@@ -128,7 +124,7 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
           newHouseholdName: updatedHouseholdName ?? activeHousehold.name,
         }),
       );
-      setIsEditing(false);
+      setIsHousehouldNameEditing(false);
       console.log("NYA PROFILNAMNET", { updatedHouseholdName });
     }
   };
@@ -168,7 +164,6 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
             { backgroundColor: activeProfile?.avatar },
           ]}
         >
-          {/* <Text style={styles.profileTitle}>{}</Text> */}
           <Text
             style={{
               fontSize: 25,
@@ -196,7 +191,7 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
           <Card style={styles.card}>
             <View style={styles.taskItem}>
               <View style={styles.nameContainer}>
-                {isEditing ? (
+                {isProfileNameEditing ? (
                   <TextInput
                     placeholder={activeProfile?.profileName}
                     onChangeText={(text) => {
@@ -207,10 +202,7 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
                     }}
                   />
                 ) : (
-                  <Text
-                  >
-                    {activeProfile?.profileName}
-                  </Text>
+                  <Text>{activeProfile?.profileName}</Text>
                 )}
               </View>
 
@@ -218,18 +210,20 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
                 icon="pencil"
                 size={20}
                 onPress={() => {
-                  setIsEditing(true);
+                  setIsProfileNameEditing(true);
                 }}
               />
             </View>
           </Card>
 
-          {isEditing ? <Button onPress={handleSaveClick}>Spara</Button> : null}
+          {isProfileNameEditing ? (
+            <Button onPress={handleSaveClick}>Spara</Button>
+          ) : null}
 
           <Card style={styles.card}>
             <View style={styles.taskItem}>
               <View style={styles.nameContainer}>
-                {isEditing ? (
+                {isHousehouldNameEditing ? (
                   <TextInput
                     placeholder={activeHousehold?.name}
                     onChangeText={(text) => {
@@ -240,10 +234,7 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
                     }}
                   />
                 ) : (
-                  <Text
-                  >
-                    {activeHousehold?.name}
-                  </Text>
+                  <Text>{activeHousehold?.name}</Text>
                 )}
               </View>
               {/* <View style={styles.nameContainer}>
@@ -251,26 +242,19 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
               {/* <Text variant="titleLarge">{headerTitle}</Text>
               </View>  */}
 
-              {/* <IconButton
+              <IconButton
                 icon="pencil"
                 size={20}
                 onPress={() => {
-                  setIsEditing(true);
+                  setIsHousehouldNameEditing(true);
                 }}
-              /> */}
-              {!isRequestPending && (
-                <IconButton
-                  icon="bell-alert-outline"
-                  size={24}
-                  onPress={handleRequest}
-                />
-              )}
+              />
 
               {/* <IconButton icon="pencil" size={20} onPress={() => {}} /> */}
             </View>
           </Card>
 
-          {isEditing ? (
+          {isHousehouldNameEditing ? (
             <Button onPress={handleHouseholdSaveClick}>Spara</Button>
           ) : null}
 
@@ -301,14 +285,34 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
             Mina hushåll
           </Button>
 
-          <Button
-            mode="contained"
-            onPress={handleLeaveHouseholdClick}
-            style={styles.buttonColor}
-            labelStyle={theme.buttonText}
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-around",
+              alignItems: "center",
+              width: 360,
+            }}
           >
-            Gå ur hushåll
-          </Button>
+            <Button
+              mode="contained"
+              onPress={handleLeaveHouseholdClick}
+              style={styles.buttonColor}
+              labelStyle={theme.buttonText}
+            >
+              Gå ur hushåll
+            </Button>
+
+            {householdRequests.length > 0 && activeProfile?.isOwner && (
+              <View style={styles.bell}>
+                <IconButton
+                  icon="bell-alert-outline"
+                  size={32}
+                  onPress={handleRequest}
+                />
+              </View>
+            )}
+          </View>
+
           <HouseholdProfileModal
             visible={isModalVisible}
             onDismiss={() => setModalVisible(false)}
@@ -320,8 +324,11 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
             visible={isViewingRequest}
             onDismiss={() => setIsViewingRequest(false)}
             householdName={activeHousehold?.name || "Laddar..."}
-            selectedAvatar="Frog"
-            email="test@mail.com"
+            // selectedAvatar="Frog"
+            // email="test@mail.com"
+            acceptRequest={acceptRequest}
+            denyRequest={denyRequest}
+            requests={householdRequests}
           />
         </View>
       </View>
@@ -374,5 +381,9 @@ const styles = StyleSheet.create({
     backgroundColor: "orange",
     marginTop: 70,
     width: 200,
+  },
+  bell: {
+    marginTop: 70,
+    alignItems: "flex-end",
   },
 });

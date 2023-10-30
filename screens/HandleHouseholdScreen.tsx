@@ -73,7 +73,7 @@ export default function HandleHouseholdScreen({
     <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
       <View>
         <View>
-          <Appbar.Header style={{ height: 70, backgroundColor: "white" }}>
+          <Appbar.Header style={{ height: 70, backgroundColor: theme.colors.background }}>
             {loggedInUser && <Appbar.Content title="Välkommen!" />}
           </Appbar.Header>
         </View>
@@ -126,15 +126,14 @@ export default function HandleHouseholdScreen({
               color: "black",
               fontSize: 16,
             }}
-            onPress={handleJoin}
+            onPress={() => handleJoin()}
           >
             Gå med
           </Button>
 
           <View style={styles.verticalSpace} />
-
           <Button
-            style={styles.centeredButton}
+           style={theme.button as any}
             labelStyle={{
               color: "black",
               fontSize: 16,

@@ -16,40 +16,39 @@ export type Theme = typeof DarkTheme & {
   };
   signupButton: {
     // backgroundColor: theme.colors.background,
-    padding: number,
-    alignItems: string,
-    margin: number,
-    borderRadius: number,
-    borderWidth: number,
-    backgroundColor: string,
+    padding: number;
+    alignItems: string;
+    margin: number;
+    borderRadius: number;
+    borderWidth: number;
+    backgroundColor: string;
     // borderColor: theme.buttonText.color,
-  },
+  };
   forgotPasswordButton: {
-
-    // backgroundColor: 
+    // backgroundColor:
     // flex: 1,
-    padding: number,
-    alignItems: string,
-    margin: number,
-  },
+    padding: number;
+    alignItems: string;
+    margin: number;
+  };
   cardButton: {
-    backgroundColor: string, // Uppdatera till ljusgrå för cardButton
-    padding: number,
-    alignItems: string,
-    margin: number,
-    shadowOffset: { width: number; height: number },
-    shadowOpacity: number,
-    shadowColor: string,
-    borderRadius: number,
-    width: number,
-    shadowRadius: number,
-    elevation: number,
-  },
+    backgroundColor: string; // Uppdatera till ljusgrå för cardButton
+    padding: number;
+    alignItems: string;
+    margin: number;
+    shadowOffset: { width: number; height: number };
+    shadowOpacity: number;
+    shadowColor: string;
+    borderRadius: number;
+    width: number;
+    shadowRadius: number;
+    elevation: number;
+  };
   taskItem: {
-    flexDirection: string,
-    justifyContent: string,
-    alignItems: string,
-  },
+    flexDirection: string;
+    justifyContent: string;
+    alignItems: string;
+  };
   // forgotPasswordButtonText: {
 
   //   color: string,
@@ -87,12 +86,11 @@ export const AppLightTheme: Theme = {
     margin: 10,
     borderRadius: 10,
     borderWidth: 1,
-    backgroundColor: "white"
+    backgroundColor: "white",
     // borderColor: theme.buttonText.color,
   },
   forgotPasswordButton: {
- 
-    // backgroundColor: 
+    // backgroundColor:
     // flex: 1,
     padding: 5,
     alignItems: "center",
@@ -104,12 +102,12 @@ export const AppLightTheme: Theme = {
   //   fontSize: 10,
   // },
   cardButton: {
-    backgroundColor: "white", 
+    backgroundColor: "white",
     padding: 16,
     alignItems: "center",
     margin: 10,
     borderRadius: 8,
-    width: 360,    
+    width: 360,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
@@ -132,7 +130,6 @@ export const AppDarkTheme: Theme = {
     primary: "rgb(255, 45, 85)",
     background: "rgb(10, 10, 10)",
     // background: "rgb(50, 50, 50)",
-
   },
   button: {
     // backgroundColor: "#FFD700",
@@ -154,14 +151,12 @@ export const AppDarkTheme: Theme = {
     margin: 10,
     borderRadius: 10,
     borderWidth: 1,
-    backgroundColor: "gray", 
+    backgroundColor: "gray",
     // backgroundColor: "white"
-    // backgroundColor: "lightgray", 
+    // backgroundColor: "lightgray",
     // borderColor: theme.buttonText.color,
   },
   forgotPasswordButton: {
- 
-
     padding: 5,
     alignItems: "center",
     margin: 10,
@@ -170,9 +165,9 @@ export const AppDarkTheme: Theme = {
     backgroundColor: "gray", // Uppdatera till ljusgrå för cardButton
     padding: 16,
     alignItems: "center",
-    margin: 16,
+    margin: 10,
     borderRadius: 8,
-    width: 360,    
+    width: 360,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
@@ -190,4 +185,3 @@ export const AppDarkTheme: Theme = {
   //   fontSize: 10,
   // },
 };
-
