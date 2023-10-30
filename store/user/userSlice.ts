@@ -52,7 +52,7 @@ const userSlice = createSlice({
     logOutUser: (state) => {
       state.user = undefined;
     },
-    setActiveUser: (state, action) => {
+    setActiveUser: (state, action: PayloadAction<User | undefined>) => {
       state.user = action.payload;
     },
   },
