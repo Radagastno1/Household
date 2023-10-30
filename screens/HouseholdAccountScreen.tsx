@@ -44,7 +44,6 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
 
   const [systemTheme, setSystemTheme] = useState(Appearance.getColorScheme());
 
-
   const [isRequest, setIsRequest] = useState(false);
 
   const activeUser = useAppSelector((state) => state.user.user);
@@ -56,7 +55,6 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
 
   const requests = useAppSelector((state) => state.request.requests);
   
-
   const [profilesLoaded, setProfilesLoaded] = useState(false);
   const [requestsLoaded, setRequestsLoaded] = useState(false);
   const activeProfile = useAppSelector((state) => state.profile.activeProfile);

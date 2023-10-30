@@ -45,6 +45,9 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
   const dispatch = useAppDispatch();
   const activeHouseholdCode = activeHousehold?.code || "Ingen kod tillgänglig";
 
+  const requests = useAppSelector((state) => state.request.requests);
+  const requestsForThisHousehold = requests.filter((request) => request.householdId === activeHousehold?.id);
+  
   //UTKOMMENTERAR DENNA:
   // useEffect(() => {
   //   if (activeHousehold) {
@@ -305,7 +308,7 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
             Gå ur hushåll
           </Button>
 
-          {!isRequestPending && (
+          {requestsForThisHousehold.length > 0 && activeProfile?.isOwner && (
             <View style={styles.bell}>
                 <IconButton
                   icon="bell-alert-outline"
@@ -328,8 +331,9 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
             visible={isViewingRequest}
             onDismiss={() => setIsViewingRequest(false)}
             householdName={activeHousehold?.name || "Laddar..."}
-            selectedAvatar="Frog"
-            email="test@mail.com"
+            // selectedAvatar="Frog"
+            // email="test@mail.com"
+            requests={requestsForThisHousehold}
           />
         </View>
       </View>
