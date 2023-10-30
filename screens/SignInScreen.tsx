@@ -5,13 +5,14 @@ import {
   Animated,
   Easing,
   Keyboard,
+  KeyboardAvoidingView,
   StyleSheet,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  View
+  View,
 } from "react-native";
 import { Text, TextInput } from "react-native-paper";
-import ThemeProvider, { useTheme } from "../contexts/themeContext";
+import { useTheme } from "../contexts/themeContext";
 import ErrorModule from "../modules/errorModule";
 import { RootNavigationScreenProps } from "../navigators/navigationTypes";
 import { useAppDispatch, useAppSelector } from "../store/store";
@@ -64,18 +65,17 @@ export const SignInScreen = ({ navigation }: SignInProps) => {
   // }
 
   async function handleLogin() {
-     dispatch(logInUserAsync({ email: username, password: password }))
-     .then(
+    dispatch(logInUserAsync({ email: username, password: password })).then(
       () => {
-        if(error){
+        if (error) {
           setErrorPopup(true);
           setUsername("");
           setPassword("");
-        }else{
+        } else {
           return;
         }
-      }
-     );
+      },
+    );
     // getUsersFromDB(username)
     //   .then((users) => {
     //     if (users && users.length > 0) {
@@ -99,106 +99,114 @@ export const SignInScreen = ({ navigation }: SignInProps) => {
   }
 
   return (
-    <Animated.View
-      style={[
-        styles.container,
-        {
-          transform: [
-            {
-              translateY: translateY.interpolate({
-                inputRange: [0, 0],
-                outputRange: [0, 0],
-              }),
-            },
-          ],
-        },
-      ]}
+    <KeyboardAvoidingView // Wrap your content in KeyboardAvoidingView
+      behavior="padding" // You can set different behaviors as needed
+      style={{ flex: 1, backgroundColor: theme.colors.background }}
     >
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
-          <StatusBar backgroundColor="#FFD700" />
+      <Animated.View
+        style={[
+          styles.container,
+          {
+            transform: [
+              {
+                translateY: translateY.interpolate({
+                  inputRange: [0, 0],
+                  outputRange: [0, 0],
+                }),
+              },
+            ],
+          },
+        ]}
+      >
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
+            <StatusBar backgroundColor="#FFD700" />
 
-          <View style={{ backgroundColor: theme.colors.background }}>
-            <View style={styles.container}>
-              <View style={theme.button as any}>
-                <Text style={styles.headerText}>Logga in</Text>
+            <View style={{ backgroundColor: theme.colors.background }}>
+              <View style={styles.container}>
+                <View style={theme.button as any}>
+                  <Text style={styles.headerText}>Logga in</Text>
+                </View>
               </View>
-            </View>
 
-            <View style={styles.container}>
-              <Video
-                source={require("../assets/bee-animation.mp4")}
-                rate={1.0}
-                volume={1.0}
-                isMuted={false}
-                shouldPlay
-                isLooping
-                style={styles.video}
-                resizeMode={ResizeMode.CONTAIN}
-              />
-            </View>
+              <View style={styles.container}>
+                <Video
+                  source={require("../assets/bee-animation.mp4")}
+                  rate={1.0}
+                  volume={1.0}
+                  isMuted={false}
+                  shouldPlay
+                  isLooping
+                  style={styles.video}
+                  resizeMode={ResizeMode.CONTAIN}
+                />
+              </View>
 
-            <View style={styles.textContainer}>
-              <Text
-                style={{
-                  color: theme.buttonText.color,
-                  fontSize: 24,
-                  fontWeight: "bold",
-                  textAlign: "center",
-                }}
-              >
-                BUZZTER
-              </Text>
-
-              <TextInput
-                placeholder="Email"
-                onChangeText={(text) => setUsername(text)}
-                value={username}
-                style={theme.buttonText}
-              />
-
-              <TextInput
-                placeholder="Lösenord"
-                secureTextEntry={!showPassword}
-                value={password}
-                onChangeText={(text) => setPassword(text)}
-                style={theme.buttonText}
-              />
-
-              <TouchableOpacity
-                style={theme.button as any}
-                onPress={handleLogin}
-              >
-                <Text style={theme.buttonText}>Logga in</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={theme.signupButton as any}
-                onPress={() => {
-                  navigation.navigate("Signup");
-                }}
-              >
-                <Text style={theme.buttonText}>Skapa konto</Text>
-              </TouchableOpacity>
-
-              {/* <TouchableOpacity
-                style={theme.signupButton as any}
-                onPress={clearFieldsAndTogglePassword}
+              <View style={styles.textContainer}>
+                <Text
+                  style={{
+                    color: theme.buttonText.color,
+                    fontSize: 24,
+                    fontWeight: "bold",
+                    textAlign: "center",
+                  }}
                 >
-                <Text style={theme.buttonText}>
-                  {showPassword ? "Ta bort lösenord" : "Glömt lösenord?"}
+                  BUZZTER
+                </Text>
+
+                <TextInput
+                  placeholder="Email"
+                  onChangeText={(text) => setUsername(text)}
+                  value={username}
+                  style={theme.buttonText}
+                />
+
+                <TextInput
+                  placeholder="Lösenord"
+                  secureTextEntry={!showPassword}
+                  value={password}
+                  onChangeText={(text) => setPassword(text)}
+                  style={theme.buttonText}
+                />
+
+                <TouchableOpacity
+                  style={theme.button as any}
+                  onPress={handleLogin}
+                >
+                  <Text style={theme.buttonText}>Logga in</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={theme.signupButton as any}
+                  onPress={() => {
+                    navigation.navigate("Signup");
+                  }}
+                >
+                  <Text style={theme.buttonText}>Skapa konto</Text>
+                </TouchableOpacity>
+
+                {/* <TouchableOpacity
+                  style={theme.signupButton as any}
+                  onPress={clearFieldsAndTogglePassword}
+                >
+                  <Text style={theme.buttonText}>
+                    {showPassword ? "Ta bort lösenord" : "Glömt lösenord?"}
                   </Text>
                 </TouchableOpacity> */}
+              </View>
             </View>
           </View>
-        </View>
-      </TouchableWithoutFeedback>
+        </TouchableWithoutFeedback>
 
-      {errorPopup && error ? (
-        <ErrorModule errorMessage={error} buttonMessage="Försök igen" onClose={() => setErrorPopup(false)} />
-      ) : null}
-
-    </Animated.View>
+        {errorPopup && error ? (
+          <ErrorModule
+            errorMessage={error}
+            buttonMessage="Försök igen"
+            onClose={() => setErrorPopup(false)}
+          />
+        ) : null}
+      </Animated.View>
+    </KeyboardAvoidingView>
   );
 };
 
