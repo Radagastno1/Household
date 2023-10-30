@@ -4,6 +4,7 @@ import {
   getTaskCompletionsFromDB,
 } from "../../api/taskCompletion";
 import { Profile, TaskCompletion } from "../../types";
+import { setActiveUser } from "../user/userSlice";
 
 interface TaskCompletionState {
   completions: TaskCompletion[];
@@ -148,6 +149,12 @@ const taskCompletionSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(setActiveUser, (state, action) => {
+        if (!action.payload) {
+          state.avatars = [];
+          state.completions = [];
+        }
+      })
       .addCase(addCompletionAsync.fulfilled, (state, action) => {
         if (action.payload) {
           state.completions = [...state.completions, action.payload];
