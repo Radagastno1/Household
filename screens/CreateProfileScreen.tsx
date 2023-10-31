@@ -15,7 +15,7 @@ import { useTheme } from "../contexts/themeContext";
 import { RootNavigationScreenProps } from "../navigators/navigationTypes";
 import {
   addProfileAsync,
-  getProfilesByHouseholdIdAsync
+  getProfilesByHouseholdIdAsync,
 } from "../store/profile/profileSlice";
 import { addProfileWithRequest } from "../store/request/requestSlice";
 
@@ -100,28 +100,27 @@ export default function CreateProfileScreen({
   const saveProfile = () => {
     console.log("skapad profil med hushållsid", householdId);
 
-    setCreateIsDisabled(true);
+      if (isOwner && activeUser) {
+        
+        const avatarsColor = AvatarColors[ Avatars.Bee];
 
-    if (selectedAvatar && activeUser) {
-      if(isOwner){
-        const avatarsColor = AvatarColors[selectedAvatar as Avatars];
         const newProfile = {
           id: todaysDate.getUTCMilliseconds.toString().slice(-4),
           profileName: householdName,
           userId: activeUser.uid,
           householdId: householdId,
-          avatar: selectedAvatar,
+          avatar: Avatars.Bee,
           avatarsColors: avatarsColor,
           isOwner: true,
           isActive: true,
         };
-        dispatch(addProfileAsync(newProfile)).then(
-          () => {
-            navigation.navigate("HouseholdAccount");
-          }
-        );
-      }else{
-        if(activeUser.email){
+        dispatch(addProfileAsync(newProfile)).then(() => {
+          navigation.navigate("HouseholdAccount");
+        });
+      } else if (activeUser && !isOwner){
+        
+        if (activeUser.email && selectedAvatar && activeUser) {
+            
           const avatarsColor = AvatarColors[selectedAvatar as Avatars];
           const newProfile = {
             id: "",
@@ -133,13 +132,17 @@ export default function CreateProfileScreen({
             isOwner: false,
             isActive: true,
           };
-          dispatch(addProfileWithRequest({newProfile:newProfile, userMail:activeUser.email, householdId:householdId})).then(
-            () => {
-              navigation.navigate("HouseholdAccount");
-            }
-          );
+          dispatch(
+            addProfileWithRequest({
+              newProfile: newProfile,
+              userMail: activeUser.email,
+              householdId: householdId,
+            }),
+          ).then(() => {
+            navigation.navigate("HouseholdAccount");
+          });
         }
-      }
+      
     }
   };
 
@@ -197,16 +200,10 @@ export default function CreateProfileScreen({
             <View>
               <TouchableOpacity
                 key={Avatars.Bee}
-                style={[
-                  styles.avatar,
-                  // selectedBee ? styles.selectedAvatar : null
-                  selectedAvatar === Avatars.Bee
-                    ? { backgroundColor: "lightgray" }
-                    : null,
-                ]}
-                onPress={() => {
-                  setSelectedAvatar(Avatars.Bee);
-                }}
+                style={[styles.avatar, { backgroundColor: "lightgray" }]}
+                // onPress={() => {
+                //   setSelectedAvatar(Avatars.Bee);
+                // }}
               >
                 <Image
                   source={{ uri: AvatarUrls[Avatars.Bee] }}
@@ -251,15 +248,22 @@ export default function CreateProfileScreen({
             </View>
           )}
         </View>
-
-        <TouchableOpacity
-           style={theme.button as any}
-          onPress={() => saveProfile()}
-          disabled={!selectedAvatar || createIsDisabled}
-        >
-    <Text style={[theme.buttonText, { fontSize: 20 }]}>SKAPA</Text>
-
-        </TouchableOpacity>
+        {isOwner ? (
+          <TouchableOpacity
+            style={theme.button as any}
+            onPress={() => saveProfile()}
+          >
+            <Text style={[theme.buttonText, { fontSize: 20 }]}>SKAPA</Text>
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity
+            style={theme.button as any}
+            onPress={() => saveProfile()}
+            disabled={!selectedAvatar || createIsDisabled}
+          >
+            <Text style={[theme.buttonText, { fontSize: 20 }]}>SKAPA</Text>
+          </TouchableOpacity>
+        )}
         <Button
           style={theme.button as any}
           onPress={() => navigation.navigate("HandleHousehold")}
