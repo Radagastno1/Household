@@ -28,7 +28,7 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({ title, navigation }) => {
     }
   }, [isFocused]);
   return (
-    <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
+    <View style={{ flex: 1, marginBottom:70,backgroundColor: theme.colors.background }}>
     <View style={styles.header}>
         <TouchableOpacity
         onPress={()=>navigation.navigate("ProfileAccount")}
