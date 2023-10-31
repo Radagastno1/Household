@@ -11,6 +11,11 @@ import {
 import { useFocusEffect } from "@react-navigation/native";
 import { AvatarUrls, Avatars, getAvatarColorString } from "../data/avatars";
 import { TopTabScreenProps } from "../navigators/navigationTypes";
+import {
+  emptyPieChartsData,
+  emptySumPieChartColors,
+  emptySumPieChartSeries,
+} from "../data/emptyPieCharts";
 
 type StatProps =
   | TopTabScreenProps<"StatisticsCurrentWeek">
@@ -34,6 +39,9 @@ export default function StatisticScreen({ route }: StatProps) {
   const completions = useAppSelector(
     (state) => state.taskCompletion.completions,
   );
+  const greyDataSumSeries = emptySumPieChartSeries;
+  const greyDataSumColors = emptySumPieChartColors;
+  const greyDataSum = emptyPieChartsData;
   const profileSlice = useAppSelector((state) => state.profile.profiles);
   const [statsForTasks, setStatsForTasks] = useState<StatData[]>([]);
   const [totalSumColors, setTotalSumColors] = useState<string[]>([]);
@@ -59,7 +67,10 @@ export default function StatisticScreen({ route }: StatProps) {
   }, [completions, tasks, profiles, startDate, endDate]);
 
   useFocusEffect(handleFocusEffect);
-  const chunkedCharts = arrayChunk(statsForTasks, 3);
+  const chunkedCharts = arrayChunk(
+    statsForTasks ? greyDataSum : statsForTasks,
+    3,
+  );
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
@@ -76,8 +87,8 @@ export default function StatisticScreen({ route }: StatProps) {
           <View style={styles.topChart}>
             <PiechartComponent
               widthAndHeight={250}
-              series={[100]}
-              sliceColor={["gray"]}
+              series={greyDataSumSeries}
+              sliceColor={greyDataSumColors}
             />
           </View>
         )}
@@ -122,17 +133,11 @@ export default function StatisticScreen({ route }: StatProps) {
                   <Text style={theme.taskTitle as any} numberOfLines={2}>
                     {chart.title}
                   </Text>
-                  {chart.colors.length > 0 && chart.series.length > 0 ? (
+                  {chart.colors.length > 0 && chart.series.length > 0 && (
                     <PiechartComponent
                       widthAndHeight={110}
                       series={chart.series}
                       sliceColor={chart.colors}
-                    />
-                  ) : (
-                    <PiechartComponent
-                      widthAndHeight={110}
-                      series={[100]}
-                      sliceColor={["gray"]}
                     />
                   )}
                 </View>

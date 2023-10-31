@@ -1,4 +1,6 @@
-export const emptyPieChartsData = [
+import { StatData } from "../types";
+
+export const emptyPieChartsData: StatData[] = [
   {
     colors: ["#b7b6b6", "#a09f9e", "#8b8a89"],
     series: [10, 10, 10],
@@ -26,9 +28,6 @@ export const emptyPieChartsData = [
   },
 ];
 
-export const emptySumPieChart = [
-  {
-    colors: ["#b7b6b6", "#a09f9e", "#8b8a89"],
-    series: [36, 33, 34],
-  },
-];
+export const emptySumPieChartSeries = [36, 33, 34];
+
+export const emptySumPieChartColors = ["#b7b6b6", "#a09f9e", "#8b8a89"];
