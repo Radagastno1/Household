@@ -1,9 +1,6 @@
 import { initializeApp } from "firebase/app";
-import {
-  getAuth,
-  setPersistence,
-  browserLocalPersistence,
-} from "firebase/auth";
+// import { getAuth, getReactNativePersistence } from "firebase/auth";
+import * as firebaseAuth from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { initializeAuth } from "firebase/auth";
 import ReactNativeAsyncStorage, {
@@ -22,15 +19,12 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-const auth = getAuth(app);
-setPersistence(auth, browserLocalPersistence);
+// const auth = initializeAuth(app, {
+//   persistence: getReactNativePersistence(ReactNativeAsyncStorage),
+// });
+const reactNativePersistence = (firebaseAuth as any).getReactNativePersistence;
+const auth = initializeAuth(app, {
+  persistence: reactNativePersistence(ReactNativeAsyncStorage),
+});
 
 export { app, db, auth };
-// const firebaseConfig = {
-//   apiKey: "API-nyckel",
-//   authDomain: "inget-authentication-krävs",
-//   projectId: "testbuzzter",
-//   storageBucket: "Ditt-storage-bucket.appspot.com",
-//   messagingSenderId: "83218627575",
-//   // appId: "app-id", // Detta är valfritt om du inte har det.
-// };
