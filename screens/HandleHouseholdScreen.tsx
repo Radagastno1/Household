@@ -30,11 +30,10 @@ export default function HandleHouseholdScreen({
   const dispatch = useAppDispatch();
 
   const handleCreateHousehold = async () => {
-   
-        if(!householdName){
-            setErrorText("Ange ett namn");
-            setErrorPopup(true); 
-        } else{
+    if (!householdName) {
+      setErrorText("Ange ett namn");
+      setErrorPopup(true);
+    } else {
       dispatch(addHouseholdAsync(householdName)).then((action) => {
         if (addHouseholdAsync.fulfilled.match(action)) {
           const householdCreated = action.payload;
@@ -68,11 +67,10 @@ export default function HandleHouseholdScreen({
       } else if (!household) {
         setErrorText("Koden finns inte");
         setErrorPopup(true);
-      } else if(profile){
+      } else if (profile) {
         setErrorText("Huset finns i profilen redo");
         setErrorPopup(true);
-      }
-      else if (household) {
+      } else if (household) {
         console.log("activeHousehold is available:", household);
         navigation.navigate("CreateProfile", {
           householdId: household.id,
@@ -81,9 +79,9 @@ export default function HandleHouseholdScreen({
         console.log("activeHousehold is not available yet.");
       }
     } else {
-        setErrorText("kod kravs");
-        setErrorPopup(true);
-    //   console.error("Join code is required.");
+      setErrorText("kod kravs");
+      setErrorPopup(true);
+      //   console.error("Join code is required.");
     }
   };
   const loggedInUser = useAppSelector((state) => state.user.user);
@@ -113,13 +111,11 @@ export default function HandleHouseholdScreen({
           <TouchableOpacity
             style={theme.button as any}
             onPress={handleCreateHousehold}
-            
           >
             <Text style={{ fontSize: 20 }}>Skapa</Text>
           </TouchableOpacity>
 
           <View style={styles.verticalSpace} />
-
           <View style={styles.horizontalLine}>
             <View style={styles.line} />
             <Text style={styles.ellerText}>eller</Text>
@@ -152,17 +148,16 @@ export default function HandleHouseholdScreen({
           >
             <Text style={{ fontSize: 20 }}>Tillbaka</Text>
           </TouchableOpacity>
-
-          {errorPopup && errorText?(
-          <ErrorModule
-            errorMessage={errorText}
-            buttonMessage="Försök igen"
-            onClose={() => setErrorPopup(false)}
-          />
-        ) : null}
         </View>
-       
       </View>
+
+      {errorPopup && errorText ? (
+        <ErrorModule
+          errorMessage={errorText}
+          buttonMessage="Försök igen"
+          onClose={() => setErrorPopup(false)}
+        />
+      ) : null}
     </View>
   );
 }

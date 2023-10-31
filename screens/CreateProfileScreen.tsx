@@ -183,11 +183,13 @@ export default function CreateProfileScreen({
             </Text>
           </View>
         </View>
+
         <View style={styles.sectionContainer}>
           <View style={theme.button as any}>
             <Text style={theme.buttonText}>Välj ditt profilnamn</Text>
           </View>
         </View>
+
         <TextInput
           placeholder="Skriv ditt profilnamn"
           // style={styles.input}
@@ -202,6 +204,7 @@ export default function CreateProfileScreen({
           ]}
           onChangeText={(text) => setHouseholdName(text)}
         />
+
         <View>
           {isOwner ? (
             <View>
@@ -223,12 +226,10 @@ export default function CreateProfileScreen({
               {avatars.map((avatar) => {
                 const isOccupied = isAvatarOccupied(avatar.id);
                 const isSelected = selectedAvatar === avatar.id;
-
+                
                 const avatarStyles = [
                   styles.avatar,
-
-                  isOccupied? styles.occupiedAvatar : undefined,
-                  
+                  isOccupied? styles.occupiedAvatar : undefined,               
                   isAvatarOccupied(avatar.id)
                     ? styles.occupiedAvatar
                     : undefined,
