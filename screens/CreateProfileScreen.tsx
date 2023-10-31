@@ -18,6 +18,7 @@ import {
   getProfilesByHouseholdIdAsync,
 } from "../store/profile/profileSlice";
 import { addProfileWithRequest } from "../store/request/requestSlice";
+import ErrorModule from "../modules/errorModule";
 
 type CreateProfileProps = RootNavigationScreenProps<"CreateProfile">;
 
@@ -45,7 +46,9 @@ export default function CreateProfileScreen({
   const [selectedBee, setSelectedBee] = useState(false);
   const householdId = route.params.householdId;
   const isOwner = route.params.isOwner;
-  const [createIsDisabled, setCreateIsDisabled] = useState(false);
+  const [errorPopup, setErrorPopup] = useState(false);
+  const [errorText, setErrorText] = useState("");
+  //   const [createIsDisabled, setCreateIsDisabled] = useState(false);
   // const household = households.find((h) => h.id === householdId);
   const { theme } = useTheme();
   const colorScheme = useColorScheme();
@@ -99,50 +102,54 @@ export default function CreateProfileScreen({
 
   const saveProfile = () => {
     console.log("skapad profil med hushållsid", householdId);
+    if (!householdName) {
+      setErrorText("Ange ett namn");
+      setErrorPopup(true);
+    }
+    else if (isOwner && activeUser) {
+      const avatarsColor = AvatarColors[Avatars.Bee];
 
-      if (isOwner && activeUser) {
-        
-        const avatarsColor = AvatarColors[ Avatars.Bee];
+      const newProfile = {
+        id: todaysDate.getUTCMilliseconds.toString().slice(-4),
+        profileName: householdName,
+        userId: activeUser.uid,
+        householdId: householdId,
+        avatar: Avatars.Bee,
+        avatarsColors: avatarsColor,
+        isOwner: true,
+        isActive: true,
+      };
 
+      dispatch(addProfileAsync(newProfile)).then(() => {
+        navigation.navigate("HouseholdAccount");
+      });
+    } else if(!selectedAvatar){
+        setErrorText("Valij en avatar");
+        setErrorPopup(true);
+    } 
+    else if (activeUser && !isOwner) {
+      if (activeUser.email && selectedAvatar && activeUser) {
+        const avatarsColor = AvatarColors[selectedAvatar as Avatars];
         const newProfile = {
-          id: todaysDate.getUTCMilliseconds.toString().slice(-4),
+          id: "",
           profileName: householdName,
           userId: activeUser.uid,
-          householdId: householdId,
-          avatar: Avatars.Bee,
+          householdId: "",
+          avatar: selectedAvatar,
           avatarsColors: avatarsColor,
-          isOwner: true,
+          isOwner: false,
           isActive: true,
         };
-        dispatch(addProfileAsync(newProfile)).then(() => {
+        dispatch(
+          addProfileWithRequest({
+            newProfile: newProfile,
+            userMail: activeUser.email,
+            householdId: householdId,
+          }),
+        ).then(() => {
           navigation.navigate("HouseholdAccount");
         });
-      } else if (activeUser && !isOwner){
-        
-        if (activeUser.email && selectedAvatar && activeUser) {
-            
-          const avatarsColor = AvatarColors[selectedAvatar as Avatars];
-          const newProfile = {
-            id: "",
-            profileName: householdName,
-            userId: activeUser.uid,
-            householdId: "",
-            avatar: selectedAvatar,
-            avatarsColors: avatarsColor,
-            isOwner: false,
-            isActive: true,
-          };
-          dispatch(
-            addProfileWithRequest({
-              newProfile: newProfile,
-              userMail: activeUser.email,
-              householdId: householdId,
-            }),
-          ).then(() => {
-            navigation.navigate("HouseholdAccount");
-          });
-        }
-      
+      }
     }
   };
 
@@ -220,12 +227,14 @@ export default function CreateProfileScreen({
                 const avatarStyles = [
                   styles.avatar,
 
-                  isOccupied ? styles.occupiedAvatar : undefined,
+                  isOccupied? styles.occupiedAvatar : undefined,
+                  
                   isAvatarOccupied(avatar.id)
                     ? styles.occupiedAvatar
                     : undefined,
                   // isSelected ? styles.selectedAvatar : undefined,
                   isSelected ? { backgroundColor: "lightgray" } : undefined,
+                 
                 ];
 
                 return (
@@ -252,6 +261,7 @@ export default function CreateProfileScreen({
           <TouchableOpacity
             style={theme.button as any}
             onPress={() => saveProfile()}
+            // disabled={!householdName}
           >
             <Text style={[theme.buttonText, { fontSize: 20 }]}>SKAPA</Text>
           </TouchableOpacity>
@@ -259,7 +269,7 @@ export default function CreateProfileScreen({
           <TouchableOpacity
             style={theme.button as any}
             onPress={() => saveProfile()}
-            disabled={!selectedAvatar || createIsDisabled}
+            // disabled={!selectedAvatar || !householdName}
           >
             <Text style={[theme.buttonText, { fontSize: 20 }]}>SKAPA</Text>
           </TouchableOpacity>
@@ -267,11 +277,18 @@ export default function CreateProfileScreen({
         <Button
           style={theme.button as any}
           onPress={() => navigation.navigate("HandleHousehold")}
-          disabled={!selectedAvatar}
+        //   disabled={!selectedAvatar}
         >
           <Text style={theme.buttonText}>Tillbaka</Text>
         </Button>
       </View>
+      {errorPopup && errorText ? (
+        <ErrorModule
+          errorMessage={errorText}
+          buttonMessage="Försök igen"
+          onClose={() => setErrorPopup(false)}
+        />
+      ) : null}
     </View>
   );
 }
