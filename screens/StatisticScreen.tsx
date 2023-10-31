@@ -1,21 +1,21 @@
-import React, { useCallback, useState } from "react";
-import { ScrollView, StyleSheet, Text, View, Image } from "react-native";
-import PiechartComponent from "../components/PiechartComponent";
-import { useAppSelector } from "../store/store";
-import { StatData } from "../types";
-import { useTheme } from "../contexts/themeContext";
-import {
-  SummerizeEachTask,
-  summarizeDataByColor,
-} from "../utils/statisticHandler";
 import { useFocusEffect } from "@react-navigation/native";
+import React, { useCallback, useState } from "react";
+import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
+import PiechartComponent from "../components/PiechartComponent";
+import { useTheme } from "../contexts/themeContext";
 import { AvatarUrls, Avatars, getAvatarColorString } from "../data/avatars";
-import { TopTabScreenProps } from "../navigators/navigationTypes";
 import {
   emptyPieChartsData,
   emptySumPieChartColors,
   emptySumPieChartSeries,
 } from "../data/emptyPieCharts";
+import { TopTabScreenProps } from "../navigators/navigationTypes";
+import { useAppSelector } from "../store/store";
+import { StatData } from "../types";
+import {
+  SummerizeEachTask,
+  summarizeDataByColor,
+} from "../utils/statisticHandler";
 
 type StatProps =
   | TopTabScreenProps<"StatisticsCurrentWeek">
@@ -46,6 +46,7 @@ export default function StatisticScreen({ route }: StatProps) {
   const [statsForTasks, setStatsForTasks] = useState<StatData[]>([]);
   const [totalSumColors, setTotalSumColors] = useState<string[]>([]);
   const [totalSumSeries, setTotalSumSeries] = useState<number[]>([]);
+  const [isData, setIsData] = useState<StatData[]>([]);
 
   const handleFocusEffect = useCallback(() => {
     console.log("USE-EFFECT STATS: ", completions);
@@ -58,6 +59,14 @@ export default function StatisticScreen({ route }: StatProps) {
       endDate,
     );
     setStatsForTasks(summarizedData);
+    console.log("SUMMARIZEDDATA: ", summarizedData);
+
+    if (summarizedData.length === 0) {
+      setIsData(greyDataSum);
+    } else {
+      setIsData(statsForTasks);
+    }
+
     const data = summarizeDataByColor(summarizedData);
     setTotalSumColors(data.colors);
     setTotalSumSeries(data.series);
@@ -67,10 +76,7 @@ export default function StatisticScreen({ route }: StatProps) {
   }, [completions, tasks, profiles, startDate, endDate]);
 
   useFocusEffect(handleFocusEffect);
-  const chunkedCharts = arrayChunk(
-    statsForTasks ? statsForTasks : greyDataSum,
-    3,
-  );
+  const chunkedCharts = arrayChunk(isData, 3);
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
@@ -135,7 +141,7 @@ export default function StatisticScreen({ route }: StatProps) {
                   </Text>
                   {chart.colors.length > 0 && chart.series.length > 0 && (
                     <PiechartComponent
-                      widthAndHeight={110}
+                      widthAndHeight={100}
                       series={chart.series}
                       sliceColor={chart.colors}
                     />
@@ -153,7 +159,7 @@ export default function StatisticScreen({ route }: StatProps) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 12,
+    paddingTop: 20,
   },
   row: {
     flexDirection: "row",
