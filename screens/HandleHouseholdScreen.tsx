@@ -1,6 +1,4 @@
-import {
-  getFirestore
-} from "firebase/firestore";
+import { getFirestore } from "firebase/firestore";
 import React, { useState } from "react";
 import { StyleSheet, View, TouchableOpacity } from "react-native";
 import { Appbar, Button, Text, TextInput } from "react-native-paper";
@@ -9,9 +7,10 @@ import { useTheme } from "../contexts/themeContext";
 import { RootNavigationScreenProps } from "../navigators/navigationTypes";
 import {
   addHouseholdAsync,
-  handleJoinHousehold
+  handleJoinHousehold,
 } from "../store/household/householdSlice";
 import { useAppDispatch, useAppSelector } from "../store/store";
+import ErrorModule from "../modules/errorModule";
 
 const db = getFirestore(app);
 
@@ -23,14 +22,18 @@ export default function HandleHouseholdScreen({
   const { theme } = useTheme();
   const [householdName, setHouseholdName] = useState("");
   const [joinCode, setJoinCode] = useState("");
+  const [errorPopup, setErrorPopup] = useState(false);
+  const [codeErrorPopup, setCodeErrorPopup] = useState(false);
+  const profilesToUser = useAppSelector(
+    (state) => state.profile.profilesToUser,
+  );
   const dispatch = useAppDispatch();
 
   const handleCreateHousehold = async () => {
-
     try {
       dispatch(addHouseholdAsync(householdName)).then((action) => {
         if (addHouseholdAsync.fulfilled.match(action)) {
-          const householdCreated = action.payload; 
+          const householdCreated = action.payload;
           if (householdCreated) {
             navigation.navigate("CreateProfile", {
               householdId: householdCreated.id,
@@ -39,7 +42,6 @@ export default function HandleHouseholdScreen({
           }
         }
       });
-      
     } catch (error) {
       console.error("Error creating household:", error);
     }
@@ -53,14 +55,21 @@ export default function HandleHouseholdScreen({
     if (joinCode) {
       console.log("Dispatching joinHouseholdByCode with code:", joinCode);
       const household = await handleJoinHousehold(joinCode);
-
-      if (household) {
+      const profile = profilesToUser.find(
+        (profile) =>
+          profile.householdId === household?.id &&
+          profile.userId === loggedInUser?.uid,
+      );
+      if (household && profile?.isOwner) {
+        setErrorPopup(true);
+      } else if (!household) {
+        setCodeErrorPopup(true);
+      } else if (household) {
         console.log("activeHousehold is available:", household);
         navigation.navigate("CreateProfile", {
           householdId: household.id,
-          isOwner:false
+          isOwner: false,
         });
-      } else {
         console.log("activeHousehold is not available yet.");
       }
     } else {
@@ -73,7 +82,9 @@ export default function HandleHouseholdScreen({
     <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
       <View>
         <View>
-          <Appbar.Header style={{ height: 70, backgroundColor: theme.colors.background }}>
+          <Appbar.Header
+            style={{ height: 70, backgroundColor: theme.colors.background }}
+          >
             {loggedInUser && <Appbar.Content title="Välkommen!" />}
           </Appbar.Header>
         </View>
@@ -93,7 +104,7 @@ export default function HandleHouseholdScreen({
             style={theme.button as any}
             onPress={handleCreateHousehold}
           >
-           <Text style={{fontSize:20}}>Skapa</Text> 
+            <Text style={{ fontSize: 20 }}>Skapa</Text>
           </TouchableOpacity>
 
           <View style={styles.verticalSpace} />
@@ -120,7 +131,7 @@ export default function HandleHouseholdScreen({
             style={theme.button as any}
             onPress={() => handleJoin()}
           >
-            <Text style={{fontSize:20}}>Gå med</Text>
+            <Text style={{ fontSize: 20 }}>Gå med</Text>
           </TouchableOpacity>
 
           <View style={styles.verticalSpace} />
@@ -128,9 +139,23 @@ export default function HandleHouseholdScreen({
             style={theme.button as any}
             onPress={() => navigation.navigate("HouseholdAccount")}
           >
-            <Text style={{fontSize:20}}>Tillbaka</Text>
+            <Text style={{ fontSize: 20 }}>Tillbaka</Text>
           </TouchableOpacity>
         </View>
+        {errorPopup ? (
+          <ErrorModule
+            errorMessage={"Kan inte gå med eget hus"}
+            buttonMessage="Försök igen"
+            onClose={() => setErrorPopup(false)}
+          />
+        ) : null}
+        {codeErrorPopup ? (
+          <ErrorModule
+            errorMessage={"koden finns inte"}
+            buttonMessage="Försök igen"
+            onClose={() => setErrorPopup(false)}
+          />
+        ) : null}
       </View>
     </View>
   );
