@@ -68,7 +68,7 @@ export default function StatisticScreen({ route }: StatProps) {
 
   useFocusEffect(handleFocusEffect);
   const chunkedCharts = arrayChunk(
-    statsForTasks ? greyDataSum : statsForTasks,
+    statsForTasks ? statsForTasks : greyDataSum,
     3,
   );
 
