@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, ReactNode, PropsWithChildren, useEffect, useState } from 'react';
 import { ColorSchemeName } from 'react-native';
 import { PaperProvider } from 'react-native-paper';
@@ -6,8 +7,7 @@ import { AppDarkTheme, AppLightTheme } from '../data/theme';
 import { Theme } from '../data/theme';
 import { useColorScheme } from 'react-native';
 
-
-type ColorScheme = ColorSchemeName;
+type ColorScheme = 'light' | 'dark' | 'Auto';
 
 type ThemeContextValue = {
   theme: Theme;
@@ -27,47 +27,21 @@ export const useTheme = () => {
 export default function ThemeProvider({
   children,
 }: PropsWithChildren) {
-  const [isAuto, setIsAuto] = useState<boolean>(true);
-  const [currentTheme, setCurrentTheme] = useState<ColorScheme>('light'); // Använd ditt önskade standardtema här
+  const [currentTheme, setCurrentTheme] = useState<ColorScheme>('light');
 
   useEffect(() => {
-    // Lyssna på ändringar i currentTheme och applicera temat
-    if (isAuto) {
-      const systemColorScheme = Appearance.getColorScheme();
-      if (systemColorScheme === 'dark') {
-        setCurrentTheme('dark');
-      } else {
-        setCurrentTheme('light');
-      }
-    }
-  }, [isAuto]);
+    const systemColorScheme = Appearance.getColorScheme();
+    setCurrentTheme(systemColorScheme === 'dark' ? 'dark' : 'light');
+  }, []);
 
-  const toggleColorScheme = () => {
-    if (!isAuto) {
-      setIsAuto(true); 
-      const systemColorScheme = Appearance.getColorScheme();
-      if (systemColorScheme === 'dark') {
-        setCurrentTheme('dark');
-      } else {
-        setCurrentTheme('light');
-      }
-    } else {
-      setIsAuto(false); 
-      setCurrentTheme((prevColorScheme: ColorScheme) => {
-        if (prevColorScheme === 'light') {
-          return 'dark';
-        } else {
-          return 'light';
-        }
-      });
-    }
+  const toggleColorScheme = (colorScheme: ColorScheme) => {
+    setCurrentTheme(colorScheme);
   };
 
   const operatingSystemScheme = useColorScheme();
-  const selectedScheme = isAuto ? operatingSystemScheme : currentTheme;
 
   const theme: Theme =
-    selectedScheme === 'dark'
+    currentTheme === 'dark'
       ? AppDarkTheme
       : AppLightTheme;
 
@@ -79,6 +53,81 @@ export default function ThemeProvider({
     </ThemeContext.Provider>
   );
 }
+
+
+// import React, { createContext, useContext, ReactNode, PropsWithChildren, useEffect, useState } from 'react';
+// import { ColorSchemeName } from 'react-native';
+// import { PaperProvider } from 'react-native-paper';
+// import { Appearance } from 'react-native';
+// import { AppDarkTheme, AppLightTheme } from '../data/theme';
+// import { Theme } from '../data/theme';
+// import { useColorScheme } from 'react-native';
+
+// type ColorScheme = ColorSchemeName | 'auto';
+
+// type ThemeContextValue = {
+//   theme: Theme;
+//   setColorScheme: (colorScheme: ColorScheme) => void;
+// };
+
+// const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
+
+// export const useTheme = () => {
+//   const themeContext = useContext(ThemeContext);
+//   if (!themeContext) {
+//     throw new Error('useTheme must be used within a ThemeProvider');
+//   }
+//   return themeContext;
+// };
+
+// export default function ThemeProvider({
+//   children,
+// }: PropsWithChildren) {
+//   const [isAuto, setIsAuto] = useState<boolean>(true);
+//   const [currentTheme, setCurrentTheme] = useState<ColorScheme>('auto');
+
+//   useEffect(() => {
+//     if (isAuto) {
+//       const systemColorScheme = Appearance.getColorScheme();
+//       setCurrentTheme(systemColorScheme);
+//     }
+//   }, [isAuto]);
+
+//   const toggleColorScheme = (colorScheme: ColorScheme) => {
+//     if (!isAuto) {
+//       setIsAuto(true); 
+//       setCurrentTheme((prevColorScheme: ColorScheme) => {
+//         if (prevColorScheme === 'light') {
+//           return 'dark';
+//         } else {
+//           return 'light';
+//         }
+//       });
+//     } else {
+//       setIsAuto(false);
+//       setCurrentTheme(colorScheme);
+//     }
+//   };
+
+//   const operatingSystemScheme = useColorScheme();
+//   const selectedScheme = isAuto ? operatingSystemScheme : currentTheme;
+//   // Använd selectedScheme när "Auto" är valt och currentTheme annars
+//   const theme: Theme =
+//     isAuto ? 
+//       (selectedScheme === 'dark' ? AppDarkTheme : AppLightTheme) :
+//       (currentTheme === 'dark' ? AppDarkTheme : AppLightTheme);
+  
+    
+
+//   return (
+//     <ThemeContext.Provider value={{ theme, setColorScheme: toggleColorScheme }}>
+//       <PaperProvider theme={theme}>
+//         {children}
+//       </PaperProvider>
+//     </ThemeContext.Provider>
+//   );
+// }
+
 
 
 
