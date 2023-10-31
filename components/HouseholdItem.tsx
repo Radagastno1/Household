@@ -50,7 +50,6 @@ export default function HouseholdItem({
 
   return (
     <TouchableOpacity
-      key={index}
       style={[
         theme.cardButton as any,
         { flexDirection: "row", justifyContent: "space-between" },

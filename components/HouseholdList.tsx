@@ -29,6 +29,7 @@ export default function HouseholdList({
         );
         return (
           <HouseholdItem
+            key={index}
             index={index}
             household={household}
             profile={profile as Profile}
