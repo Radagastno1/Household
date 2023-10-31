@@ -23,7 +23,7 @@ export default function HandleHouseholdScreen({
   const [householdName, setHouseholdName] = useState("");
   const [joinCode, setJoinCode] = useState("");
   const [errorPopup, setErrorPopup] = useState(false);
-  const [codeErrorPopup, setCodeErrorPopup] = useState(false);
+  const [errorText, setErrorText] = useState("");
   const profilesToUser = useAppSelector(
     (state) => state.profile.profilesToUser,
   );
@@ -61,9 +61,11 @@ export default function HandleHouseholdScreen({
           profile.userId === loggedInUser?.uid,
       );
       if (household && profile?.isOwner) {
+        setErrorText("Kan inte gå med eget hus");
         setErrorPopup(true);
       } else if (!household) {
-        setCodeErrorPopup(true);
+        setErrorText("Koden finns inte");
+        setErrorPopup(true);
       } else if (household) {
         console.log("activeHousehold is available:", household);
         navigation.navigate("CreateProfile", {
@@ -142,16 +144,9 @@ export default function HandleHouseholdScreen({
             <Text style={{ fontSize: 20 }}>Tillbaka</Text>
           </TouchableOpacity>
         </View>
-        {errorPopup ? (
+        {errorPopup && errorText?(
           <ErrorModule
-            errorMessage={"Kan inte gå med eget hus"}
-            buttonMessage="Försök igen"
-            onClose={() => setErrorPopup(false)}
-          />
-        ) : null}
-        {codeErrorPopup ? (
-          <ErrorModule
-            errorMessage={"koden finns inte"}
+            errorMessage={errorText}
             buttonMessage="Försök igen"
             onClose={() => setErrorPopup(false)}
           />
