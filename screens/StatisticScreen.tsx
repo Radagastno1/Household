@@ -119,7 +119,7 @@ export default function StatisticScreen({ route }: StatProps) {
             <View style={styles.row} key={rowIndex}>
               {row.map((chart, columnIndex) => (
                 <View style={styles.piechartContainer} key={columnIndex}>
-                  <Text style={styles.taskTitle} numberOfLines={2}>
+                  <Text style={theme.taskTitle as any} numberOfLines={2}>
                     {chart.title}
                   </Text>
                   {chart.colors.length > 0 && chart.series.length > 0 ? (
@@ -157,12 +157,6 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "center",
     padding: 10,
-  },
-  taskTitle: {
-    width: 110,
-    textAlign: "center",
-    padding: 2,
-    fontWeight: "bold",
   },
   topChart: {
     alignItems: "center",
