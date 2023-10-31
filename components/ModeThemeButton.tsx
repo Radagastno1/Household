@@ -18,12 +18,25 @@ export default function ModeThemeButton() {
   const [currentTheme, setCurrentTheme] = useState("automatic");
   const modes = ["light", "auto", "dark"];
 
+  // const handleToggleTheme = () => {
+  //   if (setColorScheme) {
+  //     setColorScheme(currentTheme === "dark" ? "light" : "dark");
+  //     setCurrentTheme(currentTheme === "dark" ? "light" : "dark");
+  //   }
+  // };
+
   const handleToggleTheme = () => {
     if (setColorScheme) {
-      setColorScheme(currentTheme === "dark" ? "light" : "dark");
-      setCurrentTheme(currentTheme === "dark" ? "light" : "dark");
+      if (currentTheme === "light") {
+        setColorScheme("dark");
+        setCurrentTheme("dark");
+      } else {
+        setColorScheme("light");
+        setCurrentTheme("light");
+      }
     }
   };
+  
   const handleToggleSystemTheme = () => {
     const systemColorScheme = Appearance.getColorScheme();
     console.log("System Theme Detected:", systemColorScheme);
