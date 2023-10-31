@@ -132,8 +132,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     height: "100%",
   },
-  activeTab: {},
+  activeTab: {
+   
+  },
   tabText: {
+
     color: "black",
     fontWeight: "bold",
     fontSize: 15,
