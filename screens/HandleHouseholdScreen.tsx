@@ -79,7 +79,7 @@ export default function HandleHouseholdScreen({
         console.log("activeHousehold is not available yet.");
       }
     } else {
-      setErrorText("kod kravs");
+      setErrorText("Kod kravs");
       setErrorPopup(true);
       //   console.error("Join code is required.");
     }
@@ -124,7 +124,7 @@ export default function HandleHouseholdScreen({
           </View>
 
           <View style={styles.verticalSpace} />
-
+          
           <Text style={theme.buttonText}>Gå med ett hushåll</Text>
           <View style={styles.inputContainer}>
             <TextInput

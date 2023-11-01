@@ -11,7 +11,7 @@ interface Props {
 }
 
 export default function ErrorModule(props: Props) {
-  const [isModalVisible, setIsModalVisible] = useState(true); 
+  const [isModalVisible, setIsModalVisible] = useState(true);
 
   const { theme } = useTheme();
 
@@ -25,36 +25,34 @@ export default function ErrorModule(props: Props) {
   }
 
   return (
-   
     <Modal transparent={true} visible={isModalVisible} animationType="slide">
-      <View style={styles.modalContainer}> 
-      <Card style={{alignContent:"center"}}>
-         <BlurView intensity={70} tint="light" style={styles.blurContainer}> 
-         <Text style={styles.text}>{props.errorMessage}
-         </Text>      
-          <TouchableOpacity style={theme.button as any} onPress={closeModal}>       
-            <Text>{props.buttonMessage}</Text> 
-          </TouchableOpacity></BlurView>
-          </Card>
+      <View style={styles.modalContainer}>
+        <Card style={{ alignContent: "center" }}>
+          <BlurView intensity={70} tint="light" style={styles.blurContainer}>
+            <Text style={styles.text}>{props.errorMessage}</Text>
+            <TouchableOpacity style={theme.button as any} onPress={closeModal}>
+              <Text>{props.buttonMessage}</Text>
+            </TouchableOpacity>
+          </BlurView>
+        </Card>
       </View>
     </Modal>
   );
 }
 
 const styles = StyleSheet.create({
-    blurContainer: {
-       height:600,
-        padding: 20,
-        margin: 16,
-       alignItems:"center" ,
-        justifyContent: 'center',
-        overflow: 'hidden',
-        borderRadius: 20,
-        maxWidth:"100%",
-       
-      },
+  blurContainer: {
+    height: 600,
+    padding: 20,
+    margin: 16,
+    alignItems: "center",
+    justifyContent: "center",
+    overflow: "hidden",
+    borderRadius: 20,
+    maxWidth: "100%",
+  },
   modalContainer: {
-    flex:1,
+    flex: 1,
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "rgba(0, 0, 0, 0)",
@@ -63,11 +61,11 @@ const styles = StyleSheet.create({
     width: 200,
     padding: 20,
     borderRadius: 10,
-    alignItems:"center",
-    justifyContent:"center"
+    alignItems: "center",
+    justifyContent: "center",
   },
   text: {
     fontSize: 16,
-    textAlign:"center"
+    textAlign: "center",
   },
 });

@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Image, Keyboard, TouchableWithoutFeedback, useColorScheme } from "react-native";
+import {
+  Image,
+  Keyboard,
+  TouchableWithoutFeedback,
+  useColorScheme,
+} from "react-native";
 import { Button } from "react-native-paper";
 import { AvatarColors, AvatarUrls, Avatars } from "../data/avatars";
 import { useAppDispatch, useAppSelector } from "../store/store";
@@ -105,8 +110,7 @@ export default function CreateProfileScreen({
     if (!householdName) {
       setErrorText("Ange ett namn");
       setErrorPopup(true);
-    }
-    else if (isOwner && activeUser) {
+    } else if (isOwner && activeUser) {
       const avatarsColor = AvatarColors[Avatars.Bee];
 
       const newProfile = {
@@ -123,11 +127,10 @@ export default function CreateProfileScreen({
       dispatch(addProfileAsync(newProfile)).then(() => {
         navigation.navigate("HouseholdAccount");
       });
-    } else if(!selectedAvatar){
-        setErrorText("Valij en avatar");
-        setErrorPopup(true);
-    } 
-    else if (activeUser && !isOwner) {
+    } else if (!selectedAvatar) {
+      setErrorText("Valij en avatar");
+      setErrorPopup(true);
+    } else if (activeUser && !isOwner) {
       if (activeUser.email && selectedAvatar && activeUser) {
         const avatarsColor = AvatarColors[selectedAvatar as Avatars];
         const newProfile = {
@@ -155,143 +158,142 @@ export default function CreateProfileScreen({
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-    <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
-      <View style={styles.container}>
-        <View style={styles.sectionContainer}>
-          <View
-            style={[
-              styles.rectContainer,
-              {
-                backgroundColor:
-                  colorScheme === theme.colors.background
-                    ? ""
-                    : theme.cardButton.backgroundColor,
-              },
-            ]}
-          >
-            <Text
+      <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
+        <View style={styles.container}>
+          <View style={styles.sectionContainer}>
+            <View
               style={[
-                styles.rectText,
+                styles.rectContainer,
                 {
                   backgroundColor:
                     colorScheme === theme.colors.background
-                      ? "white"
+                      ? ""
                       : theme.cardButton.backgroundColor,
                 },
               ]}
             >
-              {selectedHousehold?.name}
-            </Text>
-          </View>
-        </View>
-
-        <View style={styles.sectionContainer}>
-          <View style={theme.button as any}>
-            <Text style={theme.buttonText}>Välj ditt profilnamn</Text>
-          </View>
-        </View>
-
-        <TextInput
-          placeholder="Skriv ditt profilnamn"
-          // style={styles.input}
-          style={[
-            styles.input,
-            {
-              backgroundColor:
-                colorScheme === theme.colors.background
-                  ? "white"
-                  : theme.cardButton.backgroundColor,
-            },
-          ]}
-          onChangeText={(text) => setHouseholdName(text)}
-        />
-
-        <View>
-          {isOwner ? (
-            <View>
-              <TouchableOpacity
-                key={Avatars.Bee}
-                style={[styles.avatar, { backgroundColor: "lightgray" }]}
-                // onPress={() => {
-                //   setSelectedAvatar(Avatars.Bee);
-                // }}
+              <Text
+                style={[
+                  styles.rectText,
+                  {
+                    backgroundColor:
+                      colorScheme === theme.colors.background
+                        ? "white"
+                        : theme.cardButton.backgroundColor,
+                  },
+                ]}
               >
-                <Image
-                  source={{ uri: AvatarUrls[Avatars.Bee] }}
-                  style={styles.avatarImage}
-                />
-              </TouchableOpacity>
+                {selectedHousehold?.name}
+              </Text>
             </View>
-          ) : (
-            <View style={styles.avatarsContainer}>
-              {avatars.map((avatar) => {
-                const isOccupied = isAvatarOccupied(avatar.id);
-                const isSelected = selectedAvatar === avatar.id;
-                
-                const avatarStyles = [
-                  styles.avatar,
-                  isOccupied? styles.occupiedAvatar : undefined,               
-                  isAvatarOccupied(avatar.id)
-                    ? styles.occupiedAvatar
-                    : undefined,
-                  // isSelected ? styles.selectedAvatar : undefined,
-                  isSelected ? { backgroundColor: "lightgray" } : undefined,
-                 
-                ];
+          </View>
 
-                return (
-                  <TouchableOpacity
-                    key={avatar.id}
-                    style={avatarStyles}
-                    onPress={() => {
-                      if (!isAvatarOccupied(avatar.id)) {
-                        setSelectedAvatar(avatar.id as Avatars);
-                      }
-                    }}
-                  >
-                    <Image
-                      source={{ uri: AvatarUrls[avatar.id as Avatars] }}
-                      style={styles.avatarImage}
-                    />
-                  </TouchableOpacity>
-                );
-              })}
+          <View style={styles.sectionContainer}>
+            <View style={theme.button as any}>
+              <Text style={theme.buttonText}>Välj ditt profilnamn</Text>
             </View>
+          </View>
+
+          <TextInput
+            placeholder="Skriv ditt profilnamn"
+            // style={styles.input}
+            style={[
+              styles.input,
+              {
+                backgroundColor:
+                  colorScheme === theme.colors.background
+                    ? "white"
+                    : theme.cardButton.backgroundColor,
+              },
+            ]}
+            onChangeText={(text) => setHouseholdName(text)}
+          />
+
+          <View>
+            {isOwner ? (
+              <View>
+                <TouchableOpacity
+                  key={Avatars.Bee}
+                  style={[styles.avatar, { backgroundColor: "lightgray" }]}
+                  // onPress={() => {
+                  //   setSelectedAvatar(Avatars.Bee);
+                  // }}
+                >
+                  <Image
+                    source={{ uri: AvatarUrls[Avatars.Bee] }}
+                    style={styles.avatarImage}
+                  />
+                </TouchableOpacity>
+              </View>
+            ) : (
+              <View style={styles.avatarsContainer}>
+                {avatars.map((avatar) => {
+                  const isOccupied = isAvatarOccupied(avatar.id);
+                  const isSelected = selectedAvatar === avatar.id;
+
+                  const avatarStyles = [
+                    styles.avatar,
+                    isOccupied ? styles.occupiedAvatar : undefined,
+                    isAvatarOccupied(avatar.id)
+                      ? styles.occupiedAvatar
+                      : undefined,
+                    // isSelected ? styles.selectedAvatar : undefined,
+                    isSelected ? { backgroundColor: "lightgray" } : undefined,
+                  ];
+
+                  return (
+                    <TouchableOpacity
+                      key={avatar.id}
+                      style={avatarStyles}
+                      onPress={() => {
+                        if (!isAvatarOccupied(avatar.id)) {
+                          setSelectedAvatar(avatar.id as Avatars);
+                        }
+                      }}
+                    >
+                      <Image
+                        source={{ uri: AvatarUrls[avatar.id as Avatars] }}
+                        style={styles.avatarImage}
+                      />
+                    </TouchableOpacity>
+                  );
+                })}
+              </View>
+            )}
+          </View>
+          {isOwner ? (
+            <TouchableOpacity
+              style={theme.button as any}
+              onPress={() => saveProfile()}
+              // disabled={!householdName}
+            >
+              <Text style={[theme.buttonText, { fontSize: 20 }]}>SKAPA</Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              style={theme.button as any}
+              onPress={() => saveProfile()}
+              // disabled={!selectedAvatar || !householdName}
+            >
+              <Text style={[theme.buttonText, { fontSize: 20 }]}>SKAPA</Text>
+            </TouchableOpacity>
           )}
+          <Button
+            style={theme.button as any}
+            onPress={() => navigation.navigate("HandleHousehold")}
+            //   disabled={!selectedAvatar}
+          >
+            <Text style={theme.buttonText}>Tillbaka</Text>
+          </Button>
         </View>
-        {isOwner ? (
-          <TouchableOpacity
-            style={theme.button as any}
-            onPress={() => saveProfile()}
-            // disabled={!householdName}
-          >
-            <Text style={[theme.buttonText, { fontSize: 20 }]}>SKAPA</Text>
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity
-            style={theme.button as any}
-            onPress={() => saveProfile()}
-            // disabled={!selectedAvatar || !householdName}
-          >
-            <Text style={[theme.buttonText, { fontSize: 20 }]}>SKAPA</Text>
-          </TouchableOpacity>
-        )}
-        <Button
-          style={theme.button as any}
-          onPress={() => navigation.navigate("HandleHousehold")}
-        //   disabled={!selectedAvatar}
-        >
-          <Text style={theme.buttonText}>Tillbaka</Text>
-        </Button>
+        {errorPopup && errorText ? (
+          <ErrorModule
+            errorMessage={errorText}
+            buttonMessage="Försök igen"
+            onClose={() => setErrorPopup(false)}
+          />
+        ) : null}
       </View>
-      {errorPopup && errorText ? (
-        <ErrorModule
-          errorMessage={errorText}
-          buttonMessage="Försök igen"
-          onClose={() => setErrorPopup(false)}
-        />
-      ) : null}
-    </View>
     </TouchableWithoutFeedback>
   );
 }
