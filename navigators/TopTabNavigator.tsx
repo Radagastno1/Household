@@ -40,6 +40,7 @@ export default function TopTabNavigator() {
     endOfLastMonth,
     completions,
   );
+  console.log("LAST MONTH: ", lastMonth);
 
   useEffect(() => {
     if (lastWeek) {
@@ -69,22 +70,32 @@ export default function TopTabNavigator() {
           tabBarLabel: "Denna Vecka",
         })}
       />
-      <TopTab.Screen
-        name={"StatisticsLastWeek"}
-        component={StatisticScreen}
-        initialParams={{ startDate: startOfLastWeek, endDate: endOfLastWeek }}
-        options={() => ({
-          tabBarLabel: "Förra Vecka",
-        })}
-      />
-      <TopTab.Screen
-        name={"LastMonth"}
-        component={StatisticScreen}
-        initialParams={{ startDate: startOfLastMonth, endDate: endOfLastMonth }}
-        options={() => ({
-          tabBarLabel: "Förra månaden",
-        })}
-      />
+      {lastWeek.length > 0 && (
+        <TopTab.Screen
+          name={"StatisticsLastWeek"}
+          component={StatisticScreen}
+          initialParams={{
+            startDate: startOfLastWeek,
+            endDate: endOfLastWeek,
+          }}
+          options={() => ({
+            tabBarLabel: "Förra Vecka",
+          })}
+        />
+      )}
+      {lastMonth.length > 0 && (
+        <TopTab.Screen
+          name={"LastMonth"}
+          component={StatisticScreen}
+          initialParams={{
+            startDate: startOfLastMonth,
+            endDate: endOfLastMonth,
+          }}
+          options={() => ({
+            tabBarLabel: "Förra månaden",
+          })}
+        />
+      )}
     </TopTab.Navigator>
   );
 }
