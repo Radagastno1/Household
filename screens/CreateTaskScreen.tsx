@@ -231,17 +231,8 @@ export default function CreateTaskScreen({
                 onChangeText={(text) => setDescription(text)}
                 value={description}
               ></TextInput>
-              <Card
-                style={[
-                  styles.card,
-                  {
-                    backgroundColor:
-                      colorScheme === "dark"
-                        ? "gray"
-                        : theme.cardButton.backgroundColor,
-                  },
-                ]}
-              >
+
+               <Card style={theme as any}>
                 <Card.Content style={styles.cardContent}>
                   <View
                     style={{
@@ -253,9 +244,9 @@ export default function CreateTaskScreen({
                       <Title
                         style={{
                           fontWeight: "bold",
-                          backgroundColor:
-                            colorScheme === "dark" ? "gray" : "transparent",
-                          color: colorScheme === "dark" ? "white" : "black", 
+                                  // backgroundColor:
+                          //   colorScheme === "dark" ? "gray" : "transparent",
+                          // color: colorScheme === "dark" ? "white" : "black", 
                         }}
                       >
                         Återkommer:
@@ -270,9 +261,9 @@ export default function CreateTaskScreen({
                         <CircleComponent
                           number={selectedInterval}
                           backgroundColor={
-                            colorScheme === "dark" ? "white" : "red"
+                            colorScheme === "dark" ? "red" : "red"
                           } 
-                          color={colorScheme === "dark" ? "black" : "white"} 
+                          color={colorScheme === "dark" ? "white" : "white"} 
                         />
                       </TouchableOpacity>
                       <Title> dag</Title>
@@ -298,16 +289,28 @@ export default function CreateTaskScreen({
                             <CircleComponent
                               number={number}
                               backgroundColor={
-                                colorScheme === "dark" ? "gray" : "lightgrey"
+                                colorScheme === "dark" ? "lightgrey" : "lightgrey"
 
                               }
-                              color={colorScheme === "dark" ? "white" : "black"}
+                              color={colorScheme === "dark" ? "black" : "black"}
                             />
                           </TouchableOpacity>
                         ))}
                       </ScrollView>
                     ) : null}
                   </View>
+
+                  {/* <CircleIntervalView
+  isShowing={intervalDataPressed}
+  intervalArray={intervalData}
+  circleBackgroundColor="grey"
+  getCircleBackgroundColor={getEnergyCircleBackgroundColor}
+  onNumberSelect={(selectedNumber) => {
+    setSelectedInterval(selectedNumber);
+    setIntervalDataPressed(!intervalDataPressed);
+  }}
+/> */}
+
                 </Card.Content>
               </Card>
 
@@ -339,40 +342,16 @@ export default function CreateTaskScreen({
                     </View>
                   </View>
 
-                  {/* <View style={{ flexDirection: "row" }}>
-                    {energyDataPressed
-                      ? energyData.map((number) => (
-                          <TouchableOpacity
-                            key={number.toString()}
-                            onPress={() => {
-                              setSelectedEnergy(number),
-                                setEnergyDataPressed(false);
-                            }}
-                          >
-                            <CircleComponent
-                              number={number}
-                              backgroundColor={getEnergyCircleBackgroundColor(
-                                number,
-                              )}
-                              color="black"
-                            />
-                          </TouchableOpacity>
-                        ))
-                      : null}
-                  </View> */}
-
-                  <CircleIntervalView
+                   <CircleIntervalView
   isShowing={energyDataPressed}
   intervalArray={energyData}
   circleBackgroundColor="grey"
   getCircleBackgroundColor={getEnergyCircleBackgroundColor}
   onNumberSelect={(selectedNumber) => {
     setSelectedEnergy(selectedNumber);
-    setEnergyDataPressed(!energyDataPressed);
+    setEnergyDataPressed(false);
   }}
-/>
-
-
+/> 
                 </Card.Content>
               </Card>
               {isCreateMode ? null : (
@@ -459,7 +438,7 @@ const styles = StyleSheet.create({
   intervalContainer: {
     flexDirection: "row",
     marginVertical: 10,
-    paddingLeft: 10, // Add some padding to the left to avoid being too close to the screen edge
+    paddingLeft: 10, 
   },
   shadowProp: {
     shadowColor: "#171717",
