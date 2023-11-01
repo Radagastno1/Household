@@ -49,6 +49,11 @@ export type Theme = typeof DarkTheme & {
     justifyContent: string;
     alignItems: string;
   };
+  iconColors: {
+    
+    color: string; 
+  
+  },
   // forgotPasswordButtonText: {
 
   //   color: string,
@@ -119,6 +124,11 @@ export const AppLightTheme: Theme = {
     justifyContent: "space-between",
     alignItems: "center",
   },
+  iconColors: {
+    
+    color: 'black',
+  
+  },
 };
 
 export const AppDarkTheme: Theme = {
@@ -178,6 +188,11 @@ export const AppDarkTheme: Theme = {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+  },
+  iconColors: {
+    
+    color: 'white', 
+  
   },
   //   forgotPasswordButtonText: {
 
