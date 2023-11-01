@@ -28,6 +28,7 @@ export default function HouseholdItem({
   profile,
   request,
   activeUser,
+  
 }: HouseholdItemProps) {
   const { theme } = useTheme();
   const dispatch = useAppDispatch();
