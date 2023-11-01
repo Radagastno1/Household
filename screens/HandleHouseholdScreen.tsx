@@ -1,6 +1,6 @@
 import { getFirestore } from "firebase/firestore";
 import React, { useState } from "react";
-import { StyleSheet, View, TouchableOpacity } from "react-native";
+import { StyleSheet, View, TouchableOpacity, TouchableWithoutFeedback, Keyboard } from "react-native";
 import { Appbar, Button, Text, TextInput } from "react-native-paper";
 import { app } from "../api/config";
 import { useTheme } from "../contexts/themeContext";
@@ -11,7 +11,7 @@ import {
 } from "../store/household/householdSlice";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import ErrorModule from "../modules/errorModule";
-
+import { BlurView } from 'expo-blur';
 const db = getFirestore(app);
 
 type HandleHouseholdProps = RootNavigationScreenProps<"HandleHousehold">;
@@ -30,7 +30,10 @@ export default function HandleHouseholdScreen({
   const dispatch = useAppDispatch();
 
   const handleCreateHousehold = async () => {
-    try {
+    if (!householdName) {
+      setErrorText("Ange ett namn");
+      setErrorPopup(true);
+    } else {
       dispatch(addHouseholdAsync(householdName)).then((action) => {
         if (addHouseholdAsync.fulfilled.match(action)) {
           const householdCreated = action.payload;
@@ -42,8 +45,6 @@ export default function HandleHouseholdScreen({
           }
         }
       });
-    } catch (error) {
-      console.error("Error creating household:", error);
     }
   };
 
@@ -66,6 +67,9 @@ export default function HandleHouseholdScreen({
       } else if (!household) {
         setErrorText("Koden finns inte");
         setErrorPopup(true);
+      } else if (profile) {
+        setErrorText("Huset finns i profilen redo");
+        setErrorPopup(true);
       } else if (household) {
         console.log("activeHousehold is available:", household);
         navigation.navigate("CreateProfile", {
@@ -75,12 +79,15 @@ export default function HandleHouseholdScreen({
         console.log("activeHousehold is not available yet.");
       }
     } else {
-      console.error("Join code is required.");
+      setErrorText("Kod kravs");
+      setErrorPopup(true);
+      //   console.error("Join code is required.");
     }
   };
   const loggedInUser = useAppSelector((state) => state.user.user);
 
   return (
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
     <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
       <View>
         <View>
@@ -110,7 +117,6 @@ export default function HandleHouseholdScreen({
           </TouchableOpacity>
 
           <View style={styles.verticalSpace} />
-
           <View style={styles.horizontalLine}>
             <View style={styles.line} />
             <Text style={styles.ellerText}>eller</Text>
@@ -118,7 +124,7 @@ export default function HandleHouseholdScreen({
           </View>
 
           <View style={styles.verticalSpace} />
-
+          
           <Text style={theme.buttonText}>Gå med ett hushåll</Text>
           <View style={styles.inputContainer}>
             <TextInput
@@ -144,19 +150,32 @@ export default function HandleHouseholdScreen({
             <Text style={{ fontSize: 20 }}>Tillbaka</Text>
           </TouchableOpacity>
         </View>
-        {errorPopup && errorText?(
+      </View>
+
+      {errorPopup && errorText ? (
           <ErrorModule
             errorMessage={errorText}
             buttonMessage="Försök igen"
             onClose={() => setErrorPopup(false)}
           />
-        ) : null}
-      </View>
+       
+      ) : null}
     </View>
+    </TouchableWithoutFeedback>
   );
 }
 
 const styles = StyleSheet.create({
+    blurContainer: {
+        flex: 1,
+        padding: 20,
+        margin: 16,
+        textAlign: 'center',
+        justifyContent: 'center',
+        overflow: 'hidden',
+        borderRadius: 20,
+        height:100,
+      },
   container: {
     flex: 1,
     backgroundColor: "#fff",
