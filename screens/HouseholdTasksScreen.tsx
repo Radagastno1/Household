@@ -70,6 +70,17 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  customHeader: {
+    height: 140,
+  },
+  title: {
+    flex: 1,
+    alignItems: "center",
+    marginTop: 10,
+  },
+  imageContainer: {
+    marginBottom: 10,
+  },
   scrollContainerNonOwner: {
     flex: 1,
     maxHeight: "100%", // Max height for non-owners

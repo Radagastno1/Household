@@ -18,6 +18,7 @@ import { RootNavigationScreenProps } from "../navigators/navigationTypes";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { logInUserAsync } from "../store/user/userSlice";
 import { User } from "../types";
+import { useColorScheme } from "react-native";
 
 type SignInProps = RootNavigationScreenProps<"Login">;
 
@@ -27,12 +28,30 @@ export const SignInScreen = ({ navigation }: SignInProps) => {
   const [showPassword, setShowPassword] = useState(false);
   const error = useAppSelector((state) => state.user.error);
   const [errorPopup, setErrorPopup] = useState(false);
-  const { theme } = useTheme();
+  const { theme, setColorScheme } = useTheme();
   const dispatch = useAppDispatch();
+  const colorScheme = useColorScheme();
+
+
+
+
+
+  const isDarkMode = colorScheme === "dark";
+  const lightVideoSource = require("../assets/bee-animation.mp4");
+  const darkVideoSource = require("../assets/bee-animation-darkmode.mp4");
+  const videoSource = isDarkMode ? darkVideoSource : lightVideoSource;
 
   const [] = useState<User[]>([]);
 
   const translateY = useRef(new Animated.Value(6)).current;
+
+  useEffect(() => {
+    if (colorScheme) {
+      const systemColorScheme = colorScheme;
+      setColorScheme(systemColorScheme);
+    }
+  }, [colorScheme, setColorScheme]);
+  
 
   useEffect(() => {
     Animated.timing(translateY, {
@@ -90,7 +109,7 @@ export const SignInScreen = ({ navigation }: SignInProps) => {
 
               <View style={styles.container}>
                 <Video
-                  source={require("../assets/bee-animation.mp4")}
+                  source={videoSource}
                   rate={1.0}
                   volume={1.0}
                   isMuted={false}
