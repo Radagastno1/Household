@@ -1,8 +1,7 @@
-import { AntDesign } from "@expo/vector-icons";
 import { useFocusEffect } from "@react-navigation/native";
 import React, { useCallback } from "react";
 import { ScrollView, StyleSheet, View, useColorScheme } from "react-native";
-import { Button } from "react-native-paper";
+import NewTaskButton from "../components/NewTaskButton";
 import TaskCard from "../components/TaskCard";
 import { useTheme } from "../contexts/themeContext";
 import { TopTabScreenProps } from "../navigators/navigationTypes";
@@ -62,8 +61,8 @@ export default function HouseholdTasksScreen({
             />
           ))}
         </ScrollView>
-
-        <View style={styles.buttonContainer}>
+        <NewTaskButton isOwner={isOwner as boolean} navigation={navigation} />
+        {/* <View style={styles.buttonContainer}>
           {isOwner === true && (
             <Button
               icon={() => (
@@ -85,7 +84,7 @@ export default function HouseholdTasksScreen({
               Lägg Till
             </Button>
           )}
-        </View>
+        </View> */}
       </View>
     </View>
   );
