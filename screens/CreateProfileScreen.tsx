@@ -48,25 +48,16 @@ export default function CreateProfileScreen({
 }: CreateProfileProps) {
   const [householdName, setHouseholdName] = useState("");
   const [selectedAvatar, setSelectedAvatar] = useState<string | null>(null);
-  const [selectedBee, setSelectedBee] = useState(false);
   const householdId = route.params.householdId;
   const isOwner = route.params.isOwner;
   const [errorPopup, setErrorPopup] = useState(false);
   const [errorText, setErrorText] = useState("");
-  //   const [createIsDisabled, setCreateIsDisabled] = useState(false);
-  // const household = households.find((h) => h.id === householdId);
   const { theme } = useTheme();
   const colorScheme = useColorScheme();
   const dispatch = useAppDispatch();
   const todaysDate = new Date();
-  //här hämtas alla profiler för det hushållet det gäller
+
   const profiles = useAppSelector((state) => state.profile.profiles);
-
-  const activeHousehold = useAppSelector(
-    (state) => state.household.activeHousehold,
-  );
-
-  const householdSlice = useAppSelector((state) => state.household);
 
   const activeUser = useAppSelector((state) => state.user.user);
 
@@ -80,25 +71,6 @@ export default function CreateProfileScreen({
     dispatch(getProfilesByHouseholdIdAsync(householdId));
   }, []);
 
-  //     // Lite slarvigt kanske en stund här men funkar sålänge
-  // const hasActiveProfiles = activeProfiles.length > 0;
-
-  // const isOwner = !hasActiveProfiles;
-  // const isAvatarOccupied = (avatarId: string) => {
-  //   return activeProfiles.some((profile) => profile.avatar === avatarId);
-  // };
-
-  // const householdHasOwner = () => {
-  //   console.log("antal profiler för hushållet: ", profilesForHousehold.payload.length)
-  //   if (profilesForHousehold.payload) {
-  //     return true;
-  //   } else {
-  //     return false;
-  //   }
-  // };
-  const [lastSelectedAvatar, setLastSelectedAvatar] = useState<string | null>(
-    null,
-  );
   const isAvatarOccupied = (avatarId: string) => {
     if (profiles) {
       return profiles.some((profile) => profile.avatar === avatarId);
@@ -196,7 +168,6 @@ export default function CreateProfileScreen({
 
           <TextInput
             placeholder="Skriv ditt profilnamn"
-            // style={styles.input}
             style={[
               styles.input,
               {
@@ -215,9 +186,6 @@ export default function CreateProfileScreen({
                 <TouchableOpacity
                   key={Avatars.Bee}
                   style={[styles.avatar, { backgroundColor: "lightgray" }]}
-                  // onPress={() => {
-                  //   setSelectedAvatar(Avatars.Bee);
-                  // }}
                 >
                   <Image
                     source={{ uri: AvatarUrls[Avatars.Bee] }}
@@ -237,7 +205,6 @@ export default function CreateProfileScreen({
                     isAvatarOccupied(avatar.id)
                       ? styles.occupiedAvatar
                       : undefined,
-                    // isSelected ? styles.selectedAvatar : undefined,
                     isSelected ? { backgroundColor: "lightgray" } : undefined,
                   ];
 
@@ -265,7 +232,6 @@ export default function CreateProfileScreen({
             <TouchableOpacity
               style={theme.button as any}
               onPress={() => saveProfile()}
-              // disabled={!householdName}
             >
               <Text style={[theme.buttonText, { fontSize: 20 }]}>SKAPA</Text>
             </TouchableOpacity>
@@ -273,7 +239,6 @@ export default function CreateProfileScreen({
             <TouchableOpacity
               style={theme.button as any}
               onPress={() => saveProfile()}
-              // disabled={!selectedAvatar || !householdName}
             >
               <Text style={[theme.buttonText, { fontSize: 20 }]}>SKAPA</Text>
             </TouchableOpacity>
@@ -281,7 +246,6 @@ export default function CreateProfileScreen({
           <Button
             style={theme.button as any}
             onPress={() => navigation.navigate("HandleHousehold")}
-            //   disabled={!selectedAvatar}
           >
             <Text style={theme.buttonText}>Tillbaka</Text>
           </Button>
@@ -309,7 +273,6 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   rectContainer: {
-    // backgroundColor: "white",
     padding: 10,
     borderRadius: 5,
     width: 370,
