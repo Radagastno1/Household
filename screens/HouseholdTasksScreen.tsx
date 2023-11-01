@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
   },
   scrollContainerNonOwner: {
     flex: 1,
-    maxHeight: "100%", // Max height for non-owners
+    maxHeight: "100%", 
   },
   scrollContainerOwner: {
     flex: 1,

@@ -37,7 +37,6 @@ export default function HouseholdItem({
 
   const handleEnterHousehold = async (household: Household) => {
     dispatch(sethouseholdActive(household));
-    console.log("HHOUSEHOLDID ÄR: ", household.id);
     try {
       dispatch(fetchAllProfilesByHousehold(household.id, activeUser!.uid));
       dispatch(
@@ -46,8 +45,6 @@ export default function HouseholdItem({
           householdId: household.id,
         }),
       );
-      console.log("FRÅN HOUSEHOLDACCOUNT: ", activeProfile?.id);
-      console.log("aktiva profilen: ", activeProfile);
     } catch (error) {
       console.error("Error entering household:", error);
     }
