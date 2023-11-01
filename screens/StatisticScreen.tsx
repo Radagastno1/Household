@@ -46,7 +46,6 @@ export default function StatisticScreen({ route }: StatProps) {
   const [statsForTasks, setStatsForTasks] = useState<StatData[]>([]);
   const [totalSumColors, setTotalSumColors] = useState<string[]>([]);
   const [totalSumSeries, setTotalSumSeries] = useState<number[]>([]);
-  const [isData, setIsData] = useState<StatData[]>([]);
 
   const handleFocusEffect = useCallback(() => {
     console.log("USE-EFFECT STATS: ", completions);
@@ -61,12 +60,6 @@ export default function StatisticScreen({ route }: StatProps) {
     setStatsForTasks(summarizedData);
     console.log("SUMMARIZEDDATA: ", summarizedData);
 
-    if (summarizedData.length === 0) {
-      setIsData(greyDataSum);
-    } else {
-      setIsData(statsForTasks);
-    }
-
     const data = summarizeDataByColor(summarizedData);
     setTotalSumColors(data.colors);
     setTotalSumSeries(data.series);
@@ -76,10 +69,18 @@ export default function StatisticScreen({ route }: StatProps) {
   }, [completions, tasks, profiles, startDate, endDate]);
 
   useFocusEffect(handleFocusEffect);
-  const chunkedCharts = arrayChunk(isData, 3);
+  const chunkedCharts = arrayChunk(
+    statsForTasks.length < 1 ? greyDataSum : statsForTasks,
+    3,
+  );
 
   return (
-    <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: theme.colors.background,
+      }}
+    >
       <ScrollView style={styles.container}>
         {totalSumColors.length > 0 && totalSumSeries.length > 0 ? ( // Kontrollera om totalSumColors har data
           <View style={styles.topChart}>
@@ -118,7 +119,6 @@ export default function StatisticScreen({ route }: StatProps) {
                   width: 40,
                   height: 40,
                   alignItems: "center",
-                  justifyContent: "center",
                   margin: 5,
                 },
               ]}
@@ -131,7 +131,7 @@ export default function StatisticScreen({ route }: StatProps) {
           ))}
         </View>
 
-        <View style={styles.chartContainer}>
+        <View style={styles.piechartContainer}>
           {chunkedCharts.map((row, rowIndex) => (
             <View style={styles.row} key={rowIndex}>
               {row.map((chart, columnIndex) => (
@@ -139,13 +139,11 @@ export default function StatisticScreen({ route }: StatProps) {
                   <Text style={theme.taskTitle as any} numberOfLines={2}>
                     {chart.title}
                   </Text>
-                  {chart.colors.length > 0 && chart.series.length > 0 && (
-                    <PiechartComponent
-                      widthAndHeight={100}
-                      series={chart.series}
-                      sliceColor={chart.colors}
-                    />
-                  )}
+                  <PiechartComponent
+                    widthAndHeight={100}
+                    series={chart.series}
+                    sliceColor={chart.colors}
+                  />
                 </View>
               ))}
             </View>
@@ -165,14 +163,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   piechartContainer: {
-    flexDirection: "column",
     justifyContent: "center",
     padding: 10,
+    alignItems: "flex-start",
   },
   topChart: {
     alignItems: "center",
-  },
-  chartContainer: {
-    flexDirection: "column",
   },
 });
