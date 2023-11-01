@@ -1,6 +1,6 @@
 import { getFirestore } from "firebase/firestore";
 import React, { useState } from "react";
-import { StyleSheet, View, TouchableOpacity } from "react-native";
+import { StyleSheet, View, TouchableOpacity, TouchableWithoutFeedback, Keyboard } from "react-native";
 import { Appbar, Button, Text, TextInput } from "react-native-paper";
 import { app } from "../api/config";
 import { useTheme } from "../contexts/themeContext";
@@ -87,6 +87,7 @@ export default function HandleHouseholdScreen({
   const loggedInUser = useAppSelector((state) => state.user.user);
 
   return (
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
     <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
       <View>
         <View>
@@ -159,6 +160,7 @@ export default function HandleHouseholdScreen({
         />
       ) : null}
     </View>
+    </TouchableWithoutFeedback>
   );
 }
 

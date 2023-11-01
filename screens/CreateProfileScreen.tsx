@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Image, useColorScheme } from "react-native";
+import { Image, Keyboard, TouchableWithoutFeedback, useColorScheme } from "react-native";
 import { Button } from "react-native-paper";
 import { AvatarColors, AvatarUrls, Avatars } from "../data/avatars";
 import { useAppDispatch, useAppSelector } from "../store/store";
@@ -154,6 +154,7 @@ export default function CreateProfileScreen({
   };
 
   return (
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
     <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
       <View style={styles.container}>
         <View style={styles.sectionContainer}>
@@ -291,6 +292,7 @@ export default function CreateProfileScreen({
         />
       ) : null}
     </View>
+    </TouchableWithoutFeedback>
   );
 }
 
