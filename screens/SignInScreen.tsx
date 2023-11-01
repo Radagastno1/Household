@@ -43,27 +43,6 @@ export const SignInScreen = ({ navigation }: SignInProps) => {
     }).start();
   }, []);
 
-  // // So you don't have to write the password when logging in (remove this later)
-  // function clearFieldsAndTogglePassword(event: GestureResponderEvent): void {
-  //   if (!showPassword) {
-  //     // You can call the getUsersFromDB function with the provided username
-  //     getUsersFromDB(username).then((users) => {
-  //       if (users && users.length > 0) {
-  //         const user = users[0];
-  //         // If the user exists in the database, show the password
-  //         setPassword(user.password);
-  //         setShowPassword(true);
-  //       } else {
-  //         console.error("User not found in the database.");
-  //       }
-  //     });
-  //   } else {
-  //     // If the password is already shown, clear it
-  //     setPassword("");
-  //     setShowPassword(false);
-  //   }
-  // }
-
   async function handleLogin() {
     dispatch(logInUserAsync({ email: username, password: password })).then(
       () => {
@@ -76,32 +55,11 @@ export const SignInScreen = ({ navigation }: SignInProps) => {
         }
       },
     );
-    // getUsersFromDB(username)
-    //   .then((users) => {
-    //     if (users && users.length > 0) {
-    //       const user = users[0];
-
-    //       if (user.password === password) {
-    //         dispatch(loginUser(user));
-    //         console.log("Authentication successful");
-    //         console.log("User data:", user);
-    //         navigation.navigate("HouseholdAccount");
-    //       } else {
-    //         console.error("Authentication failed: Invalid password");
-    //       }
-    //     } else {
-    //       console.error("Authentication failed: User not found");
-    //     }
-    //   })
-    //   .catch((error) => {
-    //     console.error("Error while fetching users:", error);
-    //   });
   }
 
   return (
-
-    <KeyboardAvoidingView // Wrap your content in KeyboardAvoidingView
-      behavior="padding" // You can set different behaviors as needed
+    <KeyboardAvoidingView
+      behavior="padding"
       style={{ flex: 1, backgroundColor: theme.colors.background }}
     >
       <Animated.View
@@ -185,19 +143,9 @@ export const SignInScreen = ({ navigation }: SignInProps) => {
                 >
                   <Text style={theme.buttonText}>Skapa konto</Text>
                 </TouchableOpacity>
-
-                {/* <TouchableOpacity
-                  style={theme.signupButton as any}
-                  onPress={clearFieldsAndTogglePassword}
-                >
-                  <Text style={theme.buttonText}>
-                    {showPassword ? "Ta bort lösenord" : "Glömt lösenord?"}
-                  </Text>
-                </TouchableOpacity> */}
               </View>
             </View>
           </View>
-
         </TouchableWithoutFeedback>
 
         {errorPopup && error ? (
