@@ -13,6 +13,7 @@ import {
 } from "react-native";
 import { Card, Paragraph, Title } from "react-native-paper";
 import CircleComponent from "../components/CircleComponent";
+import CircleIntervalView from "../components/CircleIntervalView";
 import { useTheme } from "../contexts/themeContext";
 import DeleteTaskModule from "../modules/DeleteTaskModule";
 import { RootNavigationScreenProps } from "../navigators/navigationTypes";
@@ -338,7 +339,40 @@ export default function CreateTaskScreen({
                     </View>
                   </View>
 
-         
+                  {/* <View style={{ flexDirection: "row" }}>
+                    {energyDataPressed
+                      ? energyData.map((number) => (
+                          <TouchableOpacity
+                            key={number.toString()}
+                            onPress={() => {
+                              setSelectedEnergy(number),
+                                setEnergyDataPressed(false);
+                            }}
+                          >
+                            <CircleComponent
+                              number={number}
+                              backgroundColor={getEnergyCircleBackgroundColor(
+                                number,
+                              )}
+                              color="black"
+                            />
+                          </TouchableOpacity>
+                        ))
+                      : null}
+                  </View> */}
+
+                  <CircleIntervalView
+  isShowing={energyDataPressed}
+  intervalArray={energyData}
+  circleBackgroundColor="grey"
+  getCircleBackgroundColor={getEnergyCircleBackgroundColor}
+  onNumberSelect={(selectedNumber) => {
+    setSelectedEnergy(selectedNumber);
+    setEnergyDataPressed(!energyDataPressed);
+  }}
+/>
+
+
                 </Card.Content>
               </Card>
               {isCreateMode ? null : (

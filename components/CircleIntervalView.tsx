@@ -1,13 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { TouchableOpacity, View } from "react-native";
 import CircleComponent from "./CircleComponent";
 
 interface Props{
     isShowing: boolean;
     intervalArray: number[];
-    onPress: () => void;
     circleBackgroundColor: string;
-    circleBackgroundColors: { [key: number]: string };
+    getCircleBackgroundColor: (energyWeight: number | undefined) => string;
+    onNumberSelect: (selectedNumber: number) => void;
 }
 
 export default function CircleIntervalView(props:Props){
@@ -18,14 +18,14 @@ export default function CircleIntervalView(props:Props){
               <TouchableOpacity
                 key={number.toString()}
                 onPress={() => {
-                    props.onPress();
-                }}
+                    props.onNumberSelect(number);
+                  }}
               >
-                <CircleComponent
-                  number={number}
-                  backgroundColor={props.circleBackgroundColors[number] || props.circleBackgroundColor}
-                  color="black"
-                />
+             <CircleComponent
+                number={number}
+                backgroundColor={props.getCircleBackgroundColor(number) || props.circleBackgroundColor}
+                color="black"
+              />
               </TouchableOpacity>
             ))
           : null}
