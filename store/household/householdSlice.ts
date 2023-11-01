@@ -85,15 +85,17 @@ export const addHouseholdAsync = createAsyncThunk<
     return thunkAPI.rejectWithValue(error.message);
   }
 });
-export const editHouseHoldeNameAsync = createAsyncThunk<
+
+
+export const editHouseHoldAsync = createAsyncThunk<
 Household,
 Household,
 {rejectValue:string}
-> ("household/editHouseHoldeName", async (household, thunkAPI)=>{
+> ("household/editHouseHold", async (household, thunkAPI)=>{
     try{
-        const editHouseHoldeName = await editHouseholdToDB(household);
-        if(editHouseHoldeName){
-            return editHouseHoldeName;
+        const editHouseHold = await editHouseholdToDB(household);
+        if(editHouseHold){
+            return editHouseHold;
         }else{
             return thunkAPI.rejectWithValue("failed to edit household");
         }
