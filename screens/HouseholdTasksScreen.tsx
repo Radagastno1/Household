@@ -2,19 +2,20 @@ import { AntDesign } from "@expo/vector-icons";
 import { useFocusEffect } from "@react-navigation/native";
 import React, { useCallback } from "react";
 import {
-  Image,
   ScrollView,
   StyleSheet,
   View,
   useColorScheme,
+  Image,
 } from "react-native";
 import { Button, Card, Text } from "react-native-paper";
+import TaskCard from "../components/TaskCard";
 import { useTheme } from "../contexts/themeContext";
-import { AvatarUrls, Avatars } from "../data/avatars";
 import { TopTabScreenProps } from "../navigators/navigationTypes";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { fetchTasks, filterTaskListByHouseId } from "../store/tasks/taskSlice";
 import { Profile, Task } from "../types";
+import { AvatarUrls, Avatars } from "../data/avatars";
 
 type HouseholdTasksProps = TopTabScreenProps<"HouseholdTasks">;
 
@@ -60,6 +61,9 @@ export default function HouseholdTasksScreen({
   // const household = households.find((h) => h.id === activeProfile?.householdId);
   const filteredTasks = useAppSelector((state) => state.task.filteredTasks);
   const taskCompletionSlice = useAppSelector((state) => state.taskCompletion);
+  const completions = useAppSelector(
+    (state) => state.taskCompletion.completions,
+  );
   const dispatch = useAppDispatch();
 
   const isOwner = activeProfile?.isOwner;
@@ -157,81 +161,12 @@ export default function HouseholdTasksScreen({
           }
         >
           {filteredTasks.map((task) => (
-            <Card
-              key={task.id}
-              style={[
-                styles.card,
-                {
-                  backgroundColor:
-                    colorScheme === "dark"
-                      ? "white"
-                      : theme.cardButton.backgroundColor,
-                },
-              ]}
-              onPress={() => handleTaskPress(task.id)}
-            >
-              {/* {taskSlice.filteredTasks.map((task) => (
-          <Card
-            key={task.id}
-            style={styles.card}
-            onPress={() => handleTaskPress(task.id)}
-          > */}
-              <View style={styles.taskItem}>
-                <View>
-                  <Text
-                    variant="titleLarge"
-                    style={{
-                      color:
-                        colorScheme === "dark"
-                          ? "white"
-                          : theme.buttonText.color,
-                    }}
-                  >
-                    {task.title}
-                  </Text>
-                </View>
-                {/* <View style={styles.taskItem}>
-              <View>
-                <Text variant="titleLarge">{task.title}</Text>
-              </View> */}
-
-                {findAllAvatarFortodayCompletionByTaskId(
-                  task.id,
-                  activeProfile!!,
-                ).map((avatar, index) => (
-                  <View key={index}>
-                    <Image
-                      source={{ uri: AvatarUrls[avatar as Avatars] }}
-                      style={{ height: 20, width: 20 }}
-                    />
-                  </View>
-                ))}
-
-                {getDaysSinceLastCompletion(task) > 0 && (
-                  <View
-                    style={[
-                      styles.intervalNumberCircle,
-                      {
-                        backgroundColor:
-                          getDaysSinceLastCompletion(task) < task.interval
-                            ? "lightgrey"
-                            : "red",
-                      },
-                    ]}
-                  >
-                    {getDaysSinceLastCompletion(task) > 30 ? (
-                      <Text style={styles.circleText} variant="bodyMedium">
-                        30+
-                      </Text>
-                    ) : (
-                      <Text style={styles.circleText} variant="bodyMedium">
-                        {getDaysSinceLastCompletion(task)}
-                      </Text>
-                    )}
-                  </View>
-                )}
-              </View>
-            </Card>
+            <TaskCard
+              completions={completions}
+              profiles={profiles}
+              navigation={navigation}
+              task={task}
+            />
           ))}
         </ScrollView>
 

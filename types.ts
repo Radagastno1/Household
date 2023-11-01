@@ -44,6 +44,7 @@ export interface TaskCompletion {
 }
 
 export interface TaskCompletionStat {
+  completions: any;
   id: string;
   householdId: string;
   taskId: string;
