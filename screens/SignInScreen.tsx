@@ -5,12 +5,12 @@ import {
   Animated,
   Easing,
   Keyboard,
-  KeyboardAvoidingView,
   StyleSheet,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  View,
+  View
 } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { Text, TextInput } from "react-native-paper";
 import { useTheme } from "../contexts/themeContext";
 import ErrorModule from "../modules/errorModule";
@@ -18,7 +18,6 @@ import { RootNavigationScreenProps } from "../navigators/navigationTypes";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { logInUserAsync } from "../store/user/userSlice";
 import { User } from "../types";
-import { useColorScheme } from "react-native";
 
 type SignInProps = RootNavigationScreenProps<"Login">;
 
@@ -28,30 +27,12 @@ export const SignInScreen = ({ navigation }: SignInProps) => {
   const [showPassword, setShowPassword] = useState(false);
   const error = useAppSelector((state) => state.user.error);
   const [errorPopup, setErrorPopup] = useState(false);
-  const { theme, setColorScheme } = useTheme();
+  const { theme } = useTheme();
   const dispatch = useAppDispatch();
-  const colorScheme = useColorScheme();
-
-
-
-
-
-  const isDarkMode = colorScheme === "dark";
-  const lightVideoSource = require("../assets/bee-animation.mp4");
-  const darkVideoSource = require("../assets/bee-animation-darkmode.mp4");
-  const videoSource = isDarkMode ? darkVideoSource : lightVideoSource;
 
   const [] = useState<User[]>([]);
 
   const translateY = useRef(new Animated.Value(6)).current;
-
-  useEffect(() => {
-    if (colorScheme) {
-      const systemColorScheme = colorScheme;
-      setColorScheme(systemColorScheme);
-    }
-  }, [colorScheme, setColorScheme]);
-  
 
   useEffect(() => {
     Animated.timing(translateY, {
@@ -77,10 +58,10 @@ export const SignInScreen = ({ navigation }: SignInProps) => {
   }
 
   return (
-    <KeyboardAvoidingView
-      behavior="padding"
-      style={{ flex: 1, backgroundColor: theme.colors.background }}
-    >
+    <KeyboardAwareScrollView
+    contentContainerStyle={styles.scrollContent}
+    keyboardShouldPersistTaps="handled"
+  >
       <Animated.View
         style={[
           styles.container,
@@ -109,7 +90,7 @@ export const SignInScreen = ({ navigation }: SignInProps) => {
 
               <View style={styles.container}>
                 <Video
-                  source={videoSource}
+                  source={require("../assets/bee-animation.mp4")}
                   rate={1.0}
                   volume={1.0}
                   isMuted={false}
@@ -118,10 +99,7 @@ export const SignInScreen = ({ navigation }: SignInProps) => {
                   style={styles.video}
                   resizeMode={ResizeMode.CONTAIN}
                 />
-              </View>
-
-              <View style={styles.textContainer}>
-                <Text
+                              <Text
                   style={{
                     color: theme.buttonText.color,
                     fontSize: 24,
@@ -132,6 +110,10 @@ export const SignInScreen = ({ navigation }: SignInProps) => {
                   BUZZTER
                 </Text>
 
+              </View>
+
+              <View style={styles.textContainer}>
+  
                 <TextInput
                   placeholder="Email"
                   onChangeText={(text) => setUsername(text)}
@@ -175,7 +157,7 @@ export const SignInScreen = ({ navigation }: SignInProps) => {
           />
         ) : null}
       </Animated.View>
-    </KeyboardAvoidingView>
+    </KeyboardAwareScrollView>
   );
 };
 
@@ -183,7 +165,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    marginBottom: 39,
+    marginTop: 20,
   },
   video: {
     width: 400,
@@ -210,5 +192,9 @@ const styles = StyleSheet.create({
   textContainer: {
     padding: 20,
   },
+  scrollContent: {
+    flexGrow: 1,
+  },
 });
 export default SignInScreen;
+
