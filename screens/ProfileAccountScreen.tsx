@@ -241,14 +241,22 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
                 {/* tog headertitle som du satt till hushållsnamnet för att testa så det funkar */}
               {/* <Text variant="titleLarge">{headerTitle}</Text>
               </View>  */}
-
-              <IconButton
+  {activeProfile?.isOwner === true && (
+                <IconButton
+                  icon="pencil"
+                  size={20}
+                  onPress={() => {
+                    setIsHousehouldNameEditing(true);
+                  }}
+                />
+              )}
+              {/* <IconButton
                 icon="pencil"
                 size={20}
                 onPress={() => {
                   setIsHousehouldNameEditing(true);
                 }}
-              />
+              /> */}
 
               {/* <IconButton icon="pencil" size={20} onPress={() => {}} /> */}
             </View>
@@ -368,6 +376,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
+    justifyContent: "center",
   },
   taskItem: {
     flexDirection: "row",
