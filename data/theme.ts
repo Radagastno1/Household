@@ -138,7 +138,7 @@ export const AppLightTheme: Theme = {
   iconColors: {
     
     color: 'black',
-  
+  },
 
   taskTitle: {
     color: "black",
