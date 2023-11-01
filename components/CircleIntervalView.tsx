@@ -6,7 +6,7 @@ interface Props{
     isShowing: boolean;
     intervalArray: number[];
     circleBackgroundColor: string;
-    getCircleBackgroundColor: (energyWeight: number | undefined) => string;
+    getCircleBackgroundColor?: (energyWeight: number | undefined) => string;
     onNumberSelect: (selectedNumber: number) => void;
 }
 
@@ -23,7 +23,7 @@ export default function CircleIntervalView(props:Props){
               >
              <CircleComponent
                 number={number}
-                backgroundColor={props.getCircleBackgroundColor(number) || props.circleBackgroundColor}
+                backgroundColor={props.getCircleBackgroundColor ? props.getCircleBackgroundColor(number) : props.circleBackgroundColor}
                 color="black"
               />
               </TouchableOpacity>
