@@ -28,7 +28,7 @@ export default function ErrorModule(props: Props) {
     <Modal transparent={true} visible={isModalVisible} animationType="slide">
       <View style={styles.modalContainer}>
         <Card style={{ alignContent: "center" }}>
-          <BlurView intensity={70} tint="light" style={styles.blurContainer}>
+          <BlurView intensity={40}  style={styles.blurContainer}>
             <Text style={styles.text}>{props.errorMessage}</Text>
             <TouchableOpacity style={theme.button as any} onPress={closeModal}>
               <Text>{props.buttonMessage}</Text>
