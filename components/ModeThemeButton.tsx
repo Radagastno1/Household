@@ -1,33 +1,32 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Appearance, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { Button } from "react-native-paper";
 import { useTheme } from "../contexts/themeContext";
 import { FlatList } from "react-native";
+import { ColorSchemeName } from "react-native";
 
 export default function ModeThemeButton() {
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedItem, setSelectedItem] = useState<string | null>(null);
   const { theme, setColorScheme } = useTheme();
+  const [isAuto, setIsAuto] = useState<boolean>(true);
 
   const handleToggleSystemTheme = () => {
-    const systemColorScheme = Appearance.getColorScheme();
-    console.log("System Theme Detected:", systemColorScheme);
-
-    if (systemColorScheme) {
-      if (systemColorScheme === "light") {
-        setColorScheme("light");
-      } else {
-        setColorScheme("dark");
-      }
+    const systemColorScheme: ColorSchemeName = Appearance.getColorScheme() as ColorSchemeName;
+    if (systemColorScheme === "light" || systemColorScheme === "dark") {
+      setColorScheme(systemColorScheme);
     }
   };
 
   const handleSelect = (item: string) => {
     if (item === "light" || item === "dark") {
       setColorScheme(item);
-    } else {
+      setIsAuto(false);
+    } else if (item === "Auto") {
+      setColorScheme("auto");
       handleToggleSystemTheme();
+      setIsAuto(true);
     }
     setSelectedItem(item);
     setShowDropdown(false);
@@ -36,6 +35,28 @@ export default function ModeThemeButton() {
   const handleClose = () => {
     setShowDropdown(false);
   };
+
+  useEffect(() => {
+    const systemColorScheme: ColorSchemeName = Appearance.getColorScheme() as ColorSchemeName;
+
+    if (isAuto) {
+      handleToggleSystemTheme();
+    }
+  }, [isAuto]);
+
+  useEffect(() => {
+    const onChange = ({ colorScheme }: { colorScheme: ColorSchemeName }) => {
+      if (isAuto) {
+        handleToggleSystemTheme();
+      }
+    };
+
+    const subscription = Appearance.addChangeListener(onChange);
+
+    return () => {
+      subscription.remove();
+    };
+  }, [isAuto]);
 
   return (
     <>
@@ -72,4 +93,17 @@ const styles = StyleSheet.create({
     padding: 5,
   },
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
 

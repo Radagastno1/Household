@@ -49,6 +49,13 @@ export type Theme = typeof DarkTheme & {
     justifyContent: string;
     alignItems: string;
   };
+
+  iconColors: {
+    
+    color: string; 
+  
+  },
+
   taskTitle: {
     color: string;
     width: number;
@@ -56,6 +63,7 @@ export type Theme = typeof DarkTheme & {
     padding: number;
     fontWeight: string;
   };
+
   // forgotPasswordButtonText: {
 
   //   color: string,
@@ -126,12 +134,19 @@ export const AppLightTheme: Theme = {
     justifyContent: "space-between",
     alignItems: "center",
   },
+
+  iconColors: {
+    
+    color: 'black',
+  },
+
   taskTitle: {
     color: "black",
     width: 110,
     textAlign: "center",
     padding: 2,
     fontWeight: "bold",
+
   },
 };
 
@@ -192,6 +207,11 @@ export const AppDarkTheme: Theme = {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+  },
+  iconColors: {
+    
+    color: 'white', 
+  
   },
   //   forgotPasswordButtonText: {
 
