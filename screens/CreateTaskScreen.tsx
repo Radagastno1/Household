@@ -338,27 +338,7 @@ export default function CreateTaskScreen({
                     </View>
                   </View>
 
-                  <View style={{ flexDirection: "row" }}>
-                    {energyDataPressed
-                      ? energyData.map((number) => (
-                          <TouchableOpacity
-                            key={number.toString()}
-                            onPress={() => {
-                              setSelectedEnergy(number),
-                                setEnergyDataPressed(false);
-                            }}
-                          >
-                            <CircleComponent
-                              number={number}
-                              backgroundColor={getEnergyCircleBackgroundColor(
-                                number,
-                              )}
-                              color="black"
-                            />
-                          </TouchableOpacity>
-                        ))
-                      : null}
-                  </View>
+         
                 </Card.Content>
               </Card>
               {isCreateMode ? null : (
