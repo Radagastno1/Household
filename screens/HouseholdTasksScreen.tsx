@@ -1,7 +1,13 @@
 import { AntDesign } from "@expo/vector-icons";
 import { useFocusEffect } from "@react-navigation/native";
 import React, { useCallback } from "react";
-import { Image, ScrollView, StyleSheet, View, useColorScheme } from "react-native";
+import {
+  Image,
+  ScrollView,
+  StyleSheet,
+  View,
+  useColorScheme,
+} from "react-native";
 import { Button, Card, Text } from "react-native-paper";
 import { useTheme } from "../contexts/themeContext";
 import { AvatarUrls, Avatars } from "../data/avatars";
@@ -61,17 +67,15 @@ export default function HouseholdTasksScreen({
   useFocusEffect(
     useCallback(() => {
       if (activeProfile && activeHousehold) {
-        dispatch(fetchTasks(activeProfile.householdId)).then(
-          () => {
-            dispatch(
-              filterTaskListByHouseId({
-                household_Id: activeHousehold?.id,
-              })
-            );
-          }
-        );
+        dispatch(fetchTasks(activeProfile.householdId)).then(() => {
+          dispatch(
+            filterTaskListByHouseId({
+              household_Id: activeHousehold?.id,
+            }),
+          );
+        });
       }
-    }, [])
+    }, []),
   );
 
   const handleTaskPress = (taskId: string) => {
@@ -248,10 +252,11 @@ export default function HouseholdTasksScreen({
                       : theme.cardButton.backgroundColor,
                 },
               ]}
+              labelStyle={theme.buttonText}
             >
               Lägg Till
             </Button>
-           )} 
+          )}
         </View>
 
         {/* <View style={styles.buttonContainer}>

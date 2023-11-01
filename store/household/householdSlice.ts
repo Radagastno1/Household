@@ -63,9 +63,9 @@ export const handleJoinHousehold = async (joinCode: string) => {
       console.log(household);
       return household;
     } else {
-      console.error(
-        "Failed to join the household. Please check the join code.",
-      );
+    //   console.error(
+    //     "Failed to join the household. Please check the join code.",
+    //   );
       return null;
     }
   }
