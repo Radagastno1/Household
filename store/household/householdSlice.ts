@@ -85,6 +85,22 @@ export const addHouseholdAsync = createAsyncThunk<
     return thunkAPI.rejectWithValue(error.message);
   }
 });
+export const editHouseHoldeNameAsync = createAsyncThunk<
+Household,
+Household,
+{rejectValue:string}
+> ("household/editHouseHoldeName", async (household, thunkAPI)=>{
+    try{
+        const editHouseHoldeName = await editHouseholdToDB(household);
+        if(editHouseHoldeName){
+            return editHouseHoldeName;
+        }else{
+            return thunkAPI.rejectWithValue("failed to edit household");
+        }
+    }catch (error: any) {
+        return thunkAPI.rejectWithValue(error.message);
+      }
+});
 
 const householdSlice = createSlice({
   name: "household",
@@ -120,6 +136,8 @@ const householdSlice = createSlice({
       } else {
       }
     },
+    
+   
     editHouseHoldeName: (
       state,
       action: PayloadAction<{ householdId: string; newHouseholdName: string }>,
