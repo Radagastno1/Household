@@ -130,7 +130,7 @@ export default function TaskCard({
                   <View key={index}>
                     <Image
                       source={{ uri: AvatarUrls[avatar as Avatars] }}
-                      style={{ height: 20, width: 20 }}
+                      style={{ height: 30, width: 30 }}
                     />
                   </View>
                 ),
@@ -195,16 +195,3 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
-
-{
-  /* <TaskCard
-completions={completions}
-profiles={profiles}
-navigation={navigation}
-task={task}
-/> */
-}
-
-// const completions = useAppSelector(
-//   (state) => state.taskCompletion.completions,
-// );
