@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
+  useColorScheme,
 } from "react-native";
 import { Text, TextInput } from "react-native-paper";
 import { useTheme } from "../contexts/themeContext";
@@ -27,8 +28,14 @@ export const SignInScreen = ({ navigation }: SignInProps) => {
   const [showPassword, setShowPassword] = useState(false);
   const error = useAppSelector((state) => state.user.error);
   const [errorPopup, setErrorPopup] = useState(false);
-  const { theme } = useTheme();
+  const { theme, setColorScheme } = useTheme();
   const dispatch = useAppDispatch();
+  const colorScheme = useColorScheme();
+
+  const isDarkMode = colorScheme === "dark";
+  const lightVideoSource = require("../assets/bee-animation.mp4");
+  const darkVideoSource = require("../assets/bee-animation-darkmode.mp4");
+  const videoSource = isDarkMode ? darkVideoSource : lightVideoSource;
 
   const [] = useState<User[]>([]);
 
@@ -90,7 +97,7 @@ export const SignInScreen = ({ navigation }: SignInProps) => {
 
               <View style={styles.container}>
                 <Video
-                  source={require("../assets/bee-animation.mp4")}
+                  source={videoSource}
                   rate={1.0}
                   volume={1.0}
                   isMuted={false}
