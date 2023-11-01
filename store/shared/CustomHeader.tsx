@@ -56,7 +56,7 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({ title, navigation }) => {
 const styles = StyleSheet.create({
   header: {
     flexDirection: "row",
-    height: 80,
+    height: 100,
     justifyContent: "space-between",
     alignItems: "center",
     // backgroundColor: "white",
@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   beeHomeImage: {
-    width: 20,
+    width: 25,
     height: 30,
     marginRight: 20,
   },

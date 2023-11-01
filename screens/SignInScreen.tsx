@@ -10,7 +10,6 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
-  useColorScheme,
 } from "react-native";
 import { Text, TextInput } from "react-native-paper";
 import { useTheme } from "../contexts/themeContext";
@@ -19,6 +18,7 @@ import { RootNavigationScreenProps } from "../navigators/navigationTypes";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { logInUserAsync } from "../store/user/userSlice";
 import { User } from "../types";
+import { useColorScheme } from "react-native";
 
 type SignInProps = RootNavigationScreenProps<"Login">;
 
@@ -32,6 +32,10 @@ export const SignInScreen = ({ navigation }: SignInProps) => {
   const dispatch = useAppDispatch();
   const colorScheme = useColorScheme();
 
+
+
+
+
   const isDarkMode = colorScheme === "dark";
   const lightVideoSource = require("../assets/bee-animation.mp4");
   const darkVideoSource = require("../assets/bee-animation-darkmode.mp4");
@@ -40,6 +44,14 @@ export const SignInScreen = ({ navigation }: SignInProps) => {
   const [] = useState<User[]>([]);
 
   const translateY = useRef(new Animated.Value(6)).current;
+
+  useEffect(() => {
+    if (colorScheme) {
+      const systemColorScheme = colorScheme;
+      setColorScheme(systemColorScheme);
+    }
+  }, [colorScheme, setColorScheme]);
+  
 
   useEffect(() => {
     Animated.timing(translateY, {
