@@ -53,6 +53,7 @@ export default function HouseholdTasksScreen({
         >
           {filteredTasks.map((task) => (
             <TaskCard
+              key={task.id}
               completions={completions}
               profiles={profiles}
               navigation={navigation}
