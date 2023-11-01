@@ -82,7 +82,6 @@ export default function CreateTaskScreen({
         setDescription(taskToEdit.description);
         setSelectedInterval(taskToEdit.interval);
         setSelectedEnergy(taskToEdit.energyWeight);
-        console.log("task to edit interval:", taskToEdit.interval);
       } else {
         navigation.navigate("Tab");
       }
@@ -137,6 +136,12 @@ export default function CreateTaskScreen({
       }
     } else {
       if (taskToEdit && householdId) {
+        console.log(
+          "ENERGY: ",
+          selectedEnergy,
+          " OCH INTERVAL: ",
+          selectedInterval,
+        );
         const editedTask: Task = {
           id: taskToEdit.id,
           title: title,
@@ -147,8 +152,9 @@ export default function CreateTaskScreen({
           householdId: householdId,
           isActive: taskToEdit.isActive,
         };
-        dispatch(editTaskAsync(editedTask));
-        dispatch(filterTaskListByHouseId({ household_Id: householdId }));
+        dispatch(editTaskAsync(editedTask)).then(() => {
+          dispatch(filterTaskListByHouseId({ household_Id: householdId }));
+        });
       }
     }
 
@@ -270,7 +276,38 @@ export default function CreateTaskScreen({
                     </View>
                   </View>
 
-                  <CircleIntervalView
+                  <View
+                    style={{ flexDirection: "row", justifyContent: "center" }}
+                  >
+                    {intervalDataPressed ? (
+                      <ScrollView
+                        horizontal
+                        contentContainerStyle={styles.intervalContainer}
+                      >
+                        {intervalData.map((number) => (
+                          <TouchableOpacity
+                            key={number.toString()}
+                            onPress={() => {
+                              setSelectedInterval(number);
+                              setIntervalDataPressed(false);
+                            }}
+                          >
+                            <CircleComponent
+                              number={number}
+                              backgroundColor={
+                                colorScheme === "dark"
+                                  ? "lightgrey"
+                                  : "lightgrey"
+                              }
+                              color={colorScheme === "dark" ? "black" : "black"}
+                            />
+                          </TouchableOpacity>
+                        ))}
+                      </ScrollView>
+                    ) : null}
+                  </View>
+
+                  {/* <CircleIntervalView
                     isShowing={intervalDataPressed}
                     intervalArray={intervalData}
                     circleBackgroundColor={
@@ -279,9 +316,10 @@ export default function CreateTaskScreen({
                     onNumberSelect={(selectedNumber) => {
                       setSelectedInterval(selectedNumber);
                       console.log("SELECTED NUMBER:", selectedNumber);
-                      setIntervalDataPressed(!intervalDataPressed);
+                      console.log("SELECTED NUMBER:", selectedInterval);
+                      setIntervalDataPressed(false);
                     }}
-                  />
+                  /> */}
                 </Card.Content>
               </Card>
 
@@ -313,16 +351,40 @@ export default function CreateTaskScreen({
                     </View>
                   </View>
 
-                  <CircleIntervalView
+                  {/* <CircleIntervalView
                     isShowing={energyDataPressed}
                     intervalArray={energyData}
                     circleBackgroundColor="grey"
                     getCircleBackgroundColor={getEnergyCircleBackgroundColor}
                     onNumberSelect={(selectedNumber) => {
                       setSelectedEnergy(selectedNumber);
-                      setEnergyDataPressed(false);
+                      console.log("SELECTED NUMBER:", selectedNumber);
+                      console.log("SELECTED NUMBER:", selectedEnergy);
+                      setEnergyDataPressed(!energyDataPressed);
                     }}
-                  />
+                  /> */}
+
+                  <View style={{ flexDirection: "row" }}>
+                    {energyDataPressed
+                      ? energyData.map((number) => (
+                          <TouchableOpacity
+                            key={number.toString()}
+                            onPress={() => {
+                              setSelectedEnergy(number),
+                                setEnergyDataPressed(false);
+                            }}
+                          >
+                            <CircleComponent
+                              number={number}
+                              backgroundColor={getEnergyCircleBackgroundColor(
+                                number,
+                              )}
+                              color="black"
+                            />
+                          </TouchableOpacity>
+                        ))
+                      : null}
+                  </View>
                 </Card.Content>
               </Card>
               {isCreateMode ? null : (

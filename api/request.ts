@@ -98,8 +98,6 @@ export const getRequestByHouseholdIdFromDb = async (householdId: string) => {
     querySnapshot.forEach((doc) => {
       requests.push(doc.data() as HouseholdRequest);
     });
-
-    console.log("Förfrågningar hämtade:", requests);
     return requests as HouseholdRequest[];
   } catch (error) {
     console.error("Fel vid uppdatering av hushållsidt i databasen:", error);
