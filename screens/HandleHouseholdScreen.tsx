@@ -1,18 +1,15 @@
-import { getFirestore } from "firebase/firestore";
 import React, { useState } from "react";
-import { StyleSheet, View, TouchableOpacity, TouchableWithoutFeedback, Keyboard } from "react-native";
-import { Appbar, Button, Text, TextInput } from "react-native-paper";
-import { app } from "../api/config";
+import { Keyboard, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { Appbar, Text, TextInput } from "react-native-paper";
 import { useTheme } from "../contexts/themeContext";
+import ErrorModule from "../modules/errorModule";
 import { RootNavigationScreenProps } from "../navigators/navigationTypes";
 import {
   addHouseholdAsync,
   handleJoinHousehold,
 } from "../store/household/householdSlice";
 import { useAppDispatch, useAppSelector } from "../store/store";
-import ErrorModule from "../modules/errorModule";
-import { BlurView } from 'expo-blur';
-const db = getFirestore(app);
 
 type HandleHouseholdProps = RootNavigationScreenProps<"HandleHousehold">;
 
@@ -48,10 +45,6 @@ export default function HandleHouseholdScreen({
     }
   };
 
-  const activeHousehold = useAppSelector(
-    (state) => state.household.activeHousehold,
-  );
-
   const handleJoin = async () => {
     if (joinCode) {
       console.log("Dispatching joinHouseholdByCode with code:", joinCode);
@@ -76,12 +69,10 @@ export default function HandleHouseholdScreen({
           householdId: household.id,
           isOwner: false,
         });
-        console.log("activeHousehold is not available yet.");
       }
     } else {
-      setErrorText("Kod kravs");
+      setErrorText("Kod krävs");
       setErrorPopup(true);
-      //   console.error("Join code is required.");
     }
   };
   const loggedInUser = useAppSelector((state) => state.user.user);

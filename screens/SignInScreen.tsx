@@ -5,12 +5,12 @@ import {
   Animated,
   Easing,
   Keyboard,
-  KeyboardAvoidingView,
   StyleSheet,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  View,
+  View
 } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { Text, TextInput } from "react-native-paper";
 import { useTheme } from "../contexts/themeContext";
 import ErrorModule from "../modules/errorModule";
@@ -58,10 +58,10 @@ export const SignInScreen = ({ navigation }: SignInProps) => {
   }
 
   return (
-    <KeyboardAvoidingView
-      behavior="padding"
-      style={{ flex: 1, backgroundColor: theme.colors.background }}
-    >
+    <KeyboardAwareScrollView
+    contentContainerStyle={styles.scrollContent}
+    keyboardShouldPersistTaps="handled"
+  >
       <Animated.View
         style={[
           styles.container,
@@ -99,10 +99,7 @@ export const SignInScreen = ({ navigation }: SignInProps) => {
                   style={styles.video}
                   resizeMode={ResizeMode.CONTAIN}
                 />
-              </View>
-
-              <View style={styles.textContainer}>
-                <Text
+                              <Text
                   style={{
                     color: theme.buttonText.color,
                     fontSize: 24,
@@ -113,6 +110,10 @@ export const SignInScreen = ({ navigation }: SignInProps) => {
                   BUZZTER
                 </Text>
 
+              </View>
+
+              <View style={styles.textContainer}>
+  
                 <TextInput
                   placeholder="Email"
                   onChangeText={(text) => setUsername(text)}
@@ -156,7 +157,7 @@ export const SignInScreen = ({ navigation }: SignInProps) => {
           />
         ) : null}
       </Animated.View>
-    </KeyboardAvoidingView>
+    </KeyboardAwareScrollView>
   );
 };
 
@@ -164,7 +165,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    marginBottom: 39,
+    marginTop: 20,
   },
   video: {
     width: 400,
@@ -190,6 +191,9 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     padding: 20,
+  },
+  scrollContent: {
+    flexGrow: 1,
   },
 });
 export default SignInScreen;
