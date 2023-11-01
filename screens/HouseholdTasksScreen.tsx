@@ -237,25 +237,26 @@ export default function HouseholdTasksScreen({
 
         <View style={styles.buttonContainer}>
           {isOwner === true && (
-            <Button
-              icon={() => (
-                <AntDesign name="pluscircleo" size={20} color="black" />
-              )}
-              mode="outlined"
-              onPress={() => navigation.navigate("HandleTask", { taskId: "0" })}
-              style={[
-                styles.button,
-                {
-                  backgroundColor:
-                    colorScheme === "dark"
-                      ? "white"
-                      : theme.cardButton.backgroundColor,
-                },
-              ]}
-              labelStyle={theme.buttonText}
-            >
-              Lägg Till
-            </Button>
+      <Button
+      icon={() => (
+        <AntDesign name="pluscircleo" size={20} color="black" />
+      )}
+      mode="outlined"
+      onPress={() => navigation.navigate("HandleTask", { taskId: "0" })}
+      style={[
+        styles.button,
+        {
+          backgroundColor: "lightgrey", 
+        },
+      ]}
+      labelStyle={{
+        color: "black", 
+        fontSize: theme.buttonText.fontSize, 
+      }}
+    >
+      Lägg Till
+    </Button>
+    
           )}
         </View>
 
