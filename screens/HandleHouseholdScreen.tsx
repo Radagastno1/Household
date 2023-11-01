@@ -11,7 +11,7 @@ import {
 } from "../store/household/householdSlice";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import ErrorModule from "../modules/errorModule";
-
+import { BlurView } from 'expo-blur';
 const db = getFirestore(app);
 
 type HandleHouseholdProps = RootNavigationScreenProps<"HandleHousehold">;
@@ -153,11 +153,12 @@ export default function HandleHouseholdScreen({
       </View>
 
       {errorPopup && errorText ? (
-        <ErrorModule
-          errorMessage={errorText}
-          buttonMessage="Försök igen"
-          onClose={() => setErrorPopup(false)}
-        />
+          <ErrorModule
+            errorMessage={errorText}
+            buttonMessage="Försök igen"
+            onClose={() => setErrorPopup(false)}
+          />
+       
       ) : null}
     </View>
     </TouchableWithoutFeedback>
@@ -165,6 +166,16 @@ export default function HandleHouseholdScreen({
 }
 
 const styles = StyleSheet.create({
+    blurContainer: {
+        flex: 1,
+        padding: 20,
+        margin: 16,
+        textAlign: 'center',
+        justifyContent: 'center',
+        overflow: 'hidden',
+        borderRadius: 20,
+        height:100,
+      },
   container: {
     flex: 1,
     backgroundColor: "#fff",

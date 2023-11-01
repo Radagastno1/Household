@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Card } from "react-native-paper";
 import { useTheme } from "../contexts/themeContext";
+import { BlurView } from "expo-blur";
 
 interface Props {
   errorMessage: string;
@@ -24,13 +25,16 @@ export default function ErrorModule(props: Props) {
   }
 
   return (
+   
     <Modal transparent={true} visible={isModalVisible} animationType="slide">
-      <View style={styles.modalContainer}>
+      <View style={styles.modalContainer}> 
       <Card style={{alignContent:"center"}}>
-          <Text style={styles.text}>{props.errorMessage}</Text>
-          <TouchableOpacity style={theme.button as any} onPress={closeModal}>
-            <Text>{props.buttonMessage}</Text>
-          </TouchableOpacity>
+         <BlurView intensity={70} tint="light" style={styles.blurContainer}> 
+         <Text style={styles.text}>{props.errorMessage}
+         </Text>      
+          <TouchableOpacity style={theme.button as any} onPress={closeModal}>       
+            <Text>{props.buttonMessage}</Text> 
+          </TouchableOpacity></BlurView>
           </Card>
       </View>
     </Modal>
@@ -38,6 +42,17 @@ export default function ErrorModule(props: Props) {
 }
 
 const styles = StyleSheet.create({
+    blurContainer: {
+       height:600,
+        padding: 20,
+        margin: 16,
+       alignItems:"center" ,
+        justifyContent: 'center',
+        overflow: 'hidden',
+        borderRadius: 20,
+        maxWidth:"100%",
+       
+      },
   modalContainer: {
     flex:1,
     justifyContent: "center",
