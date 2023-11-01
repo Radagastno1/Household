@@ -283,7 +283,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   customHeader: {
-    height: 50,
+    height: 140,
   },
   title: {
     flex: 1,
