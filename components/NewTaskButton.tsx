@@ -34,13 +34,13 @@ export default function NewTaskButton({
           style={[
             styles.button,
             {
-              backgroundColor:
-                colorScheme === "dark"
-                  ? "white"
-                  : theme.cardButton.backgroundColor,
+              backgroundColor: "lightgrey",
             },
           ]}
-          labelStyle={theme.buttonText}
+          labelStyle={{
+            color: "black",
+            fontSize: theme.buttonText.fontSize,
+          }}
         >
           Lägg Till
         </Button>

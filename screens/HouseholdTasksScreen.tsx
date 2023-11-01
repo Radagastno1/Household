@@ -61,36 +61,7 @@ export default function HouseholdTasksScreen({
             />
           ))}
         </ScrollView>
-
-
-        <View style={styles.buttonContainer}>
-          {isOwner === true && (
-      <Button
-      icon={() => (
-        <AntDesign name="pluscircleo" size={20} color="black" />
-      )}
-      mode="outlined"
-      onPress={() => navigation.navigate("HandleTask", { taskId: "0" })}
-      style={[
-        styles.button,
-        {
-          backgroundColor: "lightgrey", 
-        },
-      ]}
-      labelStyle={{
-        color: "black", 
-        fontSize: theme.buttonText.fontSize, 
-      }}
-    >
-      Lägg Till
-    </Button>
-    
-          )}
-        </View>
-
-
         <NewTaskButton isOwner={isOwner as boolean} navigation={navigation} />
-
       </View>
     </View>
   );
