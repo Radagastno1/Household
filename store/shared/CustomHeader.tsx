@@ -64,12 +64,13 @@ const styles = StyleSheet.create({
     height: 100,
     justifyContent: "space-between",
     alignItems: "center",
-    // backgroundColor: "white",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
+    width:"100%",
+    paddingHorizontal:5
   },
   headerTextContainer: {
     flex: 1,
