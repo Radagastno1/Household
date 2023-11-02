@@ -87,25 +87,3 @@ export interface HouseholdRequest {
   householdId: string;
   status: "pending" | "approved" | "rejected";
 }
-
-// Show how to make a day function work between task-data and taskCompletion-data
-// task created today 2023-10-12
-// interval : 3 days
-
-// task completed: 2023-10-15
-// late by 1 day
-// late by 2 day
-// completed 2023-10-18
-// completed 2023-10-21
-
-// fråga david
-// hushåll och user är many to many
-// task och user är many to many
-
-//user can have multiple households and avatars
-//household can have multiple users
-
-//user_to_household - table  fråga om denna ska vara en typ?
-//user_id
-//household_id
-//avatar

@@ -15,7 +15,6 @@ export default function SplashScreen() {
 
   useEffect(() => {
     if (isLoading) {
-      // Simulate a loading process
       setTimeout(() => setIsLoading(false), 3000);
     } else {
       Animated.timing(beeAnimation, {
@@ -25,12 +24,12 @@ export default function SplashScreen() {
         useNativeDriver: true,
       }).start(() => {
         Animated.timing(loginScreenHeight, {
-          toValue: windowHeight, // Expand to the full height of the screen
+          toValue: windowHeight,
           duration: 1000,
           easing: Easing.out(Easing.ease),
           useNativeDriver: false,
         }).start(() => {
-          setTimeout(() => {}, 1000); // start 1 seconds earlier
+          setTimeout(() => {}, 1000);
         });
       });
     }

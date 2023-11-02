@@ -1,6 +1,7 @@
 import { useFocusEffect } from "@react-navigation/native";
-import React, { useCallback, useEffect, useState } from "react";
-import { Appearance, Text, View } from "react-native";
+import React, { useCallback, useEffect } from "react";
+import { Text, View } from "react-native";
+import { Appbar } from "react-native-paper";
 import CreateHouseholdButton from "../components/CreateHouseholdButton";
 import HouseholdList from "../components/HouseholdList";
 import LogoutButton from "../components/LogoutButton";
@@ -12,7 +13,6 @@ import { getProfilesByUserIdAsync } from "../store/profile/profileSlice";
 import { getRequestByHouseholdIdsAsync } from "../store/request/requestSlice";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { User } from "../types";
-import { Appbar } from "react-native-paper";
 
 type HouseholdProps = RootNavigationScreenProps<"HouseholdAccount">;
 
@@ -38,17 +38,6 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
     dispatch(getRequestByHouseholdIdsAsync(householdIds));
   }, [profilesToUser]);
 
-//   useEffect(() => {
-//     dispatch(getHouseholdsByHouseholdIdAsync(householdIds));
-//   }, [profilesLoaded]);
-
-//   useFocusEffect(
-//     useCallback(() => {
-//       dispatch(getRequestByHouseholdIdsAsync(householdIds)).then(() => {
-//         setRequestsLoaded(true);
-//       });
-//     }, [profilesLoaded, !requestsLoaded]),
-//   );
   useEffect(() => {
     if (activeProfile) {
       navigation.navigate("ProfileAccount", {
@@ -56,13 +45,6 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
       });
     }
   }, [activeProfile]);
-//   useEffect(() => {
-//     if (activeProfile) {
-//       navigation.navigate("ProfileAccount", {
-//         householdId: activeProfile.householdId,
-//       });
-//     }
-//   }, [activeProfile]);
 
   useFocusEffect(
     useCallback(() => {

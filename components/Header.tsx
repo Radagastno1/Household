@@ -5,7 +5,6 @@ import { useTheme } from "../contexts/themeContext";
 
 interface HeaderProps {
   text: string;
-  //   background: string;
 }
 
 export default function Header({ text }: HeaderProps) {

@@ -52,7 +52,7 @@ export default function CreateUserAccountScreen({
 
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"} // Set the behavior as per your requirements
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={{ flex: 1, backgroundColor: theme.colors.background }}
     >
       <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
