@@ -21,13 +21,11 @@ import {
 } from "../store/request/requestSlice";
 import { HouseholdRequest } from "../types";
 
-// import { getProfileByHouseholdAndUser } from "../store/profile/profileSlice";
-
 type ProfileProps = RootNavigationScreenProps<"ProfileAccount">;
 
 export default function ProfileAccountScreen({ navigation }: ProfileProps) {
   const [selectedAvatar] = useState<string>("");
-  const [isRequestPending, setRequestPending] = useState(false);
+  // const [isRequestPending, setRequestPending] = useState(false);
   const [householdRequests, setHouseholdRequests] = useState<
     HouseholdRequest[]
   >([]);
@@ -132,18 +130,14 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
     if (activeProfile) {
       const householdId = activeProfile.householdId;
       const userId = activeProfile.userId;
-      const profileName = activeProfile.profileName;
 
-      // Dispatch the deactivateProfile action to update the profile in the database.
       dispatch(deactivateProfileAsync(activeProfile.id)).then((action) => {
         if (deactivateProfileAsync.fulfilled.match(action)) {
-          // After deactivation, log the userId, householdId, profileName, and navigate to "HouseholdAccount."
           console.log(
             `UserId: ${userId} has now left the household with householdId: ${householdId}. Is active: ${activeProfile.isActive}`,
           );
           navigation.navigate("HouseholdAccount");
         } else {
-          // Handle the case where deactivation was not successful, e.g., show an error message.
           console.error("Failed to deactivate profile.");
         }
       });
@@ -237,10 +231,6 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
                   <Text>{activeHousehold?.name}</Text>
                 )}
               </View>
-              {/* <View style={styles.nameContainer}>
-                {/* tog headertitle som du satt till hushållsnamnet för att testa så det funkar */}
-              {/* <Text variant="titleLarge">{headerTitle}</Text>
-              </View>  */}
 
               <IconButton
                 icon="pencil"
@@ -249,8 +239,6 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
                   setIsHousehouldNameEditing(true);
                 }}
               />
-
-              {/* <IconButton icon="pencil" size={20} onPress={() => {}} /> */}
             </View>
           </Card>
 
@@ -289,9 +277,9 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
             style={{
               flexDirection: "row",
               justifyContent: "space-around",
-              alignItems:"center",
+              alignItems: "center",
               position: "relative",
-              marginTop: 50
+              marginTop: 50,
             }}
           >
             <Button
@@ -325,8 +313,6 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
             visible={isViewingRequest}
             onDismiss={() => setIsViewingRequest(false)}
             householdName={activeHousehold?.name || "Laddar..."}
-            // selectedAvatar="Frog"
-            // email="test@mail.com"
             acceptRequest={acceptRequest}
             denyRequest={denyRequest}
             requests={householdRequests}
@@ -340,15 +326,12 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
-
   },
   profileTitleContainer: {
     padding: 10,
     borderRadius: 5,
-    // marginBottom: 10,
     width: 390,
   },
   profileTitle: {
@@ -362,7 +345,6 @@ const styles = StyleSheet.create({
     height: 65,
     padding: 15,
     borderRadius: 8,
-    // backgroundColor: "white",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
@@ -384,12 +366,12 @@ const styles = StyleSheet.create({
     marginTop: 20,
     width: 200,
     position: "absolute",
-    left: 10 
+    left: 10,
   },
   bell: {
     marginTop: 20,
     alignItems: "flex-end",
     position: "absolute",
-    right: 10
+    right: 10,
   },
 });

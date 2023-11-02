@@ -37,8 +37,6 @@ export default function ModeThemeButton() {
   };
 
   useEffect(() => {
-    const systemColorScheme: ColorSchemeName = Appearance.getColorScheme() as ColorSchemeName;
-
     if (isAuto) {
       handleToggleSystemTheme();
     }
