@@ -87,7 +87,11 @@ export default function RootNavigator() {
               options={{ headerShown: false }}
               component={CreateProfileScreen}
             />
-            <Stack.Screen name="HandleTask" component={CreateTaskScreen} />
+            <Stack.Screen
+              name="HandleTask"
+              options={{ headerShown: false }}
+              component={CreateTaskScreen}
+            />
             <Stack.Screen
               name="TaskDetail"
               options={{ headerShown: false }}
