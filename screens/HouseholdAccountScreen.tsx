@@ -29,12 +29,10 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
   const dispatch = useAppDispatch();
 
   const { theme } = useTheme();
-
   useEffect(() => {
     console.log("START", new Date().toLocaleTimeString());
     dispatch(getProfilesByUserIdAsync(activeUser?.uid ?? "hej"));
   }, []);
-
   useEffect(() => {
     if (profilesToUser.length === 0) return;
     const householdIds = profilesToUser.map((p) => p.householdId);
@@ -42,6 +40,17 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
     dispatch(getRequestByHouseholdIdsAsync(householdIds));
   }, [profilesToUser]);
 
+//   useEffect(() => {
+//     dispatch(getHouseholdsByHouseholdIdAsync(householdIds));
+//   }, [profilesLoaded]);
+
+//   useFocusEffect(
+//     useCallback(() => {
+//       dispatch(getRequestByHouseholdIdsAsync(householdIds)).then(() => {
+//         setRequestsLoaded(true);
+//       });
+//     }, [profilesLoaded, !requestsLoaded]),
+//   );
   useEffect(() => {
     if (activeProfile) {
       navigation.navigate("ProfileAccount", {
@@ -49,6 +58,13 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
       });
     }
   }, [activeProfile]);
+//   useEffect(() => {
+//     if (activeProfile) {
+//       navigation.navigate("ProfileAccount", {
+//         householdId: activeProfile.householdId,
+//       });
+//     }
+//   }, [activeProfile]);
 
   useFocusEffect(
     useCallback(() => {

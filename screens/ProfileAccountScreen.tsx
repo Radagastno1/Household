@@ -5,12 +5,15 @@ import { useTheme } from "../contexts/themeContext";
 import HouseholdProfileModal from "../modules/HouseholdMemberModal";
 import {
   deactivateProfileAsync,
+  editProfile,
+  editProfileAsync,
   editProfileName,
+  setProfileByHouseholdAndUser,
 } from "../store/profile/profileSlice";
 
 import { AvatarUrls, Avatars } from "../data/avatars";
 import { RootNavigationScreenProps } from "../navigators/navigationTypes";
-import { editHouseHoldeName } from "../store/household/householdSlice";
+import { editHouseHoldAsync, editHouseHoldeName, setActiveHouseholdAsync, updateHousehold } from "../store/household/householdSlice";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { fetchTasks } from "../store/tasks/taskSlice";
 import { useFocusEffect } from "@react-navigation/native";
@@ -20,6 +23,8 @@ import {
   denyProfileToHouseholdAsync,
 } from "../store/request/requestSlice";
 import { HouseholdRequest } from "../types";
+import { getHouseholdsFromDBbyProfileId, getHouseholdsFromDBbySingleProfileId } from "../api/household";
+import { updateProfile } from "firebase/auth";
 
 type ProfileProps = RootNavigationScreenProps<"ProfileAccount">;
 
@@ -93,14 +98,37 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
     }
   }, [activeProfile]);
 
-  const handleSaveClick = () => {
+//   const handleSaveClick = () => {
+//     if (activeProfile) {
+//       dispatch(
+//         editProfileName({
+//           profileId: activeProfile?.id,
+//           newProfileName: updatedProfileName ?? activeProfile.profileName,
+//         }),
+//       );
+    
+    
+//       setIsProfileNameEditing(false);
+//       console.log("NYA PROFILNAMNET", { updatedProfileName });
+//     }
+//   };
+
+const handleSaveClick = () => {
     if (activeProfile) {
+        const editedProfile ={
+            id: activeProfile.id,
+            profileName:updatedProfileName ?? activeProfile.profileName,
+            userId: activeProfile.userId,
+            householdId: activeProfile.householdId,
+            avatar: activeProfile.avatar,
+            isOwner: activeProfile.isOwner,
+            isActive:activeProfile.isActive,
+        };
       dispatch(
-        editProfileName({
-          profileId: activeProfile?.id,
-          newProfileName: updatedProfileName ?? activeProfile.profileName,
-        }),
+       editProfileAsync( editedProfile),
       );
+    
+    dispatch(editProfile(editedProfile));
       setIsProfileNameEditing(false);
       console.log("NYA PROFILNAMNET", { updatedProfileName });
     }
@@ -116,12 +144,17 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
 
   const handleHouseholdSaveClick = async () => {
     if (activeHousehold) {
+        const editedHousehold = {
+            id: activeHousehold.id,
+            name: updatedHouseholdName ?? activeHousehold.name,
+            code:activeHousehold.code,  
+        }
       dispatch(
-        editHouseHoldeName({
-          householdId: activeHousehold.id,
-          newHouseholdName: updatedHouseholdName ?? activeHousehold.name,
-        }),
+        editHouseHoldAsync(
+            editedHousehold
+        ),
       );
+     dispatch(updateHousehold(editedHousehold));
       setIsHousehouldNameEditing(false);
       console.log("NYA PROFILNAMNET", { updatedHouseholdName });
     }
@@ -231,14 +264,28 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
                   <Text>{activeHousehold?.name}</Text>
                 )}
               </View>
-
-              <IconButton
+              {/* <View style={styles.nameContainer}>
+                {/* tog headertitle som du satt till hushållsnamnet för att testa så det funkar */}
+              {/* <Text variant="titleLarge">{headerTitle}</Text>
+              </View>  */}
+  {activeProfile?.isOwner === true && (
+                <IconButton
+                  icon="pencil"
+                  size={20}
+                  onPress={() => {
+                    setIsHousehouldNameEditing(true);
+                  }}
+                />
+              )}
+              {/* <IconButton
                 icon="pencil"
                 size={20}
                 onPress={() => {
                   setIsHousehouldNameEditing(true);
                 }}
-              />
+              /> */}
+
+              {/* <IconButton icon="pencil" size={20} onPress={() => {}} /> */}
             </View>
           </Card>
 
@@ -350,6 +397,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
+    justifyContent: "center",
   },
   taskItem: {
     flexDirection: "row",
