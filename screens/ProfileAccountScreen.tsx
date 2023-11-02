@@ -5,6 +5,8 @@ import { useTheme } from "../contexts/themeContext";
 import HouseholdProfileModal from "../modules/HouseholdMemberModal";
 import {
   deactivateProfileAsync,
+  editProfile,
+  editProfileAsync,
   editProfileName,
   setProfileByHouseholdAndUser,
 } from "../store/profile/profileSlice";
@@ -22,6 +24,7 @@ import {
 } from "../store/request/requestSlice";
 import { HouseholdRequest } from "../types";
 import { getHouseholdsFromDBbyProfileId, getHouseholdsFromDBbySingleProfileId } from "../api/household";
+import { updateProfile } from "firebase/auth";
 
 // import { getProfileByHouseholdAndUser } from "../store/profile/profileSlice";
 
@@ -97,16 +100,37 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
     }
   }, [activeProfile]);
 
-  const handleSaveClick = () => {
+//   const handleSaveClick = () => {
+//     if (activeProfile) {
+//       dispatch(
+//         editProfileName({
+//           profileId: activeProfile?.id,
+//           newProfileName: updatedProfileName ?? activeProfile.profileName,
+//         }),
+//       );
+    
+    
+//       setIsProfileNameEditing(false);
+//       console.log("NYA PROFILNAMNET", { updatedProfileName });
+//     }
+//   };
+
+const handleSaveClick = () => {
     if (activeProfile) {
+        const editedProfile ={
+            id: activeProfile.id,
+            profileName:updatedProfileName ?? activeProfile.profileName,
+            userId: activeProfile.userId,
+            householdId: activeProfile.householdId,
+            avatar: activeProfile.avatar,
+            isOwner: activeProfile.isOwner,
+            isActive:activeProfile.isActive,
+        };
       dispatch(
-        editProfileName({
-          profileId: activeProfile?.id,
-          newProfileName: updatedProfileName ?? activeProfile.profileName,
-        }),
+       editProfileAsync( editedProfile),
       );
     
-    
+    dispatch(editProfile(editedProfile));
       setIsProfileNameEditing(false);
       console.log("NYA PROFILNAMNET", { updatedProfileName });
     }

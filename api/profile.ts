@@ -157,6 +157,31 @@ export const getAllProfilesByUserIdFromDb = async (userId: string) => {
     console.error("Fel vid hämtning av uppgifter:", error);
   }
 };
+export const editProfileToDB = async (profile: Profile) => {
+    console.log("hushåll som kommer in i edit: ", profile);
+    const profileCollectionRef = collection(db, "profiles");
+  
+    try {
+      const profileRef = doc(profileCollectionRef, profile.id);
+  
+      const updatedProfileData = {
+        id: profile.id,
+  profileName: profile.profileName,
+  userId: profile.userId,
+  householdId:profile.householdId,
+  avatar: profile.avatar,
+  isOwner:profile.isOwner,
+  isActive: profile.isActive
+      };
+  
+      await updateDoc(profileRef, updatedProfileData);
+  
+      return profile;
+    } catch (error) {
+      console.error("Fel vid redigering av uppgift:", error);
+      return null;
+    }
+  };
 export const deactivateProfileInDB = async (profileId: string) => {
   const profileDocRef = doc(db, "profiles", profileId);
 

@@ -2,6 +2,7 @@ import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import {
   addProfileToDB,
   deactivateProfileInDB,
+  editProfileToDB,
   getAllProfilesByHouseholdId,
   getAllProfilesByHouseholdIdDb,
   getAllProfilesByUserIdFromDb,
@@ -81,6 +82,25 @@ export const getProfilesByHouseholdIdAsync = createAsyncThunk<
   }
 });
 
+export const editProfileAsync = createAsyncThunk<
+Profile,
+Profile,
+{rejectValue:string}
+> ("profile/editProfile", async (profile, thunkAPI)=>{
+    try{
+        const editProfile = await editProfileToDB(profile);
+        if(editProfile){
+            
+            return editProfile;
+            
+        }else{
+            return thunkAPI.rejectWithValue("failed to edit household");
+        }
+    }catch (error: any) {
+        return thunkAPI.rejectWithValue(error.message);
+      }
+});
+
 const profileSlice = createSlice({
   name: "profile",
   initialState,
@@ -154,6 +174,15 @@ const profileSlice = createSlice({
         state.activeProfile = activeProfile;
       }
     },
+    editProfile: (state, action) => {
+        const updatedProfile = action.payload;
+        // Find the index of the edited household in the state
+        const index = state.profiles.findIndex(p => p.id === updatedProfile.id);
+        if (index !== -1) {
+          // Replace only the existing household with the updated one
+          state.profiles[index] = updatedProfile;
+        }
+      },
   },
   extraReducers: (builder) => {
     builder
@@ -169,6 +198,15 @@ const profileSlice = createSlice({
           state.profilesToUser.push(action.payload);
         }
       })
+      
+      .addCase(editProfileAsync.fulfilled,(state,action)=>{
+        if(action.payload){
+            state.activeProfile = action.payload
+        }
+      })
+      .addCase(editProfileAsync.rejected,(state,action)=>{
+        console.log("error vid get households: ", action.payload);
+    })
       .addCase(getProfilesByUserIdAsync.fulfilled, (state, action) => {
         if (action.payload) {
           state.profilesToUser = action.payload;
@@ -226,5 +264,5 @@ export const { setProfiles } = profileSlice.actions;
 export const { addProfile } = profileSlice.actions;
 export const { editProfileName } = profileSlice.actions;
 export const { setProfileByHouseholdAndUser } = profileSlice.actions;
-
+export const {editProfile} = profileSlice.actions;
 export const profileReducer = profileSlice.reducer;
