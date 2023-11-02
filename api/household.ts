@@ -79,7 +79,6 @@ export const getHouseholdsFromDB = async (householdId: string) => {
 
     const household = querySnapshot.docs[0].data() as Household;
 
-    console.log("Uppgifter hämtade:", household);
     return household;
   } catch (error) {
     console.error("Fel vid hämtning av uppgifter:", error);
@@ -99,8 +98,6 @@ export const getHouseholdsFromDBbyProfileId = async (profileId: string[]) => {
     querySnapshot.forEach((doc) => {
       households.push(doc.data() as Household);
     });
-
-    console.log("Uppgifter hämtade:", households);
     return households;
   } catch (error) {
     console.error("Fel vid hämtning av uppgifter:", error);

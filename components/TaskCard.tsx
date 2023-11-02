@@ -116,7 +116,8 @@ export default function TaskCard({
               variant="titleLarge"
               style={{
                 color:
-                  colorScheme === "dark" ? "white" : theme.buttonText.color,
+                  //var tvngen att lägga till black här för att se task namnen :)) sålänge
+                  colorScheme === "dark" ? "black" : theme.buttonText.color,
               }}
             >
               {task.title}
