@@ -6,11 +6,12 @@ import HouseholdProfileModal from "../modules/HouseholdMemberModal";
 import {
   deactivateProfileAsync,
   editProfileName,
+  setProfileByHouseholdAndUser,
 } from "../store/profile/profileSlice";
 
 import { AvatarUrls, Avatars } from "../data/avatars";
 import { RootNavigationScreenProps } from "../navigators/navigationTypes";
-import { editHouseHoldeName } from "../store/household/householdSlice";
+import { editHouseHoldAsync, editHouseHoldeName, setActiveHouseholdAsync, updateHousehold } from "../store/household/householdSlice";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { fetchTasks } from "../store/tasks/taskSlice";
 import { useFocusEffect } from "@react-navigation/native";
@@ -20,6 +21,7 @@ import {
   denyProfileToHouseholdAsync,
 } from "../store/request/requestSlice";
 import { HouseholdRequest } from "../types";
+import { getHouseholdsFromDBbyProfileId, getHouseholdsFromDBbySingleProfileId } from "../api/household";
 
 // import { getProfileByHouseholdAndUser } from "../store/profile/profileSlice";
 
@@ -103,6 +105,8 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
           newProfileName: updatedProfileName ?? activeProfile.profileName,
         }),
       );
+    
+    
       setIsProfileNameEditing(false);
       console.log("NYA PROFILNAMNET", { updatedProfileName });
     }
@@ -118,12 +122,17 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
 
   const handleHouseholdSaveClick = async () => {
     if (activeHousehold) {
+        const editedHousehold = {
+            id: activeHousehold.id,
+            name: updatedHouseholdName ?? activeHousehold.name,
+            code:activeHousehold.code,  
+        }
       dispatch(
-        editHouseHoldeName({
-          householdId: activeHousehold.id,
-          newHouseholdName: updatedHouseholdName ?? activeHousehold.name,
-        }),
+        editHouseHoldAsync(
+            editedHousehold
+        ),
       );
+     dispatch(updateHousehold(editedHousehold));
       setIsHousehouldNameEditing(false);
       console.log("NYA PROFILNAMNET", { updatedHouseholdName });
     }

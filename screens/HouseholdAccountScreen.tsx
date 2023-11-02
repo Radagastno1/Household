@@ -32,26 +32,35 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
 
   const { theme } = useTheme();
   let householdIds: string[] = [];
-
   useEffect(() => {
-    dispatch(getProfilesByUserIdAsync(activeUser?.uid ?? "hej")).then(() => {
-      setProfilesLoaded(true);
-    });
-    householdIds = profilesToUser.map((p) => p.householdId);
-  }, [!profilesLoaded]);
-
+    console.log("START", new Date().toLocaleTimeString());
+    dispatch(getProfilesByUserIdAsync(activeUser?.uid ?? "hej"));
+  }, []);
   useEffect(() => {
+    if (profilesToUser.length === 0) return;
+    const householdIds = profilesToUser.map((p) => p.householdId);
     dispatch(getHouseholdsByHouseholdIdAsync(householdIds));
-  }, [profilesLoaded]);
+    dispatch(getRequestByHouseholdIdsAsync(householdIds));
+  }, [profilesToUser]);
 
-  useFocusEffect(
-    useCallback(() => {
-      dispatch(getRequestByHouseholdIdsAsync(householdIds)).then(() => {
-        setRequestsLoaded(true);
-      });
-    }, [profilesLoaded, !requestsLoaded]),
-  );
+//   useEffect(() => {
+//     dispatch(getProfilesByUserIdAsync(activeUser?.uid ?? "hej")).then(() => {
+//       setProfilesLoaded(true);
+//     });
+//     householdIds = profilesToUser.map((p) => p.householdId);
+//   }, [!profilesLoaded]);
 
+//   useEffect(() => {
+//     dispatch(getHouseholdsByHouseholdIdAsync(householdIds));
+//   }, [profilesLoaded]);
+
+//   useFocusEffect(
+//     useCallback(() => {
+//       dispatch(getRequestByHouseholdIdsAsync(householdIds)).then(() => {
+//         setRequestsLoaded(true);
+//       });
+//     }, [profilesLoaded, !requestsLoaded]),
+//   );
   useEffect(() => {
     if (activeProfile) {
       navigation.navigate("ProfileAccount", {
@@ -59,6 +68,13 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
       });
     }
   }, [activeProfile]);
+//   useEffect(() => {
+//     if (activeProfile) {
+//       navigation.navigate("ProfileAccount", {
+//         householdId: activeProfile.householdId,
+//       });
+//     }
+//   }, [activeProfile]);
 
   return (
     <View

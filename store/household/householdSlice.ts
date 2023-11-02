@@ -95,7 +95,9 @@ Household,
     try{
         const editHouseHold = await editHouseholdToDB(household);
         if(editHouseHold){
+            
             return editHouseHold;
+            
         }else{
             return thunkAPI.rejectWithValue("failed to edit household");
         }
@@ -168,6 +170,15 @@ const householdSlice = createSlice({
         }
       }
     },
+    updateHousehold: (state, action) => {
+        const updatedHousehold = action.payload;
+        // Find the index of the edited household in the state
+        const index = state.households.findIndex(h => h.id === updatedHousehold.id);
+        if (index !== -1) {
+          // Replace only the existing household with the updated one
+          state.households[index] = updatedHousehold;
+        }
+      },
   },
   extraReducers: (builder) => {
     builder
@@ -178,6 +189,15 @@ const householdSlice = createSlice({
           state.households = [];
         }
       })
+      .addCase(editHouseHoldAsync.fulfilled,(state,action)=>{
+        if(action.payload){
+            state.activeHousehold = action.payload
+        }
+      })
+      .addCase(editHouseHoldAsync.rejected,(state,action)=>{
+        console.log("error vid get households: ", action.payload);
+    })
+      
       .addCase(getHouseholdsByHouseholdIdAsync.fulfilled, (state, action) => {
         if (action.payload) {
           state.households = action.payload;
@@ -210,6 +230,7 @@ export const {
   setHouseholdByHouseholdId,
   editHouseHoldeName,
   sethouseholdActive,
+  updateHousehold,
   // getHouseholdsByHouseholdId,
 } = householdSlice.actions;
 
