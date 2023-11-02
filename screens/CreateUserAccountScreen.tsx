@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { TextInput } from "react-native-paper";
 import { useTheme } from "../contexts/themeContext";
+import ErrorModule from "../modules/errorModule";
 import { RootNavigationScreenProps } from "../navigators/navigationTypes";
 import { useAppDispatch } from "../store/store";
 import { addUserAsync } from "../store/user/userSlice";
@@ -22,8 +23,10 @@ export default function CreateUserAccountScreen({
 }: CreateUserProps) {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [passwordMismatchWarning, setPasswordMismatchWarning] = useState("");
+  const [error, setError] = useState(false);
+  const [errorPopup, setErrorPopup] = useState(false);
   const [missingFieldsWarning, setMissingFieldsWarning] = useState("");
-  const [newEmail, setNewEmail] = useState("");
+  const [newEmail, setNewEmail] = useState<string>("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmationPasswordVisible, setConfirmationPasswordVisible] =
     useState(false);
@@ -40,8 +43,10 @@ export default function CreateUserAccountScreen({
       setPasswordMismatchWarning("Lösenordet matchar inte");
     } else if (!newEmail || !newPassword) {
       setMissingFieldsWarning("Fyll i alla obligatoriska fält.");
+    } else if (!isValidEmail(newEmail)) {
+      setError(true);
+      setErrorPopup(true);
     } else {
-      console.log("ELSE");
       const newUser: UserCreate = {
         email: newEmail,
         password: newPassword,
@@ -50,9 +55,13 @@ export default function CreateUserAccountScreen({
     }
   };
 
+  const isValidEmail = (newEmail: string) => {
+    return newEmail.includes("@") && newEmail.includes(".");
+  };
+
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"} // Set the behavior as per your requirements
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={{ flex: 1, backgroundColor: theme.colors.background }}
     >
       <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
@@ -140,6 +149,16 @@ export default function CreateUserAccountScreen({
             </TouchableOpacity>
           </View>
         </View>
+        {error && (
+          <ErrorModule
+            errorMessage={"Ange en giltig email"}
+            buttonMessage="Försök igen"
+            onClose={() => {
+              setError(false);
+              setErrorPopup(false);
+            }}
+          />
+        )}
       </View>
     </KeyboardAvoidingView>
   );

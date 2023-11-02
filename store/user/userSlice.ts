@@ -74,17 +74,10 @@ const userSlice = createSlice({
         }
       })
       .addCase(logInUserAsync.rejected, (state, action) => {
-        console.log("INNE I CATCH", action.error.message);
         state.error = "Användarnamn eller lösenord är felaktigt.";
       });
   },
 });
-
-// export const fetchUsers =
-//   (activeHouseholdId: string) => async (dispatch: any, _getState: any) => {
-//     const users = await getUsersFromDB(activeHouseholdId);
-//     dispatch(userSlice.actions.setUsers(users));
-//   };
 
 export const userReducer = userSlice.reducer;
 export const { logOutUser, setActiveUser } = userSlice.actions;

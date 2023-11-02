@@ -64,7 +64,6 @@ export const editTaskAsync = createAsyncThunk<
   try {
     const editedTask = await editTaskToDB(task);
     if (editedTask) {
-      console.log("EDITED TASKKKKKKKKKKKKKKKK: ", editedTask);
       return editedTask;
     } else {
       return thunkAPI.rejectWithValue("failed to edit task");

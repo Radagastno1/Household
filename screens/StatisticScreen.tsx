@@ -48,8 +48,6 @@ export default function StatisticScreen({ route }: StatProps) {
   const [totalSumSeries, setTotalSumSeries] = useState<number[]>([]);
 
   const handleFocusEffect = useCallback(() => {
-    console.log("USE-EFFECT STATS: ", completions);
-    console.log("USE-EFFECT STATS HUR MÅNGA: ", completions.length);
     const summarizedData = SummerizeEachTask(
       completions,
       tasks,
@@ -58,14 +56,9 @@ export default function StatisticScreen({ route }: StatProps) {
       endDate,
     );
     setStatsForTasks(summarizedData);
-    console.log("SUMMARIZEDDATA: ", summarizedData);
-
     const data = summarizeDataByColor(summarizedData);
     setTotalSumColors(data.colors);
     setTotalSumSeries(data.series);
-    console.log("DATA.SERIES: ", totalSumSeries);
-    console.log("DATA.COLORS: ", totalSumColors);
-    console.log("Nu renderas datan från statisticScreen: ", statsForTasks);
   }, [completions, tasks, profiles, startDate, endDate]);
 
   useFocusEffect(handleFocusEffect);

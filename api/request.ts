@@ -29,7 +29,6 @@ export const addProfileWithRequestToDB = async (
     const profileDoc = await getDoc(docProfileRef);
     if (profileDoc.exists()) {
       const profileData = profileDoc.data();
-      console.log("profilen som skapades i databasen: ", profileData);
 
       const docRequestRef = await addDoc(requestCollectionRef, {});
       request.id = docRequestRef.id;
@@ -120,7 +119,6 @@ export const acceptProfileToHousehold = async (requestId: string) => {
       await updateDoc(profileDocRef, {
         householdId: requestData.householdId,
       });
-      console.log("profilen har uppdaterats med det nya hushållet.");
     } else {
       console.log("förfrågan saknar profilens id.");
     }

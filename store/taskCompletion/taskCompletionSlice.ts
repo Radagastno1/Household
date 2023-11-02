@@ -18,8 +18,6 @@ const initialState: TaskCompletionState = {
   error: null,
 };
 
-//createEntityAdapter - setAll   (householdId och inte varje task - id ELLER alla taskidn)
-
 export const addCompletionAsync = createAsyncThunk<
   TaskCompletion,
   TaskCompletion,
@@ -28,7 +26,6 @@ export const addCompletionAsync = createAsyncThunk<
   try {
     const addedCompletion = await addTaskCompletionToDB(completion);
     if (addedCompletion) {
-      console.log("DEEEEN TILLLLAGDA COMPLETIONNNNENNNNNN: ", addedCompletion);
       return addedCompletion;
     } else {
       throw new Error("Något gick fel. Försök igen senare.");
@@ -51,13 +48,13 @@ const taskCompletionSlice = createSlice({
     ) => {
       const { taskId } = action.payload;
       const today = new Date().toISOString();
-      //filter the completions with the same taskId
+
       const filteredCompletions = state.completions.filter(
         (completion) =>
           completion.completionDate.split("T")[0] === today.split("T")[0] &&
           completion.taskId === taskId,
       );
-      // get the unique profileIds
+
       const uniqueProfileIds = [
         ...new Set(
           filteredCompletions?.map((completion) => completion.profileId),
@@ -93,14 +90,12 @@ const taskCompletionSlice = createSlice({
       const { taskId, completionDate } = action.payload;
 
       const today = new Date().toISOString();
-      // Filter task completions for the given Task ID and today's date
       const todaysCompletions = state.completions.filter(
         (completion) =>
           completion.completionDate.split("T")[0] === today.split("T")[0],
       );
 
       if (todaysCompletions) {
-        console.log("in slice today completion", todaysCompletions);
         state.completions = todaysCompletions;
       } else {
       }
@@ -126,18 +121,16 @@ const taskCompletionSlice = createSlice({
       action: PayloadAction<{ taskId: string; profiles: Profile[] }>,
     ) => {
       const { taskId } = action.payload;
-      //filter the completions with the same taskId
       const filteredCompletions = state.completions.filter(
         (completion) => completion.taskId === taskId,
       );
-      // get the unique profileIds
+
       const uniqueProfileIds = [
         ...new Set(
           filteredCompletions?.map((completion) => completion.profileId),
         ),
       ];
 
-      // profiles corresponding to the unique profileIds
       const profilesForTask = action.payload.profiles.filter((profile) =>
         uniqueProfileIds.includes(profile.id),
       );
@@ -161,7 +154,6 @@ const taskCompletionSlice = createSlice({
         }
       })
       .addCase(addCompletionAsync.rejected, (state, action) => {
-        console.log("INNE I CATCH", action.error.message);
         state.error = "Något gick fel. Prova igen senare.";
       });
   },
@@ -174,7 +166,6 @@ export const {
   findAllAvatarFortodayCompletionByTaskId,
 } = taskCompletionSlice.actions;
 
-//FRÅGA DAVID ÄR DETTA OK VERKLIGEN?
 export const fetchCompletions =
   (householdId: string) => async (dispatch: any) => {
     const completions = await getTaskCompletionsFromDB(householdId);

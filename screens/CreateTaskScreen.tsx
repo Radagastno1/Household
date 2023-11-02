@@ -139,12 +139,7 @@ export default function CreateTaskScreen({
       }
     } else {
       if (taskToEdit && householdId) {
-        console.log(
-          "ENERGY: ",
-          selectedEnergy,
-          " OCH INTERVAL: ",
-          selectedInterval,
-        );
+
         const editedTask: Task = {
           id: taskToEdit.id,
           title: title,
@@ -287,8 +282,6 @@ export default function CreateTaskScreen({
                     }
                     onNumberSelect={(selectedNumber) => {
                       setSelectedInterval(selectedNumber);
-                      console.log("SELECTED NUMBER:", selectedNumber);
-                      console.log("SELECTED NUMBER:", selectedInterval);
                       setIntervalDataPressed(false);
                     }}
                   />
@@ -330,8 +323,6 @@ export default function CreateTaskScreen({
                     getCircleBackgroundColor={getEnergyCircleBackgroundColor}
                     onNumberSelect={(selectedNumber) => {
                       setSelectedEnergy(selectedNumber);
-                      console.log("SELECTED NUMBER:", selectedNumber);
-                      console.log("SELECTED NUMBER:", selectedEnergy);
                       setEnergyDataPressed(!energyDataPressed);
                     }}
                   />

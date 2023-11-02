@@ -78,7 +78,6 @@ export default function CreateProfileScreen({
   };
 
   const saveProfile = () => {
-    console.log("skapad profil med hushållsid", householdId);
     if (!householdName) {
       setErrorText("Ange ett namn");
       setErrorPopup(true);

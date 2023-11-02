@@ -41,12 +41,10 @@ export const saveProfileNameToDatabase = async (
   const profileDocRef = doc(db, "profiles", profileId);
 
   try {
-    // Uppdatera profilnamnet i Firestore-dokumentet
     await updateDoc(profileDocRef, {
       profileName: newProfileName,
     });
 
-    console.log("Profilnamnet har uppdaterats i databasen.");
     return { success: true };
   } catch (error) {
     console.error("Fel vid uppdatering av profilnamnet i databasen:", error);
@@ -71,38 +69,6 @@ export const getAllProfilesByHouseholdIdDb = async (householdId: string) => {
   });
   return profiles;
 };
-
-//DENNA BEHÖVS NOG INTE DÅ VI HÄMTAR ALLA EN GÅNG
-// export const getProfileByHouseholdAndUser = async (
-//   householdId: string,
-//   userId: string,
-// ) => {
-//   try {
-//     const profileCollectionRef = collection(db, "profiles");
-
-//     const q = query(
-//       profileCollectionRef,
-//       where("householdId", "==", householdId),
-//       where("userId", "==", userId),
-//     );
-
-//     const querySnapshot = await getDocs(q);
-
-//     if (!querySnapshot.empty) {
-//       const profileDoc = querySnapshot.docs[0];
-//       const profile = profileDoc.data() as Profile;
-
-//       console.log("aktiva profilen hämtad:", profile);
-//       return profile;
-//     } else {
-//       console.error("Ingen profil hittades.");
-//       return null;
-//     }
-//   } catch (error) {
-//     console.error("Error vid hämtning av aktiva profilen:", error);
-//     throw error;
-//   }
-// };
 
 export const getAllProfilesByHouseholdId = async (householdId: string) => {
   try {
@@ -129,8 +95,6 @@ export const getAllProfilesByHouseholdId = async (householdId: string) => {
 
 export const getAllProfilesByUserIdFromDb = async (userId: string) => {
   try {
-    console.log("Hämta profiler: ", userId);
-
     const profileCollectionRef = collection(db, "profiles");
 
     const q = query(
@@ -153,30 +117,29 @@ export const getAllProfilesByUserIdFromDb = async (userId: string) => {
   }
 };
 export const editProfileToDB = async (profile: Profile) => {
-    console.log("hushåll som kommer in i edit: ", profile);
-    const profileCollectionRef = collection(db, "profiles");
-  
-    try {
-      const profileRef = doc(profileCollectionRef, profile.id);
-  
-      const updatedProfileData = {
-        id: profile.id,
-  profileName: profile.profileName,
-  userId: profile.userId,
-  householdId:profile.householdId,
-  avatar: profile.avatar,
-  isOwner:profile.isOwner,
-  isActive: profile.isActive
-      };
-  
-      await updateDoc(profileRef, updatedProfileData);
-  
-      return profile;
-    } catch (error) {
-      console.error("Fel vid redigering av uppgift:", error);
-      return null;
-    }
-  };
+  const profileCollectionRef = collection(db, "profiles");
+
+  try {
+    const profileRef = doc(profileCollectionRef, profile.id);
+
+    const updatedProfileData = {
+      id: profile.id,
+      profileName: profile.profileName,
+      userId: profile.userId,
+      householdId: profile.householdId,
+      avatar: profile.avatar,
+      isOwner: profile.isOwner,
+      isActive: profile.isActive,
+    };
+
+    await updateDoc(profileRef, updatedProfileData);
+
+    return profile;
+  } catch (error) {
+    console.error("Fel vid redigering av uppgift:", error);
+    return null;
+  }
+};
 export const deactivateProfileInDB = async (profileId: string) => {
   const profileDocRef = doc(db, "profiles", profileId);
 
@@ -185,7 +148,6 @@ export const deactivateProfileInDB = async (profileId: string) => {
       isActive: false,
     });
 
-    console.log("Profile's isActive property updated in Firestore.");
     return { success: true };
   } catch (error: unknown) {
     if (error instanceof Error) {
@@ -199,41 +161,3 @@ export const deactivateProfileInDB = async (profileId: string) => {
     }
   }
 };
-
-// export const editTaskToDB = async (task: Task) => {
-//   task.householdId = "fYHVLNiQvWEG9KNUGqBT";
-//   const taskCollectionRef = collection(db, "tasks");
-
-//   try {
-//     const taskRef = doc(taskCollectionRef, task.id);
-
-//     const updatedTaskData = {
-//       id: task.id,
-//       title: task.title,
-//       description: task.description,
-//       energiWeight: task.energiWeight,
-//       creatingDate: task.creatingDate,
-//       interval: task.interval,
-//       householdId: task.householdId,
-//     };
-
-//     await updateDoc(taskRef, updatedTaskData);
-
-//     return task;
-//   } catch (error) {
-//     console.error("Fel vid redigering av uppgift:", error);
-//     return null;
-//   }
-// };
-
-// export const deleteTaskFromDB = async (taskId: string) => {
-//   //sen ska jag ta bort taskcompletions med??
-//   try {
-//     const taskDocRef = doc(db, "tasks", taskId);
-//     await deleteDoc(taskDocRef);
-
-//     console.log("Task borttagen med Id:", taskId);
-//   } catch (error) {
-//     console.error("Fel vid borttagning av tasken:", error);
-//   }
-// };

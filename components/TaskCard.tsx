@@ -45,7 +45,6 @@ export default function TaskCard({
         ),
       ),
     ];
-    console.log(uniqueProfileIds);
 
     const profilesForTask = profiles.filter((profile) =>
       uniqueProfileIds.includes(profile.id),

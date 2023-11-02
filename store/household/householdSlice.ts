@@ -53,7 +53,6 @@ export const handleJoinHousehold = async (joinCode: string) => {
     // Dispatch the action and await its completion
     const household = await checkHouseholdWithCode(joinCode);
     if (household) {
-      console.log(household);
       return household;
     } else {
       //   console.error(
@@ -79,24 +78,21 @@ export const addHouseholdAsync = createAsyncThunk<
   }
 });
 
-
 export const editHouseHoldAsync = createAsyncThunk<
-Household,
-Household,
-{rejectValue:string}
-> ("household/editHouseHold", async (household, thunkAPI)=>{
-    try{
-        const editHouseHold = await editHouseholdToDB(household);
-        if(editHouseHold){
-            
-            return editHouseHold;
-            
-        }else{
-            return thunkAPI.rejectWithValue("failed to edit household");
-        }
-    }catch (error: any) {
-        return thunkAPI.rejectWithValue(error.message);
-      }
+  Household,
+  Household,
+  { rejectValue: string }
+>("household/editHouseHold", async (household, thunkAPI) => {
+  try {
+    const editHouseHold = await editHouseholdToDB(household);
+    if (editHouseHold) {
+      return editHouseHold;
+    } else {
+      return thunkAPI.rejectWithValue("failed to edit household");
+    }
+  } catch (error: any) {
+    return thunkAPI.rejectWithValue(error.message);
+  }
 });
 
 const householdSlice = createSlice({
@@ -133,20 +129,15 @@ const householdSlice = createSlice({
       } else {
       }
     },
-    
-   
+
     editHouseHoldeName: (
       state,
       action: PayloadAction<{ householdId: string; newHouseholdName: string }>,
     ) => {
-      console.log("HUSHÅLLID SOM KOMMER IN: ", action.payload.householdId);
-      console.log("AKTIVA HUSHÅLLET ID: ", state.activeHousehold?.id);
       if (state.activeHousehold?.id === action.payload.householdId) {
         const householdToEdit = state.activeHousehold;
-        console.log("HUSHÅLLET SOM HITTAS, ", householdToEdit);
         if (householdToEdit) {
           householdToEdit.name = action.payload.newHouseholdName;
-          console.log("det nya NAMNET BLIR: ", householdToEdit.name);
 
           editHouseholdToDB(householdToEdit)
             .then((updatedHousehold) => {
@@ -164,14 +155,16 @@ const householdSlice = createSlice({
       }
     },
     updateHousehold: (state, action) => {
-        const updatedHousehold = action.payload;
-        // Find the index of the edited household in the state
-        const index = state.households.findIndex(h => h.id === updatedHousehold.id);
-        if (index !== -1) {
-          // Replace only the existing household with the updated one
-          state.households[index] = updatedHousehold;
-        }
-      },
+      const updatedHousehold = action.payload;
+      // Find the index of the edited household in the state
+      const index = state.households.findIndex(
+        (h) => h.id === updatedHousehold.id,
+      );
+      if (index !== -1) {
+        // Replace only the existing household with the updated one
+        state.households[index] = updatedHousehold;
+      }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -182,15 +175,15 @@ const householdSlice = createSlice({
           state.households = [];
         }
       })
-      .addCase(editHouseHoldAsync.fulfilled,(state,action)=>{
-        if(action.payload){
-            state.activeHousehold = action.payload
+      .addCase(editHouseHoldAsync.fulfilled, (state, action) => {
+        if (action.payload) {
+          state.activeHousehold = action.payload;
         }
       })
-      .addCase(editHouseHoldAsync.rejected,(state,action)=>{
+      .addCase(editHouseHoldAsync.rejected, (state, action) => {
         console.log("error vid get households: ", action.payload);
-    })
-      
+      })
+
       .addCase(getHouseholdsByHouseholdIdAsync.fulfilled, (state, action) => {
         if (action.payload) {
           state.households = action.payload;

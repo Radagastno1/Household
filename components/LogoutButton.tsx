@@ -13,7 +13,6 @@ export default function LogoutButton() {
   function handleLogOut() {
     signOut(auth)
       .then(() => {
-        console.log("Användaren har loggats ut");
         dispatch(logOutUser());
       })
       .catch((error) => {

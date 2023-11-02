@@ -40,8 +40,6 @@ export function sortTaskCompletionsByDate(
     return completionDate >= start && completionDate <= end;
   });
 
-  console.log("Sorted completions: ", sortedCompletions);
-  console.log("Sorted completions: ", sortedCompletions.length);
   return sortedCompletions;
 }
 
@@ -54,11 +52,7 @@ export function sortTasksFromCompletions(
   const taskWithCompletions = new Set(
     completions.map((completion) => completion.taskId),
   );
-  console.log("task with completions: ", taskWithCompletions);
   sortedTasks = tasks.filter((task) => taskWithCompletions.has(task.id));
-
-  console.log("SortedtTasks: ", sortedTasks);
-  console.log(sortedTasks.length);
 }
 
 export function sortProfilesFromCompletions(
@@ -74,9 +68,6 @@ export function sortProfilesFromCompletions(
       }
     });
   });
-
-  console.log("Sorted profiles: ", sortedProfiles);
-  console.log(sortedProfiles.length);
 }
 
 export function SummerizeEachTask(
@@ -136,9 +127,6 @@ export function SummerizeEachTask(
     summarizedByTasks.push(typedTaskData);
   });
 
-  console.log("summarizedbytasks: ", summarizedByTasks);
-  console.log(summarizedByTasks.length);
-
   return mapToPieChart(summarizedByTasks);
 }
 
@@ -155,8 +143,6 @@ function mapToPieChart(summarizedByTasks: TaskData[]) {
     };
     statDataArray.push(stat);
   });
-
-  console.log("MaptoPieChart: ", statDataArray);
   return statDataArray;
 }
 
@@ -181,9 +167,6 @@ export function summarizeDataByColor(data: StatData[]) {
       }
     });
   });
-
-  console.log("Colors: ", colors);
-  console.log("Series: ", series);
 
   return { colors, series };
 }

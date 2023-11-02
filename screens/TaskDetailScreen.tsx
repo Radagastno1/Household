@@ -50,8 +50,6 @@ export default function TaskDetailScreen({
         ),
       ),
     ];
-    console.log(uniqueProfileIds);
-    // profiles corresponding to the unique profileIds----------need to fetch from db
     const profilesForTask = profiles.filter((profile) =>
       uniqueProfileIds.includes(profile.id),
     );

@@ -45,11 +45,9 @@ export default function RootNavigator() {
           uid: response.uid,
           email: response.email,
         };
-        console.log("USER IS LOGGED IN", fetchedUser);
         dispatch(setActiveUser(fetchedUser));
       } else {
         dispatch(setActiveUser(undefined));
-        console.log("USER IS SIGNED OUT");
       }
       setUserFetched(true);
     });
