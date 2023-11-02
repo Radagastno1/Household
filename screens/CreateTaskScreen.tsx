@@ -276,38 +276,7 @@ export default function CreateTaskScreen({
                     </View>
                   </View>
 
-                  <View
-                    style={{ flexDirection: "row", justifyContent: "center" }}
-                  >
-                    {intervalDataPressed ? (
-                      <ScrollView
-                        horizontal
-                        contentContainerStyle={styles.intervalContainer}
-                      >
-                        {intervalData.map((number) => (
-                          <TouchableOpacity
-                            key={number.toString()}
-                            onPress={() => {
-                              setSelectedInterval(number);
-                              setIntervalDataPressed(false);
-                            }}
-                          >
-                            <CircleComponent
-                              number={number}
-                              backgroundColor={
-                                colorScheme === "dark"
-                                  ? "lightgrey"
-                                  : "lightgrey"
-                              }
-                              color={colorScheme === "dark" ? "black" : "black"}
-                            />
-                          </TouchableOpacity>
-                        ))}
-                      </ScrollView>
-                    ) : null}
-                  </View>
-
-                  {/* <CircleIntervalView
+                  <CircleIntervalView
                     isShowing={intervalDataPressed}
                     intervalArray={intervalData}
                     circleBackgroundColor={
@@ -319,7 +288,7 @@ export default function CreateTaskScreen({
                       console.log("SELECTED NUMBER:", selectedInterval);
                       setIntervalDataPressed(false);
                     }}
-                  /> */}
+                  />
                 </Card.Content>
               </Card>
 
@@ -351,7 +320,7 @@ export default function CreateTaskScreen({
                     </View>
                   </View>
 
-                  {/* <CircleIntervalView
+                  <CircleIntervalView
                     isShowing={energyDataPressed}
                     intervalArray={energyData}
                     circleBackgroundColor="grey"
@@ -362,29 +331,7 @@ export default function CreateTaskScreen({
                       console.log("SELECTED NUMBER:", selectedEnergy);
                       setEnergyDataPressed(!energyDataPressed);
                     }}
-                  /> */}
-
-                  <View style={{ flexDirection: "row" }}>
-                    {energyDataPressed
-                      ? energyData.map((number) => (
-                          <TouchableOpacity
-                            key={number.toString()}
-                            onPress={() => {
-                              setSelectedEnergy(number),
-                                setEnergyDataPressed(false);
-                            }}
-                          >
-                            <CircleComponent
-                              number={number}
-                              backgroundColor={getEnergyCircleBackgroundColor(
-                                number,
-                              )}
-                              color="black"
-                            />
-                          </TouchableOpacity>
-                        ))
-                      : null}
-                  </View>
+                  />
                 </Card.Content>
               </Card>
               {isCreateMode ? null : (
