@@ -16,12 +16,14 @@ interface ProfileState {
   profiles: Profile[];
   activeProfile: Profile | null;
   profilesToUser: Profile[];
+  error: string | null;
 }
 
 export const initialState: ProfileState = {
   profiles: [],
   activeProfile: null,
   profilesToUser: [],
+  error: null,
 };
 
 export const addProfileAsync = createAsyncThunk(
@@ -96,13 +98,11 @@ const profileSlice = createSlice({
   name: "profile",
   initialState,
   reducers: {
-    //denna ska anropas när man går in i ett hushåll, så man får alla profiler för det hushållet varje gång
     setProfiles: (state, action: PayloadAction<Profile[] | undefined>) => {
       if (action.payload) {
         state.profiles = action.payload;
       }
     },
-    //denna ska sättas när mnan får in i ett hushåll, vilken profil DU ÄR
     setActiveProfile: (state, action: PayloadAction<Profile>) => {
       state.activeProfile = action.payload;
     },
@@ -123,33 +123,9 @@ const profileSlice = createSlice({
           }
         })
         .catch((error) => {
-          console.error("Fel vid tillägg av profil:", error);
+          state.error =
+            "Något gick fel vid skapandet av profil. Försök igen snart.";
         });
-    },
-    editProfileName: (
-      state,
-      action: PayloadAction<{ profileId: string; newProfileName: string }>,
-    ) => {
-      const profileToEdit = state.profiles.find(
-        (profile) => profile.id === action.payload.profileId,
-      );
-      if (profileToEdit) {
-        profileToEdit.profileName = action.payload.newProfileName;
-        saveProfileNameToDatabase(
-          profileToEdit.id,
-          action.payload.newProfileName,
-        )
-          .then((response) => {
-            if (response.success) {
-              console.log("Profilnamnet har sparats i databasen.");
-            } else {
-              console.error("Fel vid spara profilnamnet i databasen.");
-            }
-          })
-          .catch((error) => {
-            console.error("Fel vid spara profilnamnet i databasen:", error);
-          });
-      }
     },
     setProfileByHouseholdAndUser: (
       state,
@@ -166,10 +142,8 @@ const profileSlice = createSlice({
     },
     editProfile: (state, action) => {
       const updatedProfile = action.payload;
-      // Find the index of the edited household in the state
       const index = state.profiles.findIndex((p) => p.id === updatedProfile.id);
       if (index !== -1) {
-        // Replace only the existing household with the updated one
         state.profiles[index] = updatedProfile;
       }
     },
@@ -195,7 +169,7 @@ const profileSlice = createSlice({
         }
       })
       .addCase(editProfileAsync.rejected, (state, action) => {
-        console.log("error vid get households: ", action.payload);
+        state.error = "Det gick inte att redigera profilen för tillfället.";
       })
       .addCase(getProfilesByUserIdAsync.fulfilled, (state, action) => {
         if (action.payload) {
@@ -203,7 +177,7 @@ const profileSlice = createSlice({
         }
       })
       .addCase(getProfilesByUserIdAsync.rejected, (state, action) => {
-        console.log("error vid get profiles: ", action.payload);
+        state.error = "Det gick inte att hämta profiler just nu.";
       })
       .addCase(getProfilesByHouseholdIdAsync.fulfilled, (state, action) => {
         if (action.payload) {
@@ -211,7 +185,8 @@ const profileSlice = createSlice({
         }
       })
       .addCase(getProfilesByHouseholdIdAsync.rejected, (state, action) => {
-        console.log("error vid get profiles: ", action.payload);
+        state.error =
+          "Just nu har vi problem med att hämta profiler från databasen.";
       });
   },
 });
@@ -248,7 +223,6 @@ export const deactivateProfileAsync = createAsyncThunk(
 
 export const { setProfiles } = profileSlice.actions;
 export const { addProfile } = profileSlice.actions;
-export const { editProfileName } = profileSlice.actions;
 export const { setProfileByHouseholdAndUser } = profileSlice.actions;
 export const { editProfile } = profileSlice.actions;
 export const profileReducer = profileSlice.reducer;

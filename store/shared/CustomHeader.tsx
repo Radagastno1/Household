@@ -50,7 +50,7 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({ title, navigation }) => {
           onPress={() => navigation.navigate("HouseholdAccount")}
         >
           <Appbar.Action
-            icon={({ size, color }) => (
+            icon={() => (
               <Image
                 source={require("../../assets/pngwing.com.png")}
                 style={styles.beeHomeImage}

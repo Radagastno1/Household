@@ -56,11 +56,9 @@
 // });
 
 // export default CustomTabBar;
-import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import { TabBar } from "react-native-tab-view";
 import { AntDesign } from "@expo/vector-icons";
-import { TabRouterOptions } from "@react-navigation/native";
+import React from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 interface CustomTabBarProps {
   state: any;
@@ -76,7 +74,6 @@ const CustomTabBar: React.FC<CustomTabBarProps> = (props) => {
     descriptors[activeRoute.key].options.tabBarLabel || activeRoute.name;
 
   const goBack = () => {
-    // Navigate to the previous screen when the left arrow is pressed
     const currentIndex = state.routes.findIndex(
       (route: { key: any }) => route.key === activeRoute.key,
     );
@@ -102,7 +99,7 @@ const CustomTabBar: React.FC<CustomTabBarProps> = (props) => {
 
   return (
     <View style={styles.container}>
-       {!isHouseholdTaskScreen && (
+      {!isHouseholdTaskScreen && (
         <TouchableOpacity onPress={goBack}>
           <AntDesign name="arrowleft" size={24} color="black" />
         </TouchableOpacity>
@@ -132,11 +129,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     height: "100%",
   },
-  activeTab: {
-   
-  },
+  activeTab: {},
   tabText: {
-
     color: "black",
     fontWeight: "bold",
     fontSize: 15,

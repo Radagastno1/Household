@@ -17,13 +17,13 @@ import {
   View,
 } from "react-native";
 import { useTheme } from "../contexts/themeContext";
+import ErrorModule from "../modules/errorModule";
 import { RootNavigationScreenProps } from "../navigators/navigationTypes";
 import {
   addProfileAsync,
   getProfilesByHouseholdIdAsync,
 } from "../store/profile/profileSlice";
 import { addProfileWithRequest } from "../store/request/requestSlice";
-import ErrorModule from "../modules/errorModule";
 
 type CreateProfileProps = RootNavigationScreenProps<"CreateProfile">;
 

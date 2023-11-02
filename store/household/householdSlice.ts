@@ -12,12 +12,14 @@ export interface HouseholdState {
   households: Household[];
   selectedHousehold: Household | null;
   activeHousehold: Household | null;
+  error: string | null;
 }
 
 export const initialState: HouseholdState = {
   households: [],
   selectedHousehold: null,
   activeHousehold: null,
+  error: null,
 };
 
 export const getHouseholdsByHouseholdIdAsync = createAsyncThunk<
@@ -55,9 +57,6 @@ export const handleJoinHousehold = async (joinCode: string) => {
     if (household) {
       return household;
     } else {
-      //   console.error(
-      //     "Failed to join the household. Please check the join code.",
-      //   );
       return null;
     }
   }
@@ -149,19 +148,17 @@ const householdSlice = createSlice({
               }
             })
             .catch((error) => {
-              console.error("Error editing household:", error);
+              state.error = "Något gick fel vid redigering av hushållet.";
             });
         }
       }
     },
     updateHousehold: (state, action) => {
       const updatedHousehold = action.payload;
-      // Find the index of the edited household in the state
       const index = state.households.findIndex(
         (h) => h.id === updatedHousehold.id,
       );
       if (index !== -1) {
-        // Replace only the existing household with the updated one
         state.households[index] = updatedHousehold;
       }
     },
@@ -181,7 +178,8 @@ const householdSlice = createSlice({
         }
       })
       .addCase(editHouseHoldAsync.rejected, (state, action) => {
-        console.log("error vid get households: ", action.payload);
+        state.error =
+          "Något blir fel vid hämtning av dina hushåll. Försök igen snart.";
       })
 
       .addCase(getHouseholdsByHouseholdIdAsync.fulfilled, (state, action) => {
@@ -190,7 +188,7 @@ const householdSlice = createSlice({
         }
       })
       .addCase(getHouseholdsByHouseholdIdAsync.rejected, (state, action) => {
-        console.log("error vid get households: ", action.payload);
+        state.error = "Något gick fel vid hämtning av hushållen.";
       })
       .addCase(addHouseholdAsync.fulfilled, (state, action) => {
         if (action.payload) {
@@ -198,16 +196,8 @@ const householdSlice = createSlice({
         }
       })
       .addCase(addHouseholdAsync.rejected, (state, action) => {
-        console.log("error vid add household: ", action.payload);
+        state.error = "Något gick fel. Försök igen senare.";
       });
-    // .addCase(getRequestByHouseholdIdsAsync.fulfilled, (state, action) => {
-    //   if (action.payload) {
-    //     state.requests = action.payload;
-    //   }
-    // })
-    // .addCase(getRequestByHouseholdIdsAsync.rejected, (state, action) => {
-    //   console.log("error vid get requests: ", action.payload);
-    // });
   },
 });
 
@@ -217,7 +207,6 @@ export const {
   editHouseHoldeName,
   sethouseholdActive,
   updateHousehold,
-  // getHouseholdsByHouseholdId,
 } = householdSlice.actions;
 
 export const householdReducer = householdSlice.reducer;
@@ -228,9 +217,3 @@ const setActiveHousehold = (household: Household) => {
     payload: household,
   };
 };
-
-// // Helper function to get a random element from a string
-// const getRandomElement = (array: string) => {
-//   const index = Math.floor(Math.random() * array.length);
-//   return array[index];
-// };

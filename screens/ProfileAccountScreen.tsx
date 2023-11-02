@@ -7,32 +7,23 @@ import {
   deactivateProfileAsync,
   editProfile,
   editProfileAsync,
-  editProfileName,
-  setProfileByHouseholdAndUser,
 } from "../store/profile/profileSlice";
 
+import { useFocusEffect } from "@react-navigation/native";
 import { AvatarUrls, Avatars } from "../data/avatars";
+import RequestModule from "../modules/RequestModule";
 import { RootNavigationScreenProps } from "../navigators/navigationTypes";
 import {
   editHouseHoldAsync,
-  editHouseHoldeName,
-  setActiveHouseholdAsync,
   updateHousehold,
 } from "../store/household/householdSlice";
-import { useAppDispatch, useAppSelector } from "../store/store";
-import { fetchTasks } from "../store/tasks/taskSlice";
-import { useFocusEffect } from "@react-navigation/native";
-import RequestModule from "../modules/RequestModule";
 import {
   acceptProfileToHouseholdAsync,
   denyProfileToHouseholdAsync,
 } from "../store/request/requestSlice";
+import { useAppDispatch, useAppSelector } from "../store/store";
+import { fetchTasks } from "../store/tasks/taskSlice";
 import { HouseholdRequest } from "../types";
-import {
-  getHouseholdsFromDBbyProfileId,
-  getHouseholdsFromDBbySingleProfileId,
-} from "../api/household";
-import { updateProfile } from "firebase/auth";
 
 type ProfileProps = RootNavigationScreenProps<"ProfileAccount">;
 
