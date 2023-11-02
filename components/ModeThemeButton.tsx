@@ -69,9 +69,9 @@ export default function ModeThemeButton() {
 
       {showDropdown && (
         <View style={theme.button as any}>
-          <Button onPress={handleClose}>
+          {/* <Button onPress={handleClose}>
             <AntDesign name="close" size={24} color="black" />
-          </Button>
+          </Button> */}
           <FlatList
             data={["light", "dark", "Auto"]}
             keyExtractor={(item) => item}
