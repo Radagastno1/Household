@@ -69,8 +69,6 @@ export const getAllProfilesByHouseholdIdDb = async (householdId: string) => {
   querySnapshot.forEach((doc) => {
     profiles.push(doc.data() as Profile);
   });
-
-  console.log("profiler hämtade från DB:", profiles);
   return profiles;
 };
 
@@ -123,8 +121,6 @@ export const getAllProfilesByHouseholdId = async (householdId: string) => {
     querySnapshot.forEach((doc) => {
       profiles.push(doc.data() as Profile);
     });
-
-    console.log("Profiler hämtade:", profiles);
     return profiles;
   } catch (error) {
     console.error("Fel vid hämtning av uppgifter:", error);
@@ -151,7 +147,6 @@ export const getAllProfilesByUserIdFromDb = async (userId: string) => {
       profiles.push(doc.data() as Profile);
     });
 
-    console.log("Profiler hämtade:", profiles);
     return profiles;
   } catch (error) {
     console.error("Fel vid hämtning av uppgifter:", error);
