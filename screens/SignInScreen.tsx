@@ -5,6 +5,7 @@ import {
   Animated,
   Easing,
   Keyboard,
+  Platform,
   StyleSheet,
   TouchableOpacity,
   TouchableWithoutFeedback,
@@ -79,7 +80,7 @@ export const SignInScreen = ({ navigation }: SignInProps) => {
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <>
-            <StatusBar backgroundColor="#FFD700" />
+            <StatusBar style="auto" backgroundColor="#FFD700" />
             <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
               <View style={{ backgroundColor: theme.colors.background }}>
                 <View style={theme.signInHeader as any}>
