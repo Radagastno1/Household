@@ -12,7 +12,7 @@ import { TextInput } from "react-native-paper";
 import { useTheme } from "../contexts/themeContext";
 import ErrorModule from "../modules/errorModule";
 import { RootNavigationScreenProps } from "../navigators/navigationTypes";
-import { useAppDispatch } from "../store/store";
+import { useAppDispatch, useAppSelector } from "../store/store";
 import { addUserAsync } from "../store/user/userSlice";
 import { UserCreate } from "../types";
 
@@ -32,6 +32,7 @@ export default function CreateUserAccountScreen({
     useState(false);
   const [confirmationPasswordInput, setConfirmationPasswordInput] =
     useState("");
+  const emailExistsError = useAppSelector((state) => state.user.error);
 
   const { theme } = useTheme();
   const colorScheme = useColorScheme();
@@ -159,6 +160,13 @@ export default function CreateUserAccountScreen({
             }}
           />
         )}
+        {emailExistsError ? (
+          <ErrorModule
+            errorMessage={emailExistsError}
+            buttonMessage="Försök igen"
+            onClose={() => setErrorPopup(false)}
+          />
+        ) : null}
       </View>
     </KeyboardAvoidingView>
   );

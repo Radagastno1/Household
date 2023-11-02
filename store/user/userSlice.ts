@@ -75,6 +75,9 @@ const userSlice = createSlice({
       })
       .addCase(logInUserAsync.rejected, (state, action) => {
         state.error = "Användarnamn eller lösenord är felaktigt.";
+      })
+      .addCase(addUserAsync.rejected, (state, action) => {
+        state.error = "Det verkar som att du redan har ett konto här.";
       });
   },
 });
