@@ -13,6 +13,7 @@ import { User } from "../types";
 import ModeThemeButton from "../components/ModeThemeButton";
 import LogoutButton from "../components/LogoutButton";
 import HouseholdList from "../components/HouseholdList";
+import { Appbar } from "react-native-paper";
 
 type HouseholdProps = RootNavigationScreenProps<"HouseholdAccount">;
 
@@ -68,7 +69,11 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
         justifyContent: "center",
       }}
     >
-      <Header text={"Välkommen"} />
+      <Appbar.Header
+        style={{ height: 70, backgroundColor: theme.colors.background }}
+      >
+        <Appbar.Content title="Välkommen!" />
+      </Appbar.Header>
       <View
         style={{
           flex: 1,
