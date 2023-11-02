@@ -52,7 +52,11 @@ export default function CreateUserAccountScreen({
         email: newEmail,
         password: newPassword,
       };
-      dispatch(addUserAsync(newUser));
+      dispatch(addUserAsync(newUser)).then(() => {
+        setNewEmail("");
+        setNewPassword("");
+        setConfirmationPasswordInput("");
+      });
     }
   };
 
