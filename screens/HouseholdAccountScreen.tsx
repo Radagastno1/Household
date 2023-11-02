@@ -17,8 +17,6 @@ import { Appbar } from "react-native-paper";
 type HouseholdProps = RootNavigationScreenProps<"HouseholdAccount">;
 
 export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
-  const [systemTheme, setSystemTheme] = useState(Appearance.getColorScheme());
-
   const activeUser = useAppSelector((state) => state.user.user);
   const activeProfile = useAppSelector((state) => state.profile.activeProfile);
   const profilesToUser = useAppSelector(
