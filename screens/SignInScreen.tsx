@@ -8,7 +8,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  View
+  View,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { Text, TextInput } from "react-native-paper";
@@ -59,9 +59,9 @@ export const SignInScreen = ({ navigation }: SignInProps) => {
 
   return (
     <KeyboardAwareScrollView
-    contentContainerStyle={styles.scrollContent}
-    keyboardShouldPersistTaps="handled"
-  >
+      contentContainerStyle={styles.scrollContent}
+      keyboardShouldPersistTaps="handled"
+    >
       <Animated.View
         style={[
           styles.container,
@@ -82,10 +82,8 @@ export const SignInScreen = ({ navigation }: SignInProps) => {
             <StatusBar backgroundColor="#FFD700" />
 
             <View style={{ backgroundColor: theme.colors.background }}>
-              <View style={styles.container}>
-                <View style={theme.button as any}>
-                  <Text style={styles.headerText}>Logga in</Text>
-                </View>
+              <View style={theme.signInHeader as any}>
+                <Text style={styles.headerText}>Logga in</Text>
               </View>
 
               <View style={styles.container}>
@@ -99,7 +97,7 @@ export const SignInScreen = ({ navigation }: SignInProps) => {
                   style={styles.video}
                   resizeMode={ResizeMode.CONTAIN}
                 />
-                              <Text
+                <Text
                   style={{
                     color: theme.buttonText.color,
                     fontSize: 24,
@@ -109,11 +107,9 @@ export const SignInScreen = ({ navigation }: SignInProps) => {
                 >
                   BUZZTER
                 </Text>
-
               </View>
 
               <View style={styles.textContainer}>
-  
                 <TextInput
                   placeholder="Email"
                   onChangeText={(text) => setUsername(text)}
@@ -165,6 +161,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
+    justifyContent: "center",
     marginTop: 20,
   },
   video: {
@@ -197,4 +194,3 @@ const styles = StyleSheet.create({
   },
 });
 export default SignInScreen;
-
