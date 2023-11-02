@@ -1,15 +1,22 @@
-- expo app
-- react native paper
-- react native sage area context
-- react redux
-- native navigation
-- native screens
-- stack navigation
-- firebase/firestore
-- async storage
+## BUZZTER
 
-- es lint
-- prettier
+Detta är Buzzter, hushållsappen till hela familjen. Skapa konto och bjud in hushållsmedlemmarna och dela på ansvaret på det gemensamma hemmet. Skapa sysslor och klara av dem. Statistik visar varje användares hårda slit och ger möjlighet till eftertanke och omtanke. Vi valde att använda oss av biet som är välkända för att arbeta i ett lag för ett gemensamt mål. Samt att vi vill lyfta biets nytta i världens alla hörn.
+
+## Applikationen
+
+Buzzters utvecklades hösten 2023 av 5 ambitiösa studenter och vi använde oss av expo react native applikation tillsammans med esLint, github Action, prettier, Firestore för att nämna några.
+
+För att komma igång med Buzzter behöver du vid nedladdning av denna kod köra `npm install`. För att köra programmet är det `npm start`som gäller i konsolen. Du kan använda din telefon eller en installerad emulator på datorn. Följ instruktionerna som ges i terminalen nedan.
+
+## Design
+
+Designmissarna i denna applikationen är energivärdetcirklarna som av någon besynnerlig anledning inte vill ha mellanrum mellan sig. Ofantligt många försök har gjorts och cirklarna vann...., för denna gången.
+
+Knappen för att ändra dark- eller lightmode var en utmaning att få till så vi fick ändra designen för den. Den är inte som den illustreras i figman.
+
+## Figma
+
+Vi skapade en figma-mall över applikationen och den finns här: https://www.figma.com/file/XGrmgnzWdYf31u4z4IVwqF/Untitled?type=design&node-id=0-1&mode=design&t=xrQ8cfCyyiPRuJQy-0
 
 ## 2023-10-12
 
