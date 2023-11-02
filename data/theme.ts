@@ -56,6 +56,13 @@ export type Theme = typeof DarkTheme & {
     padding: number;
     fontWeight: string;
   };
+  signInHeader: {
+    widht: string;
+    backgroundColor: string;
+    padding: number;
+    alignItems: string;
+    marginTop: number;
+  };
 };
 
 export const AppLightTheme: Theme = {
@@ -120,6 +127,13 @@ export const AppLightTheme: Theme = {
     padding: 2,
     fontWeight: "bold",
   },
+  signInHeader: {
+    widht: "100%",
+    backgroundColor: "#FFD700",
+    padding: 10,
+    alignItems: "center",
+    marginTop: 20,
+  },
 };
 
 export const AppDarkTheme: Theme = {
@@ -183,5 +197,12 @@ export const AppDarkTheme: Theme = {
     textAlign: "center",
     padding: 2,
     fontWeight: "bold",
+  },
+  signInHeader: {
+    widht: "100%",
+    backgroundColor: "gray",
+    padding: 10,
+    alignItems: "center",
+    marginTop: 20,
   },
 };

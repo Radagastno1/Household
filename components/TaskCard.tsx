@@ -107,10 +107,7 @@ export default function TaskCard({
         style={[
           styles.card,
           {
-            backgroundColor:
-              colorScheme === "dark"
-                ? "white"
-                : theme.cardButton.backgroundColor,
+            backgroundColor: theme.cardButton.backgroundColor,
           },
         ]}
         onPress={() => handleTaskPress(task.id)}
@@ -120,9 +117,7 @@ export default function TaskCard({
             <Text
               variant="titleLarge"
               style={{
-                color:
-                  //var tvngen att lägga till black här för att se task namnen :)) sålänge
-                  colorScheme === "dark" ? "black" : theme.buttonText.color,
+                color: theme.buttonText.color,
               }}
             >
               {task.title}

@@ -2,7 +2,6 @@ import { useFocusEffect } from "@react-navigation/native";
 import React, { useCallback, useEffect, useState } from "react";
 import { Appearance, Text, View } from "react-native";
 import CreateHouseholdButton from "../components/CreateHouseholdButton";
-import Header from "../components/Header";
 import HouseholdList from "../components/HouseholdList";
 import LogoutButton from "../components/LogoutButton";
 import ModeThemeButton from "../components/ModeThemeButton";
@@ -13,6 +12,7 @@ import { getProfilesByUserIdAsync } from "../store/profile/profileSlice";
 import { getRequestByHouseholdIdsAsync } from "../store/request/requestSlice";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { User } from "../types";
+import { Appbar } from "react-native-paper";
 
 type HouseholdProps = RootNavigationScreenProps<"HouseholdAccount">;
 
@@ -64,7 +64,11 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
         justifyContent: "center",
       }}
     >
-      <Header text={"Välkommen"} />
+      <Appbar.Header
+        style={{ height: 70, backgroundColor: theme.colors.background }}
+      >
+        <Appbar.Content title="Välkommen!" />
+      </Appbar.Header>
       <View
         style={{
           flex: 1,

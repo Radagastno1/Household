@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Appearance, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Appearance,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { Button } from "react-native-paper";
 import { useTheme } from "../contexts/themeContext";
@@ -13,7 +19,8 @@ export default function ModeThemeButton() {
   const [isAuto, setIsAuto] = useState<boolean>(true);
 
   const handleToggleSystemTheme = () => {
-    const systemColorScheme: ColorSchemeName = Appearance.getColorScheme() as ColorSchemeName;
+    const systemColorScheme: ColorSchemeName =
+      Appearance.getColorScheme() as ColorSchemeName;
     if (systemColorScheme === "light" || systemColorScheme === "dark") {
       setColorScheme(systemColorScheme);
     }
@@ -62,7 +69,7 @@ export default function ModeThemeButton() {
         style={theme.button as any}
         onPress={() => setShowDropdown(!showDropdown)}
       >
-        <Text>Choose Mode</Text>
+        <Text style={theme.buttonText}>Choose Mode</Text>
       </TouchableOpacity>
 
       {showDropdown && (
@@ -91,17 +98,3 @@ const styles = StyleSheet.create({
     padding: 5,
   },
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-

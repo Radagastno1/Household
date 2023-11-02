@@ -1,7 +1,6 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { onAuthStateChanged } from "firebase/auth";
-import { User } from "../types";
 import React, { useEffect, useState } from "react";
 import { auth } from "../api/config";
 import CreateProfileScreen from "../screens/CreateProfileScreen";
@@ -16,6 +15,7 @@ import TaskDetailScreen from "../screens/TaskDetailScreen";
 import CustomHeader from "../store/shared/CustomHeader";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { setActiveUser } from "../store/user/userSlice";
+import { User } from "../types";
 import TopTabNavigator from "./TopTabNavigator";
 
 export type RootStackParamList = {
@@ -41,10 +41,10 @@ export default function RootNavigator() {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (response) => {
       if (response) {
-        const fetchedUser : User = {
+        const fetchedUser: User = {
           uid: response.uid,
-          email: response.email
-        }
+          email: response.email,
+        };
         console.log("USER IS LOGGED IN", fetchedUser);
         dispatch(setActiveUser(fetchedUser));
       } else {
@@ -58,10 +58,13 @@ export default function RootNavigator() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator
-      >
+      <Stack.Navigator>
         {!isUserFetched ? (
-          <Stack.Screen name="SplashScreen" component={SplashScreen}   options={{ headerShown: false }} />
+          <Stack.Screen
+            name="SplashScreen"
+            component={SplashScreen}
+            options={{ headerShown: false }}
+          />
         ) : user ? (
           <>
             <Stack.Screen
@@ -84,7 +87,11 @@ export default function RootNavigator() {
               options={{ headerShown: false }}
               component={CreateProfileScreen}
             />
-            <Stack.Screen name="HandleTask" component={CreateTaskScreen} />
+            <Stack.Screen
+              name="HandleTask"
+              options={{ headerShown: false }}
+              component={CreateTaskScreen}
+            />
             <Stack.Screen
               name="TaskDetail"
               options={{ headerShown: false }}
@@ -111,10 +118,13 @@ export default function RootNavigator() {
             <Stack.Screen
               name="Login"
               component={SignInScreen}
-              // options={{ presentation: "fullScreenModal" }}
               options={{ headerShown: false }}
             />
-            <Stack.Screen name="Signup" component={CreateUserAccountScreen} />
+            <Stack.Screen
+              name="Signup"
+              options={{ headerShown: false }}
+              component={CreateUserAccountScreen}
+            />
           </>
         )}
       </Stack.Navigator>
