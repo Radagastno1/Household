@@ -21,9 +21,7 @@ export const addUserAsync = createAsyncThunk<
   UserCreate,
   { rejectValue: string }
 >("user/addUser", async (user, thunkAPI) => {
-  console.log("INNAN TRY I USER SLICE");
   try {
-    console.log("inne i try i user slice ");
     const addedUser = await addUserToDB(user);
     if (addedUser) {
       return addedUser;

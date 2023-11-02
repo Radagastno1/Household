@@ -46,10 +46,8 @@ export const getProfilesByUserIdAsync = createAsyncThunk<
   { rejectValue: string }
 >("profiles/getProfilesByUserId", async (userId, thunkAPI) => {
   try {
-    console.log("inne i try i thunken, userid är: ", userId);
     const fetchedProfiles = await getAllProfilesByUserIdFromDb(userId);
     if (fetchedProfiles) {
-      console.log("inne i try i thunken, profiles är: ", fetchedProfiles);
 
       return fetchedProfiles;
     } else {
@@ -68,10 +66,6 @@ export const getProfilesByHouseholdIdAsync = createAsyncThunk<
   try {
     const fetchedProfiles = await getAllProfilesByHouseholdIdDb(householdId);
     if (fetchedProfiles) {
-      console.log(
-        "inne i try i thunken, profiles är för hurhållet är: ",
-        fetchedProfiles,
-      );
       return fetchedProfiles;
     } else {
       return thunkAPI.rejectWithValue("failed to get profi.es");
