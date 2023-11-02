@@ -53,6 +53,4 @@ export function getAvatarColorString(avatarString: string) {
       return "white";
   }
 }
-//FÖR ATT PRESENTERA EMOJIN:
-//const avatarUrl = AvatarUrls[Avatars.Koala];   -> här kanske då profile.avatar?
-//<Image source={{ uri: avatarUrl }} style={{ height: 50, width: 50 }} />
+

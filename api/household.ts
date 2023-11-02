@@ -66,24 +66,18 @@ export const editHouseholdToDB = async (household: Household) => {
   }
 };
 
-export const getHouseholdsFromDB = async (householdId: string) => {
-  try {
-    const householdCollectionRef = collection(db, "households");
+export const getHouseholdsFromDB = async (householdIds: string[]) => {
+  const householdCollectionRef = collection(db, "households");
 
-    const q = query(householdCollectionRef, where("id", "==", householdId));
+  const q = query(householdCollectionRef, where("id", "in", householdIds));
+  const querySnapshot = await getDocs(q);
 
-    const querySnapshot = await getDocs(q);
-    if (querySnapshot.size === 0) {
-      return null;
-    }
+  const households: Household[] = [];
+  querySnapshot.forEach((doc) => {
+    households.push(doc.data() as Household);
+  });
 
-    const household = querySnapshot.docs[0].data() as Household;
-
-    console.log("Uppgifter hämtade:", household);
-    return household;
-  } catch (error) {
-    console.error("Fel vid hämtning av uppgifter:", error);
-  }
+  return households;
 };
 export const getHouseholdsFromDBbySingleProfileId = async (profileId: string) => {
     try {
@@ -118,8 +112,6 @@ export const getHouseholdsFromDBbyProfileId = async (profileId: string[]) => {
     querySnapshot.forEach((doc) => {
       households.push(doc.data() as Household);
     });
-
-    console.log("Uppgifter hämtade:", households);
     return households;
   } catch (error) {
     console.error("Fel vid hämtning av uppgifter:", error);

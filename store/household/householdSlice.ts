@@ -26,15 +26,8 @@ export const getHouseholdsByHouseholdIdAsync = createAsyncThunk<
   { rejectValue: string }
 >("households/getHouseholdByHouseholdId", async (householdIds, thunkAPI) => {
   try {
-    const fetchedHouseholds: Household[] = [];
-    for (const id of householdIds) {
-      const household = await getHouseholdsFromDB(id);
-      if (household) {
-        fetchedHouseholds.push(household as Household);
-      }
-    }
-    console.log("Hämtade hushåll: ", fetchedHouseholds);
-    return fetchedHouseholds;
+    const households = await getHouseholdsFromDB(householdIds);
+    return households;
   } catch (error: any) {
     return thunkAPI.rejectWithValue(error.message);
   }
@@ -63,9 +56,9 @@ export const handleJoinHousehold = async (joinCode: string) => {
       console.log(household);
       return household;
     } else {
-    //   console.error(
-    //     "Failed to join the household. Please check the join code.",
-    //   );
+      //   console.error(
+      //     "Failed to join the household. Please check the join code.",
+      //   );
       return null;
     }
   }
