@@ -139,7 +139,6 @@ export default function CreateTaskScreen({
       }
     } else {
       if (taskToEdit && householdId) {
-
         const editedTask: Task = {
           id: taskToEdit.id,
           title: title,
@@ -323,6 +322,7 @@ export default function CreateTaskScreen({
                     getCircleBackgroundColor={getEnergyCircleBackgroundColor}
                     onNumberSelect={(selectedNumber) => {
                       setSelectedEnergy(selectedNumber);
+                      console.log(selectedNumber);
                       setEnergyDataPressed(!energyDataPressed);
                     }}
                   />
