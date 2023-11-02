@@ -8,6 +8,8 @@ import { useTheme } from "../contexts/themeContext";
 import { AvatarUrls, Avatars } from "../data/avatars";
 import { RootStackParamList } from "../navigators/RootNavigator";
 import { TopTabParamList } from "../navigators/TopTabNavigator";
+import { useAppDispatch } from "../store/store";
+import { findTaskById } from "../store/tasks/taskSlice";
 import { Profile, Task, TaskCompletion } from "../types";
 
 type TaskCardProps = {
@@ -91,7 +93,10 @@ export default function TaskCard({
     return daysDifference;
   }
 
+  const dispatch = useAppDispatch();
   const handleTaskPress = (taskId: string) => {
+    dispatch(findTaskById({ taskId: taskId }));
+
     navigation.navigate("TaskDetail", { taskId });
   };
 

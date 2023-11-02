@@ -3,6 +3,9 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Appearance, Text, View } from "react-native";
 import CreateHouseholdButton from "../components/CreateHouseholdButton";
 import Header from "../components/Header";
+import HouseholdList from "../components/HouseholdList";
+import LogoutButton from "../components/LogoutButton";
+import ModeThemeButton from "../components/ModeThemeButton";
 import { useTheme } from "../contexts/themeContext";
 import { RootNavigationScreenProps } from "../navigators/navigationTypes";
 import { getHouseholdsByHouseholdIdAsync } from "../store/household/householdSlice";
@@ -15,12 +18,12 @@ import LogoutButton from "../components/LogoutButton";
 import HouseholdList from "../components/HouseholdList";
 import { Appbar } from "react-native-paper";
 
+
+
 type HouseholdProps = RootNavigationScreenProps<"HouseholdAccount">;
 
 export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
   const [systemTheme, setSystemTheme] = useState(Appearance.getColorScheme());
-  const [profilesLoaded, setProfilesLoaded] = useState(false);
-  const [requestsLoaded, setRequestsLoaded] = useState(false);
 
   const activeUser = useAppSelector((state) => state.user.user);
   const activeProfile = useAppSelector((state) => state.profile.activeProfile);
@@ -32,26 +35,18 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
   const dispatch = useAppDispatch();
 
   const { theme } = useTheme();
-  let householdIds: string[] = [];
 
   useEffect(() => {
-    dispatch(getProfilesByUserIdAsync(activeUser?.uid ?? "hej")).then(() => {
-      setProfilesLoaded(true);
-    });
-    householdIds = profilesToUser.map((p) => p.householdId);
-  }, [!profilesLoaded]);
+    console.log("START", new Date().toLocaleTimeString());
+    dispatch(getProfilesByUserIdAsync(activeUser?.uid ?? "hej"));
+  }, []);
 
   useEffect(() => {
+    if (profilesToUser.length === 0) return;
+    const householdIds = profilesToUser.map((p) => p.householdId);
     dispatch(getHouseholdsByHouseholdIdAsync(householdIds));
-  }, [profilesLoaded]);
-
-  useFocusEffect(
-    useCallback(() => {
-      dispatch(getRequestByHouseholdIdsAsync(householdIds)).then(() => {
-        setRequestsLoaded(true);
-      });
-    }, [profilesLoaded, !requestsLoaded]),
-  );
+    dispatch(getRequestByHouseholdIdsAsync(householdIds));
+  }, [profilesToUser]);
 
   useEffect(() => {
     if (activeProfile) {
@@ -60,6 +55,12 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
       });
     }
   }, [activeProfile]);
+
+  useFocusEffect(
+    useCallback(() => {
+      console.log("FOCUS");
+    }, []),
+  );
 
   return (
     <View

@@ -68,7 +68,6 @@ export default function TaskDetailScreen({
   }, [dispatch, taskId]);
 
   const handleTaskCompletion = async (taskId: string, householdId: string) => {
-    console.log("aktivs", activeProfile);
     if (taskId && activeProfile) {
       const newTaskCompletion: TaskCompletion = {
         id: "",
@@ -127,19 +126,6 @@ export default function TaskDetailScreen({
                   >
                     Ändra
                   </Button>
-
-                  // <Button
-                  //   icon={({ size, color }) => (
-                  //     <MaterialIcons name="edit" size={24} color="black" />
-                  //   )}
-                  //   mode="elevated"
-                  //   onPress={() =>
-                  //     navigation.navigate("HandleTask", { taskId: taskId })
-                  //   }
-                  //   style={styles.changeButton}
-                  // >
-                  //   Ändra
-                  // </Button>
                 )}
               </View>
             </View>
@@ -169,12 +155,6 @@ export default function TaskDetailScreen({
                 {taskSlice.selectedTask?.interval}
               </Text>
             </View>
-
-            {/* <View style={styles.circle}>
-            <Text style={styles.intervalNumber}>
-              {taskSlice.selectedTask?.interval}
-            </Text>
-          </View> */}
           </View>
 
           <View style={styles.valueContainer}>
