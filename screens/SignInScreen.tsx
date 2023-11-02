@@ -78,71 +78,72 @@ export const SignInScreen = ({ navigation }: SignInProps) => {
         ]}
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
+          <>
             <StatusBar backgroundColor="#FFD700" />
+            <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
+              <View style={{ backgroundColor: theme.colors.background }}>
+                <View style={theme.signInHeader as any}>
+                  <Text style={styles.headerText}>Logga in</Text>
+                </View>
 
-            <View style={{ backgroundColor: theme.colors.background }}>
-              <View style={theme.signInHeader as any}>
-                <Text style={styles.headerText}>Logga in</Text>
-              </View>
+                <View style={styles.container}>
+                  <Video
+                    source={require("../assets/bee-animation.mp4")}
+                    rate={1.0}
+                    volume={1.0}
+                    isMuted={false}
+                    shouldPlay
+                    isLooping
+                    style={styles.video}
+                    resizeMode={ResizeMode.CONTAIN}
+                  />
+                  <Text
+                    style={{
+                      color: theme.buttonText.color,
+                      fontSize: 24,
+                      fontWeight: "bold",
+                      textAlign: "center",
+                    }}
+                  >
+                    BUZZTER
+                  </Text>
+                </View>
 
-              <View style={styles.container}>
-                <Video
-                  source={require("../assets/bee-animation.mp4")}
-                  rate={1.0}
-                  volume={1.0}
-                  isMuted={false}
-                  shouldPlay
-                  isLooping
-                  style={styles.video}
-                  resizeMode={ResizeMode.CONTAIN}
-                />
-                <Text
-                  style={{
-                    color: theme.buttonText.color,
-                    fontSize: 24,
-                    fontWeight: "bold",
-                    textAlign: "center",
-                  }}
-                >
-                  BUZZTER
-                </Text>
-              </View>
+                <View style={styles.textContainer}>
+                  <TextInput
+                    placeholder="Email"
+                    onChangeText={(text) => setUsername(text)}
+                    value={username}
+                    style={theme.buttonText}
+                  />
 
-              <View style={styles.textContainer}>
-                <TextInput
-                  placeholder="Email"
-                  onChangeText={(text) => setUsername(text)}
-                  value={username}
-                  style={theme.buttonText}
-                />
+                  <TextInput
+                    placeholder="Lösenord"
+                    secureTextEntry={!showPassword}
+                    value={password}
+                    onChangeText={(text) => setPassword(text)}
+                    style={theme.buttonText}
+                  />
 
-                <TextInput
-                  placeholder="Lösenord"
-                  secureTextEntry={!showPassword}
-                  value={password}
-                  onChangeText={(text) => setPassword(text)}
-                  style={theme.buttonText}
-                />
+                  <TouchableOpacity
+                    style={theme.button as any}
+                    onPress={handleLogin}
+                  >
+                    <Text style={theme.buttonText}>Logga in</Text>
+                  </TouchableOpacity>
 
-                <TouchableOpacity
-                  style={theme.button as any}
-                  onPress={handleLogin}
-                >
-                  <Text style={theme.buttonText}>Logga in</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                  style={theme.signupButton as any}
-                  onPress={() => {
-                    navigation.navigate("Signup");
-                  }}
-                >
-                  <Text style={theme.buttonText}>Skapa konto</Text>
-                </TouchableOpacity>
+                  <TouchableOpacity
+                    style={theme.signupButton as any}
+                    onPress={() => {
+                      navigation.navigate("Signup");
+                    }}
+                  >
+                    <Text style={theme.buttonText}>Skapa konto</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
             </View>
-          </View>
+          </>
         </TouchableWithoutFeedback>
 
         {errorPopup && error ? (
