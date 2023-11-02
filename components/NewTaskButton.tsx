@@ -34,7 +34,7 @@ export default function NewTaskButton({
           style={[
             styles.button,
             {
-              backgroundColor: "lightgrey",
+              backgroundColor: "#f4f4f4",
             },
           ]}
           labelStyle={{

@@ -110,7 +110,7 @@ export default function TaskDetailScreen({
               <View>
                 {isOwner && (
                   <Button
-                    icon={({ size, color }) => (
+                    icon={() => (
                       <MaterialIcons name="edit" size={24} color="black" />
                     )}
                     mode="elevated"
@@ -121,7 +121,7 @@ export default function TaskDetailScreen({
                       styles.changeButton,
                       {
                         backgroundColor:
-                          colorScheme === "dark" ? "gray" : "gray",
+                          colorScheme === "dark" ? "gray" : "white",
                       },
                     ]}
                   >
