@@ -74,7 +74,6 @@ const userSlice = createSlice({
         }
       })
       .addCase(logInUserAsync.rejected, (state, action) => {
-        console.log("INNE I CATCH", action.error.message);
         state.error = "Användarnamn eller lösenord är felaktigt.";
       });
   },

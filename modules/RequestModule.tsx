@@ -1,10 +1,6 @@
 import { AntDesign, Feather } from "@expo/vector-icons";
 import React from "react";
-import {
-  StyleSheet,
-  TouchableOpacity,
-  View
-} from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { Card, Modal, Portal, Text } from "react-native-paper";
 import { useTheme } from "../contexts/themeContext";
 import { HouseholdRequest } from "../types";
@@ -13,62 +9,68 @@ interface RequestProps {
   visible: boolean;
   onDismiss: () => void;
   householdName: string;
-  acceptRequest: (requestId:string) => void;
-  denyRequest: (requestId:string) => void;
-  requests:HouseholdRequest[]
+  acceptRequest: (requestId: string) => void;
+  denyRequest: (requestId: string) => void;
+  requests: HouseholdRequest[];
 }
 
 export default function RequestModule({
   visible,
   onDismiss,
-   householdName,
+  householdName,
   acceptRequest,
   denyRequest,
-  requests
+  requests,
 }: RequestProps) {
   const theme = useTheme();
 
-  function approveFollowRequest(requestId:string) {
-    console.log("NU GODKÄNNS ANVÄNDAREN");
+  function approveFollowRequest(requestId: string) {
     acceptRequest(requestId);
     onDismiss();
   }
 
-  function declineFollowRequest(requestId:string) {
-    console.log("NU NEKAS ANVÄNDAREN");
+  function declineFollowRequest(requestId: string) {
     denyRequest(requestId);
     onDismiss();
   }
 
   return (
     <Portal>
-    <Modal visible={visible} onDismiss={onDismiss}>
-      {requests.map((request) => (
-        <Card key={request.id}>
-          <Card.Title title="Ansluta sig till hushållet" />
-          <Card.Content>
-            <View style={{}}>
-              <Text style={{ fontSize: 18, rowGap: 5 }}>
-                Får användare {request.userMail} ansluta hushållet{" "}
-                {householdName}?
-              </Text>
-            </View>
-            <View style={styles.buttonsContainer}>
-              <TouchableOpacity style={styles.button} onPress={() => approveFollowRequest(request.id)}>
-                <Feather name="plus-circle" size={30} color="black" />
-                <Text style={styles.buttonText}>Ja</Text>
-              </TouchableOpacity>
+      <Modal visible={visible} onDismiss={onDismiss}>
+        {requests.map((request) => (
+          <Card key={request.id}>
+            <Card.Title title="Ansluta sig till hushållet" />
+            <Card.Content>
+              <View style={{}}>
+                <Text style={{ fontSize: 18, rowGap: 5 }}>
+                  Får användare {request.userMail} ansluta hushållet{" "}
+                  {householdName}?
+                </Text>
+              </View>
+              <View style={styles.buttonsContainer}>
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={() => approveFollowRequest(request.id)}
+                >
+                  <Feather name="plus-circle" size={30} color="black" />
+                  <Text style={styles.buttonText}>Ja</Text>
+                </TouchableOpacity>
 
-              <TouchableOpacity style={styles.button} onPress={() => {declineFollowRequest(request.id) }}>
-                <AntDesign name="closecircleo" size={28} color="black" />
-                <Text style={styles.buttonText}>Nej</Text>
-              </TouchableOpacity>
-            </View>
-          </Card.Content>
-        </Card>
-      ))}
-    </Modal>
-  </Portal>
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={() => {
+                    declineFollowRequest(request.id);
+                  }}
+                >
+                  <AntDesign name="closecircleo" size={28} color="black" />
+                  <Text style={styles.buttonText}>Nej</Text>
+                </TouchableOpacity>
+              </View>
+            </Card.Content>
+          </Card>
+        ))}
+      </Modal>
+    </Portal>
   );
 }
 

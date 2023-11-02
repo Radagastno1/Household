@@ -41,7 +41,6 @@ export default function CreateUserAccountScreen({
     } else if (!newEmail || !newPassword) {
       setMissingFieldsWarning("Fyll i alla obligatoriska fält.");
     } else {
-      console.log("ELSE");
       const newUser: UserCreate = {
         email: newEmail,
         password: newPassword,

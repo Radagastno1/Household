@@ -56,18 +56,16 @@ export const getTaskCompletionsFromDB = async (householdId: string) => {
   try {
     const { todaysDate } = getCurrentDate();
     const { startOfLastMonth } = getLastMonthDates();
-    console.log(todaysDate);
-    console.log(startOfLastMonth);
+
     const startTimestamp = Timestamp.fromDate(new Date(startOfLastMonth));
     const endTimestamp = Timestamp.fromDate(new Date(todaysDate));
 
     const q = query(
       taskCompletionCollectionRef,
       where("householdId", "==", householdId),
-      where("completedTimestamp", ">=", startTimestamp), // hämtar ut data mellan två datum
+      where("completedTimestamp", ">=", startTimestamp),
       where("completedTimestamp", "<=", endTimestamp),
     );
-    console.log(startTimestamp);
 
     const querySnapshot = await getDocs(q);
 
@@ -79,7 +77,7 @@ export const getTaskCompletionsFromDB = async (householdId: string) => {
         TaskCompletion,
         "completedTimestamp"
       > = {
-        // för att inte redux ska gnälla pga det nya fältet skapas en TaskCompletion utan timestamp-fältet innan det pushas till statet
+        
         id: docData.id,
         householdId: docData.householdId,
         taskId: docData.taskId,
@@ -87,7 +85,6 @@ export const getTaskCompletionsFromDB = async (householdId: string) => {
         completionDate: docData.completionDate,
       };
       taskCompletions.push(taskCompletionWithoutTimestamp);
-      console.log("taskCOMLETIONS------------------------", taskCompletions);
     });
     return taskCompletions;
   } catch (error) {
@@ -100,38 +97,22 @@ export const deleteAllTaskCompletionsByTaskId = async (taskId: string) => {
     const q = query(taskCompletionCollectionRef, where("taskId", "==", taskId));
     const querySnapshot = await getDocs(q);
 
-    // Loopa igenom resultatet och radera varje post
     querySnapshot.forEach(async (doc) => {
       await deleteDoc(doc.ref);
-      console.log(`raderade task completion med id: ${doc.id}`);
     });
 
-    console.log(`raderade alla task completions med taskId: ${taskId}`);
   } catch (error) {
     console.error("fel vid radering av task completions:", error);
   }
 };
 
-// export const deleteTaskFromDB = async (taskId: string) => {
-//   //sen ska jag ta bort taskcompletions med??
-//   try {
-//     const taskDocRef = doc(db, "tasks", taskId);
-//     await deleteDoc(taskDocRef);
-
-//     console.log("Task borttagen med Id:", taskId);
-//   } catch (error) {
-//     console.error("Fel vid borttagning av tasken:", error);
-//   }
-// };
-
 function addTimestampToTaskCompletion(taskCompletion: TaskCompletion) {
   const completionDateStr = taskCompletion.completionDate;
   const completionDate = new Date(completionDateStr);
-  completionDate.setHours(0, 0, 0, 0); // Ställ in tiden på midnatt
+  completionDate.setHours(0, 0, 0, 0);
 
   const timestamp = Timestamp.fromDate(completionDate);
 
-  // Skapar en kopia av taskCompletion med completedTimestamp
   const taskCompletionWithTimestamp = {
     ...taskCompletion,
     completedTimestamp: timestamp,

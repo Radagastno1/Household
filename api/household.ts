@@ -36,7 +36,6 @@ export const addHouseholdToDB = async (householdName: string) => {
 
     await setDoc(doc(db, "households", householdId), createdHousehold);
 
-    console.log("Household created with ID:", householdId);
     return createdHousehold;
   } catch (error) {
     console.error("Error adding household:", error);
@@ -45,7 +44,6 @@ export const addHouseholdToDB = async (householdName: string) => {
 };
 
 export const editHouseholdToDB = async (household: Household) => {
-  console.log("hushåll som kommer in i edit: ", household);
   const householdCollectionRef = collection(db, "households");
 
   try {
@@ -95,7 +93,6 @@ export const getHouseholdsFromDBbySingleProfileId = async (
       households.push(doc.data() as Household);
     });
 
-    console.log("Uppgifter hämtade:", households);
     return households;
   } catch (error) {
     console.error("Fel vid hämtning av uppgifter:", error);
@@ -124,8 +121,6 @@ export const deleteHouseholdFromDB = async (householdId: string) => {
   try {
     const householdDocRef = doc(db, "households", householdId);
     await deleteDoc(householdDocRef);
-
-    console.log("Household borttagen med Id:", householdId);
   } catch (error) {
     console.error("Fel vid borttagning av household:", error);
   }
@@ -139,12 +134,10 @@ export const checkHouseholdWithCode = async (joinCode: string) => {
     return null;
   }
   const householdData = querySnapshot.docs[0].data() as Household;
-  console.log(householdData);
 
   if (householdData) {
     return householdData;
   } else {
-    console.log("Household does not exist");
     return null;
   }
 };

@@ -28,7 +28,6 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
 
   const { theme } = useTheme();
   useEffect(() => {
-    console.log("START", new Date().toLocaleTimeString());
     dispatch(getProfilesByUserIdAsync(activeUser?.uid ?? "hej"));
   }, []);
   useEffect(() => {
@@ -46,11 +45,7 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
     }
   }, [activeProfile]);
 
-  useFocusEffect(
-    useCallback(() => {
-      console.log("FOCUS");
-    }, []),
-  );
+  useFocusEffect(useCallback(() => {}, []));
 
   return (
     <View

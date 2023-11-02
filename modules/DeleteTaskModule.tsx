@@ -26,7 +26,6 @@ export default function DeleteTaskModule(props: Props) {
       householdId: props.task.householdId,
       isActive: false,
     };
-    console.log("den redigerade tasken: ", editedTask.title);
     props.onEditTask(editedTask);
     closeModal();
   };

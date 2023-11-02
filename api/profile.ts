@@ -45,7 +45,6 @@ export const saveProfileNameToDatabase = async (
       profileName: newProfileName,
     });
 
-    console.log("Profilnamnet har uppdaterats i databasen.");
     return { success: true };
   } catch (error) {
     console.error("Fel vid uppdatering av profilnamnet i databasen:", error);
@@ -96,8 +95,6 @@ export const getAllProfilesByHouseholdId = async (householdId: string) => {
 
 export const getAllProfilesByUserIdFromDb = async (userId: string) => {
   try {
-    console.log("Hämta profiler: ", userId);
-
     const profileCollectionRef = collection(db, "profiles");
 
     const q = query(
@@ -120,7 +117,6 @@ export const getAllProfilesByUserIdFromDb = async (userId: string) => {
   }
 };
 export const editProfileToDB = async (profile: Profile) => {
-  console.log("hushåll som kommer in i edit: ", profile);
   const profileCollectionRef = collection(db, "profiles");
 
   try {
@@ -152,7 +148,6 @@ export const deactivateProfileInDB = async (profileId: string) => {
       isActive: false,
     });
 
-    console.log("Profile's isActive property updated in Firestore.");
     return { success: true };
   } catch (error: unknown) {
     if (error instanceof Error) {

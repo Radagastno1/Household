@@ -49,7 +49,6 @@ export const getProfilesByUserIdAsync = createAsyncThunk<
   try {
     const fetchedProfiles = await getAllProfilesByUserIdFromDb(userId);
     if (fetchedProfiles) {
-
       return fetchedProfiles;
     } else {
       return thunkAPI.rejectWithValue("failed to add completion");
@@ -77,22 +76,20 @@ export const getProfilesByHouseholdIdAsync = createAsyncThunk<
 });
 
 export const editProfileAsync = createAsyncThunk<
-Profile,
-Profile,
-{rejectValue:string}
-> ("profile/editProfile", async (profile, thunkAPI)=>{
-    try{
-        const editProfile = await editProfileToDB(profile);
-        if(editProfile){
-            
-            return editProfile;
-            
-        }else{
-            return thunkAPI.rejectWithValue("failed to edit household");
-        }
-    }catch (error: any) {
-        return thunkAPI.rejectWithValue(error.message);
-      }
+  Profile,
+  Profile,
+  { rejectValue: string }
+>("profile/editProfile", async (profile, thunkAPI) => {
+  try {
+    const editProfile = await editProfileToDB(profile);
+    if (editProfile) {
+      return editProfile;
+    } else {
+      return thunkAPI.rejectWithValue("failed to edit household");
+    }
+  } catch (error: any) {
+    return thunkAPI.rejectWithValue(error.message);
+  }
 });
 
 const profileSlice = createSlice({
@@ -123,7 +120,6 @@ const profileSlice = createSlice({
         .then((createdProfile) => {
           if (createdProfile) {
             state.profiles = [...state.profiles, createdProfile];
-            console.log("profile som las till: ", action.payload);
           }
         })
         .catch((error) => {
@@ -169,14 +165,14 @@ const profileSlice = createSlice({
       }
     },
     editProfile: (state, action) => {
-        const updatedProfile = action.payload;
-        // Find the index of the edited household in the state
-        const index = state.profiles.findIndex(p => p.id === updatedProfile.id);
-        if (index !== -1) {
-          // Replace only the existing household with the updated one
-          state.profiles[index] = updatedProfile;
-        }
-      },
+      const updatedProfile = action.payload;
+      // Find the index of the edited household in the state
+      const index = state.profiles.findIndex((p) => p.id === updatedProfile.id);
+      if (index !== -1) {
+        // Replace only the existing household with the updated one
+        state.profiles[index] = updatedProfile;
+      }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -192,15 +188,15 @@ const profileSlice = createSlice({
           state.profilesToUser.push(action.payload);
         }
       })
-      
-      .addCase(editProfileAsync.fulfilled,(state,action)=>{
-        if(action.payload){
-            state.activeProfile = action.payload
+
+      .addCase(editProfileAsync.fulfilled, (state, action) => {
+        if (action.payload) {
+          state.activeProfile = action.payload;
         }
       })
-      .addCase(editProfileAsync.rejected,(state,action)=>{
+      .addCase(editProfileAsync.rejected, (state, action) => {
         console.log("error vid get households: ", action.payload);
-    })
+      })
       .addCase(getProfilesByUserIdAsync.fulfilled, (state, action) => {
         if (action.payload) {
           state.profilesToUser = action.payload;
@@ -223,18 +219,14 @@ const profileSlice = createSlice({
 export const fetchAllProfilesByHousehold =
   (activeHouseholdId: string, userId: string) =>
   async (dispatch: AppDispatch, getState: () => RootState) => {
-    console.log("FETCH ALL PROFILE KÖRS!!!!");
     const profiles = await getAllProfilesByHouseholdId(activeHouseholdId);
-    console.log("antal profiler för hushållet:", profiles?.length);
     if (profiles) {
       dispatch(profileSlice.actions.setProfiles(profiles));
-      console.log("USER ID SOM KOMMER IN: ", userId);
       const activeProfile = profiles.find(
         (p) => p.householdId === activeHouseholdId && p.userId === userId,
       );
       if (activeProfile) {
         dispatch(profileSlice.actions.setActiveProfile(activeProfile));
-        console.log("aktiva profilen: ", activeProfile);
       }
     }
   };
@@ -258,5 +250,5 @@ export const { setProfiles } = profileSlice.actions;
 export const { addProfile } = profileSlice.actions;
 export const { editProfileName } = profileSlice.actions;
 export const { setProfileByHouseholdAndUser } = profileSlice.actions;
-export const {editProfile} = profileSlice.actions;
+export const { editProfile } = profileSlice.actions;
 export const profileReducer = profileSlice.reducer;

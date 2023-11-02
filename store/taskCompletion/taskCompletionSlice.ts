@@ -26,7 +26,6 @@ export const addCompletionAsync = createAsyncThunk<
   try {
     const addedCompletion = await addTaskCompletionToDB(completion);
     if (addedCompletion) {
-      console.log("DEEEEN TILLLLAGDA COMPLETIONNNNENNNNNN: ", addedCompletion);
       return addedCompletion;
     } else {
       throw new Error("Något gick fel. Försök igen senare.");
@@ -97,7 +96,6 @@ const taskCompletionSlice = createSlice({
       );
 
       if (todaysCompletions) {
-        console.log("in slice today completion", todaysCompletions);
         state.completions = todaysCompletions;
       } else {
       }
@@ -156,7 +154,6 @@ const taskCompletionSlice = createSlice({
         }
       })
       .addCase(addCompletionAsync.rejected, (state, action) => {
-        console.log("INNE I CATCH", action.error.message);
         state.error = "Något gick fel. Prova igen senare.";
       });
   },

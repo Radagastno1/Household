@@ -47,7 +47,6 @@ export default function HandleHouseholdScreen({
 
   const handleJoin = async () => {
     if (joinCode) {
-      console.log("Dispatching joinHouseholdByCode with code:", joinCode);
       const household = await handleJoinHousehold(joinCode);
       const profile = profilesToUser.find(
         (profile) =>
@@ -64,7 +63,6 @@ export default function HandleHouseholdScreen({
         setErrorText("Huset finns i profilen redo");
         setErrorPopup(true);
       } else if (household) {
-        console.log("activeHousehold is available:", household);
         navigation.navigate("CreateProfile", {
           householdId: household.id,
           isOwner: false,

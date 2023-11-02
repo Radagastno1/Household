@@ -40,11 +40,9 @@ export default function TopTabNavigator() {
     endOfLastMonth,
     completions,
   );
-  console.log("LAST MONTH: ", lastMonth);
 
   useEffect(() => {
     if (lastWeek) {
-      console.log("LAST WEEK: ", lastWeek);
     }
   }, [completions, startOfCurrentWeek, startOfLastWeek, startOfLastMonth]);
   return (
@@ -55,9 +53,6 @@ export default function TopTabNavigator() {
         options={() => ({
           tabBarLabel: "Idag",
         })}
-        // options={({ route }) => ({
-        //   title: (route.params as unknown as { name?: string })?.name || "Idag",
-        // })}
       />
       <TopTab.Screen
         name="StatisticsCurrentWeek"

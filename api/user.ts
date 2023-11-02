@@ -21,7 +21,6 @@ export const addUserToDB = async (createUser: UserCreate) => {
       createUser.email,
       createUser.password,
     );
-    console.log(userCredential.user);
     return {
       uid: userCredential.user.uid,
       email: userCredential.user.email ?? null,
@@ -38,7 +37,6 @@ export const signInWithAPI = async (createUser: UserCreate) => {
       createUser.email,
       createUser.password,
     );
-    console.log("UUUSER UID : ", userCredential.user.uid);
     return {
       uid: userCredential.user.uid,
       email: createUser.email,
@@ -52,8 +50,6 @@ export const deleteUserFromDB = async (userId: string) => {
   try {
     const userDocRef = doc(db, "users", userId);
     await deleteDoc(userDocRef);
-
-    console.log("User borttagen med Id:", userId);
   } catch (error) {
     console.error("Fel vid borttagning av usern:", error);
   }
@@ -71,7 +67,6 @@ export const getUserByUserId = async (userId: string) => {
     }
 
     const userData = querySnapshot.docs[0].data() as User;
-    console.log("User data retrieved:", userData);
     return userData;
   } catch (error) {
     console.error("Error fetching user by userId:", error);
