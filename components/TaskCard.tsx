@@ -31,7 +31,7 @@ export default function TaskCard({
   const colorScheme = useColorScheme();
   const { theme } = useTheme();
   function findAllAvatarFortodayCompletionByTaskId(taskId: string) {
-    const today = new Date("2023-11-02").toISOString();
+    const today = new Date().toISOString();
     const filteredTodaysCompletionsForTask = completions.filter(
       (completion: TaskCompletion) =>
         completion.completionDate.split("T")[0] === today.split("T")[0] &&
