@@ -52,7 +52,6 @@ export const setActiveHouseholdAsync = createAsyncThunk(
 
 export const handleJoinHousehold = async (joinCode: string) => {
   if (joinCode) {
-    // Dispatch the action and await its completion
     const household = await checkHouseholdWithCode(joinCode);
     if (household) {
       return household;

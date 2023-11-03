@@ -29,7 +29,6 @@ type ProfileProps = RootNavigationScreenProps<"ProfileAccount">;
 
 export default function ProfileAccountScreen({ navigation }: ProfileProps) {
   const [selectedAvatar] = useState<string>("");
-  // const [isRequestPending, setRequestPending] = useState(false);
   const [householdRequests, setHouseholdRequests] = useState<
     HouseholdRequest[]
   >([]);
@@ -236,10 +235,7 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
                   <Text>{activeHousehold?.name}</Text>
                 )}
               </View>
-              {/* <View style={styles.nameContainer}>
-                {/* tog headertitle som du satt till hushållsnamnet för att testa så det funkar */}
-              {/* <Text variant="titleLarge">{headerTitle}</Text>
-              </View>  */}
+
               {activeProfile?.isOwner === true && (
                 <IconButton
                   icon="pencil"
@@ -249,15 +245,6 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
                   }}
                 />
               )}
-              {/* <IconButton
-                icon="pencil"
-                size={20}
-                onPress={() => {
-                  setIsHousehouldNameEditing(true);
-                }}
-              /> */}
-
-              {/* <IconButton icon="pencil" size={20} onPress={() => {}} /> */}
             </View>
           </Card>
 

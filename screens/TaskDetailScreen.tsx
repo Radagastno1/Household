@@ -28,10 +28,6 @@ export default function TaskDetailScreen({
   const dispatch = useAppDispatch();
   const taskCompletionSlice = useAppSelector((state) => state.taskCompletion);
   const profiles = useAppSelector((state) => state.profile.profiles);
-  //   const fetchAvatars = () => {
-  //     dispatch(findAllAvatarFortodayCompletionByTaskId({ taskId }));
-
-  //   };
 
   function findAllAvatarFortodayCompletionByTaskId(taskId: string) {
     const today = new Date().toISOString();
@@ -171,12 +167,6 @@ export default function TaskDetailScreen({
                 {taskSlice.selectedTask?.energyWeight}
               </Text>
             </View>
-
-            {/* <View style={styles.circle}>
-            <Text style={styles.valueNumber}>
-              {taskSlice.selectedTask?.energyWeight}
-            </Text>
-          </View> */}
           </View>
         </View>
 
@@ -217,7 +207,6 @@ export default function TaskDetailScreen({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
   },
@@ -293,7 +282,6 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   klarButtonContainer: {
-    // marginBottom:40,
     flex: 1,
   },
   klarButton: {},

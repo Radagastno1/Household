@@ -36,7 +36,6 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({ title, navigation }) => {
   }, [isFocused]);
   return (
     <View style={[styles.header, { backgroundColor: theme.colors.background }]}>
-      {/* <View style={{ flex: 1, marginBottom:70,backgroundColor: theme.colors.background }}> */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.navigate("ProfileAccount")}>
           <AntDesign name="arrowleft" size={24} color="black" />
@@ -60,7 +59,6 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({ title, navigation }) => {
         </TouchableOpacity>
       </View>
     </View>
-    // </View>
   );
 };
 

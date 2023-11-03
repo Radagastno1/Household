@@ -27,7 +27,6 @@ export function getCurrentWeekDates() {
   };
 }
 
-// Gets the last weeks start- and end-date
 export function getLastWeekDates() {
   const today = new Date();
   const currentDay = today.getDay();
@@ -46,17 +45,14 @@ export function getLastWeekDates() {
   };
 }
 
-// Gets the current months start- and end-date
 export function getCurrentMonthDates() {
   const today = new Date();
   const year = today.getFullYear();
   const month = today.getMonth();
 
-  // Skapa första dagen i den aktuella månaden
   const firstDate = new Date(year, month, 1);
   const startOfCurrentMonth = format(firstDate, "yyyy-MM-dd");
 
-  // Skapa den sista dagen i den aktuella månaden
   const lastDate = new Date(year, month + 1, 0);
   const endOfCurrentMonth = format(lastDate, "yyyy-MM-dd");
 
@@ -66,17 +62,14 @@ export function getCurrentMonthDates() {
   };
 }
 
-// Gets the last months start- and end-date
 export function getLastMonthDates() {
   const today = new Date();
   const year = today.getFullYear();
   const month = today.getMonth();
 
-  // Skapa första dagen i förra månaden
   const firstDate = new Date(year, month - 1, 1);
   const startOfLastMonth = format(firstDate, "yyyy-MM-dd");
 
-  // Skapa den sista dagen i förra månaden
   const lastDate = new Date(year, month, 0);
   const endOfLastMonth = format(lastDate, "yyyy-MM-dd");
 
