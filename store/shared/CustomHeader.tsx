@@ -1,15 +1,8 @@
 import { AntDesign } from "@expo/vector-icons";
 import { useIsFocused } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
-import {
-  Image,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  useColorScheme,
-} from "react-native";
-import { Appbar, IconButton } from "react-native-paper";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Appbar } from "react-native-paper";
 import { useTheme } from "../../contexts/themeContext";
 import { useAppSelector } from "../../store/store";
 
@@ -20,13 +13,11 @@ interface CustomHeaderProps {
 
 const CustomHeader: React.FC<CustomHeaderProps> = ({ title, navigation }) => {
   const isFocused = useIsFocused();
-  const colorScheme = useColorScheme();
   const [houseTitle, setHouseTitle] = useState<string>("");
   const activeProfile = useAppSelector((state) => state.profile.activeProfile);
   const households = useAppSelector((state) => state.household.households);
   const household = households.find((h) => h.id === activeProfile?.householdId);
   const { theme } = useTheme();
-  const headerTextColor = "gray";
   useEffect(() => {
     if (isFocused) {
       if (household) {

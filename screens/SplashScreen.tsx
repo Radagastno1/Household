@@ -1,17 +1,12 @@
-import { useNavigation } from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack";
 import { ResizeMode, Video } from "expo-av";
 import React, { useEffect, useState } from "react";
 import { Animated, Dimensions, Easing, StyleSheet, View } from "react-native";
-import { RootStackParamList } from "../navigators/RootNavigator";
 
 export default function SplashScreen() {
   const [isLoading, setIsLoading] = useState(true);
   const beeAnimation = new Animated.Value(0);
   const loginScreenHeight = new Animated.Value(0);
   const windowHeight = Dimensions.get("window").height;
-  const navigation =
-    useNavigation<StackNavigationProp<RootStackParamList, "Login">>();
 
   useEffect(() => {
     if (isLoading) {

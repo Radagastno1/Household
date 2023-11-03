@@ -136,9 +136,6 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
   };
   const handleLeaveHouseholdClick = () => {
     if (activeProfile) {
-      const householdId = activeProfile.householdId;
-      const userId = activeProfile.userId;
-
       dispatch(deactivateProfileAsync(activeProfile.id)).then((action) => {
         if (deactivateProfileAsync.fulfilled.match(action)) {
           navigation.navigate("HouseholdAccount");

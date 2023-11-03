@@ -2,7 +2,7 @@ import { MaterialTopTabNavigationProp } from "@react-navigation/material-top-tab
 import { CompositeNavigationProp } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import React from "react";
-import { Image, StyleSheet, View, useColorScheme } from "react-native";
+import { Image, StyleSheet, View } from "react-native";
 import { Card, Text } from "react-native-paper";
 import { useTheme } from "../contexts/themeContext";
 import { AvatarUrls, Avatars } from "../data/avatars";
@@ -28,7 +28,6 @@ export default function TaskCard({
   navigation,
   task,
 }: TaskCardProps) {
-  const colorScheme = useColorScheme();
   const { theme } = useTheme();
   function findAllAvatarFortodayCompletionByTaskId(taskId: string) {
     const today = new Date().toISOString();

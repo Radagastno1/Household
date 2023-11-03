@@ -2,7 +2,6 @@ import { AntDesign, Feather } from "@expo/vector-icons";
 import React from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { Card, Modal, Portal, Text } from "react-native-paper";
-import { useTheme } from "../contexts/themeContext";
 import { HouseholdRequest } from "../types";
 
 interface RequestProps {
@@ -22,8 +21,6 @@ export default function RequestModule({
   denyRequest,
   requests,
 }: RequestProps) {
-  const theme = useTheme();
-
   function approveFollowRequest(requestId: string) {
     acceptRequest(requestId);
     onDismiss();
