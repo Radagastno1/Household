@@ -3,7 +3,7 @@ import { MaterialTopTabNavigationProp } from "@react-navigation/material-top-tab
 import { CompositeNavigationProp } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import React from "react";
-import { StyleSheet, View, useColorScheme } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { Button } from "react-native-paper";
 import { useTheme } from "../contexts/themeContext";
 import { RootStackParamList } from "../navigators/RootNavigator";
@@ -21,7 +21,6 @@ export default function NewTaskButton({
   isOwner,
   navigation,
 }: NewTaskButtonProps) {
-  const colorScheme = useColorScheme();
   const { theme } = useTheme();
 
   return (

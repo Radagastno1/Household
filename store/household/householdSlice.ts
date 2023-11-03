@@ -209,10 +209,3 @@ export const {
 } = householdSlice.actions;
 
 export const householdReducer = householdSlice.reducer;
-
-const setActiveHousehold = (household: Household) => {
-  return {
-    type: "household/setActiveHousehold",
-    payload: household,
-  };
-};

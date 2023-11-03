@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Appearance,
+  ColorSchemeName,
+  FlatList,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
 import { useTheme } from "../contexts/themeContext";
-import { FlatList } from "react-native";
-import { ColorSchemeName } from "react-native";
 
 export default function ModeThemeButton() {
   const [showDropdown, setShowDropdown] = useState(false);
@@ -34,10 +34,6 @@ export default function ModeThemeButton() {
       setIsAuto(true);
     }
     setSelectedItem(item);
-    setShowDropdown(false);
-  };
-
-  const handleClose = () => {
     setShowDropdown(false);
   };
 
@@ -72,9 +68,6 @@ export default function ModeThemeButton() {
 
       {showDropdown && (
         <View style={theme.button as any}>
-          {/* <Button onPress={handleClose}>
-            <AntDesign name="close" size={24} color="black" />
-          </Button> */}
           <FlatList
             data={["light", "dark", "Auto"]}
             keyExtractor={(item) => item}
