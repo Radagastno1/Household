@@ -6,8 +6,6 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { AntDesign } from "@expo/vector-icons";
-import { Button } from "react-native-paper";
 import { useTheme } from "../contexts/themeContext";
 import { FlatList } from "react-native";
 import { ColorSchemeName } from "react-native";

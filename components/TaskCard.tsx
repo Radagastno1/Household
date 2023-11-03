@@ -84,10 +84,9 @@ export default function TaskCard({
           )[0].completionDate,
       );
     }
-    // get the timeDifference since last done date
+
     const currentDate = new Date();
     const timeDifference = currentDate.getTime() - lastCompletionDate.getTime();
-    //convert it to days minus the interval days
     const daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
     return daysDifference;
   }
