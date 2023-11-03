@@ -26,7 +26,7 @@ export const addUserToDB = async (createUser: UserCreate) => {
       email: userCredential.user.email ?? null,
     } satisfies User;
   } catch (error: any) {
-    console.error(error);
+    throw error;
   }
 };
 

@@ -119,13 +119,9 @@ export const acceptProfileToHousehold = async (requestId: string) => {
       await updateDoc(profileDocRef, {
         householdId: requestData.householdId,
       });
-    } else {
-      console.log("förfrågan saknar profilens id.");
+      return { success: true };
     }
-
-    return { success: true };
   } catch (error) {
-    console.error("Fel vid uppdatering av hushållsidt i databasen:", error);
     return { success: false, error };
   }
 };

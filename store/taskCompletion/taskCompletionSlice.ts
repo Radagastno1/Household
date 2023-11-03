@@ -87,8 +87,6 @@ const taskCompletionSlice = createSlice({
       state,
       action: PayloadAction<{ taskId: string; completionDate: string }>,
     ) => {
-      const { taskId, completionDate } = action.payload;
-
       const today = new Date().toISOString();
       const todaysCompletions = state.completions.filter(
         (completion) =>
