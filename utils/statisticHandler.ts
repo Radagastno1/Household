@@ -7,7 +7,6 @@ import {
   TaskCompletion,
   TaskCompletionStat,
   TaskData,
-  PieChart,
 } from "../types";
 
 let sortedTasks: Task[] = [];
@@ -108,15 +107,13 @@ export function SummerizeEachTask(
           );
 
           if (existingProfileData) {
-            // Profile already exists in values, update sum
             existingProfileData.sum += task.energyWeight;
           } else {
-            // Profile doesn't exist, create a new ProfileData
             const avatarColor = getAvatarColorString(profile.avatar);
             const typedProfileData: ProfileData = {
               id: profile.id,
               avatar: profile.avatar,
-              color: avatarColor, // You can set the color as needed
+              color: avatarColor, 
               sum: task.energyWeight,
             };
             typedTaskData.values.push(typedProfileData);
@@ -161,10 +158,8 @@ export function summarizeDataByColor(data: StatData[]) {
       const existingIndex = colors.indexOf(color);
 
       if (existingIndex !== -1) {
-        // Om färgen redan finns i colors-arrayen, uppdatera den befintliga serievärdet
         series[existingIndex] += itemSeries[index];
       } else {
-        // Annars lägg till färgen i colors-arrayen och det motsvarande serievärdet i series-arrayen
         colors.push(color);
         series.push(itemSeries[index]);
       }
