@@ -247,9 +247,6 @@ export default function CreateTaskScreen({
                       <Title
                         style={{
                           fontWeight: "bold",
-                          // backgroundColor:
-                          //   colorScheme === "dark" ? "gray" : "transparent",
-                          // color: colorScheme === "dark" ? "white" : "black",
                         }}
                       >
                         Återkommer:

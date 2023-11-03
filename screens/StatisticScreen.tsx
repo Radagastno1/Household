@@ -75,7 +75,7 @@ export default function StatisticScreen({ route }: StatProps) {
       }}
     >
       <ScrollView style={styles.container}>
-        {totalSumColors.length > 0 && totalSumSeries.length > 0 ? ( // Kontrollera om totalSumColors har data
+        {totalSumColors.length > 0 && totalSumSeries.length > 0 ? ( 
           <View style={styles.topChart}>
             <PiechartComponent
               widthAndHeight={250}

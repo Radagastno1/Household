@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Keyboard, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { Appbar, Text, TextInput } from "react-native-paper";
 import { useTheme } from "../contexts/themeContext";
 import ErrorModule from "../modules/errorModule";

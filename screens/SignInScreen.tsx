@@ -5,7 +5,6 @@ import {
   Animated,
   Easing,
   Keyboard,
-  Platform,
   StyleSheet,
   TouchableOpacity,
   TouchableWithoutFeedback,

@@ -31,12 +31,6 @@ export default function HouseholdAccountScreen({ navigation }: HouseholdProps) {
     dispatch(getProfilesByUserIdAsync(activeUser?.uid ?? "hej"));
   }, []);
 
-  // useEffect(() => {
-  //   if (profilesToUser.length === 0) return;
-  //   const householdIds = profilesToUser.map((p) => p.householdId);
-  //   dispatch(getHouseholdsByHouseholdIdAsync(householdIds));
-  //   dispatch(getRequestByHouseholdIdsAsync(householdIds));
-  // }, [profilesToUser]);
 
   useEffect(() => {
     if (activeProfile) {
