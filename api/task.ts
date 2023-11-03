@@ -45,7 +45,7 @@ export const editTaskToDB = async (task: Task) => {
       id: task.id,
       title: task.title,
       description: task.description,
-      energiWeight: task.energyWeight,
+      energyWeight: task.energyWeight,
       creatingDate: task.creatingDate,
       interval: task.interval,
       householdId: task.householdId,
@@ -56,7 +56,7 @@ export const editTaskToDB = async (task: Task) => {
 
     return task;
   } catch (error) {
-   throw error;
+    throw error;
   }
 };
 
