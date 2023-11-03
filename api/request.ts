@@ -41,7 +41,7 @@ export const addProfileWithRequestToDB = async (
       return null;
     }
   } catch (error) {
-    return null;
+    throw error;
   }
 };
 
@@ -76,7 +76,7 @@ export const deleteProfileWithRequestToDB = async (requestId: string) => {
       }
     }
   } catch (error) {
-    return null;
+    throw error;
   }
 };
 
@@ -99,8 +99,7 @@ export const getRequestByHouseholdIdFromDb = async (householdId: string) => {
     });
     return requests as HouseholdRequest[];
   } catch (error) {
-    console.error("Fel vid uppdatering av hushållsidt i databasen:", error);
-    return [];
+    throw error;
   }
 };
 

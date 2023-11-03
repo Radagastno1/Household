@@ -51,7 +51,7 @@ export const deleteUserFromDB = async (userId: string) => {
     const userDocRef = doc(db, "users", userId);
     await deleteDoc(userDocRef);
   } catch (error) {
-    console.error("Fel vid borttagning av usern:", error);
+    throw error;
   }
 };
 
@@ -69,7 +69,6 @@ export const getUserByUserId = async (userId: string) => {
     const userData = querySnapshot.docs[0].data() as User;
     return userData;
   } catch (error) {
-    console.error("Error fetching user by userId:", error);
-    return null;
+    throw error;
   }
 };

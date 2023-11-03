@@ -143,7 +143,7 @@ export default function ProfileAccountScreen({ navigation }: ProfileProps) {
         if (deactivateProfileAsync.fulfilled.match(action)) {
           navigation.navigate("HouseholdAccount");
         } else {
-          console.error("Failed to deactivate profile.");
+          //här sätts ju state error i slicen så här ska det komma en error popup senare.
         }
       });
     }

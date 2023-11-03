@@ -53,7 +53,7 @@ export const addProfileWithRequest = createAsyncThunk(
     try {
       if (userMail) {
         const request: HouseholdRequest = {
-          id: "", 
+          id: "",
           profileId: "",
           userMail: userMail,
           householdId: householdId,
@@ -91,17 +91,17 @@ export const acceptProfileToHouseholdAsync = createAsyncThunk(
 );
 
 export const denyProfileToHouseholdAsync = createAsyncThunk(
-    "request/denyProfileToHousehold",
-    async ({ requestId }: { requestId: string }, thunkAPI) => {
-      try {
-        if (requestId) {
-          await deleteProfileWithRequestToDB(requestId);
-        }
-      } catch (error: any) {
-        return thunkAPI.rejectWithValue(error.message);
+  "request/denyProfileToHousehold",
+  async ({ requestId }: { requestId: string }, thunkAPI) => {
+    try {
+      if (requestId) {
+        await deleteProfileWithRequestToDB(requestId);
       }
-    },
-  );
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error.message);
+    }
+  },
+);
 
 const requestSlice = createSlice({
   name: "request",
@@ -119,6 +119,14 @@ const requestSlice = createSlice({
         }
       })
       .addCase(getRequestByHouseholdIdsAsync.rejected, (state, action) => {
+        state.error = "Något gick fel vid gå med i hushåll.";
+      })
+      .addCase(denyProfileToHouseholdAsync.fulfilled, (state, action) => {
+        if (action.payload) {
+          state.error = null;
+        }
+      })
+      .addCase(denyProfileToHouseholdAsync.rejected, (state, action) => {
         state.error = "Något gick fel vid gå med i hushåll.";
       });
   },
