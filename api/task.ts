@@ -56,7 +56,7 @@ export const editTaskToDB = async (task: Task) => {
 
     return task;
   } catch (error) {
-    return null;
+   throw error;
   }
 };
 

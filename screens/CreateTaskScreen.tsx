@@ -319,7 +319,6 @@ export default function CreateTaskScreen({
                     getCircleBackgroundColor={getEnergyCircleBackgroundColor}
                     onNumberSelect={(selectedNumber) => {
                       setSelectedEnergy(selectedNumber);
-                      console.log(selectedNumber);
                       setEnergyDataPressed(!energyDataPressed);
                     }}
                   />

@@ -79,8 +79,7 @@ const taskCompletionSlice = createSlice({
 
       if (foundCompletion) {
         state.completions = [foundCompletion];
-      } else {
-      }
+      } 
     },
 
     findCompletionsByTaskIdAndCompletionDate: (
@@ -95,8 +94,7 @@ const taskCompletionSlice = createSlice({
 
       if (todaysCompletions) {
         state.completions = todaysCompletions;
-      } else {
-      }
+      } 
     },
 
     findCompletionsByTaskAndProfielId: (
@@ -110,8 +108,7 @@ const taskCompletionSlice = createSlice({
       );
       if (foundCompletion) {
         state.completions = [foundCompletion];
-      } else {
-      }
+      } 
     },
 
     findAllAvatarInCompletionByTaskId: (

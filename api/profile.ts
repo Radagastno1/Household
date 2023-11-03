@@ -47,7 +47,6 @@ export const saveProfileNameToDatabase = async (
 
     return { success: true };
   } catch (error) {
-    console.error("Fel vid uppdatering av profilnamnet i databasen:", error);
     return { success: false, error };
   }
 };
@@ -89,7 +88,7 @@ export const getAllProfilesByHouseholdId = async (householdId: string) => {
     });
     return profiles;
   } catch (error) {
-    console.error("Fel vid hämtning av uppgifter:", error);
+    throw error;
   }
 };
 
@@ -113,7 +112,7 @@ export const getAllProfilesByUserIdFromDb = async (userId: string) => {
 
     return profiles;
   } catch (error) {
-    console.error("Fel vid hämtning av uppgifter:", error);
+    throw error;
   }
 };
 export const editProfileToDB = async (profile: Profile) => {
@@ -136,8 +135,7 @@ export const editProfileToDB = async (profile: Profile) => {
 
     return profile;
   } catch (error) {
-    console.error("Fel vid redigering av uppgift:", error);
-    return null;
+    throw error;
   }
 };
 export const deactivateProfileInDB = async (profileId: string) => {
@@ -151,12 +149,8 @@ export const deactivateProfileInDB = async (profileId: string) => {
     return { success: true };
   } catch (error: unknown) {
     if (error instanceof Error) {
-      console.error("Error updating profile in Firestore:", error);
       return { success: false, error: error.message };
     } else {
-      console.error(
-        "Unknown error occurred while updating profile in Firestore.",
-      );
       return { success: false, error: "Unknown error" };
     }
   }

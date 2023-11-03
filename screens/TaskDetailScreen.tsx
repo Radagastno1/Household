@@ -75,7 +75,7 @@ export default function TaskDetailScreen({
         setAvatars([...avatar, activeProfile.avatar]);
       }
     } else {
-      console.error("Task ID or profile ID is undefined.");
+     //hantera error statet här med ju senare
     }
   };
 

@@ -95,7 +95,7 @@ export const getHouseholdsFromDBbySingleProfileId = async (
 
     return households;
   } catch (error) {
-    console.error("Fel vid hämtning av uppgifter:", error);
+    throw error;
   }
 };
 export const getHouseholdsFromDBbyProfileId = async (profileId: string[]) => {
@@ -113,7 +113,7 @@ export const getHouseholdsFromDBbyProfileId = async (profileId: string[]) => {
     });
     return households;
   } catch (error) {
-    console.error("Fel vid hämtning av uppgifter:", error);
+    throw error;
   }
 };
 
@@ -122,7 +122,7 @@ export const deleteHouseholdFromDB = async (householdId: string) => {
     const householdDocRef = doc(db, "households", householdId);
     await deleteDoc(householdDocRef);
   } catch (error) {
-    console.error("Fel vid borttagning av household:", error);
+   throw error;
   }
 };
 export const checkHouseholdWithCode = async (joinCode: string) => {
