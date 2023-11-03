@@ -136,12 +136,15 @@ function mapToPieChart(summarizedByTasks: TaskData[]) {
   summarizedByTasks.forEach((sum) => {
     const series = sum.values.map((value) => value.sum);
     const colors = sum.values.map((value) => value.color);
-    const stat: StatData = {
-      title: sum.taskTitle,
-      series: series,
-      colors: colors,
-    };
-    statDataArray.push(stat);
+
+    if (series.length > 0 && colors.length > 0) {
+      const stat: StatData = {
+        title: sum.taskTitle,
+        series: series,
+        colors: colors,
+      };
+      statDataArray.push(stat);
+    }
   });
   return statDataArray;
 }
