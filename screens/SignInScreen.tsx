@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { Text, TextInput } from "react-native-paper";
+import SupportTextComponent from "../components/SupportTextComponent";
 import { useTheme } from "../contexts/themeContext";
 import ErrorModule from "../modules/errorModule";
 import { RootNavigationScreenProps } from "../navigators/navigationTypes";
@@ -140,6 +141,9 @@ export const SignInScreen = ({ navigation }: SignInProps) => {
                   >
                     <Text style={theme.buttonText}>Skapa konto</Text>
                   </TouchableOpacity>
+
+                  <SupportTextComponent />
+                  
                 </View>
               </View>
             </View>
